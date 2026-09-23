@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
-import { getButtonClasses } from "@/components/ui/ButtonLink";
+import { ButtonLink } from "@/components/ui/ButtonLink";
 import { PlaceholderNotice } from "@/components/ui/PlaceholderNotice";
 import { HowItWorksSteps } from "@/features/walks/components/HowItWorksSteps";
 import { LocationPreviewList } from "@/features/walks/components/LocationPreviewList";
@@ -104,14 +104,7 @@ export default async function WalkDetailPage({ params }: PageProps<"/walks/[slug
               per team
             </p>
           </div>
-          {/* The walk player is the next milestone, so this button is disabled for now. */}
-          <button
-            type="button"
-            disabled
-            className={`${getButtonClasses("primary")} cursor-not-allowed opacity-60`}
-          >
-            Start adventure · available soon
-          </button>
+          <ButtonLink href={`/walks/${walk.slug}/play`}>Start adventure</ButtonLink>
         </section>
 
         {walk.highlights && walk.highlights.length > 0 && (

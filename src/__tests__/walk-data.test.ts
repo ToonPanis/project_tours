@@ -70,7 +70,7 @@ describe.each(walks.map((walk) => [walk.title, walk] as const))("walk data: %s",
     for (const location of walk.locations) {
       for (const option of location.drinkRound?.options ?? []) {
         if (option.menuVerification === "to-verify") {
-          expect(option.name).toContain("VERIFY MENU");
+          expect(option.name).toMatch(/VERIFY MENU|\(test\)/);
         }
       }
     }

@@ -24,6 +24,9 @@ export const metadata: Metadata = {
   },
   description:
     "Discover Antwerp through self-guided interactive walks: stories, riddles and hidden places, right in your mobile browser.",
+  // PROTOTYPE: keep the whole site out of search engines while it contains
+  // placeholder content next to real café names. Remove this at launch.
+  robots: { index: false, follow: false },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

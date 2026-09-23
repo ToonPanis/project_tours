@@ -18,7 +18,9 @@ describe("Walk detail page", () => {
     await renderWalkPage("the-17-gates");
 
     expect(screen.getByRole("heading", { level: 1, name: "The 17 Gates" })).toBeDefined();
-    expect(screen.getByRole("button", { name: /start adventure/i })).toBeDefined();
+    expect(screen.getByRole("link", { name: /start adventure/i }).getAttribute("href")).toBe(
+      "/walks/the-17-gates/play",
+    );
     expect(screen.queryByText("The story · fiction")).toBeNull();
     expect(screen.queryByRole("heading", { name: "What to expect" })).toBeNull();
   });

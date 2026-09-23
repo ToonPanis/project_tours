@@ -3,9 +3,10 @@ import type { Team, Vote } from "./team";
 /**
  * Where a team is at one location. The normal flow is:
  *
- *   locked → travelling → arrived → (voting → drink-selected) → challenge → solved
+ *   locked → travelling → arrived → (voting → drink-selected) → story → challenge → solved
  *
  * The voting steps only happen at locations with a drink round.
+ * "story" is where the location's content (history, story fragment) is read.
  * "Walk completed" is not a location status: see `WalkSession.completedAt`.
  */
 export type LocationStatus =
@@ -14,6 +15,7 @@ export type LocationStatus =
   | "arrived"
   | "voting"
   | "drink-selected"
+  | "story"
   | "challenge"
   | "solved";
 
@@ -60,6 +62,7 @@ export type SessionAction =
   | { type: "CAST_VOTE"; playerId: string; drinkOptionId: string }
   | { type: "CLOSE_VOTING"; winnerOptionId: string; wasTie: boolean }
   | { type: "SKIP_DRINK_ROUND" }
+  | { type: "SHOW_STORY" }
   | { type: "START_CHALLENGE" }
   | { type: "SUBMIT_ANSWER"; answer: ChallengeAnswer }
   | { type: "REVEAL_HINT" }

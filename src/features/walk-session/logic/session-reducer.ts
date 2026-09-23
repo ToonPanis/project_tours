@@ -87,11 +87,17 @@ export function applySessionAction(
       });
     }
 
-    case "START_CHALLENGE": {
-      const canStart =
+    case "SHOW_STORY": {
+      // After the drink round, or straight after arriving when there is none.
+      const canShow =
         progress.status === "drink-selected" ||
         (progress.status === "arrived" && !location.drinkRound);
-      if (!canStart) return session;
+      if (!canShow) return session;
+      return updateProgress({ status: "story" });
+    }
+
+    case "START_CHALLENGE": {
+      if (progress.status !== "story") return session;
 
       // A location without a challenge is solved as soon as it's "started".
       if (!location.challenge) return solveLocation(walk, session, location);

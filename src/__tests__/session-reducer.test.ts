@@ -96,6 +96,7 @@ describe("drink round", () => {
   test("the round can always be skipped, and the challenge still unlocks", () => {
     const session = play(hiddenPubsWalk, arrived, [
       { type: "SKIP_DRINK_ROUND" },
+      { type: "SHOW_STORY" },
       { type: "START_CHALLENGE" },
     ]);
     expect(currentProgress(session).drinkRoundSkipped).toBe(true);
@@ -104,28 +105,34 @@ describe("drink round", () => {
   });
 
   test("the challenge can't be skipped past the drink round without a vote or skip", () => {
-    const session = play(hiddenPubsWalk, arrived, [{ type: "START_CHALLENGE" }]);
+    const session = play(hiddenPubsWalk, arrived, [
+      { type: "SHOW_STORY" },
+      { type: "START_CHALLENGE" },
+    ]);
     expect(currentProgress(session).status).toBe("voting");
   });
 });
 
 describe("challenge and hints", () => {
-  // Stop 3 (Paters Vaetje) has a text challenge with two hints.
+  // Stop 3 (Paters Vaetje) has a challenge with two hints.
   function atStop3Challenge(): WalkSession {
     let session = startSession(hiddenPubsWalk);
     session = play(hiddenPubsWalk, session, [
       { type: "ARRIVE" },
       { type: "SKIP_DRINK_ROUND" },
+      { type: "SHOW_STORY" },
       { type: "START_CHALLENGE" },
       { type: "SUBMIT_ANSWER", answer: "1" },
       { type: "CONTINUE_TO_NEXT_LOCATION", at: "2026-09-23T14:20:00.000Z" },
       { type: "ARRIVE" },
       { type: "SKIP_DRINK_ROUND" },
+      { type: "SHOW_STORY" },
       { type: "START_CHALLENGE" },
-      { type: "SUBMIT_ANSWER", answer: "" },
+      { type: "SUBMIT_ANSWER", answer: "halo" },
       { type: "CONTINUE_TO_NEXT_LOCATION", at: "2026-09-23T14:40:00.000Z" },
       { type: "ARRIVE" },
       { type: "SKIP_DRINK_ROUND" },
+      { type: "SHOW_STORY" },
       { type: "START_CHALLENGE" },
     ]);
     expect(session.currentLocationId).toBe("pubs-paters-vaetje");
@@ -157,7 +164,7 @@ describe("challenge and hints", () => {
 
   test("a correct answer solves the location and collects its clue", () => {
     const session = play(hiddenPubsWalk, atStop3Challenge(), [
-      { type: "SUBMIT_ANSWER", answer: " Ledger " },
+      { type: "SUBMIT_ANSWER", answer: " 12 " },
     ]);
     expect(currentProgress(session).status).toBe("solved");
     expect(session.collectedClueIds).toContain("pubs-clue-3");
@@ -177,13 +184,13 @@ describe("challenge and hints", () => {
 describe("full play-through", () => {
   const answers: Record<string, string> = {
     "pubs-rococo": "1",
-    "pubs-den-engel": "",
-    "pubs-paters-vaetje": "ledger",
-    "pubs-de-muze": "4",
-    "pubs-de-kat": "ledger",
-    "pubs-quinten-matsijs": "ledger",
-    "pubs-de-varkenspoot": "ledger",
-    "pubs-boer-van-tienen": "ledger",
+    "pubs-den-engel": "halo",
+    "pubs-paters-vaetje": "12",
+    "pubs-de-muze": "cab",
+    "pubs-de-kat": "1",
+    "pubs-quinten-matsijs": "anchor",
+    "pubs-de-varkenspoot": "15",
+    "pubs-boer-van-tienen": "taverns",
   };
 
   test("Hidden Pubs: 8 cafés, 7 clues, then the walk is complete", () => {
@@ -196,7 +203,8 @@ describe("full play-through", () => {
         { type: "START_VOTING" },
         { type: "CAST_VOTE", playerId: "p1", drinkOptionId: `${locationId}-drink-c` },
         { type: "CLOSE_VOTING", winnerOptionId: `${locationId}-drink-c`, wasTie: false },
-        { type: "START_CHALLENGE" },
+        { type: "SHOW_STORY" },
+      { type: "START_CHALLENGE" },
         { type: "SUBMIT_ANSWER", answer: answers[locationId] },
       ]);
       expect(session.locations[locationId].status).toBe("solved");
@@ -217,7 +225,8 @@ describe("full play-through", () => {
       session = play(the17GatesWalk, session, [
         { type: "ARRIVE" },
         { type: "START_VOTING" }, // ignored: no drink round here
-        { type: "START_CHALLENGE" },
+        { type: "SHOW_STORY" },
+      { type: "START_CHALLENGE" },
         { type: "SUBMIT_ANSWER", answer },
         { type: "CONTINUE_TO_NEXT_LOCATION", at: "2026-09-23T16:00:00.000Z" },
       ]);
