@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { ReactNode } from "react";
 import { getButtonClasses } from "@/components/ui/ButtonLink";
 import { PlaceholderNotice } from "@/components/ui/PlaceholderNotice";
+import { HowItWorksSteps } from "@/features/walks/components/HowItWorksSteps";
 import { LocationPreviewList } from "@/features/walks/components/LocationPreviewList";
 import { WalkCover } from "@/features/walks/components/WalkCover";
+import { WalkHighlights } from "@/features/walks/components/WalkHighlights";
+import { WalkNarrativeTeaser } from "@/features/walks/components/WalkNarrativeTeaser";
+import { WalkPracticalInfo } from "@/features/walks/components/WalkPracticalInfo";
 import { WalkStats } from "@/features/walks/components/WalkStats";
 import { formatPrice } from "@/features/walks/utils/format-walk";
+import { getHowItWorksSteps } from "@/features/walks/utils/walk-content";
 import { walkRepository } from "@/lib/repositories";
 
 // Pre-render a page for every known walk at build time.
@@ -34,17 +40,22 @@ export default async function WalkDetailPage({ params }: PageProps<"/walks/[slug
   if (!walk) notFound();
 
   const descriptionParagraphs = walk.description.split("\n\n");
+  const mainLocationCount = walk.locations.filter((location) => !location.isBonus).length;
+  const howItWorksSteps = getHowItWorksSteps(walk).map((title) => ({ title }));
 
+  // Every section below is shown only when the walk has data for it,
+  // so any walk can use this page without walk-specific conditions.
   return (
-    <article className="bg-parchment-texture">
+    // `data-walk-theme` swaps the color tokens (see globals.css).
+    <article data-walk-theme={walk.theme} className="bg-parchment-texture">
       {/* Cover + title */}
       <header className="relative text-parchment">
         <div className="relative h-56 sm:h-72">
           <WalkCover image={walk.coverImage} sizes="100vw" priority />
           <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
         </div>
-        <div className="mx-auto -mt-24 max-w-3xl px-4 pb-6 sm:px-6 relative">
-          <Link href="/walks" className="text-sm text-gold hover:underline underline-offset-4">
+        <div className="relative mx-auto -mt-24 max-w-3xl px-4 pb-6 sm:px-6">
+          <Link href="/walks" className="text-sm text-gold underline-offset-4 hover:underline">
             ← All walks
           </Link>
           <h1 className="mt-2 font-display text-4xl font-semibold leading-tight text-parchment sm:text-5xl">
@@ -57,23 +68,25 @@ export default async function WalkDetailPage({ params }: PageProps<"/walks/[slug
       <div className="mx-auto flex max-w-3xl flex-col gap-10 px-4 pb-16 pt-4 sm:px-6">
         {walk.contentStatus === "placeholder" && <PlaceholderNotice />}
 
-        <WalkStats
-          durationInMinutes={walk.durationInMinutes}
-          distanceInMeters={walk.distanceInMeters}
-          difficulty={walk.difficulty}
-          locationCount={walk.locations.length}
-        />
+        <div className="space-y-6">
+          <WalkStats
+            estimatedDuration={walk.estimatedDuration}
+            distanceInMeters={walk.distanceInMeters}
+            difficulty={walk.difficulty}
+            locationCount={mainLocationCount}
+          />
+          <WalkPracticalInfo items={walk.practicalInfo ?? []} languages={walk.languages} />
+        </div>
 
-        <section aria-labelledby="about-heading">
-          <h2 id="about-heading" className="font-display text-2xl font-semibold text-ink">
-            About this walk
-          </h2>
-          <div className="mt-3 space-y-4 leading-relaxed text-sepia">
+        <DetailSection id="about" title="About this walk">
+          <div className="space-y-4 leading-relaxed text-sepia">
             {descriptionParagraphs.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
           </div>
-        </section>
+        </DetailSection>
+
+        {walk.narrative && <WalkNarrativeTeaser narrative={walk.narrative} />}
 
         {/* Start box */}
         <section
@@ -97,20 +110,50 @@ export default async function WalkDetailPage({ params }: PageProps<"/walks/[slug
             disabled
             className={`${getButtonClasses("primary")} cursor-not-allowed opacity-60`}
           >
-            Start walk · available soon
+            Start adventure · available soon
           </button>
         </section>
 
-        <section aria-labelledby="route-heading">
-          <h2 id="route-heading" className="font-display text-2xl font-semibold text-ink">
-            The route
-          </h2>
-          <p className="mb-6 mt-1 text-sm text-sepia">
-            A preview of the stops. The stories are revealed during the walk.
-          </p>
+        {walk.highlights && walk.highlights.length > 0 && (
+          <DetailSection id="expect" title="What to expect">
+            <WalkHighlights highlights={walk.highlights} />
+          </DetailSection>
+        )}
+
+        <DetailSection id="how" title="How it works">
+          <HowItWorksSteps steps={howItWorksSteps} />
+        </DetailSection>
+
+        <DetailSection
+          id="route"
+          title="The route"
+          intro="A preview of the stops. The stories are revealed during the walk."
+        >
           <LocationPreviewList locations={walk.locations} />
-        </section>
+        </DetailSection>
       </div>
     </article>
+  );
+}
+
+interface DetailSectionProps {
+  id: string;
+  title: string;
+  intro?: string;
+  children: ReactNode;
+}
+
+/** A titled section of the detail page, with an accessible heading link. */
+function DetailSection({ id, title, intro, children }: DetailSectionProps) {
+  const headingId = `${id}-heading`;
+
+  return (
+    <section aria-labelledby={headingId}>
+      <h2 id={headingId} className="font-display text-2xl font-semibold text-ink">
+        {title}
+      </h2>
+      {intro && <p className="mt-1 text-sm text-sepia">{intro}</p>}
+      <div className="mt-4">{children}</div>
+    </section>
   );
 }

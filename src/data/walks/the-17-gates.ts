@@ -18,21 +18,29 @@ export const the17GatesWalk: Walk = {
     "Hidden in plain sight, Antwerp's historic gates and doorways tell stories that most passers-by never notice. This walk follows a trail of surviving gates associated with the work of Paul Smekens, with stops at historic cafés and churches in between.\n\nAt every gate you'll uncover a story, solve a challenge and unlock the next stop on the route.",
   city: "Antwerp",
   // Placeholder estimates until the route is finalised.
-  durationInMinutes: 150,
+  estimatedDuration: { minMinutes: 120, maxMinutes: 180 },
   distanceInMeters: 4500,
   difficulty: "easy",
   price: { amountInCents: 1295, currency: "EUR" },
+  theme: "classic",
+  languages: ["en"],
   contentStatus: "placeholder",
   locations: [
     {
       id: "gates-loc-1",
       order: 1,
       name: "Gate 1 (location to be researched)",
+      type: "gateway",
       address: "Address to be confirmed, Antwerp city centre",
       coordinates: { latitude: 51.2213, longitude: 4.3997 },
       description: "The first doorway on the route. Your adventure starts here.",
-      story:
-        "[Placeholder story] This text will describe the history of the first gate once research is complete. Until then, no historical claims are made here.",
+      content: [
+        {
+          kind: "history",
+          verification: "research-needed",
+          body: "[Historical research required] This text will describe the history of the first gate once research is complete. Until then, no historical claims are made here.",
+        },
+      ],
       challenge: {
         id: "gates-challenge-1",
         type: "multiple-choice",
@@ -51,17 +59,22 @@ export const the17GatesWalk: Walk = {
           description: "[Placeholder] A traditional Antwerp café near the first gate.",
         },
       ],
-      contentStatus: "placeholder",
     },
     {
       id: "gates-loc-2",
       order: 2,
       name: "Gate 2 (location to be researched)",
+      type: "gateway",
       address: "Address to be confirmed, Antwerp city centre",
       coordinates: { latitude: 51.2192, longitude: 4.401 },
       description: "A second doorway, hidden between the houses.",
-      story:
-        "[Placeholder story] This text will describe the history of the second gate once research is complete.",
+      content: [
+        {
+          kind: "history",
+          verification: "research-needed",
+          body: "[Historical research required] This text will describe the history of the second gate once research is complete.",
+        },
+      ],
       challenge: {
         id: "gates-challenge-2",
         type: "text-answer",
@@ -79,17 +92,22 @@ export const the17GatesWalk: Walk = {
           description: "[Placeholder] A historic church along the route.",
         },
       ],
-      contentStatus: "placeholder",
     },
     {
       id: "gates-loc-3",
       order: 3,
       name: "Gate 3 (location to be researched)",
+      type: "gateway",
       address: "Address to be confirmed, Antwerp city centre",
       coordinates: { latitude: 51.2215, longitude: 4.4062 },
       description: "The last gate of this preview route.",
-      story:
-        "[Placeholder story] This text will describe the history of the third gate once research is complete.",
+      content: [
+        {
+          kind: "history",
+          verification: "research-needed",
+          body: "[Historical research required] This text will describe the history of the third gate once research is complete.",
+        },
+      ],
       challenge: {
         id: "gates-challenge-3",
         type: "multiple-choice",
@@ -100,7 +118,6 @@ export const the17GatesWalk: Walk = {
       },
       unlockCondition: { type: "proximity", radiusInMeters: 50 },
       nearbyPlaces: [],
-      contentStatus: "placeholder",
     },
   ],
 };

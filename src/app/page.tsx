@@ -1,8 +1,9 @@
 import { ButtonLink } from "@/components/ui/ButtonLink";
+import { HowItWorksSteps, type HowItWorksStep } from "@/features/walks/components/HowItWorksSteps";
 import { WalkCard } from "@/features/walks/components/WalkCard";
 import { walkRepository } from "@/lib/repositories";
 
-const steps = [
+const steps: HowItWorksStep[] = [
   {
     title: "Choose your walk",
     text: "Pick a route and start it on your phone. No app to download.",
@@ -49,17 +50,9 @@ export default async function HomePage() {
       <section id="how-it-works" className="bg-parchment-texture scroll-mt-14">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
           <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">How it works</h2>
-          <ol className="mt-8 grid gap-6 sm:grid-cols-3">
-            {steps.map((step, index) => (
-              <li key={step.title} className="border-t-2 border-gold-deep/40 pt-4">
-                <p aria-hidden="true" className="font-display text-4xl font-semibold text-gold-deep">
-                  {String(index + 1).padStart(2, "0")}
-                </p>
-                <h3 className="mt-1 font-display text-xl font-semibold text-ink">{step.title}</h3>
-                <p className="mt-1 text-sepia">{step.text}</p>
-              </li>
-            ))}
-          </ol>
+          <div className="mt-8">
+            <HowItWorksSteps steps={steps} />
+          </div>
         </div>
       </section>
 
@@ -75,8 +68,8 @@ export default async function HomePage() {
                 Start with {featuredWalk.title}
               </h2>
               <p className="mt-3 text-sepia">
-                Our first route. More walks through Antwerp&apos;s pubs, dark history and
-                art are on the way.
+                Our first route, and a great place to begin. Explore the other walks, and
+                keep an eye out for new routes on the way.
               </p>
               <ButtonLink href="/walks" variant="outline-light" className="mt-6">
                 See all walks

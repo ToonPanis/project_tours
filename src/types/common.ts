@@ -4,6 +4,9 @@
  */
 export type ContentStatus = "placeholder" | "verified";
 
+/** Languages the platform supports (content may be available in a subset). */
+export type LanguageCode = "en" | "nl" | "fr" | "de";
+
 export interface ImageAsset {
   src: string;
   /** Required so every image stays accessible. */

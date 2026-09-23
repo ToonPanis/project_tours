@@ -1,8 +1,24 @@
 import type { Challenge } from "./challenge";
-import type { ContentStatus, GeoCoordinates, ImageAsset } from "./common";
+import type { GeoCoordinates, ImageAsset } from "./common";
+import type { ContentBlock } from "./content";
+
+/** What kind of place a location is. (Whether it's a bonus stop is a separate flag.) */
+export type LocationType =
+  | "pub"
+  | "historic-pub"
+  | "historic-building"
+  | "street"
+  | "alley"
+  | "square"
+  | "church"
+  | "landmark"
+  | "brewery-history"
+  | "hidden-location"
+  | "gateway";
 
 export type NearbyPlaceCategory =
   | "cafe"
+  | "pub"
   | "church"
   | "architecture"
   | "hidden-spot";
@@ -13,6 +29,18 @@ export interface NearbyPlace {
   category: NearbyPlaceCategory;
   description: string;
   address?: string;
+  // Later: `partnership?: {...}` for partner offers. Not implemented yet.
+}
+
+/**
+ * A suggested café/pub break. Always optional: the walk never requires
+ * visiting, buying or drinking anything.
+ */
+export interface OptionalBreak {
+  place: NearbyPlace;
+  walkingMinutes: number;
+  /** E.g. "You don't need to visit this café to continue the walk." */
+  note: string;
 }
 
 /**
@@ -23,20 +51,32 @@ export type UnlockCondition =
   | { type: "none" }
   | { type: "proximity"; radiusInMeters: number };
 
+export interface LocationImages {
+  historical?: ImageAsset;
+  current?: ImageAsset;
+}
+
 export interface WalkLocation {
   id: string;
   /** 1-based position in the route. */
   order: number;
   name: string;
+  type: LocationType;
+  /** Bonus stops are optional and don't count towards route progress. */
+  isBonus?: boolean;
   address: string;
   coordinates: GeoCoordinates;
-  /** Short teaser, safe to show before the walk starts. */
+  /** Short introduction, safe to show before the walk starts. */
   description: string;
-  /** The full story, revealed during the walk. */
-  story: string;
-  image?: ImageAsset;
+  /** History, legends and story fragments, revealed during the walk. */
+  content: ContentBlock[];
+  images?: LocationImages;
+  /** What to look at on site, e.g. "Look up at the facade". */
+  observationPrompt?: string;
   challenge?: Challenge;
   unlockCondition: UnlockCondition;
   nearbyPlaces: NearbyPlace[];
-  contentStatus: ContentStatus;
+  optionalBreak?: OptionalBreak;
+  /** E.g. "Cobblestones and three steps at the entrance". */
+  accessibilityNotes?: string;
 }

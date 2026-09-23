@@ -35,6 +35,20 @@ Commands: `npm run dev`, `npm run build`, `npm run lint`, `npm test` (watch) / `
 10. Build responsive, mobile-first layouts: start with the base styles, then add `sm:`/`md:`/`lg:` breakpoints.
 11. Keep accessibility in mind: semantic HTML, alt text, labels on form fields, keyboard access and enough color contrast.
 
+## Project: Hidden Antwerp
+
+A mobile-first platform for interactive self-guided city walks. Every walk (The 17 Gates, Hidden Pubs, …) is data in `src/data/walks/` using the shared models in `src/types/`. Pages read it through `walkRepository` (`src/lib/repositories/`).
+
+- **Never add walk-specific conditions** like `if (walk.slug === "hidden-pubs")`. Drive differences through data (optional fields, `theme`, `clues`, …) so any walk can use the same components.
+- Walk visual themes are CSS token overrides under `[data-walk-theme="…"]` in `globals.css`.
+
+## Content rules
+
+- **Never invent historical facts.** Unresearched history is a `kind: "history"` block with `verification: "research-needed"` and a visible `[Historical research required]` marker.
+- **Always separate history from fiction.** Content blocks are `history` (real, verified or not), `legend` (told as legend) or `story` (fictional game narrative). The UI must label each block by its kind.
+- **Alcohol and pubs:** alcohol is never required, rewarded or part of a challenge. Pub/café stops are always optional and skippable, and no purchase is ever needed. Alcohol-free players get exactly the same experience.
+- Challenges must be solvable from public space by observation or from clues. They never require entering a business.
+
 ## How to work with me
 
 - **Before installing any npm package**, explain why it's needed and whether a built-in alternative exists. Wait for my OK.

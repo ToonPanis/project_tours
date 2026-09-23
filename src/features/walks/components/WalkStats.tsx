@@ -1,26 +1,26 @@
-import type { Difficulty } from "@/types/walk";
+import type { Difficulty, DurationRange } from "@/types/walk";
 import {
   formatDifficulty,
   formatDistance,
-  formatDuration,
+  formatDurationRange,
 } from "../utils/format-walk";
 
 interface WalkStatsProps {
-  durationInMinutes: number;
-  distanceInMeters: number;
+  estimatedDuration: DurationRange;
+  distanceInMeters: number | null;
   difficulty: Difficulty;
   locationCount: number;
 }
 
 /** Key facts about a walk, as an accessible description list. */
 export function WalkStats({
-  durationInMinutes,
+  estimatedDuration,
   distanceInMeters,
   difficulty,
   locationCount,
 }: WalkStatsProps) {
   const stats = [
-    { label: "Duration", value: formatDuration(durationInMinutes) },
+    { label: "Duration", value: formatDurationRange(estimatedDuration) },
     { label: "Distance", value: formatDistance(distanceInMeters) },
     { label: "Difficulty", value: formatDifficulty(difficulty) },
     { label: "Stops", value: String(locationCount) },

@@ -11,13 +11,15 @@ export function toWalkSummary(walk: Walk): WalkSummary {
     tagline: walk.tagline,
     shortDescription: walk.shortDescription,
     city: walk.city,
-    durationInMinutes: walk.durationInMinutes,
+    estimatedDuration: walk.estimatedDuration,
     distanceInMeters: walk.distanceInMeters,
     difficulty: walk.difficulty,
     price: walk.price,
     coverImage: walk.coverImage,
+    theme: walk.theme,
     contentStatus: walk.contentStatus,
-    locationCount: walk.locations.length,
+    // Bonus stops are optional, so they don't count as route stops.
+    locationCount: walk.locations.filter((location) => !location.isBonus).length,
   };
 }
 

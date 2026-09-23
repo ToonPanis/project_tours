@@ -25,6 +25,11 @@ export function LocationPreviewList({ locations }: LocationPreviewListProps) {
             <span className="sr-only">Stop {location.order}: </span>
             {location.name}
           </h3>
+          {location.isBonus && (
+            <p className="text-xs font-semibold uppercase tracking-wider text-gold-deep">
+              Bonus stop · optional
+            </p>
+          )}
           <p className="text-sm text-sepia">{location.description}</p>
         </li>
       ))}

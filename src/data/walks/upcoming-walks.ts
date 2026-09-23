@@ -3,14 +3,6 @@ import type { UpcomingWalk } from "@/types/walk";
 /** Walks announced as "coming soon". They have no route or detail page yet. */
 export const upcomingWalks: UpcomingWalk[] = [
   {
-    id: "walk-hidden-pubs",
-    slug: "hidden-pubs",
-    title: "Hidden Pubs",
-    shortDescription:
-      "A walk through old and unusual Antwerp cafés, combined with stories about the city.",
-    city: "Antwerp",
-  },
-  {
     id: "walk-dark-antwerp",
     slug: "dark-antwerp",
     title: "Dark Antwerp",

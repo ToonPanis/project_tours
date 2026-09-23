@@ -45,3 +45,22 @@ body {
       transparent 1px 28px
     );
 }
+
+/*
+ * Walk themes: a walk sets `theme` in its data, and the page wraps it in
+ * `data-walk-theme="..."`. Overriding the tokens here re-colors every
+ * component inside, without any walk-specific code in the components.
+ * ("classic" uses the default tokens above, so it needs no block.)
+ */
+
+/* Tavern: candlelight, dark wood and aged ledger paper (e.g. Hidden Pubs). */
+[data-walk-theme="tavern"] {
+  --color-ink: #1a100a;
+  --color-umber: #3a2416;
+  --color-umber-light: #573a24;
+  --color-sepia: #3b2a1c;
+  --color-parchment: #e6d3ae;
+  --color-parchment-dark: #d4bc8e;
+  --color-gold: #d9a54e;
+  --color-gold-deep: #6b4512;
+}

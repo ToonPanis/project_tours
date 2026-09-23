@@ -12,10 +12,11 @@ const exampleWalk: WalkSummary = {
   tagline: "A walk for testing",
   shortDescription: "Short description for the test.",
   city: "Antwerp",
-  durationInMinutes: 90,
+  estimatedDuration: { minMinutes: 60, maxMinutes: 120 },
   distanceInMeters: 3000,
   difficulty: "easy",
   price: { amountInCents: 995, currency: "EUR" },
+  theme: "classic",
   locationCount: 5,
   contentStatus: "verified",
 };
@@ -32,8 +33,22 @@ describe("WalkCard", () => {
     render(<WalkCard walk={exampleWalk} />);
 
     expect(screen.getByText("5 stops")).toBeDefined();
-    expect(screen.getByText(/1 h 30 min/)).toBeDefined();
+    expect(screen.getByText(/1–2 h/)).toBeDefined();
     expect(screen.getByText(/3 km/)).toBeDefined();
+  });
+
+  test("hides the distance while it is still unknown", () => {
+    render(<WalkCard walk={{ ...exampleWalk, distanceInMeters: null }} />);
+
+    expect(screen.queryByText(/km/)).toBeNull();
+    expect(screen.queryByText(/To be confirmed/)).toBeNull();
+  });
+
+  test("applies the walk's visual theme", () => {
+    render(<WalkCard walk={{ ...exampleWalk, theme: "tavern" }} />);
+
+    const card = screen.getByRole("article");
+    expect(card.getAttribute("data-walk-theme")).toBe("tavern");
   });
 
   test("only shows the preview badge for placeholder content", () => {
