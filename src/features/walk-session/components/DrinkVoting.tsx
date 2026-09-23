@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import type { DrinkRound } from "@/types/drink";
 import type { LocationProgress, SessionAction } from "@/types/session";
 import type { Team, Vote } from "@/types/team";
+import { optionLetter } from "../logic/option-letter";
 import { findLeadingOptionIds, haveAllPlayersVoted, pickRandomWinner, tallyVotes } from "../logic/voting";
 import { PlayScreen } from "./PlayScreen";
 
@@ -16,8 +17,6 @@ interface DrinkVotingProps {
   /** Called when the last vote closes the round (used to play the tie animation). */
   onVotingClosed: () => void;
 }
-
-const OPTION_LETTERS = ["A", "B", "C"];
 
 /**
  * Pass-the-phone voting. Whose turn it is comes from the saved votes (the
@@ -85,7 +84,7 @@ export function DrinkVoting({ drinkRound, team, progress, dispatch, onVotingClos
   return (
     <PlayScreen
       eyebrow={isSolo ? "Drink vote" : `${currentPlayer.name}'s turn`}
-      title="Choose your drink"
+      title="What is your choice?"
       actions={
         <>
           <Button onClick={confirmVote} disabled={!selectedOptionId} fullWidth>
@@ -122,7 +121,7 @@ export function DrinkVoting({ drinkRound, team, progress, dispatch, onVotingClos
                   isSelected ? "border-gold bg-gold text-ink" : "border-gold/60 text-gold"
                 }`}
               >
-                {OPTION_LETTERS[index]}
+                {optionLetter(index)}
               </span>
               <span className="flex flex-col">
                 <span className="text-lg font-semibold text-parchment">{option.name}</span>

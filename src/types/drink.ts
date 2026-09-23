@@ -22,17 +22,15 @@ export interface DrinkOption {
   menuVerification: "verified" | "to-verify";
 }
 
-export type AlcoholicDrinkOption = DrinkOption & { alcoholic: true };
-export type AlcoholFreeDrinkOption = DrinkOption & { alcoholic: false };
-
 /**
- * A team drink vote at a location: exactly two alcoholic options and one
- * alcohol-free option. The tuple type makes TypeScript enforce this rule:
- * a round without an alcohol-free option won't compile.
+ * A team drink vote at a location, usually four options. Rules (checked by
+ * the walk data tests, since data will later come from a database):
+ * - at least one option is alcohol-free;
+ * - no shots.
  *
- * The vote result is only a suggestion. Players can always choose the
- * alcohol-free option (or skip the round), and progress never depends on it.
+ * The vote result is only a suggestion. Players can always choose an
+ * alcohol-free drink (or skip the round), and progress never depends on it.
  */
 export interface DrinkRound {
-  options: [AlcoholicDrinkOption, AlcoholicDrinkOption, AlcoholFreeDrinkOption];
+  options: DrinkOption[];
 }

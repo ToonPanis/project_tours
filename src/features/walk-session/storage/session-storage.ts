@@ -12,7 +12,7 @@ export interface WalkSessionStore {
 }
 
 /** Bump this when the WalkSession shape changes; older saves are then ignored. */
-export const STORAGE_VERSION = 1;
+export const STORAGE_VERSION = 2;
 
 interface SavedSession {
   version: number;
@@ -47,6 +47,7 @@ export function parseSavedSession(walk: Walk, raw: unknown): WalkSession | null 
     isObject(session.locations) &&
     walkLocationIds.every((id) => isObject(session.locations?.[id])) &&
     Array.isArray(session.collectedClueIds) &&
+    (session.finale === null || isObject(session.finale)) &&
     isObject(session.team) &&
     Array.isArray(session.team.players) &&
     session.team.players.length > 0;

@@ -2,6 +2,8 @@ import { describe, expect, test } from "vitest";
 import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
 import { the17GatesWalk } from "@/data/walks/the-17-gates";
 import { createWalkSession } from "@/features/walk-session/logic/create-session";
+import { getOrderedLocations } from "@/features/walk-session/logic/route";
+import { getCorrectAnswer, getJumpToStopActions } from "@/features/walk-session/playtest/get-correct-answer";
 import { applySessionAction } from "@/features/walk-session/logic/session-reducer";
 import type { SessionAction, WalkSession } from "@/types/session";
 import type { Team } from "@/types/team";
@@ -114,38 +116,27 @@ describe("drink round", () => {
 });
 
 describe("challenge and hints", () => {
-  // Stop 3 (Paters Vaetje) has a challenge with two hints.
-  function atStop3Challenge(): WalkSession {
-    let session = startSession(hiddenPubsWalk);
-    session = play(hiddenPubsWalk, session, [
-      { type: "ARRIVE" },
-      { type: "SKIP_DRINK_ROUND" },
-      { type: "SHOW_STORY" },
-      { type: "START_CHALLENGE" },
-      { type: "SUBMIT_ANSWER", answer: "1" },
-      { type: "CONTINUE_TO_NEXT_LOCATION", at: "2026-09-23T14:20:00.000Z" },
-      { type: "ARRIVE" },
-      { type: "SKIP_DRINK_ROUND" },
-      { type: "SHOW_STORY" },
-      { type: "START_CHALLENGE" },
-      { type: "SUBMIT_ANSWER", answer: "halo" },
-      { type: "CONTINUE_TO_NEXT_LOCATION", at: "2026-09-23T14:40:00.000Z" },
+  // Stop 2 (Den Engel) has a text challenge with two hints.
+  function atStop2Challenge(): WalkSession {
+    const session = play(hiddenPubsWalk, startSession(hiddenPubsWalk), [
+      ...getJumpToStopActions(hiddenPubsWalk, 2, "2026-09-23T14:20:00.000Z"),
       { type: "ARRIVE" },
       { type: "SKIP_DRINK_ROUND" },
       { type: "SHOW_STORY" },
       { type: "START_CHALLENGE" },
     ]);
-    expect(session.currentLocationId).toBe("pubs-paters-vaetje");
+    expect(session.currentLocationId).toBe("pubs-den-engel");
+    expect(currentProgress(session).status).toBe("challenge");
     return session;
   }
 
   test("no hint before the first wrong answer", () => {
-    const session = play(hiddenPubsWalk, atStop3Challenge(), [{ type: "REVEAL_HINT" }]);
+    const session = play(hiddenPubsWalk, atStop2Challenge(), [{ type: "REVEAL_HINT" }]);
     expect(currentProgress(session).hintsRevealed).toBe(0);
   });
 
   test("each wrong answer makes one more hint available", () => {
-    let session = play(hiddenPubsWalk, atStop3Challenge(), [
+    let session = play(hiddenPubsWalk, atStop2Challenge(), [
       { type: "SUBMIT_ANSWER", answer: "wrong" },
       { type: "REVEAL_HINT" },
       { type: "REVEAL_HINT" }, // not yet: only one wrong answer so far
@@ -162,62 +153,117 @@ describe("challenge and hints", () => {
     expect(currentProgress(session).hintsRevealed).toBe(2);
   });
 
-  test("a correct answer solves the location and collects its clue", () => {
-    const session = play(hiddenPubsWalk, atStop3Challenge(), [
-      { type: "SUBMIT_ANSWER", answer: " 12 " },
-    ]);
-    expect(currentProgress(session).status).toBe("solved");
-    expect(session.collectedClueIds).toContain("pubs-clue-3");
-  });
+  test.each(["11:55", "23:55", "11.55", "Vijf voor twaalf", "5 voor 12"])(
+    "the Den Engel clock accepts %j",
+    (answer) => {
+      const session = play(hiddenPubsWalk, atStop2Challenge(), [{ type: "SUBMIT_ANSWER", answer }]);
+      expect(currentProgress(session).status).toBe("solved");
+      expect(session.collectedClueIds).toContain("pubs-clue-time");
+    },
+  );
 
   test("the next location only unlocks after continuing from a solved stop", () => {
-    const session = atStop3Challenge();
-    expect(session.locations["pubs-de-muze"].status).toBe("locked");
+    const session = atStop2Challenge();
+    expect(session.locations["pubs-paters-vaetje"].status).toBe("locked");
 
     const continuedTooEarly = play(hiddenPubsWalk, session, [
       { type: "CONTINUE_TO_NEXT_LOCATION", at: "2026-09-23T15:00:00.000Z" },
     ]);
-    expect(continuedTooEarly.currentLocationId).toBe("pubs-paters-vaetje");
+    expect(continuedTooEarly.currentLocationId).toBe("pubs-den-engel");
+  });
+});
+
+describe("bonus question (Quinten Matsijs)", () => {
+  function atSolvedStop6(): WalkSession {
+    const session = play(hiddenPubsWalk, startSession(hiddenPubsWalk), [
+      ...getJumpToStopActions(hiddenPubsWalk, 6, "2026-09-23T15:00:00.000Z"),
+      { type: "ARRIVE" },
+      { type: "SKIP_DRINK_ROUND" },
+      { type: "SHOW_STORY" },
+      { type: "START_CHALLENGE" },
+      { type: "SUBMIT_ANSWER", answer: "tonspel" },
+    ]);
+    expect(currentProgress(session).status).toBe("solved");
+    return session;
+  }
+
+  test("a correct bonus answer is recorded", () => {
+    const session = play(hiddenPubsWalk, atSolvedStop6(), [
+      { type: "SUBMIT_BONUS_ANSWER", answer: "'t Gulick" },
+    ]);
+    expect(currentProgress(session).bonusStatus).toBe("solved");
+  });
+
+  test("a wrong bonus answer is counted, and the bonus can be skipped", () => {
+    const session = play(hiddenPubsWalk, atSolvedStop6(), [
+      { type: "SUBMIT_BONUS_ANSWER", answer: "wrong" },
+      { type: "SKIP_BONUS" },
+    ]);
+    expect(currentProgress(session).bonusWrongAttempts).toBe(1);
+    expect(currentProgress(session).bonusStatus).toBe("skipped");
+  });
+
+  test("the bonus never blocks progress", () => {
+    const session = play(hiddenPubsWalk, atSolvedStop6(), [
+      { type: "CONTINUE_TO_NEXT_LOCATION", at: "2026-09-23T15:30:00.000Z" },
+    ]);
+    expect(session.currentLocationId).toBe("pubs-de-varkenspoot");
   });
 });
 
 describe("full play-through", () => {
-  const answers: Record<string, string> = {
-    "pubs-rococo": "1",
-    "pubs-den-engel": "halo",
-    "pubs-paters-vaetje": "12",
-    "pubs-de-muze": "cab",
-    "pubs-de-kat": "1",
-    "pubs-quinten-matsijs": "anchor",
-    "pubs-de-varkenspoot": "15",
-    "pubs-boer-van-tienen": "taverns",
-  };
-
-  test("Hidden Pubs: 8 cafés, 7 clues, then the walk is complete", () => {
+  test("Hidden Pubs: 8 cafés and 8 clues open the finale; 3 correct answers complete the walk", () => {
     let session = startSession(hiddenPubsWalk);
 
-    for (let stop = 0; stop < 8; stop++) {
-      const locationId = session.currentLocationId;
+    for (const location of getOrderedLocations(hiddenPubsWalk)) {
+      const challenge = location.challenge;
+      if (!challenge) throw new Error(`${location.name} has no challenge`);
+
       session = play(hiddenPubsWalk, session, [
         { type: "ARRIVE" },
         { type: "START_VOTING" },
-        { type: "CAST_VOTE", playerId: "p1", drinkOptionId: `${locationId}-drink-c` },
-        { type: "CLOSE_VOTING", winnerOptionId: `${locationId}-drink-c`, wasTie: false },
+        { type: "CAST_VOTE", playerId: "p1", drinkOptionId: `${location.id}-drink-d` },
+        { type: "CAST_VOTE", playerId: "p2", drinkOptionId: `${location.id}-drink-d` },
+        { type: "CLOSE_VOTING", winnerOptionId: `${location.id}-drink-d`, wasTie: false },
         { type: "SHOW_STORY" },
-      { type: "START_CHALLENGE" },
-        { type: "SUBMIT_ANSWER", answer: answers[locationId] },
+        { type: "START_CHALLENGE" },
+        { type: "SUBMIT_ANSWER", answer: getCorrectAnswer(challenge) },
       ]);
-      expect(session.locations[locationId].status).toBe("solved");
+      expect(session.locations[location.id].status).toBe("solved");
       session = play(hiddenPubsWalk, session, [
-        { type: "CONTINUE_TO_NEXT_LOCATION", at: "2026-09-23T16:47:00.000Z" },
+        { type: "CONTINUE_TO_NEXT_LOCATION", at: "2026-09-23T16:30:00.000Z" },
       ]);
     }
 
-    expect(session.collectedClueIds).toHaveLength(7);
+    expect(session.collectedClueIds).toHaveLength(8);
+    expect(session.finale?.status).toBe("active");
+    expect(session.completedAt).toBeUndefined();
+
+    // A wrong finale answer is counted and completes nothing.
+    session = play(hiddenPubsWalk, session, [
+      { type: "SUBMIT_FINALE_ANSWER", questionId: "pubs-finale-time", answer: "noon", at: "x" },
+    ]);
+    expect(session.finale?.wrongAttemptsByQuestion["pubs-finale-time"]).toBe(1);
+
+    session = play(hiddenPubsWalk, session, [
+      { type: "SUBMIT_FINALE_ANSWER", questionId: "pubs-finale-time", answer: "five to twelve", at: "x" },
+      { type: "SUBMIT_FINALE_ANSWER", questionId: "pubs-finale-animal", answer: "Paard", at: "x" },
+    ]);
+    expect(session.finale?.status).toBe("active");
+
+    session = play(hiddenPubsWalk, session, [
+      {
+        type: "SUBMIT_FINALE_ANSWER",
+        questionId: "pubs-finale-game",
+        answer: "barrel game",
+        at: "2026-09-23T16:47:00.000Z",
+      },
+    ]);
+    expect(session.finale?.status).toBe("solved");
     expect(session.completedAt).toBe("2026-09-23T16:47:00.000Z");
   });
 
-  test("The 17 Gates plays through the same reducer without drink rounds", () => {
+  test("The 17 Gates plays through the same reducer without drink rounds or finale", () => {
     let session = startSession(the17GatesWalk);
     const gateAnswers = ["0", "antwerpen", "2"];
 
@@ -226,18 +272,22 @@ describe("full play-through", () => {
         { type: "ARRIVE" },
         { type: "START_VOTING" }, // ignored: no drink round here
         { type: "SHOW_STORY" },
-      { type: "START_CHALLENGE" },
+        { type: "START_CHALLENGE" },
         { type: "SUBMIT_ANSWER", answer },
         { type: "CONTINUE_TO_NEXT_LOCATION", at: "2026-09-23T16:00:00.000Z" },
       ]);
     }
 
+    expect(session.finale).toBeNull();
     expect(session.completedAt).toBe("2026-09-23T16:00:00.000Z");
     expect(session.collectedClueIds).toEqual([]);
   });
 
   test("a completed session ignores further actions", () => {
-    const completed: WalkSession = { ...startSession(hiddenPubsWalk), completedAt: "2026-09-23T17:00:00.000Z" };
+    const completed: WalkSession = {
+      ...startSession(hiddenPubsWalk),
+      completedAt: "2026-09-23T17:00:00.000Z",
+    };
     expect(applySessionAction(hiddenPubsWalk, completed, { type: "ARRIVE" })).toBe(completed);
   });
 });

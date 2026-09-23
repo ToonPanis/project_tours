@@ -44,15 +44,17 @@ A mobile-first platform for interactive self-guided city walks. Every walk (The 
 
 ## Content rules
 
-- **Never invent historical facts.** Unresearched history is a `kind: "history"` block with `verification: "research-needed"` and a visible `[Historical research required]` marker.
-- **Always separate history from fiction.** Content blocks are `history` (real, verified or not), `legend` (told as legend) or `story` (fictional game narrative). The UI must label each block by its kind.
-- **Never invent** drink menus, prices, opening hours, coordinates or physical objects for riddles. Use visible placeholders (`[… VERIFY MENU]`, `[RESEARCH REQUIRED]`, `coordinates: null`). Unverified drinks use `menuVerification: "to-verify"`.
+- **Never invent historical facts.** Real history has a verification status: `"verified"` (needs sources), `"partially-verified"` or `"research-required"`. Unresearched placeholder text carries a visible `[Historical research required]` marker.
+- **Always separate history from fiction.** Content blocks are `history`, `legend` or `story` (fictional game narrative); a location's `historicalReveal` holds real history only. The UI labels each by kind and verification status.
+- **History comes after the challenge.** Players discover something, answer, and only then learn why it matters: put real history in `historicalReveal`, not in the story shown before the challenge.
+- **Never invent** drink menus, prices, opening hours, coordinates, sources or physical objects for riddles. Use visible placeholders (`(verify menu)`, `[RESEARCH REQUIRED]`, `coordinates: null`). Unverified drinks use `menuVerification: "to-verify"`; on-site answers still to be checked use `researchStatus: "on-site-verification-required"`.
 - **Alcohol and cafés** (e.g. Hidden Pubs):
   - Progress never depends on ordering, buying or drinking anything. A team drink vote is only a suggestion, and every vote can be skipped.
-  - Every drink round has at least one alcohol-free option (enforced by the `DrinkRound` type), and every player can always choose their own drink.
-  - No drinking challenges, speed, quantities, shots, penalties or proof of drinking. Never show or celebrate the number of drinks.
+  - Every drink round has at least one alcohol-free option, and every player can always choose their own drink.
+  - **No shots as drink options**, and no drinking challenges, speed, quantities, penalties or proof of drinking. Never show or celebrate the number of drinks. (Both checked by the walk data tests.)
   - Alcohol-free players get exactly the same experience.
-- **Challenges** should depend on the physical location (observation, inscriptions, symbols, counting), not on trivia you can google. A challenge that needs a café's interior must also have an outdoor fallback (closed, full, groups not welcome), so a team never gets stuck.
+- **Challenges** should depend on the physical location (observation, inscriptions, symbols, counting), not on trivia you can google.
+  - **Open to-do (after the Hidden Pubs playtest):** challenges that need a café's interior (Den Engel, De Muze, De Kat, Quinten Matsijs) need an outdoor fallback for when a café is closed, full or doesn't welcome groups. Until then, the playtest tools are the fallback.
 
 ## How to work with me
 

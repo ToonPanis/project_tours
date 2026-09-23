@@ -6,6 +6,7 @@ import { ButtonLink } from "@/components/ui/ButtonLink";
 import type { WalkSession } from "@/types/session";
 import type { GameCopy, Walk } from "@/types/walk";
 import { getElapsedTime, getSessionStats } from "../logic/session-stats";
+import { ContentBlockView } from "./ContentBlockView";
 import { PlayScreen } from "./PlayScreen";
 
 interface CompletionScreenProps {
@@ -21,12 +22,16 @@ interface CompletionScreenProps {
  */
 export function CompletionScreen({ walk, session, copy, onOpenLedger }: CompletionScreenProps) {
   const [shareFallbackText, setShareFallbackText] = useState<string | null>(null);
+  const closingStory = walk.finale?.closingStory ?? [];
+  // The closing story comes first; the summary follows.
+  const [hasReadStory, setHasReadStory] = useState(closingStory.length === 0);
 
   const stats = getSessionStats(walk, session);
   const elapsedTime = getElapsedTime(session, new Date());
   const playerNames = session.team.players.map((player) => player.name).join(", ");
 
-  const shareText = `We solved ${walk.narrative?.title ?? walk.title} with Hidden Antwerp: ${stats.solvedStops}/${stats.totalStops} stops in ${elapsedTime}!`;
+  const teamLabel = session.team.name ? `${session.team.name} (${playerNames})` : playerNames;
+  const shareText = `We solved ${walk.narrative?.title ?? walk.title} with Hidden Antwerp: ${stats.solvedStops}/${stats.totalStops} ${copy.locationsDiscoveredLabel} in ${elapsedTime}!`;
 
   async function shareResult() {
     // The Web Share API only works on HTTPS pages. Otherwise, show the text to copy.
@@ -42,17 +47,37 @@ export function CompletionScreen({ walk, session, copy, onOpenLedger }: Completi
   }
 
   const statItems = [
-    { label: "Stops discovered", value: `${stats.solvedStops} / ${stats.totalStops}` },
+    { label: copy.locationsDiscoveredLabel, value: `${stats.solvedStops} / ${stats.totalStops}` },
     ...(stats.totalClues > 0
-      ? [{ label: "Clues collected", value: `${stats.collectedClues} / ${stats.totalClues}` }]
+      ? [{ label: "Clues recovered", value: `${stats.collectedClues} / ${stats.totalClues}` }]
       : []),
     { label: "Challenges completed", value: String(stats.challengesCompleted) },
     { label: "Time", value: elapsedTime },
   ];
 
+  if (!hasReadStory) {
+    return (
+      <PlayScreen
+        eyebrow={walk.narrative?.title ?? walk.title}
+        title="The last page"
+        actions={
+          <Button onClick={() => setHasReadStory(true)} fullWidth>
+            Close the ledger
+          </Button>
+        }
+      >
+        <div className="animate-[reveal_1200ms_ease-out] space-y-5">
+          {closingStory.map((block, index) => (
+            <ContentBlockView key={index} block={block} />
+          ))}
+        </div>
+      </PlayScreen>
+    );
+  }
+
   return (
     <PlayScreen
-      eyebrow={walk.narrative?.title ?? walk.title}
+      eyebrow={walk.narrative ? `${walk.title} · ${walk.narrative.title}` : walk.title}
       title={copy.completionTitle}
       actions={
         <>
@@ -83,7 +108,7 @@ export function CompletionScreen({ walk, session, copy, onOpenLedger }: Completi
 
       <p className="text-parchment/75">
         <span className="text-xs uppercase tracking-wider text-parchment/60">Team: </span>
-        {playerNames}
+        {teamLabel}
       </p>
 
       {shareFallbackText && (

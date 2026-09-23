@@ -29,6 +29,16 @@ export interface LocationProgress {
   wasTie: boolean;
   wrongAttempts: number;
   hintsRevealed: number;
+  /** Only relevant for locations with a bonus challenge. */
+  bonusStatus: "unanswered" | "solved" | "skipped";
+  bonusWrongAttempts: number;
+}
+
+/** Progress through a walk's final puzzle (null for walks without one). */
+export interface FinaleProgress {
+  status: "locked" | "active" | "solved";
+  solvedQuestionIds: string[];
+  wrongAttemptsByQuestion: Record<string, number>;
 }
 
 /** One team's play-through of one walk. Plain data, so it can be saved or synced. */
@@ -42,6 +52,7 @@ export interface WalkSession {
   currentLocationId: string;
   locations: Record<string, LocationProgress>;
   collectedClueIds: string[];
+  finale: FinaleProgress | null;
 }
 
 /** A submitted answer: text for most challenges, an ordering for sequence challenges. */
@@ -66,4 +77,7 @@ export type SessionAction =
   | { type: "START_CHALLENGE" }
   | { type: "SUBMIT_ANSWER"; answer: ChallengeAnswer }
   | { type: "REVEAL_HINT" }
+  | { type: "SUBMIT_BONUS_ANSWER"; answer: ChallengeAnswer }
+  | { type: "SKIP_BONUS" }
+  | { type: "SUBMIT_FINALE_ANSWER"; questionId: string; answer: ChallengeAnswer; at: string }
   | { type: "CONTINUE_TO_NEXT_LOCATION"; at: string };

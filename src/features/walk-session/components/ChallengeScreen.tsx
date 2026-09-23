@@ -6,6 +6,7 @@ import type { Challenge } from "@/types/challenge";
 import type { Clue } from "@/types/clue";
 import type { ChallengeAnswer, LocationProgress } from "@/types/session";
 import type { GameCopy } from "@/types/walk";
+import { optionLetter } from "../logic/option-letter";
 import { PlayScreen } from "./PlayScreen";
 
 interface ChallengeScreenProps {
@@ -46,10 +47,14 @@ export function ChallengeScreen({
     <PlayScreen eyebrow="Challenge" title={challenge.title}>
       {challenge.researchStatus && (
         <p className="self-start rounded-full border border-dashed border-parchment/40 px-3 py-1 text-xs uppercase tracking-wider text-parchment/70">
-          {challenge.researchStatus === "on-site-research-required"
-            ? "On-site research required"
+          {challenge.researchStatus === "on-site-verification-required"
+            ? "On-site verification required"
             : "Research required"}
         </p>
+      )}
+
+      {challenge.instruction && challenge.type !== "observation" && (
+        <p className="rounded-sm bg-gold/10 p-4 text-parchment">{challenge.instruction}</p>
       )}
 
       <p className="font-display text-2xl leading-snug text-parchment">{challenge.question}</p>
@@ -74,9 +79,15 @@ export function ChallengeScreen({
       {challenge.type === "multiple-choice" && (
         <div className="flex flex-col gap-3">
           {challenge.options.map((option, index) => (
-            <Button key={option} variant="outline" onClick={() => onSubmit(String(index))} fullWidth>
+            <button
+              key={option}
+              type="button"
+              onClick={() => onSubmit(String(index))}
+              className="group flex min-h-14 w-full items-center gap-4 rounded-sm border border-gold/60 px-4 text-left text-lg text-parchment transition-colors hover:bg-gold hover:text-ink focus-visible:outline-2 focus-visible:outline-gold"
+            >
+              <span className="font-display text-xl font-semibold text-gold group-hover:text-ink">{optionLetter(index)}</span>
               {option}
-            </Button>
+            </button>
           ))}
         </div>
       )}

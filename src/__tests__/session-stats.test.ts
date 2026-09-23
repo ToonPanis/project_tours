@@ -14,13 +14,13 @@ describe("session stats", () => {
     startedAt: "2026-09-23T14:00:00.000Z",
   });
 
-  test("a new Hidden Pubs session is at stop 1 of 8 with 0 of 7 clues", () => {
+  test("a new Hidden Pubs session is at stop 1 of 8 with 0 of 8 clues", () => {
     expect(getSessionStats(hiddenPubsWalk, session)).toEqual({
       currentStopNumber: 1,
       totalStops: 8,
       solvedStops: 0,
       collectedClues: 0,
-      totalClues: 7,
+      totalClues: 8,
       challengesCompleted: 0,
     });
   });
@@ -40,12 +40,15 @@ describe("session stats", () => {
 });
 
 describe("playtest 'solve' helper", () => {
-  // Also a data check: every challenge's stored answer really solves it.
+  // Also a data check: every stored answer really solves its challenge.
   for (const walk of walks) {
-    for (const location of walk.locations) {
-      const challenge = location.challenge;
+    const challenges = [
+      ...walk.locations.flatMap((location) => [location.challenge, location.bonusChallenge]),
+      ...(walk.finale?.questions ?? []),
+    ];
+    for (const challenge of challenges) {
       if (!challenge) continue;
-      test(`${walk.title} · ${location.name}: the stored answer is accepted`, () => {
+      test(`${walk.title} · ${challenge.title}: the stored answer is accepted`, () => {
         expect(checkAnswer(challenge, getCorrectAnswer(challenge))).toBe(true);
       });
     }

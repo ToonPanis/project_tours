@@ -20,6 +20,9 @@ export function applySessionAction(
 ): WalkSession {
   if (session.completedAt) return session;
 
+  // The finale happens after the last location, so it's handled separately.
+  if (action.type === "SUBMIT_FINALE_ANSWER") return applyFinaleAnswer(walk, session, action);
+
   const location = walk.locations.find((candidate) => candidate.id === session.currentLocationId);
   const progress = session.locations[session.currentLocationId];
   if (!location || !progress) return session;
@@ -121,15 +124,36 @@ export function applySessionAction(
       return updateProgress({ hintsRevealed: progress.hintsRevealed + 1 });
     }
 
+    case "SUBMIT_BONUS_ANSWER": {
+      // The bonus is asked after the main challenge and never blocks progress.
+      if (progress.status !== "solved" || !location.bonusChallenge) return session;
+      if (progress.bonusStatus !== "unanswered") return session;
+
+      if (checkAnswer(location.bonusChallenge, action.answer)) {
+        return updateProgress({ bonusStatus: "solved" });
+      }
+      return updateProgress({ bonusWrongAttempts: progress.bonusWrongAttempts + 1 });
+    }
+
+    case "SKIP_BONUS": {
+      if (progress.status !== "solved" || !location.bonusChallenge) return session;
+      if (progress.bonusStatus !== "unanswered") return session;
+      return updateProgress({ bonusStatus: "skipped" });
+    }
+
     case "CONTINUE_TO_NEXT_LOCATION": {
       if (progress.status !== "solved") return session;
+      if (session.finale && session.finale.status !== "locked") return session;
 
       const orderedLocations = getOrderedLocations(walk);
       const currentIndex = orderedLocations.findIndex((candidate) => candidate.id === location.id);
       const nextLocation = orderedLocations[currentIndex + 1];
 
-      // No next stop: the walk is complete.
-      if (!nextLocation) return { ...session, completedAt: action.at };
+      // No next stop: open the finale if there is one, otherwise the walk is complete.
+      if (!nextLocation) {
+        if (session.finale) return { ...session, finale: { ...session.finale, status: "active" } };
+        return { ...session, completedAt: action.at };
+      }
 
       return {
         ...session,
@@ -141,6 +165,42 @@ export function applySessionAction(
       };
     }
   }
+}
+
+/**
+ * Checks one finale question. When every question is solved, the finale is
+ * solved and the walk is complete.
+ */
+function applyFinaleAnswer(
+  walk: Walk,
+  session: WalkSession,
+  action: Extract<SessionAction, { type: "SUBMIT_FINALE_ANSWER" }>,
+): WalkSession {
+  const finale = session.finale;
+  const questions = walk.finale?.questions ?? [];
+  const question = questions.find((candidate) => candidate.id === action.questionId);
+  if (!finale || finale.status !== "active" || !question) return session;
+  if (finale.solvedQuestionIds.includes(question.id)) return session;
+
+  if (!checkAnswer(question, action.answer)) {
+    const wrongAttempts = (finale.wrongAttemptsByQuestion[question.id] ?? 0) + 1;
+    return {
+      ...session,
+      finale: {
+        ...finale,
+        wrongAttemptsByQuestion: { ...finale.wrongAttemptsByQuestion, [question.id]: wrongAttempts },
+      },
+    };
+  }
+
+  const solvedQuestionIds = [...finale.solvedQuestionIds, question.id];
+  const allSolved = questions.every((candidate) => solvedQuestionIds.includes(candidate.id));
+
+  return {
+    ...session,
+    finale: { ...finale, solvedQuestionIds, status: allSolved ? "solved" : "active" },
+    completedAt: allSolved ? action.at : undefined,
+  };
 }
 
 /** Marks a location solved and collects the clues earned there. */

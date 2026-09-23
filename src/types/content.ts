@@ -3,6 +3,8 @@
  * a paragraph is real history, a local legend or fictional game story.
  */
 
+import type { VerificationStatus } from "./reveal";
+
 export interface Source {
   title: string;
   url?: string;
@@ -22,8 +24,8 @@ interface BaseBlock {
 /** Real history. Must be "verified" before it can be presented as fact. */
 export interface HistoryBlock extends BaseBlock {
   kind: "history";
-  /** "research-needed" = placeholder text; the UI must show it as unverified. */
-  verification: "verified" | "research-needed";
+  /** Anything but "verified" must be shown as unverified in the UI. */
+  verification: VerificationStatus;
   sources?: Source[];
 }
 
@@ -38,6 +40,8 @@ export interface StoryBlock extends BaseBlock {
   kind: "story";
   /** Chapter name, used later by the Ledger screen. */
   chapterTitle?: string;
+  /** "urgent" renders the text as hasty, shaky handwriting. */
+  tone?: "normal" | "urgent";
 }
 
 export type ContentBlock = HistoryBlock | LegendBlock | StoryBlock;

@@ -1,4 +1,11 @@
 import type { ContentBlock } from "@/types/content";
+import type { VerificationStatus } from "@/types/reveal";
+
+const verificationLabels: Record<VerificationStatus, string> = {
+  verified: "History",
+  "partially-verified": "History · partially verified",
+  "research-required": "History · research required",
+};
 
 /** The visible label for each kind of content, so fiction is never mistaken for history. */
 function getBlockLabel(block: ContentBlock): string {
@@ -8,8 +15,12 @@ function getBlockLabel(block: ContentBlock): string {
     case "legend":
       return "Local legend";
     case "history":
-      return block.verification === "verified" ? "History" : "History · research required";
+      return verificationLabels[block.verification];
   }
+}
+
+export function getVerificationLabel(status: VerificationStatus): string {
+  return verificationLabels[status];
 }
 
 interface ContentBlockViewProps {
@@ -17,31 +28,37 @@ interface ContentBlockViewProps {
 }
 
 export function ContentBlockView({ block }: ContentBlockViewProps) {
-  const isUnverified = block.kind === "history" && block.verification === "research-needed";
+  if (block.kind === "story") {
+    const isUrgent = block.tone === "urgent";
+    return (
+      <article className={`border-l-2 pl-4 ${isUrgent ? "border-red-400/70" : "border-gold/60"}`}>
+        <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-gold/90">
+          {getBlockLabel(block)}
+        </p>
+        {block.chapterTitle && (
+          <h2 className="mt-1 font-display text-2xl font-semibold text-parchment">{block.chapterTitle}</h2>
+        )}
+        {/* pre-line keeps the line breaks of the ledger's poems. */}
+        <p
+          className={`mt-2 whitespace-pre-line font-display leading-relaxed text-parchment ${
+            isUrgent ? "animate-[tremble_2.5s_ease-in-out_infinite] text-xl italic tracking-wide" : "text-xl"
+          }`}
+        >
+          {block.body}
+        </p>
+      </article>
+    );
+  }
 
+  const isUnverified = block.kind === "history" && block.verification !== "verified";
   return (
     <article
-      className={
-        block.kind === "story"
-          ? "border-l-2 border-gold/60 pl-4"
-          : `rounded-sm border px-4 py-3 ${isUnverified ? "border-dashed border-parchment/25 text-parchment/60" : "border-parchment/20"}`
-      }
+      className={`rounded-sm border px-4 py-3 ${isUnverified ? "border-dashed border-parchment/25 text-parchment/70" : "border-parchment/20"}`}
     >
       <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-gold/90">
         {getBlockLabel(block)}
       </p>
-      {block.kind === "story" && block.chapterTitle && (
-        <h2 className="mt-1 font-display text-2xl font-semibold text-parchment">{block.chapterTitle}</h2>
-      )}
-      <p
-        className={
-          block.kind === "story"
-            ? "mt-2 font-display text-xl leading-relaxed text-parchment"
-            : "mt-1 text-sm leading-relaxed"
-        }
-      >
-        {block.body}
-      </p>
+      <p className="mt-1 whitespace-pre-line text-sm leading-relaxed">{block.body}</p>
     </article>
   );
 }

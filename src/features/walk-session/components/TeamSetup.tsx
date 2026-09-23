@@ -16,6 +16,7 @@ interface TeamSetupProps {
 export function TeamSetup({ teamSize, onComplete }: TeamSetupProps) {
   const [playerCount, setPlayerCount] = useState<number | null>(null);
   const [names, setNames] = useState<string[]>([]);
+  const [teamName, setTeamName] = useState("");
 
   const countOptions = Array.from(
     { length: teamSize.maxPlayers - teamSize.minPlayers + 1 },
@@ -34,7 +35,7 @@ export function TeamSetup({ teamSize, onComplete }: TeamSetupProps) {
       // An emptied field falls back to the default name.
       name: name.trim() || `Player ${index + 1}`,
     }));
-    onComplete({ id: createId(), name: "", players });
+    onComplete({ id: createId(), name: teamName.trim(), players });
   }
 
   if (playerCount === null) {
@@ -73,6 +74,20 @@ export function TeamSetup({ teamSize, onComplete }: TeamSetupProps) {
           </>
         }
       >
+        <label className="flex flex-col gap-1">
+          <span className="text-xs font-semibold uppercase tracking-wider text-gold">
+            Team name (optional)
+          </span>
+          <input
+            value={teamName}
+            onChange={(event) => setTeamName(event.target.value)}
+            placeholder="The Antwerp Explorers"
+            maxLength={30}
+            autoComplete="off"
+            className="min-h-12 rounded-sm border border-parchment/30 bg-ink/40 px-4 text-lg text-parchment placeholder:text-parchment/35 focus:border-gold focus:outline-none"
+          />
+        </label>
+
         {names.map((name, index) => (
           <label key={index} className="flex flex-col gap-1">
             <span className="text-xs font-semibold uppercase tracking-wider text-gold">

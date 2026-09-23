@@ -11,6 +11,8 @@ export function createLocationProgress(status: LocationProgress["status"]): Loca
     wasTie: false,
     wrongAttempts: 0,
     hintsRevealed: 0,
+    bonusStatus: "unanswered",
+    bonusWrongAttempts: 0,
   };
 }
 
@@ -47,5 +49,8 @@ export function createWalkSession({
     currentLocationId: orderedLocations[0].id,
     locations,
     collectedClueIds: [],
+    finale: walk.finale
+      ? { status: "locked", solvedQuestionIds: [], wrongAttemptsByQuestion: {} }
+      : null,
   };
 }

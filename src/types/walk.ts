@@ -1,4 +1,6 @@
+import type { Challenge } from "./challenge";
 import type { Clue } from "./clue";
+import type { StoryBlock } from "./content";
 import type { ContentStatus, ImageAsset, LanguageCode } from "./common";
 import type { WalkLocation } from "./location";
 
@@ -47,6 +49,24 @@ export interface GameCopy {
   nextLocationTitle: string;
   completionTitle: string;
   completionMessage: string;
+  /** Shown when a clue is added, e.g. "The ledger has changed". */
+  clueCollectedTitle: string;
+  /** Heading of the route list, e.g. "Taverns". */
+  locationsTitle: string;
+  /** Completion stat label, e.g. "taverns discovered". */
+  locationsDiscoveredLabel: string;
+}
+
+/**
+ * An optional final puzzle after the last location: several questions that
+ * test what the team remembers, followed by a closing story.
+ */
+export interface WalkFinale {
+  title: string;
+  intro: string;
+  questions: Challenge[];
+  /** Fiction shown once the finale is solved. */
+  closingStory: StoryBlock[];
 }
 
 export interface TeamSize {
@@ -97,6 +117,7 @@ export interface Walk extends Omit<WalkSummary, "locationCount"> {
   howItWorksSteps?: string[];
   practicalInfo?: PracticalInfoItem[];
   locations: WalkLocation[];
+  finale?: WalkFinale;
   /** Collectible clues. Walks without clues simply omit this. */
   clues?: Clue[];
 }

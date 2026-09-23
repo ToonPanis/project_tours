@@ -39,7 +39,7 @@ export const the17GatesWalk: Walk = {
       content: [
         {
           kind: "history",
-          verification: "research-needed",
+          verification: "research-required",
           body: "[Historical research required] This text will describe the history of the first gate once research is complete. Until then, no historical claims are made here.",
         },
       ],
@@ -74,7 +74,7 @@ export const the17GatesWalk: Walk = {
       content: [
         {
           kind: "history",
-          verification: "research-needed",
+          verification: "research-required",
           body: "[Historical research required] This text will describe the history of the second gate once research is complete.",
         },
       ],
@@ -108,7 +108,7 @@ export const the17GatesWalk: Walk = {
       content: [
         {
           kind: "history",
-          verification: "research-needed",
+          verification: "research-required",
           body: "[Historical research required] This text will describe the history of the third gate once research is complete.",
         },
       ],

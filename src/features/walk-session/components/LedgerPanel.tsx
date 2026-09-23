@@ -3,18 +3,19 @@
 import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
 import type { WalkSession } from "@/types/session";
-import type { Walk } from "@/types/walk";
+import type { GameCopy, Walk } from "@/types/walk";
 import { getOrderedLocations, isLocationRevealed } from "../logic/route";
 
 interface LedgerPanelProps {
   walk: Walk;
   session: WalkSession;
+  copy: GameCopy;
   open: boolean;
   onClose: () => void;
 }
 
 /** The team's notebook: discovered clues and the route so far. */
-export function LedgerPanel({ walk, session, open, onClose }: LedgerPanelProps) {
+export function LedgerPanel({ walk, session, copy, open, onClose }: LedgerPanelProps) {
   const title = walk.narrative?.title ?? `${walk.title}: your route`;
   const orderedLocations = getOrderedLocations(walk);
   const clues = walk.clues ?? [];
@@ -38,14 +39,13 @@ export function LedgerPanel({ walk, session, open, onClose }: LedgerPanelProps) 
                       {isFound ? "✓" : "?"}
                     </span>
                     {isFound ? (
-                      <span className="flex flex-1 items-baseline justify-between gap-3">
-                        <span className="text-parchment/80">{clue.title}</span>
-                        <span className="font-display text-2xl font-semibold tracking-widest text-parchment">
-                          {clue.value}
-                        </span>
+                      <span className="font-display text-xl font-semibold tracking-wider text-parchment">
+                        {clue.value}
                       </span>
                     ) : (
-                      <span className="text-parchment/40">Clue {index + 1} · locked</span>
+                      <span className="uppercase tracking-wider text-parchment/40">
+                        Clue {index + 1} · locked
+                      </span>
                     )}
                   </li>
                 );
@@ -56,7 +56,7 @@ export function LedgerPanel({ walk, session, open, onClose }: LedgerPanelProps) 
 
         <section aria-labelledby="ledger-route">
           <h3 id="ledger-route" className="text-xs font-semibold uppercase tracking-[0.25em] text-parchment/70">
-            The route
+            {copy.locationsTitle}
           </h3>
           <ol className="mt-3 space-y-2">
             {orderedLocations.map((location) => {

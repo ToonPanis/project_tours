@@ -68,7 +68,9 @@ export function StartScreen({
             ? "Completed"
             : `Stop ${stats.currentStopNumber} of ${stats.totalStops}`}
         </p>
-        <p className="mt-1 text-sm text-parchment/75">Team: {playerNames}</p>
+        <p className="mt-1 text-sm text-parchment/75">
+          Team: {savedSession.team.name ? `${savedSession.team.name} (${playerNames})` : playerNames}
+        </p>
       </div>
 
       <ConfirmDialog

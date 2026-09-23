@@ -2,6 +2,7 @@ import type { Challenge } from "./challenge";
 import type { GeoCoordinates, ImageAsset } from "./common";
 import type { ContentBlock } from "./content";
 import type { DrinkRound } from "./drink";
+import type { HistoricalReveal } from "./reveal";
 
 /** What kind of place a location is. (Whether it's a bonus stop is a separate flag.) */
 export type LocationType =
@@ -78,6 +79,10 @@ export interface WalkLocation {
   /** Team drink vote at this location (e.g. Hidden Pubs cafés). */
   drinkRound?: DrinkRound;
   challenge?: Challenge;
+  /** Optional extra question after the main challenge. Never blocks progress. */
+  bonusChallenge?: Challenge;
+  /** Real history, revealed after the challenge is solved. */
+  historicalReveal?: HistoricalReveal;
   unlockCondition: UnlockCondition;
   nearbyPlaces: NearbyPlace[];
   optionalBreak?: OptionalBreak;

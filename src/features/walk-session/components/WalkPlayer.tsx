@@ -11,6 +11,7 @@ import { ArrivedScreen } from "./ArrivedScreen";
 import { ChallengeScreen } from "./ChallengeScreen";
 import { CompletionScreen } from "./CompletionScreen";
 import { DrinkVoting } from "./DrinkVoting";
+import { FinaleScreen } from "./FinaleScreen";
 import { GameIntro } from "./GameIntro";
 import { LedgerPanel } from "./LedgerPanel";
 import { PlayHeader } from "./PlayHeader";
@@ -90,10 +91,22 @@ export function WalkPlayer({ walk }: WalkPlayerProps) {
   const activeSession: WalkSession = session;
 
   const ledger = (
-    <LedgerPanel walk={walk} session={session} open={isLedgerOpen} onClose={() => setIsLedgerOpen(false)} />
+    <LedgerPanel
+      walk={walk}
+      session={session}
+      copy={copy}
+      open={isLedgerOpen}
+      onClose={() => setIsLedgerOpen(false)}
+    />
   );
   const playtestControls = (
-    <PlaytestControls currentLocation={location} dispatch={dispatch} onRestart={restart} />
+    <PlaytestControls
+      walk={walk}
+      session={session}
+      dispatch={dispatch}
+      startNewSession={startNewSession}
+      onRestart={restart}
+    />
   );
 
   if (session.completedAt) {
@@ -106,7 +119,27 @@ export function WalkPlayer({ walk }: WalkPlayerProps) {
     );
   }
 
+  // Clues in the order of the walk (not the order they were found).
+  const collectedClues = (walk.clues ?? []).filter((clue) =>
+    activeSession.collectedClueIds.includes(clue.id),
+  );
+
   function renderCurrentScreen() {
+    // After the last location: the final puzzle.
+    if (walk.finale && activeSession.finale?.status === "active") {
+      return (
+        <FinaleScreen
+          finale={walk.finale}
+          progress={activeSession.finale}
+          collectedClues={collectedClues}
+          copy={copy}
+          onSubmit={(questionId, answer) =>
+            dispatch({ type: "SUBMIT_FINALE_ANSWER", questionId, answer, at: new Date().toISOString() })
+          }
+        />
+      );
+    }
+
     switch (progress.status) {
       case "locked":
       case "travelling":
@@ -182,9 +215,13 @@ export function WalkPlayer({ walk }: WalkPlayerProps) {
           <SolvedScreen
             key={location.id}
             location={location}
+            progress={progress}
             earnedClues={(walk.clues ?? []).filter((clue) => clue.sourceLocationId === location.id)}
             nextLocation={nextLocation}
+            hasFinale={Boolean(walk.finale)}
             copy={copy}
+            onSubmitBonus={(answer) => dispatch({ type: "SUBMIT_BONUS_ANSWER", answer })}
+            onSkipBonus={() => dispatch({ type: "SKIP_BONUS" })}
             onContinue={() => dispatch({ type: "CONTINUE_TO_NEXT_LOCATION", at: new Date().toISOString() })}
             onShowRoute={() => setIsLedgerOpen(true)}
           />

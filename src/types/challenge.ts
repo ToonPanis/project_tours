@@ -8,12 +8,14 @@
  */
 
 /** Marks a challenge whose real-world puzzle still needs to be researched. */
-export type ChallengeResearchStatus = "research-required" | "on-site-research-required";
+export type ChallengeResearchStatus = "research-required" | "on-site-verification-required";
 
 interface BaseChallenge {
   id: string;
   /** Short name, e.g. "The Angel's Secret". */
   title: string;
+  /** What to do before answering, e.g. "Go outside and look up." */
+  instruction?: string;
   question: string;
   /** Shown after the challenge is completed. */
   explanation?: string;

@@ -50,7 +50,7 @@ describe.each(walks.map((walk) => [walk.title, walk] as const))("walk data: %s",
   test("unverified history is visibly marked", () => {
     for (const location of walk.locations) {
       for (const block of location.content) {
-        if (block.kind === "history" && block.verification === "research-needed") {
+        if (block.kind === "history" && block.verification === "research-required") {
           expect(block.body).toContain("[Historical research required]");
         }
       }
@@ -70,9 +70,37 @@ describe.each(walks.map((walk) => [walk.title, walk] as const))("walk data: %s",
     for (const location of walk.locations) {
       for (const option of location.drinkRound?.options ?? []) {
         if (option.menuVerification === "to-verify") {
-          expect(option.name).toMatch(/VERIFY MENU|\(test\)/);
+          expect(option.name).toMatch(/verify menu|\(test\)/i);
         }
       }
+    }
+  });
+
+  test("drink rounds have 2 to 6 options and never offer shots", () => {
+    for (const location of walk.locations) {
+      if (!location.drinkRound) continue;
+      const options = location.drinkRound.options;
+      expect(options.length).toBeGreaterThanOrEqual(2);
+      expect(options.length).toBeLessThanOrEqual(6);
+      expect(new Set(options.map((option) => option.id)).size).toBe(options.length);
+      for (const option of options) {
+        expect(option.name).not.toMatch(/\bshots?\b/i);
+      }
+    }
+  });
+
+  test("a 'verified' historical reveal always names its sources", () => {
+    for (const location of walk.locations) {
+      if (location.historicalReveal?.status === "verified") {
+        expect(location.historicalReveal.sources.length).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  test("a finale has questions, and clues to remember", () => {
+    if (walk.finale) {
+      expect(walk.finale.questions.length).toBeGreaterThan(0);
+      expect((walk.clues ?? []).length).toBeGreaterThan(0);
     }
   });
 
@@ -117,7 +145,7 @@ describe("hasUnverifiedContent", () => {
     expect(
       hasUnverifiedContent({
         ...baseLocation,
-        content: [{ kind: "history", verification: "research-needed", body: "…" }],
+        content: [{ kind: "history", verification: "research-required", body: "…" }],
       }),
     ).toBe(true);
   });

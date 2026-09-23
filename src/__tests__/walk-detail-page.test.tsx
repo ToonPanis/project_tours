@@ -33,7 +33,9 @@ describe("Walk detail page", () => {
     expect(screen.getByRole("heading", { name: "The Lost Tavern Ledger" })).toBeDefined();
     expect(screen.getByRole("heading", { name: "What to expect" })).toBeDefined();
     expect(screen.getByText(/Never required/)).toBeDefined();
-    expect(screen.getByRole("heading", { name: "Collect the clue" })).toBeDefined();
+    expect(
+      screen.getByRole("heading", { name: "Discover the history and collect the clue" }),
+    ).toBeDefined();
   });
 
   test("Hidden Pubs reveals only the first café before the walk starts", async () => {
