@@ -30,8 +30,25 @@ describe("Walk detail page", () => {
     expect(screen.getByText("The story · fiction")).toBeDefined();
     expect(screen.getByRole("heading", { name: "The Lost Tavern Ledger" })).toBeDefined();
     expect(screen.getByRole("heading", { name: "What to expect" })).toBeDefined();
-    expect(screen.getByText(/Not required/)).toBeDefined();
+    expect(screen.getByText(/Never required/)).toBeDefined();
     expect(screen.getByRole("heading", { name: "Collect the clue" })).toBeDefined();
+  });
+
+  test("Hidden Pubs reveals only the first café before the walk starts", async () => {
+    await renderWalkPage("hidden-pubs");
+
+    expect(screen.getByRole("heading", { name: /Rococo Antwerp/ })).toBeDefined();
+    expect(screen.getAllByRole("heading", { name: /hidden location/ })).toHaveLength(7);
+    expect(screen.getByText("Final destination")).toBeDefined();
+    // The hidden names must not appear anywhere in the rendered page.
+    expect(document.body.textContent).not.toContain("Den Engel");
+    expect(document.body.textContent).not.toContain("Boer van Tienen");
+  });
+
+  test("The 17 Gates shows every stop", async () => {
+    await renderWalkPage("the-17-gates");
+
+    expect(screen.queryAllByRole("heading", { name: /hidden location/ })).toHaveLength(0);
   });
 
   test("applies the walk's theme to the page", async () => {

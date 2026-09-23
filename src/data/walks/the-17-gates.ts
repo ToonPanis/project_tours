@@ -24,6 +24,8 @@ export const the17GatesWalk: Walk = {
   price: { amountInCents: 1295, currency: "EUR" },
   theme: "classic",
   languages: ["en"],
+  routeReveal: "all",
+  team: { minPlayers: 1, maxPlayers: 8 },
   contentStatus: "placeholder",
   locations: [
     {
@@ -43,12 +45,13 @@ export const the17GatesWalk: Walk = {
       ],
       challenge: {
         id: "gates-challenge-1",
+        title: "Where are we?",
         type: "multiple-choice",
         question: "[Placeholder challenge] In which city does this walk take place?",
         options: ["Antwerp", "Ghent", "Bruges"],
         correctOptionIndex: 0,
         explanation: "Correct, you're in Antwerp. Real challenges will be added later.",
-        hint: "Look at the title of the website.",
+        hints: ["Look at the title of the website."],
       },
       unlockCondition: { type: "none" },
       nearbyPlaces: [
@@ -77,11 +80,12 @@ export const the17GatesWalk: Walk = {
       ],
       challenge: {
         id: "gates-challenge-2",
+        title: "The city's own name",
         type: "text-answer",
         question: "[Placeholder challenge] Type the name of this walk's city in Dutch.",
         acceptedAnswers: ["antwerpen"],
         explanation: "Antwerp is 'Antwerpen' in Dutch.",
-        hint: "It starts with 'Antw…'.",
+        hints: ["It starts with 'Antw…'."],
       },
       unlockCondition: { type: "proximity", radiusInMeters: 50 },
       nearbyPlaces: [
@@ -110,11 +114,13 @@ export const the17GatesWalk: Walk = {
       ],
       challenge: {
         id: "gates-challenge-3",
+        title: "Counting gates",
         type: "multiple-choice",
         question: "[Placeholder challenge] How many gates does the full walk contain?",
         options: ["7", "12", "17"],
         correctOptionIndex: 2,
         explanation: "The full walk will visit 17 gates.",
+        hints: [],
       },
       unlockCondition: { type: "proximity", radiusInMeters: 50 },
       nearbyPlaces: [],

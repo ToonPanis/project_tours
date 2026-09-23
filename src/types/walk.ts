@@ -27,6 +27,33 @@ export interface PracticalInfoItem {
   value: string;
 }
 
+/**
+ * "all": every stop is visible from the start.
+ * "progressive": a stop's name stays hidden ("???") until it is unlocked.
+ */
+export type RouteReveal = "all" | "progressive";
+
+/**
+ * Flavour text used during play. Walks can override any line
+ * (e.g. "The tavern has spoken."); defaults live in the walk-session feature.
+ */
+export interface GameCopy {
+  voteResultTitle: string;
+  tieTitle: string;
+  tieSubtitle: string;
+  afterVoteMessage: string;
+  wrongAnswer: string;
+  correctAnswer: string;
+  nextLocationTitle: string;
+  completionTitle: string;
+  completionMessage: string;
+}
+
+export interface TeamSize {
+  minPlayers: number;
+  maxPlayers: number;
+}
+
 /** The fictional story that ties a walk together. Always presented as fiction. */
 export interface WalkNarrative {
   title: string;
@@ -60,6 +87,9 @@ export interface WalkSummary {
 export interface Walk extends Omit<WalkSummary, "locationCount"> {
   description: string;
   languages: LanguageCode[];
+  routeReveal: RouteReveal;
+  team: TeamSize;
+  copy?: Partial<GameCopy>;
   narrative?: WalkNarrative;
   /** "What to expect" bullet points. */
   highlights?: string[];

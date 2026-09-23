@@ -1,6 +1,7 @@
 import type { Challenge } from "./challenge";
 import type { GeoCoordinates, ImageAsset } from "./common";
 import type { ContentBlock } from "./content";
+import type { DrinkRound } from "./drink";
 
 /** What kind of place a location is. (Whether it's a bonus stop is a separate flag.) */
 export type LocationType =
@@ -65,7 +66,8 @@ export interface WalkLocation {
   /** Bonus stops are optional and don't count towards route progress. */
   isBonus?: boolean;
   address: string;
-  coordinates: GeoCoordinates;
+  /** `null` until the exact position has been researched. Never guess coordinates. */
+  coordinates: GeoCoordinates | null;
   /** Short introduction, safe to show before the walk starts. */
   description: string;
   /** History, legends and story fragments, revealed during the walk. */
@@ -73,6 +75,8 @@ export interface WalkLocation {
   images?: LocationImages;
   /** What to look at on site, e.g. "Look up at the facade". */
   observationPrompt?: string;
+  /** Team drink vote at this location (e.g. Hidden Pubs cafés). */
+  drinkRound?: DrinkRound;
   challenge?: Challenge;
   unlockCondition: UnlockCondition;
   nearbyPlaces: NearbyPlace[];

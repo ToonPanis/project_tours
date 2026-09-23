@@ -129,7 +129,7 @@ export default async function WalkDetailPage({ params }: PageProps<"/walks/[slug
           title="The route"
           intro="A preview of the stops. The stories are revealed during the walk."
         >
-          <LocationPreviewList locations={walk.locations} />
+          <LocationPreviewList walk={walk} />
         </DetailSection>
       </div>
     </article>

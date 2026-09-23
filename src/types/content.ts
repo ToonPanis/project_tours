@@ -8,26 +8,34 @@ export interface Source {
   url?: string;
 }
 
-/** Real history. Must be "verified" before it can be presented as fact. */
-export interface HistoryBlock {
-  kind: "history";
+/**
+ * When a block is shown during play: on arrival (default) or after the
+ * location's challenge is solved.
+ */
+export type RevealMoment = "arrival" | "solved";
+
+interface BaseBlock {
   body: string;
+  revealAt?: RevealMoment;
+}
+
+/** Real history. Must be "verified" before it can be presented as fact. */
+export interface HistoryBlock extends BaseBlock {
+  kind: "history";
   /** "research-needed" = placeholder text; the UI must show it as unverified. */
   verification: "verified" | "research-needed";
   sources?: Source[];
 }
 
 /** A local legend: told as a legend, never presented as fact. */
-export interface LegendBlock {
+export interface LegendBlock extends BaseBlock {
   kind: "legend";
-  body: string;
   sources?: Source[];
 }
 
 /** Fictional game narrative (e.g. "The Lost Tavern Ledger"). */
-export interface StoryBlock {
+export interface StoryBlock extends BaseBlock {
   kind: "story";
-  body: string;
   /** Chapter name, used later by the Ledger screen. */
   chapterTitle?: string;
 }

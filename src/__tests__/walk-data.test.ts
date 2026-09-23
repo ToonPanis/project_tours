@@ -57,6 +57,52 @@ describe.each(walks.map((walk) => [walk.title, walk] as const))("walk data: %s",
     }
   });
 
+  test("every drink round has an alcohol-free option", () => {
+    // Also enforced by the DrinkRound type, but data will later come from a database.
+    for (const location of walk.locations) {
+      if (location.drinkRound) {
+        expect(location.drinkRound.options.some((option) => !option.alcoholic)).toBe(true);
+      }
+    }
+  });
+
+  test("unverified drinks are visibly marked", () => {
+    for (const location of walk.locations) {
+      for (const option of location.drinkRound?.options ?? []) {
+        if (option.menuVerification === "to-verify") {
+          expect(option.name).toContain("VERIFY MENU");
+        }
+      }
+    }
+  });
+
+  test("no challenge involves drinking", () => {
+    const drinkingWords = /\b(shots?|chug|down (it|your)|drink (fast|quickly)|finish (your|the) (drink|glass|beer)|drinking game)\b/i;
+    for (const location of walk.locations) {
+      const challenge = location.challenge;
+      if (!challenge) continue;
+      const texts = [challenge.title, challenge.question, ...challenge.hints];
+      for (const text of texts) {
+        expect(text).not.toMatch(drinkingWords);
+      }
+    }
+  });
+
+  test("coordinates are either unknown (null) or plausible", () => {
+    for (const location of walk.locations) {
+      if (location.coordinates) {
+        expect(Math.abs(location.coordinates.latitude)).toBeLessThanOrEqual(90);
+        expect(Math.abs(location.coordinates.longitude)).toBeLessThanOrEqual(180);
+      }
+    }
+  });
+
+  test("hints are only revealed after wrong answers, so every challenge has a hint list", () => {
+    for (const location of walk.locations) {
+      if (location.challenge) expect(Array.isArray(location.challenge.hints)).toBe(true);
+    }
+  });
+
   test("a walk with unverified history is marked as placeholder", () => {
     if (walk.locations.some(hasUnverifiedContent)) {
       expect(walk.contentStatus).toBe("placeholder");

@@ -7,13 +7,23 @@
  * exists, answer checking should move to the server.
  */
 
+/** Marks a challenge whose real-world puzzle still needs to be researched. */
+export type ChallengeResearchStatus = "research-required" | "on-site-research-required";
+
 interface BaseChallenge {
   id: string;
+  /** Short name, e.g. "The Angel's Secret". */
+  title: string;
   question: string;
   /** Shown after the challenge is completed. */
   explanation?: string;
-  /** Optional hint the player can reveal. */
-  hint?: string;
+  /**
+   * Hints from subtle to explicit. One more hint becomes available after
+   * each wrong answer (none before the first attempt).
+   */
+  hints: string[];
+  /** Absent = final content. Otherwise the UI shows a research badge. */
+  researchStatus?: ChallengeResearchStatus;
   /**
    * Clues the player must have collected before this challenge makes sense.
    * A challenge with required clues acts as a "combine the clues" / final puzzle.
@@ -30,7 +40,10 @@ export interface MultipleChoiceChallenge extends BaseChallenge {
 
 export interface TextAnswerChallenge extends BaseChallenge {
   type: "text-answer";
-  /** All accepted answers, compared case-insensitively. */
+  /**
+   * All accepted answers (compared ignoring case, accents and punctuation).
+   * The first one is the canonical answer shown in explanations.
+   */
   acceptedAnswers: string[];
 }
 
