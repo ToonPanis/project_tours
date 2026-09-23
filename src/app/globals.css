@@ -1,26 +1,47 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * "Old Antwerp" design tokens.
+ * Every --color-* token becomes a Tailwind class: bg-ink, text-parchment, border-gold, ...
+ * Contrast notes: use `gold` for text on dark backgrounds only;
+ * use `gold-deep` for gold-coloured text on parchment.
+ */
+@theme {
+  --color-ink: #17120e;
+  --color-umber: #2e2118;
+  --color-umber-light: #4a3627;
+  --color-sepia: #4a3b2c;
+  --color-parchment: #f3ead8;
+  --color-parchment-dark: #e4d5b7;
+  --color-gold: #c3a064;
+  --color-gold-deep: #7a5a24;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-display: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-source-sans), system-ui, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-parchment);
+  color: var(--color-ink);
+}
+
+/* Subtle aged-paper look, built with gradients so no image download is needed. */
+@utility bg-parchment-texture {
+  background-color: var(--color-parchment);
+  background-image:
+    radial-gradient(ellipse at top left, rgb(195 160 100 / 0.18), transparent 60%),
+    radial-gradient(ellipse at bottom right, rgb(122 90 36 / 0.14), transparent 55%);
+}
+
+/* Dark "night map" background for hero sections. */
+@utility bg-night-map {
+  background-color: var(--color-ink);
+  background-image:
+    radial-gradient(circle at 20% 20%, rgb(195 160 100 / 0.16), transparent 45%),
+    radial-gradient(circle at 85% 75%, rgb(74 54 39 / 0.6), transparent 50%),
+    repeating-linear-gradient(
+      45deg,
+      rgb(195 160 100 / 0.04) 0 1px,
+      transparent 1px 28px
+    );
 }
