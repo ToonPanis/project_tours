@@ -19,7 +19,7 @@
 
 | What | Where | Why | How long |
 |---|---|---|---|
-| Your walk progress: stops reached, votes, answers, team name and player names you typed, start and finish time | Your browser's local storage (`hidden-antwerp:playtest:<walk>`) | So you can continue after closing the page or losing signal | Until you start the walk again ("Start again" / "Restart" on the walk's start screen), or clear this site's data in your browser |
+| Your walk progress: stops reached, votes, answers, team name and player names you typed, start and finish time | Your browser's local storage (`hidden-antwerp:playtest:<walk>`) | So you can continue after closing the page or losing signal | Until you start the walk again (the "Start again" button on the walk's start screen), or clear this site's data in your browser |
 | Your chosen language | A cookie (`ha-locale`) and local storage (`hidden-antwerp:locale`) | So pages open in your language | The cookie for 1 year; local storage until you clear it |
 
 Your walk progress never leaves your phone. The **language cookie** is sent to the website with each page request, so pages open in your language: that is its only purpose. Hidden Antwerp has no server-side database and no accounts.
@@ -45,7 +45,7 @@ Google Fonts are downloaded when the site is built. Your browser does not contac
 ## Your choices
 
 - Don't allow location and use "Continue without live GPS". The walk still works.
-- Delete your progress: "Start again" / "Restart" on the walk's start screen, or clear this site's data in your browser settings.
+- Delete your progress: the "Start again" button on the walk's start screen, or clear this site's data in your browser settings.
 - Change the language at any time.
 
 ## Contact

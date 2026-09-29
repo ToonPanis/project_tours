@@ -58,7 +58,7 @@ export function StartScreen({
             {t("game.start.continueWalk")}
           </Button>
           <Button variant="outline" onClick={() => setIsConfirmOpen(true)} fullWidth>
-            {t("game.start.restartPlaytest")}
+            {t("game.start.startAgain")}
           </Button>
         </>
       }

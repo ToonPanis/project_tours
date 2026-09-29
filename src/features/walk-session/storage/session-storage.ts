@@ -27,6 +27,11 @@ interface SavedSession {
   session: WalkSession;
 }
 
+/**
+ * The localStorage key of a saved walk. "playtest" in it is historical (the app
+ * started as a playtest). Never rename it without a migration step: every saved
+ * game in the field is stored under it.
+ */
 export function storageKey(walkSlug: string): string {
   return `hidden-antwerp:playtest:${walkSlug}`;
 }

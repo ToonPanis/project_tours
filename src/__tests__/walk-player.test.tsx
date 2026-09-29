@@ -194,7 +194,7 @@ describe("WalkPlayer: Hidden Pubs", () => {
     render(<WalkPlayer walk={hiddenPubsWalk} />);
     await screen.findByRole("heading", { name: "Welcome back" });
 
-    click("Restart playtest");
+    click("Start again");
     expect(window.localStorage.getItem(storageKey("hidden-pubs"))).not.toBeNull();
     // jsdom has no showModal(), so the dialog counts as "hidden" in tests.
     fireEvent.click(screen.getByRole("button", { name: "Yes, restart", hidden: true }));

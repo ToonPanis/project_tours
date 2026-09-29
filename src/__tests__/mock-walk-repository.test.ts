@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { the17GatesWalk } from "@/data/walks/the-17-gates";
+import { the17GatesWalk } from "./fixtures/the-17-gates";
 import { MockWalkRepository } from "@/lib/repositories/mock-walk-repository";
 
 describe("MockWalkRepository", () => {

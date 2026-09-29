@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { walks } from "@/data/walks";
 import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
-import { the17GatesWalk } from "@/data/walks/the-17-gates";
+import { the17GatesWalk } from "./fixtures/the-17-gates";
 import { NAVIGATION_CONFIG } from "@/features/navigation/config";
 import { getOrderedLocations } from "@/lib/walk-locations";
 import { distanceInMeters } from "@/lib/geo";

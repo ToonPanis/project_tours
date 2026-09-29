@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
-import { the17GatesWalk } from "@/data/walks/the-17-gates";
+import { the17GatesWalk } from "./fixtures/the-17-gates";
 import { defaultWalkCopy, getWalkCopy } from "@/features/walk-session/logic/walk-copy";
 import { distanceInMeters } from "@/lib/geo";
 import {
