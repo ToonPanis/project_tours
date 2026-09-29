@@ -8,5 +8,19 @@
     "title": "This walk doesn't exist",
     "text": "The route you're looking for may have moved, or it isn't available yet.",
     "seeAll": "See all walks"
+  },
+  "playError": {
+    "title": "Something went wrong",
+    "text": "The walk stopped unexpectedly, for example because of a weak connection. Your progress is normally saved on this phone.",
+    "tryAgain": "Try again",
+    "startOver": "Start this walk again",
+    "startOverTitle": "Start this walk again?",
+    "startOverMessage": "This deletes the saved progress for this walk on this phone and starts again from the first stop.",
+    "startOverConfirm": "Yes, start again",
+    "allWalks": "All walks"
+  },
+  "globalError": {
+    "title": "Something went wrong",
+    "text": "This page couldn't be shown. Please try again in a moment."
   }
 }

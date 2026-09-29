@@ -48,5 +48,10 @@
     "u-turn": "Keer om",
     "roundabout": "Neem de rotonde",
     "arrive": "Bestemming vlakbij"
+  },
+  "confirmArrival": {
+    "title": "Ben je bij {name}?",
+    "message": "Volgens je gps ben je nog ongeveer {distance} verwijderd. Toch doorgaan naar deze stop?",
+    "confirm": "Ja, ik ben hier"
   }
 }

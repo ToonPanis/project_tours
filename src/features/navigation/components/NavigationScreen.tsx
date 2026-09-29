@@ -3,12 +3,15 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useT } from "@/i18n/client";
+import { distanceInMeters } from "@/lib/geo";
 import type { WalkLocation } from "@/types/location";
 import type { GpsFix, WalkingRoute } from "@/types/navigation";
 import { useGeolocation } from "../hooks/useGeolocation";
 import { usePositionSimulation } from "../simulation/PositionSimulation";
 import { useWakeLock } from "../hooks/useWakeLock";
+import { NAVIGATION_CONFIG } from "../config";
 import { formatWalkingDistance } from "../logic/maneuver-display";
 import { getNavigationView } from "../logic/navigation-view";
 import { initialTracking, isLowAccuracy, trackFix, type NavigationTracking } from "../logic/tracking";
@@ -77,6 +80,8 @@ export function NavigationScreen({
   const [tracking, setTracking] = useState<NavigationTracking>(initialTracking);
   const trackingRef = useRef(tracking);
   const [isFollowing, setIsFollowing] = useState(true);
+  // The distance shown in the "are you here?" question, frozen when it opens (null = closed).
+  const [confirmArrivalDistance, setConfirmArrivalDistance] = useState<number | null>(null);
   const [orientation, setOrientation] = useState<MapOrientation>("follow-direction");
 
   // Every GPS reading updates the tracking state; arrival is detected here.
@@ -154,10 +159,26 @@ export function NavigationScreen({
     setPhase("manual");
     setTimeout(() => setPhase("gps"), 0);
   }
-  const showManualArrival = phase === "manual" || gpsProblem || !destinationCoordinates;
+  // "I'm here" is always available, so nobody can get stuck: GPS can report good
+  // accuracy while being wrong (narrow streets), or a stop's pin can be unreachable.
+  // With working GPS it's a secondary button: automatic arrival stays the main path.
+  const isManualArrivalPrimary = phase === "manual" || gpsProblem || !destinationCoordinates;
+  // A good GPS fix that is still far away: ask before moving on (an accidental tap
+  // can't be undone). With weak or no GPS the position can't be trusted, so no question.
+  const manualArrivalDistance =
+    fix && destinationCoordinates && !gpsProblem ? distanceInMeters(fix.coordinates, destinationCoordinates) : null;
+  function handleManualArrival() {
+    if (manualArrivalDistance !== null && manualArrivalDistance > NAVIGATION_CONFIG.MANUAL_ARRIVAL_CONFIRM_METERS) {
+      setConfirmArrivalDistance(manualArrivalDistance);
+    } else {
+      onArrive();
+    }
+  }
 
   return (
-    <section className="flex h-[calc(100dvh-9.5rem)] flex-col">
+    // min-h (not a fixed height): if the headers above wrap (long German/Russian titles),
+    // the screen grows instead of squeezing the map, and the sticky bottom bar stays visible.
+    <section className="flex min-h-[calc(100dvh-9.5rem)] flex-col">
       {/* Top: destination + remaining distance */}
       <div className="flex items-baseline justify-between gap-3 bg-ink px-4 py-2">
         <p className="min-w-0 truncate font-display text-xl font-semibold text-parchment">
@@ -181,17 +202,20 @@ export function NavigationScreen({
       )}
 
       {/* Middle: the map */}
-      <div className="relative min-h-0 flex-1">
-        <WalkingMap
-          destination={{ name: destination.name, coordinates: destinationCoordinates }}
-          routeGeometry={route?.geometry ?? null}
-          userPosition={fix?.coordinates ?? null}
-          isFollowing={isFollowing}
-          orientation={orientation}
-          travelBearing={view.travelBearing}
-          onUserMovedMap={() => setIsFollowing(false)}
-          loadErrorText={t("gps.mapUnavailable")}
-        />
+      <div className="relative min-h-48 flex-1">
+        {/* absolute inset-0 gives the map a definite size inside the growing flex area. */}
+        <div className="absolute inset-0">
+          <WalkingMap
+            destination={{ name: destination.name, coordinates: destinationCoordinates }}
+            routeGeometry={route?.geometry ?? null}
+            userPosition={fix?.coordinates ?? null}
+            isFollowing={isFollowing}
+            orientation={orientation}
+            travelBearing={view.travelBearing}
+            onUserMovedMap={() => setIsFollowing(false)}
+            loadErrorText={t("gps.mapUnavailable")}
+          />
+        </div>
         {destinationCoordinates ? (
           <>
             <div className="absolute right-3 top-3 flex flex-col gap-2">
@@ -217,8 +241,8 @@ export function NavigationScreen({
         )}
       </div>
 
-      {/* Bottom: GPS status + fallbacks */}
-      <div className="flex flex-col gap-2 bg-ink px-4 py-3">
+      {/* Bottom: GPS status + fallbacks. Sticky, so "I'm here" is always on screen. */}
+      <div className="sticky bottom-0 z-10 flex flex-col gap-2 bg-ink px-4 py-3">
         {isPermissionDenied && (
           <div role="alert" className="flex flex-col gap-1 text-sm text-yellow-300">
             <p>
@@ -240,11 +264,9 @@ export function NavigationScreen({
             <strong>{t("gps.gpsWeak")}</strong> {t("gps.gpsWeakDetail")}
           </p>
         )}
-        {showManualArrival && (
-          <Button onClick={onArrive} fullWidth>
-            {phase === "manual" || !destinationCoordinates ? t("gps.arrived") : t("gps.imHere")}
-          </Button>
-        )}
+        <Button onClick={handleManualArrival} variant={isManualArrivalPrimary ? "primary" : "outline"} fullWidth>
+          {phase === "manual" || !destinationCoordinates ? t("gps.arrived") : t("gps.imHere")}
+        </Button>
         <div className="flex justify-between text-sm">
           <button type="button" onClick={onShowRoute} className="min-h-11 text-gold underline underline-offset-4">
             {t("gps.showRoute")}
@@ -254,6 +276,19 @@ export function NavigationScreen({
           </a>
         </div>
       </div>
+      <ConfirmDialog
+        open={confirmArrivalDistance !== null}
+        title={t("gps.confirmArrival.title", { name: destination.name })}
+        message={t("gps.confirmArrival.message", {
+          distance: formatWalkingDistance(confirmArrivalDistance ?? 0, t),
+        })}
+        confirmLabel={t("gps.confirmArrival.confirm")}
+        onConfirm={() => {
+          setConfirmArrivalDistance(null);
+          onArrive();
+        }}
+        onCancel={() => setConfirmArrivalDistance(null)}
+      />
     </section>
   );
 }

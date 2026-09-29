@@ -48,5 +48,10 @@
     "u-turn": "Faites demi-tour",
     "roundabout": "Prenez le rond-point",
     "arrive": "Destination droit devant"
+  },
+  "confirmArrival": {
+    "title": "Êtes-vous à {name} ?",
+    "message": "Votre GPS indique que vous êtes encore à environ {distance}. Continuer quand même avec cette étape ?",
+    "confirm": "Oui, je suis là"
   }
 }

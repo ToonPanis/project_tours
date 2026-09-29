@@ -1,13 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createId } from "@/lib/create-id";
 import type { SessionAction, WalkSession } from "@/types/session";
 import type { Team } from "@/types/team";
 import type { Walk } from "@/types/walk";
 import { createWalkSession } from "../logic/create-session";
 import { applySessionAction } from "../logic/session-reducer";
-import { localWalkSessionStore, type WalkSessionStore } from "../storage/session-storage";
+import {
+  localWalkSessionStore,
+  parseSavedSession,
+  STORAGE_VERSION,
+  type WalkSessionStore,
+} from "../storage/session-storage";
 
 export interface WalkSessionControls {
   /** False until the saved game (if any) has been read from storage. */
@@ -30,11 +35,26 @@ export function useWalkSession(
 ): WalkSessionControls {
   const [session, setSession] = useState<WalkSession | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  // Which walk (and store) the session was loaded for.
+  const loadedFromRef = useRef<{ slug: string; store: WalkSessionStore } | null>(null);
 
-  // Load once, in the browser. (The server has no localStorage, so this
+  // Load once per walk, in the browser. (The server has no localStorage, so this
   // can't happen during the first render without a hydration mismatch.)
+  // Switching the language re-renders the page with a new `walk` object for the
+  // SAME walk: the session in memory is kept then. Reloading it from storage would
+  // lose the game whenever saving has been failing (private mode, storage full).
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- reading an external store once on mount
+    const loadedFrom = loadedFromRef.current;
+    if (loadedFrom?.slug === walk.slug && loadedFrom.store === store) {
+      // Same walk, new data (e.g. another language): keep the game in memory, unless it
+      // no longer fits the walk (a deploy changed its stops). Then fall back to the saved
+      // copy, which parseSavedSession checks the same way (usually: a fresh start).
+      setSession((current) =>
+        current === null || fitsWalk(walk, current) ? current : store.load(walk),
+      );
+      return;
+    }
+    loadedFromRef.current = { slug: walk.slug, store };
     setSession(store.load(walk));
     setIsLoaded(true);
   }, [walk, store]);
@@ -67,5 +87,19 @@ export function useWalkSession(
     setSession(null);
   }, [store, walk.slug]);
 
-  return { isLoaded, session, dispatch, startNewSession, resetSession };
+  // Never hand out another walk's session: right after switching to a different walk
+  // the old one is still in state for one render, until the effect above loads the new one.
+  const isSessionForThisWalk = session === null || session.walkSlug === walk.slug;
+  return {
+    isLoaded: isLoaded && isSessionForThisWalk,
+    session: isSessionForThisWalk ? session : null,
+    dispatch,
+    startNewSession,
+    resetSession,
+  };
+}
+
+/** True when an in-memory session still matches the walk's current stops (same check as a saved game). */
+function fitsWalk(walk: Walk, session: WalkSession): boolean {
+  return parseSavedSession(walk, { version: STORAGE_VERSION, session }) !== null;
 }

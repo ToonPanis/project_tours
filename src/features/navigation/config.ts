@@ -9,6 +9,13 @@ export const NAVIGATION_CONFIG = {
   /** How many good readings in a row are needed to confirm arrival. */
   ARRIVAL_CONFIRMATIONS: 2,
 
+  /**
+   * "I'm here" is always available (a pin can be unreachable, GPS can be wrong).
+   * With a good GPS fix farther than this from the stop, it asks for confirmation
+   * first, so an accidental tap doesn't skip ahead.
+   */
+  MANUAL_ARRIVAL_CONFIRM_METERS: 150,
+
   /** Show "GPS signal is weak" when accuracy is worse than this. */
   LOW_ACCURACY_METERS: 35,
 

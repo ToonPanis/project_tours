@@ -48,5 +48,10 @@
     "u-turn": "Umkehren",
     "roundabout": "In den Kreisverkehr",
     "arrive": "Ziel voraus"
+  },
+  "confirmArrival": {
+    "title": "Bist du bei {name}?",
+    "message": "Laut GPS bist du noch etwa {distance} entfernt. Trotzdem mit dieser Station weitermachen?",
+    "confirm": "Ja, ich bin hier"
   }
 }

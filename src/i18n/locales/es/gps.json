@@ -48,5 +48,10 @@
     "u-turn": "Da la vuelta",
     "roundabout": "Toma la rotonda",
     "arrive": "Destino al frente"
+  },
+  "confirmArrival": {
+    "title": "¿Estás en {name}?",
+    "message": "Tu GPS indica que todavía estás a unos {distance}. ¿Continuar de todos modos con esta parada?",
+    "confirm": "Sí, estoy aquí"
   }
 }

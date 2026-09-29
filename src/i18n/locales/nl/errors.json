@@ -8,5 +8,19 @@
     "title": "Deze wandeling bestaat niet",
     "text": "De route die je zoekt is misschien verplaatst, of nog niet beschikbaar.",
     "seeAll": "Alle wandelingen"
+  },
+  "playError": {
+    "title": "Er ging iets mis",
+    "text": "De wandeling stopte onverwacht, bijvoorbeeld door een zwakke verbinding. Je voortgang wordt normaal op deze telefoon bewaard.",
+    "tryAgain": "Opnieuw proberen",
+    "startOver": "Deze wandeling opnieuw beginnen",
+    "startOverTitle": "Deze wandeling opnieuw beginnen?",
+    "startOverMessage": "Hiermee wis je de opgeslagen voortgang van deze wandeling op deze telefoon en begin je opnieuw bij de eerste stop.",
+    "startOverConfirm": "Ja, opnieuw beginnen",
+    "allWalks": "Alle wandelingen"
+  },
+  "globalError": {
+    "title": "Er ging iets mis",
+    "text": "Deze pagina kon niet worden getoond. Probeer het zo meteen opnieuw."
   }
 }

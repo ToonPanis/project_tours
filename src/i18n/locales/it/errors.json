@@ -8,5 +8,19 @@
     "title": "Questa passeggiata non esiste",
     "text": "Il percorso che cerchi potrebbe essere stato spostato o non è ancora disponibile.",
     "seeAll": "Tutte le passeggiate"
+  },
+  "playError": {
+    "title": "Qualcosa è andato storto",
+    "text": "La passeggiata si è interrotta in modo imprevisto, ad esempio per una connessione debole. Di solito i progressi sono salvati su questo telefono.",
+    "tryAgain": "Riprova",
+    "startOver": "Ricomincia questa passeggiata",
+    "startOverTitle": "Ricominciare questa passeggiata?",
+    "startOverMessage": "Verranno cancellati i progressi salvati per questa passeggiata su questo telefono e si ricomincerà dalla prima tappa.",
+    "startOverConfirm": "Sì, ricomincia",
+    "allWalks": "Tutte le passeggiate"
+  },
+  "globalError": {
+    "title": "Qualcosa è andato storto",
+    "text": "Non è stato possibile mostrare questa pagina. Riprova tra un momento."
   }
 }
