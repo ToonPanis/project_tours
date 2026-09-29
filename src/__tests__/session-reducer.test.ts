@@ -327,6 +327,26 @@ describe("full play-through", () => {
     expect(session.completedAt).toBe("2026-09-23T16:47:00.000Z");
   });
 
+  test("the final puzzle can't become a dead end: after 3 wrong answers each question can be revealed", () => {
+    let session = play(hiddenPubsWalk, startSession(hiddenPubsWalk), getJumpToStopActions(hiddenPubsWalk, 9, "x"));
+    expect(session.finale?.status).toBe("active");
+
+    for (const question of hiddenPubsWalk.finale!.questions) {
+      const wrong: SessionAction = { type: "SUBMIT_FINALE_ANSWER", questionId: question.id, answer: "noon", at: "x" };
+      const reveal: SessionAction = { type: "REVEAL_FINALE_ANSWER", questionId: question.id, at: "2026-09-23T17:00:00.000Z" };
+
+      // Too early: ignored.
+      const early = play(hiddenPubsWalk, session, [wrong, wrong, reveal]);
+      expect(early.finale?.solvedQuestionIds).not.toContain(question.id);
+
+      session = play(hiddenPubsWalk, session, [wrong, wrong, wrong, reveal]);
+      expect(session.finale?.solvedQuestionIds).toContain(question.id);
+    }
+
+    expect(session.finale?.status).toBe("solved");
+    expect(session.completedAt).toBe("2026-09-23T17:00:00.000Z");
+  });
+
   test("The 17 Gates plays through the same reducer without drink rounds or finale", () => {
     let session = startSession(the17GatesWalk);
     const gateAnswers = ["0", "antwerpen", "2"];

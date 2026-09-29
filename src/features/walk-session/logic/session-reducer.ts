@@ -1,8 +1,8 @@
 import type { WalkLocation } from "@/types/location";
-import type { LocationProgress, SessionAction, WalkSession } from "@/types/session";
+import type { FinaleProgress, LocationProgress, SessionAction, WalkSession } from "@/types/session";
 import type { Walk } from "@/types/walk";
 import { checkAnswer } from "./answers";
-import { canRevealAnswer } from "./reveal-answer";
+import { canRevealAnswer, canRevealFinaleAnswer } from "./reveal-answer";
 import { getOrderedLocations } from "./route";
 import { findLeadingOptionIds, tallyVotes } from "./voting";
 
@@ -22,7 +22,9 @@ export function applySessionAction(
   if (session.completedAt) return session;
 
   // The finale happens after the last location, so it's handled separately.
-  if (action.type === "SUBMIT_FINALE_ANSWER") return applyFinaleAnswer(walk, session, action);
+  if (action.type === "SUBMIT_FINALE_ANSWER" || action.type === "REVEAL_FINALE_ANSWER") {
+    return applyFinaleAction(walk, session, action);
+  }
 
   const location = walk.locations.find((candidate) => candidate.id === session.currentLocationId);
   const progress = session.locations[session.currentLocationId];
@@ -196,16 +198,34 @@ export function applySessionAction(
  * Checks one finale question. When every question is solved, the finale is
  * solved and the walk is complete.
  */
-function applyFinaleAnswer(
+function applyFinaleAction(
   walk: Walk,
   session: WalkSession,
-  action: Extract<SessionAction, { type: "SUBMIT_FINALE_ANSWER" }>,
+  action: Extract<SessionAction, { type: "SUBMIT_FINALE_ANSWER" | "REVEAL_FINALE_ANSWER" }>,
 ): WalkSession {
   const finale = session.finale;
   const questions = walk.finale?.questions ?? [];
   const question = questions.find((candidate) => candidate.id === action.questionId);
   if (!finale || finale.status !== "active" || !question) return session;
   if (finale.solvedQuestionIds.includes(question.id)) return session;
+
+  /** Marks this question solved; the walk is complete once every question is. */
+  function solveQuestion(finaleProgress: FinaleProgress, questionId: string, at: string): WalkSession {
+    const solvedQuestionIds = [...finaleProgress.solvedQuestionIds, questionId];
+    const allSolved = questions.every((candidate) => solvedQuestionIds.includes(candidate.id));
+    return {
+      ...session,
+      finale: { ...finaleProgress, solvedQuestionIds, status: allSolved ? "solved" : "active" },
+      completedAt: allSolved ? at : undefined,
+    };
+  }
+
+  // After enough wrong answers the team may see the answer (as at the stops),
+  // so the last page can never become a dead end.
+  if (action.type === "REVEAL_FINALE_ANSWER") {
+    if (!canRevealFinaleAnswer(finale.wrongAttemptsByQuestion[question.id] ?? 0)) return session;
+    return solveQuestion(finale, question.id, action.at);
+  }
 
   if (!checkAnswer(question, action.answer)) {
     const wrongAttempts = (finale.wrongAttemptsByQuestion[question.id] ?? 0) + 1;
@@ -218,14 +238,7 @@ function applyFinaleAnswer(
     };
   }
 
-  const solvedQuestionIds = [...finale.solvedQuestionIds, question.id];
-  const allSolved = questions.every((candidate) => solvedQuestionIds.includes(candidate.id));
-
-  return {
-    ...session,
-    finale: { ...finale, solvedQuestionIds, status: allSolved ? "solved" : "active" },
-    completedAt: allSolved ? action.at : undefined,
-  };
+  return solveQuestion(finale, question.id, action.at);
 }
 
 /** Marks a location solved and collects the clues earned there. */

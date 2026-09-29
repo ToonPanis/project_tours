@@ -1,7 +1,7 @@
 "use client";
 
 import { useT } from "@/i18n/client";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import type { Challenge } from "@/types/challenge";
 import type { Clue } from "@/types/clue";
@@ -10,6 +10,7 @@ import type { GameCopy } from "@/types/walk";
 import { optionLetter } from "../logic/option-letter";
 import { canRevealAnswer, getRevealContent } from "../logic/reveal-answer";
 import { PlayScreen } from "./PlayScreen";
+import { RevealAnswer } from "./RevealAnswer";
 
 interface ChallengeScreenProps {
   challenge: Challenge;
@@ -39,14 +40,7 @@ export function ChallengeScreen({
   const [answer, setAnswer] = useState("");
   // Step 1 shows the answer on screen; step 2 ("Continue") tells the game.
   const [isAnswerShown, setIsAnswerShown] = useState(false);
-  const answerBoxRef = useRef<HTMLDivElement>(null);
   const mayRevealAnswer = canRevealAnswer(challenge, progress);
-  const revealed = getRevealContent(challenge);
-
-  // Move focus to the revealed answer, so screen-reader users hear it right away.
-  useEffect(() => {
-    if (isAnswerShown) answerBoxRef.current?.focus();
-  }, [isAnswerShown]);
 
   const hasWrongAnswer = progress.wrongAttempts > 0;
   const hintsAvailable = Math.min(progress.wrongAttempts, challenge.hints.length);
@@ -171,38 +165,13 @@ export function ChallengeScreen({
       )}
 
       {/* Nobody gets stuck: after a few wrong attempts the team may see the answer. */}
-      {mayRevealAnswer && !isAnswerShown && (
-        <div className="flex flex-col gap-2 border-t border-parchment/20 pt-4">
-          {/* role="status": screen readers announce the offer when it appears. */}
-          <p role="status" className="text-sm text-parchment/80">
-            {t("game.challenge.revealOffer")}
-          </p>
-          <Button variant="outline" onClick={() => setIsAnswerShown(true)} fullWidth>
-            {t("game.challenge.revealAnswer")}
-          </Button>
-        </div>
-      )}
-      {mayRevealAnswer && isAnswerShown && (
-        <div className="flex flex-col gap-3 rounded-sm border border-gold/60 p-4">
-          {/* Focus lands on the answer text itself, so screen readers read it out. */}
-          <div
-            ref={answerBoxRef}
-            tabIndex={-1}
-            className="flex flex-col gap-2 break-words focus-visible:outline-2 focus-visible:outline-gold"
-          >
-            {revealed.answer !== null && (
-              <p className="font-display text-2xl text-parchment">
-                {t("game.challenge.answerIs", { answer: revealed.answer })}
-              </p>
-            )}
-            {revealed.explanation && (
-              <p className="font-display text-xl leading-snug text-parchment/90">{revealed.explanation}</p>
-            )}
-          </div>
-          <Button onClick={onRevealAnswer} fullWidth>
-            {t("common.continue")}
-          </Button>
-        </div>
+      {mayRevealAnswer && (
+        <RevealAnswer
+          isShown={isAnswerShown}
+          onShow={() => setIsAnswerShown(true)}
+          {...getRevealContent(challenge)}
+          onContinue={onRevealAnswer}
+        />
       )}
     </PlayScreen>
   );

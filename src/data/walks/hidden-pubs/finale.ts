@@ -5,22 +5,27 @@ import type { ChallengeData, StoryData } from "./helpers";
 
 /**
  * The final puzzle after the last café: the answers and the ledger's last
- * page. All three questions must be answered. Texts per language:
+ * page. All three questions must be answered. Each answer is written on a
+ * collected clue (answerClueId): that clue is shown if a team asks for the
+ * answer after three wrong tries. Texts per language:
  * content/<lang>.ts → finale.
  */
 export const finaleQuestions: ChallengeData[] = [
   {
     id: "pubs-finale-time",
+    answerClueId: "pubs-clue-time",
     type: "text-answer",
     acceptedAnswers: timeAnswers,
   },
   {
     id: "pubs-finale-animal",
+    answerClueId: "pubs-clue-horse",
     type: "text-answer",
     acceptedAnswers: horseAnswers,
   },
   {
     id: "pubs-finale-game",
+    answerClueId: "pubs-clue-barrel",
     type: "text-answer",
     acceptedAnswers: [
       ...barrelGameAnswers,

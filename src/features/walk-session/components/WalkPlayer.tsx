@@ -162,10 +162,14 @@ function WalkPlayerContent({ walk }: WalkPlayerProps) {
           finale={walk.finale}
           progress={activeSession.finale}
           collectedClues={collectedClues}
+          allClues={walk.clues ?? []}
           copy={copy}
           eyebrow={walk.narrative?.title ?? walk.title}
           onSubmit={(questionId, answer) =>
             dispatch({ type: "SUBMIT_FINALE_ANSWER", questionId, answer, at: new Date().toISOString() })
+          }
+          onRevealAnswer={(questionId) =>
+            dispatch({ type: "REVEAL_FINALE_ANSWER", questionId, at: new Date().toISOString() })
           }
         />
       );

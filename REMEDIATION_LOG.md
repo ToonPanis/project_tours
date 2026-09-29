@@ -253,6 +253,19 @@ Status values: `VERIFIED FIXED` · `PARTIALLY FIXED` · `BLOCKED` · `NOT REPROD
 - **Remaining limitations:**
   - The finale questions have no reveal of their own. Each finale answer is printed on a collected clue, so it is reachable, but the owner may want the same rule there later.
 
+### H-02 follow-up: the final puzzle gets the same reveal (owner request)
+- **Status:** VERIFIED FIXED
+- **Fix:**
+  - `REVEAL_FINALE_ANSWER` is allowed after 3 wrong answers on that question, using the same rule (`canRevealFinaleAnswer`).
+  - The answer shown is the translated value of the clue the answer is written on. This uses the new optional, data-driven `Challenge.answerClueId`; the finale links time, horse and barrel. It is read from the walk's clue definitions, so it is translated even if the clue was missed.
+  - A shared `components/RevealAnswer.tsx` is now used by `ChallengeScreen` and `FinaleScreen`.
+  - The session format is unchanged, so no migration is needed.
+- **Tests:**
+  - reducer: reveal ignored until 3 wrong answers; revealing all 3 questions completes the walk;
+  - data, all 8 languages: every finale question's linked clue exists, and its value really is an accepted answer;
+  - player: 3 wrong answers → the translated clue value is shown, the form and the clue toggle are hidden → the next question.
+- **Review + QA:** approved. Ignored cases were verified: finale locked, too early, unknown or solved question, double tap, after completion, separate counters per question. The minor points (translated fallback, id consistency) are fixed.
+
 ### M-04 (merge part)
 - **Status:** VERIFIED FIXED (decision: **merge**).
 - **Fix:**
@@ -283,5 +296,5 @@ Status values: `VERIFIED FIXED` · `PARTIALLY FIXED` · `BLOCKED` · `NOT REPROD
 | `npm run typecheck` | ✅ |
 | `npm run lint` | ✅ 0 problems |
 | `npm run i18n:check` | ✅ |
-| `npm run test:run` | ✅ 26 files, **743 tests** |
+| `npm run test:run` | ✅ 26 files, **755 tests** (incl. finale reveal) |
 | `npm run build` | ✅ |

@@ -88,5 +88,6 @@ export type SessionAction =
   | { type: "SUBMIT_BONUS_ANSWER"; answer: ChallengeAnswer }
   | { type: "SKIP_BONUS" }
   | { type: "SUBMIT_FINALE_ANSWER"; questionId: string; answer: ChallengeAnswer; at: string }
+  | { type: "REVEAL_FINALE_ANSWER"; questionId: string; at: string }
   /** `skipBonus`: pass over optional (bonus) stops, e.g. "continue the route" instead of a detour. */
   | { type: "CONTINUE_TO_NEXT_LOCATION"; at: string; skipBonus?: boolean };

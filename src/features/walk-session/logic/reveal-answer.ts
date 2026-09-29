@@ -1,4 +1,5 @@
 import type { Challenge } from "@/types/challenge";
+import type { Clue } from "@/types/clue";
 import type { LocationProgress } from "@/types/session";
 import { optionLetter } from "./option-letter";
 
@@ -16,6 +17,11 @@ export function canRevealAnswer(challenge: Challenge, progress: LocationProgress
   return progress.wrongAttempts >= REVEAL_ANSWER_AFTER_WRONG_ATTEMPTS;
 }
 
+/** The same rule for a question of the final puzzle (tracked per question). */
+export function canRevealFinaleAnswer(wrongAttempts: number): boolean {
+  return wrongAttempts >= REVEAL_ANSWER_AFTER_WRONG_ATTEMPTS;
+}
+
 /**
  * What the "show the answer" box shows, in the walk's language.
  * - `answer`: a short answer line ("B. Stepped", "9"), or null when it can't be
@@ -24,10 +30,17 @@ export function canRevealAnswer(challenge: Challenge, progress: LocationProgress
  *
  * Typed answers (text, code) are checked against one list shared by all languages
  * ("horse", "paard", "лошадь"…), whose first entry is in one language only. For
- * those, the translated explanation is shown instead.
+ * those, a linked clue's translated value (final puzzles) or the translated
+ * explanation is shown instead.
  */
-export function getRevealContent(challenge: Challenge): { answer: string | null; explanation: string | null } {
+export function getRevealContent(
+  challenge: Challenge,
+  clues: readonly Clue[] = [],
+): { answer: string | null; explanation: string | null } {
   const explanation = challenge.explanation ?? null;
+  const answerClue = challenge.answerClueId ? clues.find((clue) => clue.id === challenge.answerClueId) : undefined;
+  if (answerClue) return { answer: answerClue.value, explanation };
+
   const isTyped = challenge.type === "text-answer" || challenge.type === "code";
   if (isTyped && explanation) return { answer: null, explanation };
   return { answer: getAnswerText(challenge), explanation };

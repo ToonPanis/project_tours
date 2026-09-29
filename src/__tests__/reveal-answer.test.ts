@@ -1,8 +1,10 @@
 import { describe, expect, test } from "vitest";
 import { getWalks, walks } from "@/data/walks";
 import { createLocationProgress } from "@/features/walk-session/logic/create-session";
+import { checkAnswer } from "@/features/walk-session/logic/answers";
 import {
   canRevealAnswer,
+  canRevealFinaleAnswer,
   getAnswerText,
   getRevealContent,
   REVEAL_ANSWER_AFTER_WRONG_ATTEMPTS,
@@ -64,6 +66,30 @@ describe("getRevealContent: the revealed answer is in the player's language", ()
         expect(challenge.explanation?.trim(), `${walk.slug} / ${location.id}`).toBeTruthy();
       }
     }
+  });
+});
+
+describe("final puzzle: the answer comes from the clue it is written on", () => {
+  test("a linked clue's value is shown as the answer", () => {
+    const question: Challenge = { ...base, type: "text-answer", acceptedAnswers: ["horse"], answerClueId: "clue-horse" };
+    const clues = [{ id: "clue-horse", title: "Лошадь", value: "ЛОШАДЬ", icon: "lion" as const, sourceLocationId: "s" }];
+    expect(getRevealContent(question, clues)).toEqual({ answer: "ЛОШАДЬ", explanation: null });
+  });
+
+  test.each(locales)("[%s] every final question links a clue whose value really is an accepted answer", (locale) => {
+    for (const walk of getWalks(locale)) {
+      for (const question of walk.finale?.questions ?? []) {
+        const clue = (walk.clues ?? []).find((candidate) => candidate.id === question.answerClueId);
+        expect(clue, `${walk.slug} / ${question.id}: answerClueId`).toBeDefined();
+        // Proves the link: typing what the clue says solves the question.
+        expect(checkAnswer(question, clue!.value), `${walk.slug} / ${question.id} = "${clue!.value}"`).toBe(true);
+      }
+    }
+  });
+
+  test("the reveal rule is the same as at the stops", () => {
+    expect(canRevealFinaleAnswer(REVEAL_ANSWER_AFTER_WRONG_ATTEMPTS - 1)).toBe(false);
+    expect(canRevealFinaleAnswer(REVEAL_ANSWER_AFTER_WRONG_ATTEMPTS)).toBe(true);
   });
 });
 

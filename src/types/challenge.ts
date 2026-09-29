@@ -31,6 +31,11 @@ interface BaseChallenge {
    * A challenge with required clues acts as a "combine the clues" / final puzzle.
    */
   requiredClueIds?: string[];
+  /**
+   * For final puzzles: the clue whose (translated) value is the answer. Shown when
+   * a team asks to see the answer, so it appears in the player's language.
+   */
+  answerClueId?: string;
 }
 
 export interface MultipleChoiceChallenge extends BaseChallenge {

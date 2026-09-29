@@ -6,6 +6,7 @@ import { createWalkSession } from "@/features/walk-session/logic/create-session"
 import { applySessionAction } from "@/features/walk-session/logic/session-reducer";
 import { getJumpToStopActions } from "@/features/walk-session/playtest/get-correct-answer";
 import { getAnswerText } from "@/features/walk-session/logic/reveal-answer";
+import { englishTranslator } from "@/i18n/translate";
 import { localWalkSessionStore, storageKey } from "@/features/walk-session/storage/session-storage";
 import type { SessionAction } from "@/types/session";
 
@@ -270,5 +271,34 @@ describe("WalkPlayer: Hidden Pubs", () => {
     expect(screen.getByText("taverns discovered")).toBeDefined();
     expect(screen.getByText("Clues recovered")).toBeDefined();
     expect(document.body.textContent).not.toMatch(/drinks? (ordered|consumed)/i);
+  });
+
+  test("a final-puzzle question can't become a dead end: after 3 wrong answers the answer can be shown", async () => {
+    saveSessionAfter(getJumpToStopActions(hiddenPubsWalk, 9, "2026-09-23T16:00:00.000Z"));
+    await continueSavedWalk();
+    click("Open the final page");
+
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      expect(screen.queryByRole("button", { name: "Show the answer" })).toBeNull();
+      fireEvent.change(screen.getByLabelText("Your answer"), { target: { value: "noon" } });
+      click("Submit");
+    }
+    click("Show the answer");
+
+    // The answer comes from the clue it is written on, in the player's language.
+    const firstQuestion = hiddenPubsWalk.finale!.questions[0];
+    const clue = hiddenPubsWalk.clues!.find((candidate) => candidate.id === firstQuestion.answerClueId)!;
+    expect(screen.getByText(`The answer: ${clue.value}`)).toBeDefined();
+    expect(screen.queryByLabelText("Your answer")).toBeNull();
+    expect(screen.queryByRole("button", { name: "Show your clues" })).toBeNull();
+    click("Continue");
+
+    // On to the next question; the walk completes as usual.
+    expect(screen.getByText(englishTranslator("game.finale.questionOf", { number: 2, total: 3 }))).toBeDefined();
+    for (const answer of ["Horse", "tonspel"]) {
+      fireEvent.change(screen.getByLabelText("Your answer"), { target: { value: answer } });
+      click("Submit");
+    }
+    expect(screen.getByText(/Maar de stad/)).toBeDefined();
   });
 });
