@@ -1,11 +1,13 @@
 import { spawnSync } from "node:child_process";
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { afterEach, describe, expect, test } from "vitest";
-import { MAP_WORKER_URL } from "@/features/navigation/config";
-import { copyMaplibreWorker, WORKER_FILES } from "../../scripts/lib/maplibre-worker.mjs";
+import { getVersion } from "maplibre-gl";
+import nextConfig from "../../next.config";
+import { MAP_WORKER_FOLDER, mapWorkerUrl } from "@/features/navigation/config";
+import { copyMaplibreWorker, removeOtherWorkerVersions, WORKER_FILES } from "../../scripts/lib/maplibre-worker.mjs";
 
 /**
  * The map stays empty when MapLibre can't start its web worker. The worker is
@@ -17,17 +19,35 @@ describe("MapLibre worker", () => {
   const installedVersion: string = JSON.parse(
     readFileSync(join(process.cwd(), "node_modules/maplibre-gl/package.json"), "utf8"),
   ).version;
+  const workerUrl = mapWorkerUrl(installedVersion);
 
   test("the worker and the shared module it imports are served from /public", () => {
-    expect(existsSync(publicFile(MAP_WORKER_URL))).toBe(true);
-    const worker = readFileSync(publicFile(MAP_WORKER_URL), "utf8");
+    expect(existsSync(publicFile(workerUrl))).toBe(true);
+    const worker = readFileSync(publicFile(workerUrl), "utf8");
     expect(worker).toContain('from"./maplibre-gl-shared.mjs"');
-    expect(existsSync(publicFile(MAP_WORKER_URL.replace("maplibre-gl-worker.mjs", "maplibre-gl-shared.mjs")))).toBe(true);
+    expect(existsSync(publicFile(workerUrl.replace("maplibre-gl-worker.mjs", "maplibre-gl-shared.mjs")))).toBe(true);
   });
 
   test("the served worker is the same version as the installed library", () => {
-    const worker = readFileSync(publicFile(MAP_WORKER_URL), "utf8");
+    const worker = readFileSync(publicFile(workerUrl), "utf8");
     expect(worker).toContain(`v${installedVersion}`);
+  });
+
+  test("the browser asks for the folder of the installed version", () => {
+    // WalkingMap builds the URL from getVersion(); the copy script names the folder after
+    // package.json. If they ever differ, the browser would ask for a folder that doesn't exist.
+    expect(getVersion()).toBe(installedVersion);
+    expect(workerUrl).toBe(`/maplibre/${installedVersion}/maplibre-gl-worker.mjs`);
+  });
+
+  test("the versioned worker is cached for a year; nothing else gets a cache header", async () => {
+    const rules = (await nextConfig.headers?.()) ?? [];
+    const workerRule = rules.find((rule) => rule.source.startsWith(`${MAP_WORKER_FOLDER}/:version/`));
+    expect(workerRule?.headers).toContainEqual({ key: "Cache-Control", value: "public, max-age=31536000, immutable" });
+    // Pages and images must never get an immutable cache.
+    for (const rule of rules.filter((rule) => rule !== workerRule)) {
+      expect(rule.headers.map((header) => header.key)).not.toContain("Cache-Control");
+    }
   });
 });
 
@@ -66,6 +86,22 @@ describe("copy-maplibre-worker script", () => {
     for (const file of WORKER_FILES) expect(existsSync(join(target, file))).toBe(false);
   });
 
+  test("removes older versions and the old unversioned files, keeps the current version", async () => {
+    const parent = makeTempDir();
+    for (const folder of ["6.10.0", "6.11.1"]) {
+      mkdirSync(join(parent, folder));
+      writeFileSync(join(parent, folder, WORKER_FILES[0]), "// worker");
+    }
+    writeFileSync(join(parent, WORKER_FILES[0]), "// old unversioned layout");
+    await removeOtherWorkerVersions(dirUrl(parent), "6.11.1");
+    expect(readdirSync(parent)).toEqual(["6.11.1"]);
+    expect(existsSync(join(parent, "6.11.1", WORKER_FILES[0]))).toBe(true);
+  });
+
+  test("removing older versions is fine when the folder doesn't exist yet", async () => {
+    await expect(removeOtherWorkerVersions(dirUrl(join(makeTempDir(), "missing")), "6.11.1")).resolves.toBeUndefined();
+  });
+
   /**
    * Runs the real command (`node scripts/copy-maplibre-worker.mjs`) in a throwaway copy of the
    * project layout, started through a junction/symlink: npm runs it this way when the checkout
@@ -77,6 +113,7 @@ describe("copy-maplibre-worker script", () => {
     cpSync(join(process.cwd(), "scripts/lib"), join(root, "scripts/lib"), { recursive: true });
     const dist = join(root, "node_modules/maplibre-gl/dist");
     mkdirSync(dist, { recursive: true });
+    writeFileSync(join(root, "node_modules/maplibre-gl/package.json"), JSON.stringify({ version: "1.2.3" }));
     if (withWorkerFiles) for (const file of WORKER_FILES) writeFileSync(join(dist, file), `// ${file}`);
 
     const link = join(makeTempDir(), "linked-project");
@@ -94,13 +131,13 @@ describe("copy-maplibre-worker script", () => {
     const { result, publicDir } = runCommandThroughLink(true);
     expect(result.status).toBe(0);
     expect(result.stdout).toContain("Copied MapLibre worker");
-    for (const file of WORKER_FILES) expect(existsSync(join(publicDir, file))).toBe(true);
+    for (const file of WORKER_FILES) expect(existsSync(join(publicDir, "1.2.3", file))).toBe(true);
   });
 
   test("the command exits with code 1 and explains the problem when the worker is missing", () => {
     const { result, publicDir } = runCommandThroughLink(false);
     expect(result.status).toBe(1);
     expect(result.stderr).toMatch(/MapLibre worker file "maplibre-gl-worker\.mjs" was not found.*npm install/);
-    expect(existsSync(join(publicDir, WORKER_FILES[0]))).toBe(false);
+    expect(existsSync(join(publicDir, "1.2.3", WORKER_FILES[0]))).toBe(false);
   });
 });

@@ -53,15 +53,13 @@ export function GuideWalkPlayer({ walk }: { walk: Walk }) {
     setSeenChapterIds([]);
   }
 
-  if (!isLoaded) {
-    return <p className="px-4 py-16 text-center text-parchment/70">{t("common.loading")}</p>;
-  }
-
   if (!session || !isPlaying) {
     return (
       <GuideStartScreen
         walk={walk}
         savedSession={session}
+        // Until the save is read (also during server rendering) the hero shows without buttons.
+        isLoading={!isLoaded}
         t={t}
         onStart={() => {
           startNewSession(VISITOR_TEAM);

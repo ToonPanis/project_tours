@@ -53,12 +53,21 @@ export const NAVIGATION_CONFIG = {
 export const MAP_STYLE_URL =
   process.env.NEXT_PUBLIC_MAP_STYLE_URL || "https://tiles.openfreemap.org/styles/liberty";
 
+/** The folder MapLibre's web worker is served from (one subfolder per MapLibre version). */
+export const MAP_WORKER_FOLDER = "/maplibre";
+
 /**
  * Where the browser loads MapLibre's web worker from. The file is copied into
- * /public by scripts/copy-maplibre-worker.mjs (before dev/build). Without it
- * the map stays empty: see that script for the full explanation.
+ * public/maplibre/<version>/ by scripts/copy-maplibre-worker.mjs (before dev/build).
+ * Without it the map stays empty: see that script for the full explanation.
+ *
+ * The version is part of the path, so the file can be cached for a year
+ * (next.config.ts): after a MapLibre upgrade the URL changes, and a phone can
+ * never pair a cached old worker with the new library.
  */
-export const MAP_WORKER_URL = "/maplibre/maplibre-gl-worker.mjs";
+export function mapWorkerUrl(maplibreVersion: string): string {
+  return `${MAP_WORKER_FOLDER}/${maplibreVersion}/maplibre-gl-worker.mjs`;
+}
 
 /** Where the map looks before there is a route or GPS position: Antwerp's Grote Markt. */
 export const ANTWERP_CENTER = { latitude: 51.2211, longitude: 4.3997 } as const;

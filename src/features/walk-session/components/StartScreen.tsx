@@ -12,6 +12,12 @@ import { PlayScreen } from "./PlayScreen";
 interface StartScreenProps {
   walk: Walk;
   savedSession: WalkSession | null;
+  /**
+   * True until the saved game has been read (in the browser, after the first render).
+   * The screen already shows the walk, so the page isn't blank while JavaScript loads,
+   * but the button waits: starting before the save is known could overwrite it.
+   */
+  isLoading?: boolean;
   onNewAdventure: () => void;
   onContinue: () => void;
   onRestart: () => void;
@@ -20,6 +26,7 @@ interface StartScreenProps {
 export function StartScreen({
   walk,
   savedSession,
+  isLoading = false,
   onNewAdventure,
   onContinue,
   onRestart,
@@ -33,9 +40,15 @@ export function StartScreen({
         eyebrow={walk.title}
         title={walk.narrative?.title ?? walk.title}
         actions={
-          <Button onClick={onNewAdventure} fullWidth>
-            {t("game.start.newAdventure")}
-          </Button>
+          isLoading ? (
+            <Button disabled aria-busy="true" fullWidth>
+              {t("common.loading")}
+            </Button>
+          ) : (
+            <Button onClick={onNewAdventure} fullWidth>
+              {t("game.start.newAdventure")}
+            </Button>
+          )
         }
       >
         <p className="font-display text-xl leading-relaxed">

@@ -63,10 +63,6 @@ function WalkPlayerContent({ walk }: WalkPlayerProps) {
     setPhase("start");
   }
 
-  if (!isLoaded) {
-    return <p className="px-4 py-16 text-center text-parchment/70">{t("common.loading")}</p>;
-  }
-
   // ── Before the game ────────────────────────────────────────────────
   if (!session || phase === "start" || phase === "team-setup") {
     if (phase === "team-setup") {
@@ -84,6 +80,8 @@ function WalkPlayerContent({ walk }: WalkPlayerProps) {
       <StartScreen
         walk={walk}
         savedSession={session}
+        // Until the save is read (also during server rendering) the screen shows without buttons.
+        isLoading={!isLoaded}
         onNewAdventure={() => setPhase("team-setup")}
         onContinue={() => setPhase("playing")}
         onRestart={restart}

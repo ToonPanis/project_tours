@@ -216,6 +216,7 @@ export function NavigationScreen({
             travelBearing={view.travelBearing}
             onUserMovedMap={() => setIsFollowing(false)}
             loadErrorText={t("gps.mapUnavailable")}
+            tilesFailingText={t("gps.mapTilesFailing")}
           />
         </div>
         {destinationCoordinates ? (

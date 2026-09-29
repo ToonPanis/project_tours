@@ -569,3 +569,76 @@ Status values: `VERIFIED FIXED` · `PARTIALLY FIXED` · `BLOCKED` · `NOT REPROD
 - **Simulated GPS "arrive":** needs two clicks right after "Reset navigation". The first reading only switches to live mode. Playtest-only.
 - **Guide stop page → navigation:** no scroll to the top. Candidate for Phase 6 (UX).
 - **Start, team-setup and intro screens:** still follow the title (they come before the game).
+
+---
+
+## Phase 5 — Performance (2026-09-29)
+
+- **Branch:** `fix/phase-5-performance`, branched from `b0b6fd0`. Committed after approval.
+- **Measured** against a local production build (`next start`) before and after with the same script (read-only HTTP requests). No dependency added; the tile provider is unchanged.
+
+### Validation gate
+
+| Command | Result |
+|---|---|
+| `npx tsc --noEmit` | ✅ |
+| `npm run lint` | ✅ 0 problems |
+| `npm run i18n:check` | ✅ (1 new key, 8 languages) |
+| `npx vitest run` | ✅ 35 files, **889 tests** (was 872, +17) |
+| `npm run build` | ✅ All routes still dynamic (`ƒ`); worker copied to `public/maplibre/6.11.1/` |
+
+### Measurements (local production build)
+
+| Metric | Before | After |
+|---|---|---|
+| All 18 Classics images at 1200w (a 390 px phone at 3×) | 6426 KB WebP (largest 922 KB) | **2892 KB** AVIF (largest 343 KB) |
+| All 18 Classics images at 828w | 2998 KB | **1350 KB** |
+| Font files preloaded on every page | 6 | **2** |
+| Poortjes detail page HTML | 315 KB | **295 KB** (srcset URLs 849 → 525) |
+| MapLibre worker `Cache-Control` | `public, max-age=0` (re-checked on every leg) | **`public, max-age=31536000, immutable`** |
+| Play page first paint (HTML) | only "Loading…" | **the start screen** (title, text, stats), hero image preloaded (both guide walks) |
+| Play page HTML size | Poortjes 305 KB, Classics 137 KB | 308 KB, 139 KB (the start screen markup) |
+
+### M-14 + L-16: Heavy images and a heavy detail page
+- **Status:** PARTIALLY FIXED. The 1200w total is 2.8 MB; the plan's target was under 2.5 MB.
+- **Fix:** `next.config.ts` `images`: AVIF first, WebP fallback, `qualities: [75]`, fewer `deviceSizes`/`imageSizes` (shorter srcsets, so smaller HTML).
+- **Not done, on purpose:** re-encoding the original files in `public/images/classics`. It would need an image library (a new dependency) and permanently changes the historical scans. The originals, `images.json`, credits and licenses are untouched.
+- **Visual check:** original, WebP and AVIF crops compared for `central-station-hall-1909` and `sint-paulus-1901`. Detail and halftone pattern are preserved; only slight grain smoothing is visible at 2× zoom.
+- **Decision (user, 2026-09-29):** keep quality 75. The 2.5 MB target is not pursued: lowering the quality or pre-processing the originals would cost image quality of the historical photos.
+
+### L-15: Font preloads
+- **Status:** VERIFIED FIXED
+- **Fix:** `layout.tsx`: `subsets: ["latin"]`. `subsets` only decides preloading: the generated CSS still contains the Cyrillic and Latin-extended `@font-face` rules (with `unicode-range`), so Russian, Ukrainian and accented text load their font file when a page uses them.
+
+### M-08 step 1: Worker cache and tile failures
+- **Status:** VERIFIED FIXED (steps 2–4 deferred, see below)
+- **Worker cache:**
+  - The worker is copied to `public/maplibre/<version>/` (the version from `maplibre-gl/package.json`); folders of other versions and the old unversioned files are removed.
+  - The browser URL comes from MapLibre's own `getVersion()` (`mapWorkerUrl()` in `features/navigation/config.ts`).
+  - `next.config.ts` gives `/maplibre/:version/:file*` a one-year immutable cache (production only: a locally patched library keeps its version number). An upgrade changes the URL, so a phone can never pair a cached old worker with a new library. Pages and images keep their default headers.
+  - Known effect: a tab left open across a MapLibre upgrade asks for the removed old folder and shows "map unavailable" until reloaded. Before, it silently mixed versions.
+- **Tile failures:**
+  - `logic/map-health.ts` (pure): after the map has loaded, 3 failed tiles in a row show "Part of the map can't be loaded right now (weak connection?). The directions below still work." It disappears as soon as a tile loads again. Single failures, non-tile errors (e.g. a missing icon) and our own route/GPS-circle layers (redrawn on every reading) are ignored. MapLibre itself ignores 404 tiles (outside the tile set).
+  - The notice leaves the round map buttons (top right) free.
+- **Tests:**
+  - `map-worker.test.ts`: `getVersion()` equals the installed version; the served worker exists in the versioned folder; the cache rule exists and is the only `Cache-Control` rule; old versions are removed.
+  - `map-health.test.tsx`: the pure rules, plus `WalkingMap` with a fake MapLibre (notice after 3 failed tiles, cleared by a loaded street-map tile, **not** cleared by our own layers, nothing after 1). The notice test fails on the old code; the own-layers test fails without the review fix.
+
+### M-15: The play page showed only "Loading…"
+- **Status:** VERIFIED FIXED
+- **Root cause:** both players returned "Loading…" until the saved game had been read from localStorage, which only happens in the browser after the first render. So the server HTML was empty, and the hero image preload never reached it.
+- **Fix:** the start screens render straight away with `isLoading`; only their buttons wait. While loading they show one disabled "Loading…" button, so nobody can start a new walk before a saved walk is known (that would overwrite it). The server and the first browser render are identical (both "loading"), so hydration matches.
+- **Tests:** `play-first-paint.test.tsx`:
+  - the server HTML of a guide walk and a game walk contains the start screen, the hero preload and a disabled loading button, and no start button (fails on the old code);
+  - hydrating that HTML gives no hydration errors, then shows "Start" (no save) or "Continue" (with a save).
+- **Visible difference:** during the first moment, the game start screen shows the walk's title; with a saved game it then switches to "Welcome back" (as before, after loading).
+
+### Deferred, with reasons
+- **M-08 step 2 (one map for the whole walk):** Medium risk (lifecycle of markers, sources and the camera across legs). With the worker now cached, the remaining cost per leg is re-creating the map and re-reading its style and tiles, mostly from the browser cache. Its benefit can't be measured without a phone; better done together with a field test.
+- **L-14 (only the active language in the client bundle):** the messages file (36 KB gzip) is cached as an immutable chunk after the first visit. Sending the messages as props instead adds them to every server response, and a language switch would wait for the server. Small gain, real cost: not done.
+- **M-08 steps 3–4 (service worker/offline, production tile provider):** PRODUCT DECISION, not implemented.
+
+### Reviews
+- **Code reviewer:** no blockers. One major finding, fixed: our own GeoJSON sources (the accuracy circle is redrawn on every GPS reading) fired "tile loaded" events and cleared the notice while the street map was still grey, so the alert would flicker and be re-announced. The fix ignores those sources, with a regression test. Also fixed: the long cache applies in production only; comments on deploy skew and the Cyrillic font trade-off. Verified in MapLibre's code: failed tiles carry `tile`, 404 tiles are never reported, aborted tiles are filtered. Hydration, walk switching and language switching checked: no way to start before the save is known.
+- **QA / Guardian:** PASS on all tasks. No data, images, credits, research markers, dependencies or tile provider changed; no GPS stored. The 8 translations are consistent with the neighbouring map texts. The play pages in en/de/ru show the translated start screen with a disabled loading button in that language. The worker returns 200 + immutable + security headers; the old URL 404s; pages and images keep their headers. The new notice fits at 390 px in German and Cyrillic.
+- **Field checks added:** E19 (block tiles in DevTools → notice appears and clears), E20 (slow connection → start screen first, loading button can't be tapped).

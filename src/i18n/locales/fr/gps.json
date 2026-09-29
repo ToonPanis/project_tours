@@ -19,6 +19,7 @@
   "recenter": "Recentrer",
   "notOnMap": "Ce lieu n'est pas encore sur la carte.",
   "mapUnavailable": "Impossible de charger la carte (pas de connexion, ou ce navigateur ne peut pas afficher de cartes). Les indications et la carte externe fonctionnent toujours.",
+  "mapTilesFailing": "Une partie de la carte ne peut pas être chargée pour l'instant (connexion faible ?). Les indications ci-dessous fonctionnent toujours.",
   "gpsUnavailable": "Le GPS n'est pas disponible ici. La localisation nécessite une page sécurisée (https) et des services de localisation activés.",
   "gpsWeak": "Signal GPS faible.",
   "gpsWeakDetail": "Votre position peut être moins précise.",

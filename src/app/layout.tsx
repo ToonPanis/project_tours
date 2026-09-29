@@ -8,16 +8,21 @@ import "./globals.css";
 
 // Headings: a classic serif with an engraved, historical feel.
 // Both fonts include Cyrillic, so Russian and Ukrainian look the same as the rest.
+// `subsets` only decides which font files are PRELOADED: next/font still adds every
+// subset (Cyrillic, Latin-extended…) with a unicode-range, so the browser downloads
+// those only when a page uses their characters. Preloading just "latin" saves
+// about 150 KB of font downloads for most visitors. Trade-off: Russian and Ukrainian
+// text may show the fallback font for a moment while its Cyrillic file loads.
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
-  subsets: ["latin", "latin-ext", "cyrillic"],
+  subsets: ["latin"],
   weight: ["500", "600", "700"],
 });
 
 // Body text: a clean sans-serif that stays readable on phones outdoors.
 const sourceSans = Source_Sans_3({
   variable: "--font-source-sans",
-  subsets: ["latin", "latin-ext", "cyrillic"],
+  subsets: ["latin"],
 });
 
 /** Title and description in the visitor's language (also for link previews). */

@@ -12,7 +12,7 @@ I'm a programming student. I'm comfortable with TypeScript, JavaScript, React, N
 ## Stack
 
 - Next.js **16.3** (App Router, `src/app/`, Turbopack), React 19.2, TypeScript strict. Path alias `@/*` → `./src/*`.
-- Tailwind CSS v4 (`@tailwindcss/postcss`); design tokens + walk themes in `src/app/globals.css`. Fonts via `next/font/google`: Cormorant Garamond (display) + Source Sans 3 (body), both with `latin`, `latin-ext` and `cyrillic` subsets.
+- Tailwind CSS v4 (`@tailwindcss/postcss`); design tokens + walk themes in `src/app/globals.css`. Fonts via `next/font/google`: Cormorant Garamond (display) + Source Sans 3 (body), only `latin` is preloaded (`subsets`); Cyrillic and Latin-extended still load on demand via `unicode-range`.
 - **Only runtime dependency besides Next/React: `maplibre-gl` 6.** No i18n library, no state library, no UI kit.
 - ESLint 9 (`eslint-config-next`). Vitest 4 + React Testing Library (jsdom), tests in `src/__tests__/`.
 - Node 20 locally (end-of-life; upgrade planned). CI uses the version in `.nvmrc` (22); `engines` allows Next's minimum (≥ 20.9). Windows machine (use Git Bash / PowerShell syntax accordingly).
@@ -50,7 +50,7 @@ src/lib/                      repositories/ (walkRepository, cached getWalk), ro
 src/types/                    shared models (walk, location, challenge, content, guide, navigation, session, …)
 src/data/walks/               ALL walk data (see "Walks")
 scripts/                      route generator, Commons image downloader, MapLibre worker copy, translation check
-public/images/classics|poortjes/   walk images (committed). public/maplibre/ is generated + git-ignored.
+public/images/classics|poortjes/   walk images (committed). public/maplibre/<version>/ is generated + git-ignored.
 I18N.md                       full i18n guide (how to add texts / translate a stop / add a 9th language)
 ```
 
@@ -84,7 +84,7 @@ Pattern: **technical data exists once** (ids, coordinates, addresses, images, an
 ## GPS, map & navigation (`src/features/navigation/`)
 
 - Walking routes are **pre-generated** per leg (and a bypass leg around each optional stop) by `scripts/generate-walking-routes.mjs` using the free OSRM foot router at routing.openstreetmap.de, stored in `routes.json`. No routing API at runtime. Rerun after changing `coordinates.json`. Coordinates have `status` (`verified` / `to-verify`); unknown = `null`. **All 61 are currently `to-verify`** (geocoded, not checked on site; see `FIELD_TEST_CHECKLIST.md`).
-- Map: **MapLibre GL 6 + OpenFreeMap tiles** (no key; `NEXT_PUBLIC_MAP_STYLE_URL` overrides). MapLibre's worker must be served from `/maplibre/` (copied by `scripts/copy-maplibre-worker.mjs`, set via `setWorkerUrl`); without it the map stays blank. Don't remove this.
+- Map: **MapLibre GL 6 + OpenFreeMap tiles** (no key; `NEXT_PUBLIC_MAP_STYLE_URL` overrides). MapLibre's worker must be served from `/maplibre/<version>/` (copied by `scripts/copy-maplibre-worker.mjs`, URL from `mapWorkerUrl(getVersion())`, set via `setWorkerUrl`); without it the map stays blank. Don't remove this. The versioned path gets a one-year immutable cache in `next.config.ts`. After 3 failed tiles in a row the map shows a notice (`logic/map-health.ts`).
 - Live position via `navigator.geolocation.watchPosition` (`useGeolocation`), screen wake lock while navigating (at most one lock). Thresholds in `config.ts` (arrival 40 m + accuracy ≤ 40 m + 2 confirmations; off-route 30 m ×3; far-from-route 150 m ×2 → "head to" guidance with a compass direction and an arrow). Map fits user + destination; north-up above 1 km.
 - Noisy GPS is filtered in the pure `logic/tracking.ts` (tested): exact repeated readings are ignored; readings worse than 150 m are not used for position (only "GPS weak"); an implausible jump (> 10 m/s) is held back until a second reading confirms it, unless a precise reading replaces an imprecise position. A browser TIMEOUT is status `"searching"` (the watch keeps trying). The camera only moves for ≥ 4 m / ≥ 10° / a mode change (`logic/camera.ts`), stops following on any user pan/zoom/rotate, and doesn't animate with reduced motion. An accuracy circle shows how sure the dot is.
 - Permission explainer is skipped if already granted; if denied, the map and "I'm here"/"continue without GPS" still work.
@@ -92,6 +92,7 @@ Pattern: **technical data exists once** (ids, coordinates, addresses, images, an
 
 ## Images
 
+- `next/image` serves AVIF (WebP fallback) at quality 75 with a reduced set of widths (`images` in `next.config.ts`). The original files are never re-encoded.
 - **Classics:** only reusable licenses from Wikimedia Commons (public domain/CC0 for historical images; CC BY/BY-SA with attribution for modern photos). List them in `image-sources.json`, run `download-commons-images.mjs <walk>`, which refuses other licenses and writes files (`public/images/<folder>/`) plus `images.json` (size, author, source, license). Check each downloaded image visually (e.g. postcard backs). Captions/alt text are per language in `content`. The UI always shows caption + credit + license (`GuideImageFigure`).
 - **Poortjes** reuses Classics photos by id and shows Smekens' drawings `public/images/poortjes/gate-01…52.jpg` (file number = plate number). **Rights of the 1951 drawings are not yet cleared** (`license: "Rights still to be verified"` + TODO in `poortjes-van-antwerpen/index.ts`). Clear them before a public launch.
 

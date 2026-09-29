@@ -13,6 +13,12 @@ import type { Walk } from "@/types/walk";
 interface GuideStartScreenProps {
   walk: Walk;
   savedSession: WalkSession | null;
+  /**
+   * True until the saved walk has been read (in the browser, after the first render).
+   * The hero already shows, so the page isn't blank while JavaScript loads, but the
+   * buttons wait: starting before the save is known could overwrite it.
+   */
+  isLoading?: boolean;
   t?: Translator;
   onStart: () => void;
   onContinue: () => void;
@@ -25,7 +31,15 @@ function getApproximateHours(minMinutes: number, maxMinutes: number): number {
 }
 
 /** The hero screen of a guide walk. */
-export function GuideStartScreen({ walk, savedSession, t = englishTranslator, onStart, onContinue, onRestart }: GuideStartScreenProps) {
+export function GuideStartScreen({
+  walk,
+  savedSession,
+  isLoading = false,
+  t = englishTranslator,
+  onStart,
+  onContinue,
+  onRestart,
+}: GuideStartScreenProps) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const intro = walk.guideIntro;
 
@@ -68,7 +82,11 @@ export function GuideStartScreen({ walk, savedSession, t = englishTranslator, on
           ))}
         </ul>
 
-        {savedSession ? (
+        {isLoading ? (
+          <Button disabled aria-busy="true" fullWidth>
+            {t("common.loading")}
+          </Button>
+        ) : savedSession ? (
           <div className="flex flex-col gap-3">
             <Button onClick={onContinue} fullWidth>
               {savedSession.completedAt

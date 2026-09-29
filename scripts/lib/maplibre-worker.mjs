@@ -3,7 +3,7 @@
  * Used by scripts/copy-maplibre-worker.mjs (the command) and by the tests.
  * See that script for why the worker has to be served from /public.
  */
-import { access, copyFile, mkdir } from "node:fs/promises";
+import { access, copyFile, mkdir, readdir, rm } from "node:fs/promises";
 
 /** The worker imports ./maplibre-gl-shared.mjs, so both files must end up in the same folder. */
 export const WORKER_FILES = ["maplibre-gl-worker.mjs", "maplibre-gl-shared.mjs"];
@@ -36,5 +36,23 @@ export async function copyMaplibreWorker(sourceDir, targetDir) {
   await mkdir(targetDir, { recursive: true });
   for (const file of WORKER_FILES) {
     await copyFile(new URL(file, sourceDir), new URL(file, targetDir));
+  }
+}
+
+/**
+ * Removes everything in `parentDir` except the `keep` folder: workers of older MapLibre
+ * versions (public/maplibre/<old version>/) and files from the old unversioned layout.
+ * `parentDir` is a file: URL ending in "/". A missing folder is fine (nothing to remove).
+ */
+export async function removeOtherWorkerVersions(parentDir, keep) {
+  let entries;
+  try {
+    entries = await readdir(parentDir);
+  } catch (error) {
+    if (error?.code === "ENOENT") return;
+    throw error;
+  }
+  for (const entry of entries) {
+    if (entry !== keep) await rm(new URL(entry, parentDir), { recursive: true, force: true });
   }
 }

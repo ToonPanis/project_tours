@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-import { MAP_STYLE_URL } from "./src/features/navigation/config";
+import { MAP_STYLE_URL, MAP_WORKER_FOLDER } from "./src/features/navigation/config";
 import { buildSecurityHeaders, parseDevAllowedOrigins } from "./src/lib/security-headers";
 
 const isDevelopment = process.env.NODE_ENV === "development";
@@ -16,6 +16,21 @@ if (process.env.NODE_ENV === "production" && process.env.NEXT_PUBLIC_PLAYTEST_TO
 const nextConfig: NextConfig = {
   // Don't advertise the framework in every response.
   poweredByHeader: false,
+
+  /**
+   * next/image: AVIF first (about 20% smaller than WebP at the same quality; the
+   * first request of each size is slower to encode, later ones come from the cache),
+   * WebP for browsers without AVIF. Fewer widths than the defaults: the pages are at
+   * most 32rem wide except the hero, and the smallest image is 6rem (96 px). Fewer
+   * widths also make every image's srcset (and so the HTML) shorter.
+   * The original files and their licenses are untouched.
+   */
+  images: {
+    formats: ["image/avif", "image/webp"],
+    deviceSizes: [640, 828, 1080, 1200, 1920],
+    imageSizes: [64, 96, 128, 256, 384],
+    qualities: [75],
+  },
 
   /**
    * DEVELOPMENT ONLY: lets a phone on the same network open the dev server
@@ -35,6 +50,18 @@ const nextConfig: NextConfig = {
           mapStyleUrl: MAP_STYLE_URL,
         }),
       },
+      // MapLibre's worker (about 530 KB uncompressed). Safe to cache for a year because
+      // the MapLibre version is part of the path (see mapWorkerUrl in features/navigation/config.ts).
+      // Without this, public/ files get "max-age=0" and are re-checked on every leg.
+      // Not in development: a locally patched maplibre-gl keeps its version number.
+      ...(isDevelopment
+        ? []
+        : [
+            {
+              source: `${MAP_WORKER_FOLDER}/:version/:file*`,
+              headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+            },
+          ]),
     ];
   },
 };

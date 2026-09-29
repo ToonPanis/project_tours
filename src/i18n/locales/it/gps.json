@@ -19,6 +19,7 @@
   "recenter": "Centra",
   "notOnMap": "Questo luogo non è ancora sulla mappa.",
   "mapUnavailable": "Impossibile caricare la mappa (nessuna connessione, oppure questo browser non può mostrare mappe). Le indicazioni e la mappa esterna funzionano comunque.",
+  "mapTilesFailing": "Al momento non è possibile caricare parte della mappa (connessione debole?). Le indicazioni qui sotto funzionano comunque.",
   "gpsUnavailable": "Il GPS non è disponibile qui. La posizione richiede una pagina sicura (https) e i servizi di localizzazione attivi.",
   "gpsWeak": "Segnale GPS debole.",
   "gpsWeakDetail": "La tua posizione potrebbe essere meno precisa.",

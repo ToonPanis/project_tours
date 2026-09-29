@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { GeoJSONSource, getWorkerUrl, LngLatBounds, Map as MapLibreMap, Marker, NavigationControl, setWorkerUrl } from "maplibre-gl";
+import { GeoJSONSource, getVersion, getWorkerUrl, LngLatBounds, Map as MapLibreMap, Marker, NavigationControl, setWorkerUrl } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { circleAround, distanceInMeters } from "@/lib/geo";
 import type { GeoCoordinates } from "@/types/common";
-import { ANTWERP_CENTER, MAP_STYLE_URL, MAP_WORKER_URL, OVERVIEW_DISTANCE_METERS } from "../config";
+import { ANTWERP_CENTER, MAP_STYLE_URL, mapWorkerUrl, OVERVIEW_DISTANCE_METERS } from "../config";
 import { shouldMoveCamera, type CameraTarget } from "../logic/camera";
+import { getMapHealth, INITIAL_MAP_HEALTH, updateMapHealth, type MapHealth, type MapHealthEvent } from "../logic/map-health";
 
 export type MapOrientation = "follow-direction" | "north-up";
 
@@ -26,6 +27,8 @@ interface WalkingMapProps {
   onUserMovedMap: () => void;
   /** Shown over the map when it can't be loaded (no WebGL, no connection…). */
   loadErrorText: string;
+  /** Shown over the map when several tiles in a row failed (grey squares), e.g. a weak signal. */
+  tilesFailingText: string;
 }
 
 /**
@@ -36,6 +39,18 @@ const MARKER_PADDING = { top: 72, bottom: 56, left: 110, right: 110 };
 
 const toLngLat = (coordinates: GeoCoordinates): [number, number] => [coordinates.longitude, coordinates.latitude];
 
+/**
+ * Our own GeoJSON sources (GPS accuracy circle, route line). Their "tiles" are made in
+ * the browser on every GPS reading, so they must not count as map tiles loading again.
+ */
+const OWN_SOURCE_IDS = ["accuracy", "route"];
+
+/** True for an event about a tile of the street map itself (MapLibre sets `tile` and `sourceId`). */
+function isStreetMapTileEvent(event: object): boolean {
+  const sourceId = "sourceId" in event ? event.sourceId : undefined;
+  return "tile" in event && Boolean(event.tile) && !OWN_SOURCE_IDS.includes(String(sourceId));
+}
+
 /** Camera glide per GPS update: short, so it has finished before the next reading (~1 s). */
 const CAMERA_ANIMATION_MS = 500;
 
@@ -44,7 +59,7 @@ const CAMERA_ANIMATION_MS = 500;
  * scripts/copy-maplibre-worker.mjs). Must run before the first map is created.
  */
 function pointMapLibreAtServedWorker() {
-  const url = new URL(MAP_WORKER_URL, window.location.origin).href;
+  const url = new URL(mapWorkerUrl(getVersion()), window.location.origin).href;
   if (getWorkerUrl() !== url) setWorkerUrl(url);
 }
 
@@ -119,6 +134,7 @@ export default function WalkingMap({
   travelBearing,
   onUserMovedMap,
   loadErrorText,
+  tilesFailingText,
 }: WalkingMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
@@ -129,7 +145,7 @@ export default function WalkingMap({
   const accuracyRef = useRef({ position: userPosition, meters: userAccuracyMeters });
   // Where the camera was last pointed while following (null = move on the next update).
   const lastCameraRef = useRef<CameraTarget | null>(null);
-  const [hasLoadError, setHasLoadError] = useState(false);
+  const [mapHealth, setMapHealth] = useState<MapHealth>("ok");
 
   useEffect(() => {
     onUserMovedMapRef.current = onUserMovedMap;
@@ -152,7 +168,7 @@ export default function WalkingMap({
       });
     } catch {
       // E.g. no WebGL on this device. Reported after this effect, so React can render the message.
-      queueMicrotask(() => setHasLoadError(true));
+      queueMicrotask(() => setMapHealth("load-failed"));
       return;
     }
     mapRef.current = map;
@@ -174,16 +190,21 @@ export default function WalkingMap({
     map.on("rotatestart", stopFollowingOnUserMove);
     map.on("pitchstart", stopFollowingOnUserMove);
 
-    // A single missing tile is harmless; an error before the map ever loaded
-    // (style unreachable, worker missing…) means the walker sees nothing.
-    let hasLoaded = false;
-    map.on("error", () => {
-      if (!hasLoaded) setHasLoadError(true);
+    // Load errors and failing tiles (see logic/map-health.ts). Kept outside React state:
+    // tiles load many times a second, and only a change of health needs a render.
+    let health = INITIAL_MAP_HEALTH;
+    const report = (event: MapHealthEvent) => {
+      health = updateMapHealth(health, event);
+      setMapHealth(getMapHealth(health)); // same value: React skips the render
+    };
+    // MapLibre puts the failed tile on the error event (not in its TypeScript type).
+    map.on("error", (event) => report({ type: "error", isTileError: isStreetMapTileEvent(event) }));
+    map.on("sourcedata", (event) => {
+      if (isStreetMapTileEvent(event)) report({ type: "tile-loaded" });
     });
 
     map.on("load", () => {
-      hasLoaded = true;
-      setHasLoadError(false);
+      report({ type: "loaded" });
       // GPS accuracy circle, under the route line.
       map.addSource("accuracy", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
       map.addLayer({
@@ -318,9 +339,10 @@ export default function WalkingMap({
     <div className="relative h-full w-full">
       {/* h-full, not absolute: MapLibre's CSS makes its container position: relative. */}
       <div ref={containerRef} className="h-full w-full" aria-label={destination.name} role="region" />
-      {hasLoadError && (
-        <p role="alert" className="absolute inset-x-3 top-3 z-10 rounded-sm bg-ink/90 p-3 text-sm text-parchment shadow-lg">
-          {loadErrorText}
+      {/* right-16 keeps the round map buttons (top right) visible and tappable. */}
+      {mapHealth !== "ok" && (
+        <p role="alert" className="absolute left-3 right-16 top-3 z-10 rounded-sm bg-ink/90 p-3 text-sm text-parchment shadow-lg">
+          {mapHealth === "load-failed" ? loadErrorText : tilesFailingText}
         </p>
       )}
     </div>

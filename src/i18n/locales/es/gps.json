@@ -19,6 +19,7 @@
   "recenter": "Centrar",
   "notOnMap": "Este lugar todavía no está en el mapa.",
   "mapUnavailable": "No se ha podido cargar el mapa (sin conexión, o este navegador no puede mostrar mapas). Las indicaciones y el mapa externo siguen funcionando.",
+  "mapTilesFailing": "Ahora mismo no se puede cargar parte del mapa (¿conexión débil?). Las indicaciones de abajo siguen funcionando.",
   "gpsUnavailable": "El GPS no está disponible aquí. La ubicación necesita una página segura (https) y los servicios de ubicación activados.",
   "gpsWeak": "Señal de GPS débil.",
   "gpsWeakDetail": "Tu posición puede ser menos precisa.",
