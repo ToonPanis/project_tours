@@ -2,13 +2,19 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
 import { WalkPlayer } from "@/features/walk-session/components/WalkPlayer";
+import { getVerificationLabel } from "@/features/walk-session/components/ContentBlockView";
 import { createWalkSession } from "@/features/walk-session/logic/create-session";
 import { applySessionAction } from "@/features/walk-session/logic/session-reducer";
-import { getJumpToStopActions } from "@/features/walk-session/playtest/get-correct-answer";
-import { getAnswerText } from "@/features/walk-session/logic/reveal-answer";
+import { getWalkCopy } from "@/features/walk-session/logic/walk-copy";
+import { getCorrectAnswer, getJumpToStopActions } from "@/features/walk-session/playtest/get-correct-answer";
 import { englishTranslator } from "@/i18n/translate";
+import { getOrderedLocations } from "@/lib/walk-locations";
 import { localWalkSessionStore, storageKey } from "@/features/walk-session/storage/session-storage";
+import type { Challenge } from "@/types/challenge";
+import type { StoryBlock } from "@/types/content";
+import type { WalkLocation } from "@/types/location";
 import type { SessionAction } from "@/types/session";
+import { revealedIn } from "./fixtures/hidden-stop";
 
 // The real map needs WebGL, which jsdom doesn't have.
 vi.mock("@/features/navigation/components/WalkingMap", () => ({
@@ -22,6 +28,50 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 
+// Every expected text comes from the walk data or the English UI texts, so
+// researchers can correct the content without breaking these tests.
+const walk = hiddenPubsWalk;
+const t = englishTranslator;
+const copy = getWalkCopy(walk, t);
+const stops = getOrderedLocations(walk);
+const clues = walk.clues ?? [];
+
+function stop(id: string): WalkLocation {
+  const location = stops.find((candidate) => candidate.id === id);
+  if (!location) throw new Error(`Unknown stop ${id}`);
+  return location;
+}
+
+/** The value of the clue earned at a stop. */
+function clueValueOf(location: WalkLocation): string {
+  const clue = clues.find((candidate) => candidate.sourceLocationId === location.id);
+  if (!clue) throw new Error(`${location.id} has no clue`);
+  return clue.value;
+}
+
+/** The ledger (story) blocks of a stop. */
+function storyBlocks(location: WalkLocation): StoryBlock[] {
+  return location.content.filter((block): block is StoryBlock => block.kind === "story");
+}
+
+/** Matches text containing `text` literally (like a regex, but safe for any character). */
+function containing(text: string): RegExp {
+  return new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+}
+
+/** Testing Library collapses whitespace in the page; do the same for multi-line data texts. */
+function normalized(text: string): string {
+  return text.replace(/\s+/g, " ").trim();
+}
+
+/** The research badge a challenge shows, if any. */
+function researchBadge(challenge: Challenge): string | null {
+  if (!challenge.researchStatus) return null;
+  return challenge.researchStatus === "on-site-verification-required"
+    ? t("game.challenge.onSiteVerification")
+    : t("game.challenge.researchRequired");
+}
+
 function click(name: string | RegExp) {
   fireEvent.click(screen.getByRole("button", { name }));
 }
@@ -29,7 +79,7 @@ function click(name: string | RegExp) {
 /** Saves a two-player session advanced by `actions`, as if played earlier. */
 function saveSessionAfter(actions: SessionAction[]) {
   const start = createWalkSession({
-    walk: hiddenPubsWalk,
+    walk,
     team: {
       id: "t",
       name: "The Antwerp Explorers",
@@ -41,110 +91,129 @@ function saveSessionAfter(actions: SessionAction[]) {
     sessionId: "s",
     startedAt: "2026-09-23T14:00:00.000Z",
   });
-  const session = actions.reduce((state, action) => applySessionAction(hiddenPubsWalk, state, action), start);
+  const session = actions.reduce((state, action) => applySessionAction(walk, state, action), start);
   localWalkSessionStore.save(session);
   return session;
 }
 
 /** Renders the player and continues the saved walk. */
 async function continueSavedWalk() {
-  render(<WalkPlayer walk={hiddenPubsWalk} />);
-  await screen.findByRole("button", { name: "Continue walk" });
-  click("Continue walk");
+  render(<WalkPlayer walk={walk} />);
+  await screen.findByRole("button", { name: t("game.start.continueWalk") });
+  click(t("game.start.continueWalk"));
 }
 
 /** Start a new game with two players and walk to the first vote. */
 async function startTwoPlayerGameAndStartVote() {
-  render(<WalkPlayer walk={hiddenPubsWalk} />);
+  render(<WalkPlayer walk={walk} />);
   // The saved game is loaded after the first render, so wait for the start screen.
-  await screen.findByRole("button", { name: "Start new adventure" });
-  click("Start new adventure");
+  await screen.findByRole("button", { name: t("game.start.newAdventure") });
+  click(t("game.start.newAdventure"));
   click("2");
   const [teamName, player1, player2] = screen.getAllByRole("textbox");
   fireEvent.change(teamName, { target: { value: "The Antwerp Explorers" } });
   fireEvent.change(player1, { target: { value: "Tony" } });
   fireEvent.change(player2, { target: { value: "Sarah" } });
-  click("Start adventure");
-  click("Begin the adventure");
+  click(t("game.team.startAdventure"));
+  click(t("game.intro.begin"));
 
-  expect(screen.getByRole("heading", { level: 1, name: "Rococo Antwerp" })).toBeDefined();
-  expect(screen.getByText("Stop 1 / 8")).toBeDefined();
-  click("Continue without live GPS");
-  click("I've arrived");
-  click("Start the drink vote");
+  expect(screen.getByRole("heading", { level: 1, name: stops[0].name })).toBeDefined();
+  expect(screen.getByText(t("game.header.stopCounter", { current: 1, total: stops.length }))).toBeDefined();
+  click(t("gps.continueWithoutGps"));
+  click(t("gps.arrived"));
+  click(t("game.arrived.startVote"));
 }
 
 describe("WalkPlayer: Hidden Pubs", () => {
   test("pass-the-phone voting shows four options and keeps each vote secret", async () => {
+    const options = stops[0].drinkRound!.options;
+    const tonysDrink = options.find((option) => option.alcoholic)!;
     await startTwoPlayerGameAndStartVote();
 
-    expect(screen.getByText("Tony's turn")).toBeDefined();
-    expect(screen.getAllByRole("radio")).toHaveLength(4);
-    fireEvent.click(screen.getByLabelText(/Tongerlo Blond/));
-    click("Confirm vote");
+    expect(screen.getByText(t("game.voting.playerTurn", { name: "Tony" }))).toBeDefined();
+    expect(screen.getAllByRole("radio")).toHaveLength(options.length);
+    fireEvent.click(screen.getByLabelText(containing(tonysDrink.name)));
+    click(t("game.voting.confirm"));
 
     // Pass screen: the next player, and no trace of Tony's choice.
-    expect(screen.getByRole("heading", { name: "Pass the phone to Sarah" })).toBeDefined();
-    expect(document.body.textContent).not.toContain("Tongerlo");
+    expect(screen.getByRole("heading", { name: t("game.voting.passPhone", { name: "Sarah" }) })).toBeDefined();
+    expect(document.body.textContent).not.toContain(tonysDrink.name);
 
-    click("I'm Sarah");
-    expect(screen.getByText("Sarah's turn")).toBeDefined();
+    click(t("game.voting.iAm", { name: "Sarah" }));
+    expect(screen.getByText(t("game.voting.playerTurn", { name: "Sarah" }))).toBeDefined();
     // Nothing is preselected for the next player.
-    expect(screen.getByRole("button", { name: "Confirm vote" }).hasAttribute("disabled")).toBe(true);
+    expect(screen.getByRole("button", { name: t("game.voting.confirm") }).hasAttribute("disabled")).toBe(true);
   });
 
-  test("plays Rococo: vote, story, challenge with hint, history, clue, next café", async () => {
+  test("plays the first café: vote, story, challenge with hint, history, clue, next café", async () => {
+    const first = stops[0];
+    const second = stops[1];
+    const challenge = first.challenge!;
+    if (challenge.type !== "multiple-choice") throw new Error("The first café needs a multiple-choice challenge");
+    const correctOption = challenge.options[challenge.correctOptionIndex];
+    const wrongOption = challenge.options.find((_, index) => index !== challenge.correctOptionIndex)!;
+    const alcoholFree = first.drinkRound!.options.find((option) => !option.alcoholic)!;
+    const [chapter, ...laterBlocks] = storyBlocks(first);
+    const revealedAfterSolving = laterBlocks.find((block) => block.revealAt === "solved")!;
+
     await startTwoPlayerGameAndStartVote();
 
-    fireEvent.click(screen.getByLabelText(/Tonic Water/));
-    click("Confirm vote");
-    click("I'm Sarah");
-    fireEvent.click(screen.getByLabelText(/Tonic Water/));
-    click("Confirm vote");
+    fireEvent.click(screen.getByLabelText(containing(alcoholFree.name)));
+    click(t("game.voting.confirm"));
+    click(t("game.voting.iAm", { name: "Sarah" }));
+    fireEvent.click(screen.getByLabelText(containing(alcoholFree.name)));
+    click(t("game.voting.confirm"));
 
     // Result
-    expect(screen.getByRole("heading", { name: "The tavern has spoken" })).toBeDefined();
-    expect(screen.getByText("2 votes counted")).toBeDefined();
-    click("Continue");
+    expect(screen.getByRole("heading", { name: copy.voteResultTitle })).toBeDefined();
+    expect(screen.getByText(t.plural("game.result.votesCounted", 2))).toBeDefined();
+    click(t("common.continue"));
 
     // Story: fiction only, no history before the challenge.
-    expect(screen.getByText("The First Page")).toBeDefined();
-    expect(screen.getAllByText("The Ledger · fiction").length).toBeGreaterThan(0);
-    expect(screen.queryByText(/History/)).toBeNull();
-    click("To the challenge");
+    expect(screen.getByText(chapter.chapterTitle!)).toBeDefined();
+    expect(screen.getAllByText(t("game.content.story")).length).toBeGreaterThan(0);
+    expect(screen.queryByText(containing(t("game.content.history")))).toBeNull();
+    click(t("game.story.toChallenge"));
 
     // Challenge: a wrong answer, a hint, then the right answer.
-    expect(screen.getByText("On-site verification required")).toBeDefined();
-    click(/Rounded/);
-    expect(screen.getByText("The Ledger remains silent.")).toBeDefined();
-    click("Need a hint?");
-    expect(screen.getByText(/Hint 1:/)).toBeDefined();
-    click(/Stepped/);
+    const badge = researchBadge(challenge);
+    if (badge) {
+      expect(screen.getByText(badge)).toBeDefined();
+    } else {
+      expect(screen.queryByText(t("game.challenge.onSiteVerification"))).toBeNull();
+      expect(screen.queryByText(t("game.challenge.researchRequired"))).toBeNull();
+    }
+    click(containing(wrongOption));
+    expect(screen.getByText(copy.wrongAnswer)).toBeDefined();
+    click(t("game.challenge.needHint"));
+    expect(screen.getByText(containing(t("game.challenge.hint", { number: 1 }).trim()))).toBeDefined();
+    click(containing(correctOption));
 
     // Correct → history → clue → next café
-    expect(screen.getByRole("heading", { name: "The ink begins to move…" })).toBeDefined();
-    click("Discover why it matters");
-    expect(screen.getByText("History · research required")).toBeDefined();
-    click("Continue");
-    expect(screen.getByText("The ledger has changed")).toBeDefined();
-    expect(screen.getByText("THE STAIR")).toBeDefined();
-    click("Continue");
-    expect(screen.getByRole("heading", { name: "Café Den Engel" })).toBeDefined();
-    expect(screen.getByText(/Zoek de Engel aan de andere zijde van de markt/)).toBeDefined();
-    expect(screen.getByText("min walk", { exact: false })).toBeDefined(); // distance + time
-    click("Start walking");
+    expect(screen.getByRole("heading", { name: copy.correctAnswer })).toBeDefined();
+    click(t("game.solved.discoverWhy"));
+    expect(screen.getByText(getVerificationLabel(first.historicalReveal!.status, t))).toBeDefined();
+    click(t("common.continue"));
+    expect(screen.getByText(copy.clueCollectedTitle)).toBeDefined();
+    expect(screen.getByText(clueValueOf(first))).toBeDefined();
+    click(t("common.continue"));
+    expect(screen.getByRole("heading", { name: second.name })).toBeDefined();
+    expect(screen.getByText(normalized(revealedAfterSolving.body))).toBeDefined();
+    // distance + time
+    expect(screen.getByText(containing(t("gps.minWalk", { minutes: "" }).trim()))).toBeDefined();
+    click(t("game.solved.startWalking"));
 
-    expect(screen.getByText("Your next destination")).toBeDefined();
-    expect(screen.getByText("Stop 2 / 8")).toBeDefined();
-    expect(screen.getByText("Clues 1 / 8")).toBeDefined();
+    expect(screen.getByText(t("gps.yourNextDestination"))).toBeDefined();
+    expect(screen.getByText(t("game.header.stopCounter", { current: 2, total: stops.length }))).toBeDefined();
+    expect(screen.getByText(t("game.header.clues", { found: 1, total: clues.length }))).toBeDefined();
   });
 
   test("after 3 wrong answers the team can see the answer and continue (H-02)", async () => {
     // Stop 5 (De Kat) has a number challenge whose answer is still a placeholder:
     // exactly the case where a team could otherwise get stuck.
-    const deKat = hiddenPubsWalk.locations.find((location) => location.id === "pubs-de-kat")!;
+    const deKat = stop("pubs-de-kat");
     saveSessionAfter([
-      ...getJumpToStopActions(hiddenPubsWalk, 5, "2026-09-23T15:00:00.000Z"),
+      ...getJumpToStopActions(walk, deKat.order, "2026-09-23T15:00:00.000Z"),
       { type: "ARRIVE" },
       { type: "SKIP_DRINK_ROUND" },
       { type: "SHOW_STORY" },
@@ -152,82 +221,88 @@ describe("WalkPlayer: Hidden Pubs", () => {
     ]);
     await continueSavedWalk();
 
-    const input = screen.getByPlaceholderText("Your answer");
+    const input = screen.getByPlaceholderText(t("common.yourAnswer"));
     for (let attempt = 1; attempt <= 3; attempt++) {
-      expect(screen.queryByRole("button", { name: "Show the answer" })).toBeNull();
+      expect(screen.queryByRole("button", { name: t("game.challenge.revealAnswer") })).toBeNull();
       fireEvent.change(input, { target: { value: "-1" } });
-      click("Submit");
+      click(t("common.submit"));
     }
 
-    click("Show the answer");
+    click(t("game.challenge.revealAnswer"));
     // The answer box: the answer and the (translated) explanation. The form is gone.
-    expect(screen.getByText(`The answer: ${getAnswerText(deKat.challenge!)}`)).toBeDefined();
-    expect(screen.getByText(deKat.challenge!.explanation!)).toBeDefined();
-    expect(screen.queryByPlaceholderText("Your answer")).toBeNull();
-    click("Continue");
+    // Expected straight from the data (not from the code that renders it).
+    const challenge = deKat.challenge!;
+    if (challenge.type !== "number-answer") throw new Error("this test expects De Kat's number question");
+    expect(screen.getByText(t("game.challenge.answerIs", { answer: String(challenge.correctNumber) }))).toBeDefined();
+    expect(screen.getByText(challenge.explanation!)).toBeDefined();
+    expect(screen.queryByPlaceholderText(t("common.yourAnswer"))).toBeNull();
+    click(t("common.continue"));
 
     // No "Correct" screen (that wouldn't be true); straight on to the history, the clue is collected.
-    expect(screen.queryByRole("heading", { name: "The ink begins to move…" })).toBeNull();
+    expect(screen.queryByRole("heading", { name: copy.correctAnswer })).toBeNull();
     expect(deKat.historicalReveal).toBeDefined();
-    expect(screen.getByText("Why it matters")).toBeDefined();
-    const saved = localWalkSessionStore.load(hiddenPubsWalk)!;
-    expect(saved.locations["pubs-de-kat"].answerRevealed).toBe(true);
-    expect(saved.collectedClueIds).toHaveLength(5);
+    expect(screen.getByText(t("game.solved.whyItMatters"))).toBeDefined();
+    const saved = localWalkSessionStore.load(walk)!;
+    expect(saved.locations[deKat.id].answerRevealed).toBe(true);
+    expect(saved.collectedClueIds).toHaveLength(deKat.order);
   });
 
   test("progress survives a page reload", async () => {
     await startTwoPlayerGameAndStartVote();
-    expect(window.localStorage.getItem(storageKey("hidden-pubs"))).not.toBeNull();
+    expect(window.localStorage.getItem(storageKey(walk.slug))).not.toBeNull();
 
     // Simulate a reload: unmount and mount a fresh player.
     cleanup();
-    render(<WalkPlayer walk={hiddenPubsWalk} />);
+    render(<WalkPlayer walk={walk} />);
 
-    expect(await screen.findByRole("heading", { name: "Welcome back" })).toBeDefined();
-    expect(screen.getByText("Team: The Antwerp Explorers (Tony and Sarah)")).toBeDefined();
-    click("Continue walk");
-    expect(screen.getByText("Tony's turn")).toBeDefined();
+    expect(await screen.findByRole("heading", { name: t("game.start.welcomeBack") })).toBeDefined();
+    expect(screen.getByText(t("game.start.team", { team: "The Antwerp Explorers (Tony and Sarah)" }))).toBeDefined();
+    click(t("game.start.continueWalk"));
+    expect(screen.getByText(t("game.voting.playerTurn", { name: "Tony" }))).toBeDefined();
   });
 
   test("restart asks for confirmation, then deletes the saved walk", async () => {
     saveSessionAfter([{ type: "ARRIVE" }]);
-    render(<WalkPlayer walk={hiddenPubsWalk} />);
-    await screen.findByRole("heading", { name: "Welcome back" });
+    render(<WalkPlayer walk={walk} />);
+    await screen.findByRole("heading", { name: t("game.start.welcomeBack") });
 
-    click("Start again");
-    expect(window.localStorage.getItem(storageKey("hidden-pubs"))).not.toBeNull();
-    // jsdom has no showModal(), so the dialog counts as "hidden" in tests.
-    fireEvent.click(screen.getByRole("button", { name: "Yes, restart", hidden: true }));
+    click(t("game.start.startAgain"));
+    expect(window.localStorage.getItem(storageKey(walk.slug))).not.toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: t("game.start.restartConfirm"), hidden: true }));
 
-    expect(window.localStorage.getItem(storageKey("hidden-pubs"))).toBeNull();
-    expect(screen.getByRole("button", { name: "Start new adventure" })).toBeDefined();
+    expect(window.localStorage.getItem(storageKey(walk.slug))).toBeNull();
+    expect(screen.getByRole("button", { name: t("game.start.newAdventure") })).toBeDefined();
   });
 
   test("skipping the drink round goes straight to the story", async () => {
     await startTwoPlayerGameAndStartVote();
-    click("Skip this round");
-    expect(screen.getByRole("heading", { name: "The ledger opens" })).toBeDefined();
+    click(t("game.voting.skip"));
+    expect(screen.getByRole("heading", { name: t("game.story.title") })).toBeDefined();
   });
 
   test("the Ledger never reveals future cafés", async () => {
-    saveSessionAfter(getJumpToStopActions(hiddenPubsWalk, 3, "2026-09-23T15:00:00.000Z"));
+    const current = stops[2];
+    saveSessionAfter(getJumpToStopActions(walk, 3, "2026-09-23T15:00:00.000Z"));
     await continueSavedWalk();
-    click("Ledger");
+    click(copy.routeButtonLabel!);
 
     const ledger = screen.getByRole("dialog", { hidden: true });
-    expect(within(ledger).getByText("Rococo Antwerp")).toBeDefined();
-    expect(within(ledger).getByText("Paters Vaetje")).toBeDefined(); // current
-    expect(within(ledger).getAllByText("???")).toHaveLength(5);
-    expect(ledger.textContent).not.toContain("De Muze");
-    expect(ledger.textContent).not.toContain("Boer van Tienen");
-    expect(within(ledger).getByText("THE STAIR")).toBeDefined();
-    expect(within(ledger).getByText("11:55")).toBeDefined();
-    expect(ledger.textContent).not.toContain("ONE TOWER");
+    expect(within(ledger).getByText(stops[0].name)).toBeDefined();
+    expect(within(ledger).getByText(current.name)).toBeDefined(); // current
+    expect(within(ledger).getAllByText("???")).toHaveLength(stops.length - 3);
+    for (const future of stops.slice(3)) {
+      expect(revealedIn(ledger.textContent ?? "", future)).toEqual([]);
+    }
+    // The clues of the two solved cafés, but not yet the current café's clue.
+    expect(within(ledger).getByText(clueValueOf(stops[0]))).toBeDefined();
+    expect(within(ledger).getByText(clueValueOf(stops[1]))).toBeDefined();
+    expect(ledger.textContent).not.toContain(clueValueOf(current));
   });
 
   test("the bonus question at Quinten Matsijs can be skipped", async () => {
+    const quinten = stop("pubs-quinten-matsijs");
     saveSessionAfter([
-      ...getJumpToStopActions(hiddenPubsWalk, 6, "2026-09-23T15:00:00.000Z"),
+      ...getJumpToStopActions(walk, quinten.order, "2026-09-23T15:00:00.000Z"),
       { type: "ARRIVE" },
       { type: "SKIP_DRINK_ROUND" },
       { type: "SHOW_STORY" },
@@ -235,70 +310,82 @@ describe("WalkPlayer: Hidden Pubs", () => {
     ]);
     await continueSavedWalk();
 
-    fireEvent.change(screen.getByLabelText("Your answer"), { target: { value: "Tonspel" } });
-    click("Submit");
-    click("Discover why it matters");
+    fireEvent.change(screen.getByLabelText(t("common.yourAnswer")), {
+      target: { value: getCorrectAnswer(quinten.challenge!) },
+    });
+    click(t("common.submit"));
+    click(t("game.solved.discoverWhy"));
 
-    expect(screen.getByText("Optional bonus")).toBeDefined();
-    click("Skip the bonus");
-    // The reveal comes after the bonus, so it can mention the old name.
-    expect(screen.getByText(/'t Gulick/)).toBeDefined();
+    expect(screen.getByText(t("game.solved.optionalBonus"))).toBeDefined();
+    click(t("game.solved.skipBonus"));
+    // The reveal comes after the bonus, so it can mention the bonus answer (the old name).
+    const bonusAnswer = getCorrectAnswer(quinten.bonusChallenge!) as string;
+    expect(screen.getByText(containing(bonusAnswer))).toBeDefined();
   });
 
   test("the final puzzle completes the walk and shows the closing story", async () => {
-    saveSessionAfter(getJumpToStopActions(hiddenPubsWalk, 9, "2026-09-23T16:00:00.000Z"));
+    const finale = walk.finale!;
+    saveSessionAfter(getJumpToStopActions(walk, stops.length + 1, "2026-09-23T16:00:00.000Z"));
     await continueSavedWalk();
 
     // Final page with all eight clues.
-    expect(screen.getByRole("heading", { name: "The Final Page" })).toBeDefined();
-    expect(screen.getByText("SEVEN STEPS")).toBeDefined();
-    click("Open the final page");
+    expect(screen.getByRole("heading", { name: finale.title })).toBeDefined();
+    expect(screen.getByText(clueValueOf(stops[stops.length - 1]))).toBeDefined();
+    click(t("game.finale.openFinalPage"));
 
-    fireEvent.change(screen.getByLabelText("Your answer"), { target: { value: "noon" } });
-    click("Submit");
-    expect(screen.getByText("The Ledger remains silent.")).toBeDefined();
+    fireEvent.change(screen.getByLabelText(t("common.yourAnswer")), { target: { value: "noon" } });
+    click(t("common.submit"));
+    expect(screen.getByText(copy.wrongAnswer)).toBeDefined();
 
-    for (const answer of ["vijf voor twaalf", "Horse", "tonspel"]) {
-      fireEvent.change(screen.getByLabelText("Your answer"), { target: { value: answer } });
-      click("Submit");
+    for (const question of finale.questions) {
+      fireEvent.change(screen.getByLabelText(t("common.yourAnswer")), {
+        target: { value: getCorrectAnswer(question) },
+      });
+      click(t("common.submit"));
     }
 
-    expect(screen.getByText(/Maar de stad/)).toBeDefined();
-    click("Close the ledger");
+    expect(screen.getByText(normalized(finale.closingStory[finale.closingStory.length - 1].body))).toBeDefined();
+    click(t("game.completion.closeLedger"));
 
-    expect(screen.getByRole("heading", { name: "Case closed" })).toBeDefined();
-    expect(screen.getAllByText("8 / 8")).toHaveLength(2); // taverns and clues
-    expect(screen.getByText("taverns discovered")).toBeDefined();
-    expect(screen.getByText("Clues recovered")).toBeDefined();
+    expect(screen.getByRole("heading", { name: copy.completionTitle })).toBeDefined();
+    // taverns and clues
+    expect(screen.getAllByText(`${stops.length} / ${stops.length}`)).toHaveLength(2);
+    expect(screen.getByText(copy.locationsDiscoveredLabel)).toBeDefined();
+    expect(screen.getByText(t("game.completion.cluesRecovered"))).toBeDefined();
     expect(document.body.textContent).not.toMatch(/drinks? (ordered|consumed)/i);
   });
 
   test("a final-puzzle question can't become a dead end: after 3 wrong answers the answer can be shown", async () => {
-    saveSessionAfter(getJumpToStopActions(hiddenPubsWalk, 9, "2026-09-23T16:00:00.000Z"));
+    saveSessionAfter(getJumpToStopActions(walk, stops.length + 1, "2026-09-23T16:00:00.000Z"));
     await continueSavedWalk();
-    click("Open the final page");
+    click(t("game.finale.openFinalPage"));
 
     for (let attempt = 1; attempt <= 3; attempt++) {
-      expect(screen.queryByRole("button", { name: "Show the answer" })).toBeNull();
-      fireEvent.change(screen.getByLabelText("Your answer"), { target: { value: "noon" } });
-      click("Submit");
+      expect(screen.queryByRole("button", { name: t("game.challenge.revealAnswer") })).toBeNull();
+      fireEvent.change(screen.getByLabelText(t("common.yourAnswer")), { target: { value: "noon" } });
+      click(t("common.submit"));
     }
-    click("Show the answer");
+    click(t("game.challenge.revealAnswer"));
 
     // The answer comes from the clue it is written on, in the player's language.
-    const firstQuestion = hiddenPubsWalk.finale!.questions[0];
-    const clue = hiddenPubsWalk.clues!.find((candidate) => candidate.id === firstQuestion.answerClueId)!;
-    expect(screen.getByText(`The answer: ${clue.value}`)).toBeDefined();
-    expect(screen.queryByLabelText("Your answer")).toBeNull();
-    expect(screen.queryByRole("button", { name: "Show your clues" })).toBeNull();
-    click("Continue");
+    const [firstQuestion, ...otherQuestions] = walk.finale!.questions;
+    const clue = clues.find((candidate) => candidate.id === firstQuestion.answerClueId)!;
+    expect(screen.getByText(t("game.challenge.answerIs", { answer: clue.value }))).toBeDefined();
+    expect(screen.queryByLabelText(t("common.yourAnswer"))).toBeNull();
+    expect(screen.queryByRole("button", { name: t("game.finale.showClues") })).toBeNull();
+    click(t("common.continue"));
 
     // On to the next question; the walk completes as usual.
-    expect(screen.getByText(englishTranslator("game.finale.questionOf", { number: 2, total: 3 }))).toBeDefined();
-    for (const answer of ["Horse", "tonspel"]) {
-      fireEvent.change(screen.getByLabelText("Your answer"), { target: { value: answer } });
-      click("Submit");
+    expect(
+      screen.getByText(t("game.finale.questionOf", { number: 2, total: walk.finale!.questions.length })),
+    ).toBeDefined();
+    for (const question of otherQuestions) {
+      fireEvent.change(screen.getByLabelText(t("common.yourAnswer")), {
+        target: { value: getCorrectAnswer(question) },
+      });
+      click(t("common.submit"));
     }
-    expect(screen.getByText(/Maar de stad/)).toBeDefined();
+    const closingStory = walk.finale!.closingStory;
+    expect(screen.getByText(normalized(closingStory[closingStory.length - 1].body))).toBeDefined();
   });
 });

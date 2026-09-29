@@ -13,6 +13,7 @@
  * the image stays visible until someone checks it by hand and removes or replaces it.
  */
 import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { readImageSize } from "./lib/image-size.mjs";
 import { fetchWithRetry, isInsideDirectory, readWalkFolderArg, toHttps, USER_AGENT_CONTACT } from "./lib/script-utils.mjs";
 
 const walk = readWalkFolderArg(process.argv[2], "node scripts/download-commons-images.mjs <walk-folder>");
@@ -85,7 +86,12 @@ for (const source of sources) {
 
   const response = await fetchWithRetry(info.thumburl ?? info.url, { headers: HEADERS });
   await mkdir(new URL(".", target), { recursive: true });
-  await writeFile(target, Buffer.from(await response.arrayBuffer()));
+  const bytes = Buffer.from(await response.arrayBuffer());
+  await writeFile(target, bytes);
+  // Record the size of the file we actually saved: Commons' reported thumbnail size
+  // doesn't always match it (e.g. when the original is smaller than 1280 px).
+  const savedSize = readImageSize(bytes);
+  if (!savedSize) throw new Error(`Not a JPEG or PNG file: ${source.localPath}`);
 
   results.push({
     id: source.id,
@@ -96,8 +102,8 @@ for (const source of sources) {
     title: source.commonsTitle.replace(/^File:/, ""),
     photographerOrArtist: stripHtml(meta.Artist?.value) || "Unknown",
     dateOnSource: stripHtml(meta.DateTimeOriginal?.value) || null,
-    width: info.thumbwidth ?? info.width,
-    height: info.thumbheight ?? info.height,
+    width: savedSize.width,
+    height: savedSize.height,
     license,
     licenseUrl: toHttps(meta.LicenseUrl?.value ?? null),
     credit: stripHtml(meta.Credit?.value) || null,

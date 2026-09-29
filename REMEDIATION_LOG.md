@@ -784,3 +784,70 @@ New tests: `i18n-phase7.test.tsx` and `no-hardcoded-text.test.ts`; 22 of their 2
 - **QA / translation / Guardian:** PASS. Data: only the 8 `routeButtonLabel` lines; same translations as the removed key. New texts natural; "С"/"Пн" are the standard compass abbreviations. On a production build in nl/ru/de: no "Clues"/"Ledger"/"Discovered clues", `og:locale` nl_BE/ru_RU/de_DE, play page `noindex, nofollow`. Fixed after QA: the play page has its own `og:title`; team names are joined per language (`Intl.ListFormat`: "Tony and Sarah" / "Tony en Sarah").
 - **Intended visible change:** team names read "Tony and Sarah" instead of "Tony, Sarah".
 - **Known, unchanged:** `global-error.tsx` stays English (it can't read the language cookie when the whole app has crashed).
+
+---
+
+## Phase 8 — Testing (2026-09-29)
+
+- **Branch:** `fix/phase-8-testing`, branched from `64170fb`. Committed after approval.
+- **Decision (user, 2026-09-29):** Playwright and `@vitest/coverage-v8` approved (added in Phase 9); the test-tooling upgrade (L-38) not now. L-43 hints: no answer yet (stays CONTENT DECISION PENDING).
+- **No new dependencies.** Playwright, coverage (`@vitest/coverage-v8`) and the test-tooling upgrade (L-38) need approval: see the report.
+
+### Validation gate
+
+| Command | Result |
+|---|---|
+| `npx tsc --noEmit` | ✅ |
+| `npm run lint` | ✅ 0 problems |
+| `npm run i18n:check` | ✅ |
+| `npx vitest run` | ✅ 42 files, **1,203 tests** (was 940, +263), about 33 s; identical on repeated and shuffled runs |
+| `npm run build` | ✅ |
+
+### Shared test setup (QA-09, QA-10)
+- **Status:** VERIFIED FIXED
+- `src/__tests__/setup.ts` (`setupFiles`): cleanup after every test, empty `localStorage`, a `scrollTo` stub, and a `<dialog>` stand-in that behaves like browsers (`showModal` opens and focuses the first button; `close` fires "close"), so dialog tests check real behaviour instead of hidden content.
+- `restoreMocks`, `unstubGlobals`, `unstubEnvs`: a fake GPS, spy or environment variable in one test can't change another's result.
+
+### M-18: Runtime paths without tests
+- **Status:** VERIFIED FIXED (unit level; a real-browser test needs Playwright)
+- `runtime-paths.test.tsx`:
+  - the real `useGeolocation` against a fake `navigator.geolocation`: high accuracy, asking → active, low accuracy, refused / unavailable / timeout, insecure page, no watch until enabled, **`clearWatch` on leaving**, simulated positions pause the real watch and stopping resumes it;
+  - **privacy:** readings go to the callback and never to `localStorage` or cookies;
+  - wake lock: no API, a refused lock, a lock granted after leaving is released at once;
+  - `getLocale` with a mocked request: cookie beats `Accept-Language`, `nl-BE` → nl, unknown → English, a tampered cookie is ignored;
+  - the language menu saves cookie + storage, sets `<html lang>` and refreshes; `LocaleSync` restores a lost cookie once and leaves a present one alone.
+- `walking-map.test.tsx` + `fixtures/fake-maplibre.ts` (a recording MapLibre stand-in, also used by `map-health.test.tsx`): the real `WalkingMap` sets the versioned worker, follows the walker with the walking direction, ignores GPS jitter, stays north-up far away, stops following on a user gesture but not on its own moves, doesn't move while not following, jumps with reduced motion, removes the map on leaving.
+- **Mutation checks:** removing `clearWatch` fails 2 tests; removing a Dutch text (English fallback) fails the Dutch smoke test.
+
+### M-19: Tests tied to placeholder content
+- **Status:** VERIFIED FIXED
+- The six listed test files now take café and drink names, answers (`getCorrectAnswer`), clue values, stop names, walk copy and all UI text from the data and translations; counts are computed from the stop list. Only ids, names the test itself types, and route structure stay literal. When researchers correct content, these tests keep passing.
+- The Den Engel answer test now runs for every accepted answer (plus upper-case and punctuation variants).
+
+### Missing flows and languages (QA-06, QA-08, QA-13)
+- `flows-and-locales.test.tsx`:
+  - **all 8 languages × 3 walks**: start screen and first step show no raw keys and no English interface text (every English text of 12+ characters that the language translates differently);
+  - every challenge type renders something playable (options, text/number keypad, confirm button, "not playable yet" for sequence);
+  - a tied drink vote: suspense first, then the walk's choice; no second suspense after a refresh;
+  - off the route: a few readings away from the line show "Back to the route".
+
+### L-40 to L-44: Data checks (`data-integrity.test.ts`)
+- **L-40 (stale routes):** VERIFIED FIXED. Every leg (bypasses included) must start and end within 60 m of its stops' pins (measured today: Poortjes 48.9 m, Classics 42.1 m, Hidden Pubs 15.8 m). A stop moved ~110 m is reported (tested). No network: the routes aren't regenerated.
+- **L-41 (Hidden Pubs distance):** VERIFIED FIXED. One shared `getMainRouteDistance` (moved from Poortjes) for all walks: Hidden Pubs now shows **2,000 m**; Poortjes (9,800 m) and Classics (5,200 m) are unchanged (checked before/after).
+- **L-42 (image sizes):** VERIFIED FIXED. A dependency-free JPEG/PNG size reader (`scripts/lib/image-size.mjs`), used by the test and by the download script (which now records the saved file's real size). Corrected in `images.json` (width/height only): `handelsbeurs-lalanne` 1280×1040 → 940×764, `cathedral-hollar-1649` 1280×1812 → 750×1062. All 52 Smekens drawings match (1600×2000).
+- **L-43 (no hints):** GUARDED, CONTENT DECISION PENDING. Every challenge must have a hint, except an explicit list: `pubs-bonus-quinten-matsijs`, `pubs-finale-animal`, `pubs-finale-game`, `pubs-finale-time`. No hints were invented; a new challenge without hints fails the test.
+- **L-44 (search tasks):** VERIFIED FIXED. All 3 Poortjes search tasks (Gildekamersstraat 11–12, Academie 37–41, Adriaan Brouwerstraat 47–50) are checked in all 8 languages.
+
+### Review (QA lead)
+- No blockers. **Major, fixed:** after the M-19 rewrite the "hidden cafés stay hidden" checks compared full names only, so "Den Engel" or "Boer van Tienen" without their prefix could have leaked unnoticed. `fixtures/hidden-stop.ts` now checks every revealing text: the full name, each shorter form ("Den Engel", "Boer van Tienen"), and the street with house number (a whole number, so Rococo's "Grote Markt 32" doesn't count as Den Engel's "Grote Markt 3"); the helper has its own test.
+- **Minors fixed:**
+  - no test loop can silently run zero times (accepted-answer list checked non-empty);
+  - no circular expectation: the revealed answer is compared with the challenge data, not with the function that renders it;
+  - stop counts pinned per walk and language (33 + 2 / 8 / 18), so a stop can't disappear unnoticed;
+  - the `<dialog>` stand-in skips disabled and hidden elements for focus and follows the spec for a second `showModal`; outdated "jsdom has no showModal" comments removed;
+  - the language cookie and `<html lang>` are reset after every test;
+  - English-leak detector: every piece of 6+ characters around placeholders, whole words only, brand name and playtest tools excluded (mutation: a missing Dutch "Continue" is now caught);
+  - off-route test: the test point is chosen with the app's own route distance, between "off route" and "far from route";
+  - tie vote: the choice is checked absent during the suspense; the camera test also checks gliding without reduced motion;
+  - **privacy at player level:** a whole walk to a café with GPS readings until arrival; nothing of any reading reaches storage or cookies (mutation: saving a reading fails both privacy tests).
+- **Accepted as is:** the 60 m route tolerance can't see a pin moved less than that (storing the generator's input coordinates would, but needs a route regeneration with network); the dialog stand-in doesn't make the page behind a modal inert (a real-browser test would).

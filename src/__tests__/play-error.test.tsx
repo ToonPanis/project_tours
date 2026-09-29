@@ -48,7 +48,7 @@ describe("Play error page (M-02)", () => {
     render(<PlayError error={crash} />);
 
     fireEvent.click(screen.getByRole("button", { name: "Start this walk again" }));
-    // Nothing is deleted before confirming. (jsdom has no showModal, so the dialog counts as hidden.)
+    // Nothing is deleted before confirming.
     expect(window.localStorage.getItem(storageKey("hidden-pubs"))).not.toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Yes, start again", hidden: true }));
 

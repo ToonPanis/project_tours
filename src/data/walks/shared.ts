@@ -38,3 +38,19 @@ export function loadRouteLegs(file: RoutesFile): RouteLeg[] {
     route: normalizeOsrmRoute(leg.osrm as SavedOsrmRoute),
   }));
 }
+
+/**
+ * The walk's length as shown on its cards: the route of a walker who skips every
+ * optional stop (bypass legs and detours don't count), from one main stop to the
+ * next. Rounded to 100 m, because the routes are pre-calculated from draft coordinates.
+ */
+export function getMainRouteDistance(walkName: string, locations: WalkLocation[], legs: RouteLeg[]): number {
+  const mainStops = locations.filter((location) => !location.isBonus).sort((a, b) => a.order - b.order);
+  const meters = mainStops.slice(1).reduce((sum, location, index) => {
+    const from = mainStops[index].id;
+    const leg = legs.find((candidate) => candidate.fromLocationId === from && candidate.toLocationId === location.id);
+    if (!leg) throw new Error(`${walkName}: no route ${from} → ${location.id}`);
+    return sum + leg.route.distanceMeters;
+  }, 0);
+  return Math.round(meters / 100) * 100;
+}

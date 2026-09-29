@@ -8,69 +8,9 @@ import {
   type MapHealthEvent,
 } from "@/features/navigation/logic/map-health";
 
-/**
- * A stand-in for MapLibre's Map (jsdom has no WebGL). It records the event
- * handlers, so a test can play "load", "error" and "sourcedata" events.
- */
-const fakeMap = vi.hoisted(() => {
-  const handlers = new Map<string, ((event: object) => void)[]>();
-  return {
-    handlers,
-    /** The options the map was created with. */
-    options: {} as Record<string, unknown>,
-    fire(type: string, event: object = {}) {
-      for (const handler of handlers.get(type) ?? []) handler(event);
-    },
-  };
-});
-
-vi.mock("maplibre-gl", () => {
-  class FakeMap {
-    constructor(options: Record<string, unknown>) {
-      fakeMap.handlers.clear();
-      fakeMap.options = options;
-    }
-    on(type: string, handler: (event: object) => void) {
-      fakeMap.handlers.set(type, [...(fakeMap.handlers.get(type) ?? []), handler]);
-      return this;
-    }
-    addControl() {}
-    setMissingStyleImageResolver() {}
-    addSource() {}
-    addLayer() {}
-    getSource() {
-      return undefined;
-    }
-    fitBounds() {}
-    easeTo() {}
-    getZoom() {
-      return 17;
-    }
-    remove() {}
-  }
-  return {
-    Map: FakeMap,
-    Marker: class {
-      setLngLat() {
-        return this;
-      }
-      addTo() {
-        return this;
-      }
-      remove() {}
-    },
-    NavigationControl: class {},
-    LngLatBounds: class {
-      extend() {
-        return this;
-      }
-    },
-    GeoJSONSource: class {},
-    getVersion: () => "6.11.1",
-    getWorkerUrl: () => "",
-    setWorkerUrl: () => {},
-  };
-});
+// jsdom has no WebGL: a recording stand-in for MapLibre (see the fixture).
+vi.mock("maplibre-gl", async () => (await import("./fixtures/fake-maplibre")).fakeMapLibreModule);
+const { fakeMap } = await import("./fixtures/fake-maplibre");
 
 const { default: WalkingMap } = await import("@/features/navigation/components/WalkingMap");
 

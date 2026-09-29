@@ -14,7 +14,7 @@ I'm a programming student. I'm comfortable with TypeScript, JavaScript, React, N
 - Next.js **16.3** (App Router, `src/app/`, Turbopack), React 19.2, TypeScript strict. Path alias `@/*` → `./src/*`.
 - Tailwind CSS v4 (`@tailwindcss/postcss`); design tokens + walk themes in `src/app/globals.css`. Fonts via `next/font/google`: Cormorant Garamond (display) + Source Sans 3 (body), only `latin` is preloaded (`subsets`); Cyrillic and Latin-extended still load on demand via `unicode-range`.
 - **Only runtime dependency besides Next/React: `maplibre-gl` 6.** No i18n library, no state library, no UI kit.
-- ESLint 9 (`eslint-config-next`). Vitest 4 + React Testing Library (jsdom), tests in `src/__tests__/`.
+- ESLint 9 (`eslint-config-next`). Vitest 4 + React Testing Library (jsdom), tests in `src/__tests__/`. Shared setup in `src/__tests__/setup.ts` (cleanup, empty storage, `<dialog>` stand-in); mocks and global stubs are restored between tests. Tests take content from the data and texts from the translations (never type café names, answers or UI text literally); `fixtures/fake-maplibre.ts` stands in for MapLibre.
 - Node 20 locally (end-of-life; upgrade planned). CI uses the version in `.nvmrc` (22); `engines` allows Next's minimum (≥ 20.9). Windows machine (use Git Bash / PowerShell syntax accordingly).
 - CI: `.github/workflows/ci.yml` runs typecheck → lint → i18n:check → tests → build on every push to `main` and every PR.
 
@@ -26,7 +26,7 @@ npm run build          # production build (prebuild copies the worker too)
 npm start              # serve the build (use e.g. `npx next start -p 3200` if 3000 is taken)
 npm run typecheck      # = npx tsc --noEmit
 npm run lint
-npm run test:run       # = npx vitest run, all tests once (~940); `npm test` = watch mode
+npm run test:run       # = npx vitest run, all tests once (~1,190, ~30 s); `npm test` = watch mode
 npm run i18n:check     # every language has every UI text (en = master)
 node scripts/generate-walking-routes.mjs <walk-folder>   # after changing coordinates.json
 node scripts/download-commons-images.mjs <walk-folder>   # after changing image-sources.json

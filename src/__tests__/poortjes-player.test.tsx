@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { getPoortjesWalk } from "@/data/walks/poortjes-van-antwerpen";
 import { LocaleProvider } from "@/i18n/client";
+import { createTranslator } from "@/i18n/translate";
 import { getPreviousVisitedLocation, getRouteLegToCurrent } from "@/features/navigation/logic/route-legs";
 import { WalkPlayer } from "@/features/walk-session/components/WalkPlayer";
 import { createWalkSession } from "@/features/walk-session/logic/create-session";
@@ -9,6 +10,8 @@ import { applySessionAction } from "@/features/walk-session/logic/session-reduce
 import { getSessionStats } from "@/features/walk-session/logic/session-stats";
 import { getOrderedLocations } from "@/lib/walk-locations";
 import { localWalkSessionStore } from "@/features/walk-session/storage/session-storage";
+import type { GuideStopContent } from "@/types/guide";
+import type { WalkLocation } from "@/types/location";
 import type { SessionAction, WalkSession } from "@/types/session";
 
 // The real map needs WebGL, which jsdom doesn't have.
@@ -23,7 +26,10 @@ beforeEach(() => {
 afterEach(cleanup);
 
 // These tests follow a Dutch-speaking walker: Dutch texts and a Dutch interface.
+// Every expected text comes from the walk data or the Dutch UI texts, so
+// researchers can correct the content without breaking these tests.
 const walk = getPoortjesWalk("nl");
+const t = createTranslator("nl");
 
 function renderPlayer() {
   return render(
@@ -33,7 +39,35 @@ function renderPlayer() {
   );
 }
 const locations = getOrderedLocations(walk);
+const mainStops = locations.filter((location) => !location.isBonus);
 const AT = "2026-09-26T10:00:00.000Z";
+
+function stop(id: string): WalkLocation {
+  const location = locations.find((candidate) => candidate.id === id);
+  if (!location) throw new Error(`Unknown stop ${id}`);
+  return location;
+}
+
+function guideOf(id: string): GuideStopContent {
+  const guide = stop(id).guide;
+  if (!guide) throw new Error(`${id} has no guide content`);
+  return guide;
+}
+
+/** 1-based number of a main stop, as shown in "Stop 26 / 33". */
+function stopNumber(id: string): number {
+  return mainStops.findIndex((location) => location.id === id) + 1;
+}
+
+/** Matches text containing `text` literally (like a regex, but safe for any character). */
+function containing(text: string): RegExp {
+  return new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+}
+
+/** A translated template as a pattern: every "#" placeholder value may be any number. */
+function numberPattern(template: string): RegExp {
+  return new RegExp(containing(template).source.replaceAll("#", "\\d+"));
+}
 
 function click(name: string | RegExp) {
   fireEvent.click(screen.getByRole("button", { name }));
@@ -65,87 +99,104 @@ function play(actions: SessionAction[], from = newSession()): WalkSession {
 async function continueAt(stopId: string) {
   localWalkSessionStore.save(play([...actionsUntil(stopId), { type: "ARRIVE" }]));
   renderPlayer();
-  click((await screen.findByRole("button", { name: /Verdergaan: stop/ })).textContent ?? "");
+  const continueButton = await screen.findByRole("button", {
+    name: numberPattern(t("guide.continueAt", { stop: "#", total: "#" })),
+  });
+  click(continueButton.textContent ?? "");
 }
 
 describe("Guide walk player: Poortjes van Antwerpen", () => {
   test("starts in Dutch with a chapter card, then shows the first gate with its drawing and status", async () => {
+    const [first, second] = locations;
+    const firstGate = first.guide!.featuredItems![0];
     renderPlayer();
 
-    expect(await screen.findByRole("heading", { level: 1, name: "Poortjes van Antwerpen" })).toBeDefined();
-    expect(screen.getByText("33 stops")).toBeDefined();
-    click("Start de wandeling");
+    expect(await screen.findByRole("heading", { level: 1, name: walk.title })).toBeDefined();
+    expect(screen.getByText(t.plural("guide.stops", mainStops.length))).toBeDefined();
+    click(t("guide.startWalk"));
 
     // Chapter card for part 1
-    expect(screen.getByRole("heading", { level: 1, name: "Zuidkant & Hoogstraat" })).toBeDefined();
-    click("Verder");
+    expect(screen.getByRole("heading", { level: 1, name: walk.chapters![0].title })).toBeDefined();
+    click(t("common.continue"));
 
     // Navigation, in Dutch
-    expect(screen.getByText("Je volgende bestemming")).toBeDefined();
-    click("Verder zonder live gps");
-    click("Ik ben er");
+    expect(screen.getByText(t("gps.yourNextDestination"))).toBeDefined();
+    click(t("gps.continueWithoutGps"));
+    click(t("gps.arrived"));
 
     // The stop page
-    expect(screen.getByRole("heading", { level: 1, name: "Rosier 24" })).toBeDefined();
-    expect(screen.getByText("Stop 1 van 33")).toBeDefined();
-    expect(screen.getAllByText("Poort 1").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Bestaat nog").length).toBeGreaterThan(0);
-    expect(screen.getByText("Wat zie je?")).toBeDefined();
-    expect(screen.getByText("Toen en nu")).toBeDefined();
-    expect(screen.getByText("Wist je dat?")).toBeDefined();
-    expect(screen.getByRole("img", { name: /Opmetingstekening van de poort Rosier 24/ })).toBeDefined();
-    expect(screen.getByText("Lange Gasthuisstraat 37")).toBeDefined(); // next stop
+    expect(screen.getByRole("heading", { level: 1, name: first.name })).toBeDefined();
+    expect(screen.getByText(t("guide.stopOf", { stop: 1, total: mainStops.length }))).toBeDefined();
+    expect(screen.getAllByText(t("guide.gateNumber", { numbers: String(firstGate.number) })).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(t(`guide.status.${firstGate.status}`)).length).toBeGreaterThan(0);
+    expect(screen.getByText(t("guide.whatYouSee"))).toBeDefined();
+    expect(screen.getByText(t("guide.thenAndNow"))).toBeDefined();
+    expect(screen.getByText(t("guide.didYouKnow"))).toBeDefined();
+    expect(screen.getByRole("img", { name: firstGate.image.alt })).toBeDefined();
+    expect(screen.getByText(second.name)).toBeDefined(); // next stop
   });
 
   test("Gildekamersstraat: the task hides the answer until the walker asks for it", async () => {
+    const guide = guideOf("poortjes-gildekamersstraat");
+    const task = guide.searchTask!;
+    const [firstItem] = task.items;
+    const storyHeading = guide.sections.find((section) => section.heading)!.heading!;
     await continueAt("poortjes-gildekamersstraat");
 
-    expect(screen.getByRole("heading", { name: "Kun jij de poort van de tekening terugvinden?" })).toBeDefined();
+    expect(screen.getByRole("heading", { name: firstItem.question })).toBeDefined();
     // The story (which names the houses) waits for the task.
-    expect(screen.queryByRole("heading", { name: "Het verhaal van de straat" })).toBeNull();
-    expect(screen.queryByText("Gildekamersstraat 7, het huis De Swane.")).toBeNull();
+    expect(screen.queryByRole("heading", { name: storyHeading })).toBeNull();
+    expect(screen.queryByText(firstItem.solution)).toBeNull();
 
-    fireEvent.click(screen.getAllByRole("button", { name: "Toon hint" })[0]);
-    expect(screen.getByText(/er staat een getal in/)).toBeDefined();
+    fireEvent.click(screen.getAllByRole("button", { name: t("guide.showHint") })[0]);
+    expect(screen.getByText(firstItem.hints[0])).toBeDefined();
 
-    fireEvent.click(screen.getAllByRole("button", { name: "Toon oplossing" })[0]);
-    expect(screen.getByText("Gildekamersstraat 7, het huis De Swane.")).toBeDefined();
+    fireEvent.click(screen.getAllByRole("button", { name: t("guide.showSolution") })[0]);
+    expect(screen.getByText(firstItem.solution)).toBeDefined();
 
-    fireEvent.click(screen.getAllByRole("button", { name: "Gevonden!" })[0]);
-    expect(screen.getByRole("heading", { name: "Het verhaal van de straat" })).toBeDefined();
+    fireEvent.click(screen.getAllByRole("button", { name: t("guide.foundIt") })[0]);
+    expect(screen.getByRole("heading", { name: storyHeading })).toBeDefined();
   });
 
   test("the Grote Markt pause shows its slides one at a time", async () => {
+    const guide = guideOf("poortjes-grote-markt");
+    const pause = guide.infoBoxes!.find((box) => box.kind === "pause")!;
+    const [firstCard, secondCard, thirdCard] = guide.cards!;
     await continueAt("poortjes-grote-markt");
 
-    expect(screen.getByText("Pauzemoment")).toBeDefined();
-    expect(screen.getByRole("heading", { level: 2, name: "De Grote Markt" })).toBeDefined();
-    click("Volgende →");
-    expect(screen.getByRole("heading", { level: 2, name: "Het Stadhuis" })).toBeDefined();
-    click("De Brabofontein");
-    expect(screen.getByText("Legende")).toBeDefined();
-    expect(screen.getByText("Interpretatie")).toBeDefined();
+    expect(screen.getByText(pause.title)).toBeDefined();
+    expect(screen.getByRole("heading", { level: 2, name: firstCard.title })).toBeDefined();
+    click(`${t("common.next")} →`);
+    expect(screen.getByRole("heading", { level: 2, name: secondCard.title })).toBeDefined();
+    click(thirdCard.title);
+    expect(screen.getByText(t("guide.sectionLabels.legend"))).toBeDefined();
+    expect(screen.getByText(t("guide.sectionLabels.interpretation"))).toBeDefined();
   });
 
   test("vanished gates are mentioned at the nearest stop, with their status", async () => {
+    const vanished = guideOf("poortjes-leonie-glassplein").vanishedNearby!;
     await continueAt("poortjes-leonie-glassplein");
 
-    expect(screen.getByText("Verdwenen poorten in de buurt")).toBeDefined();
-    expect(screen.getByRole("heading", { name: "Zilversmidstraat 5" })).toBeDefined();
-    expect(screen.getByRole("heading", { name: "Zilversmidstraat 17" })).toBeDefined();
-    expect(screen.getAllByText("Verdwenen")).toHaveLength(2);
+    expect(screen.getByText(t("guide.vanishedNearbyTitle"))).toBeDefined();
+    for (const item of vanished) {
+      expect(screen.getByRole("heading", { name: item.address })).toBeDefined();
+    }
+    expect(screen.getAllByText(t("guide.status.vanished"))).toHaveLength(vanished.length);
   });
 
   test("before the Rodestraat the walker chooses: detour or continue the route", async () => {
+    const stadswaag = stop("poortjes-stadswaag");
     await continueAt("poortjes-universiteit");
 
-    expect(screen.getByText("Optionele omweg")).toBeDefined();
-    expect(screen.getByRole("button", { name: "Extra poort bekijken" })).toBeDefined();
-    click("Route verderzetten: De Stadswaag");
+    expect(screen.getByText(t("guide.optionalDetour"))).toBeDefined();
+    expect(screen.getByRole("button", { name: t("guide.takeDetour") })).toBeDefined();
+    click(t("guide.continueRouteTo", { name: stadswaag.name }));
 
-    // Straight on to the Stadswaag: no chapter card, stop 26 of 33.
-    expect(screen.getByRole("heading", { level: 1, name: "De Stadswaag" })).toBeDefined();
-    expect(screen.getByText("Stop 26 / 33")).toBeDefined();
+    // Straight on to the Stadswaag: no chapter card, its own stop number.
+    expect(screen.getByRole("heading", { level: 1, name: stadswaag.name })).toBeDefined();
+    expect(
+      screen.getByText(t("game.header.stopCounter", { current: stopNumber(stadswaag.id), total: mainStops.length })),
+    ).toBeDefined();
   });
 });
 
@@ -170,8 +221,9 @@ describe("Optional stops in the session", () => {
     expect(onDetour.currentLocationId).toBe("poortjes-rodestraat");
     const stats = getSessionStats(walk, onDetour);
     expect(stats.isAtBonusStop).toBe(true);
-    expect(stats.currentStopNumber).toBe(25);
-    expect(stats.totalStops).toBe(33);
+    // The detour keeps the number of the stop before it.
+    expect(stats.currentStopNumber).toBe(stopNumber("poortjes-universiteit"));
+    expect(stats.totalStops).toBe(mainStops.length);
     expect(getRouteLegToCurrent(walk, onDetour)?.fromLocationId).toBe("poortjes-universiteit");
   });
 

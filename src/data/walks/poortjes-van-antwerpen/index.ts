@@ -1,4 +1,4 @@
-import { findPosition, loadRouteLegs } from "../shared";
+import { findPosition, getMainRouteDistance, loadRouteLegs } from "../shared";
 import type { CollectionItem, GuideCard, GuideImage, SearchTask } from "@/types/guide";
 import type { WalkLocation } from "@/types/location";
 import type { RouteLeg } from "@/types/navigation";
@@ -199,16 +199,6 @@ function buildLocations(content: PoortjesContent, collectionItems: CollectionIte
   });
 }
 
-/** The route of a walker who skips every optional stop: consecutive main stops. */
-function getMainRouteDistance(locations: WalkLocation[], legs: RouteLeg[]): number {
-  const mainStops = locations.filter((location) => !location.isBonus);
-  return mainStops.slice(1).reduce((sum, location, index) => {
-    const leg = legs.find((candidate) => candidate.fromLocationId === mainStops[index].id && candidate.toLocationId === location.id);
-    if (!leg) throw new Error(`Poortjes van Antwerpen: no route ${mainStops[index].id} → ${location.id}`);
-    return sum + leg.route.distanceMeters;
-  }, 0);
-}
-
 function buildWalk(content: PoortjesContent, locale: Locale): Walk {
   const routeLegs: RouteLeg[] = loadRouteLegs(routesFile);
   const collectionItems = buildCollectionItems(content);
@@ -224,8 +214,7 @@ function buildWalk(content: PoortjesContent, locale: Locale): Walk {
     city: createTranslator(locale)("common.cities.antwerp"),
     // ± 2 h 45 of walking plus reading at 33 stops and a pause.
     estimatedDuration: { minMinutes: 300, maxMinutes: 390 },
-    // Rounded to 100 m: the routes are pre-calculated from draft coordinates.
-    distanceInMeters: Math.round(getMainRouteDistance(locations, routeLegs) / 100) * 100,
+    distanceInMeters: getMainRouteDistance("Poortjes van Antwerpen", locations, routeLegs),
     difficulty: "moderate",
     price: { amountInCents: 1295, currency: "EUR" },
     coverImage: {

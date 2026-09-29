@@ -1,4 +1,4 @@
-import { findPosition, loadRouteLegs } from "../shared";
+import { findPosition, getMainRouteDistance, loadRouteLegs } from "../shared";
 import type { GuideImage } from "@/types/guide";
 import type { WalkLocation } from "@/types/location";
 import type { Walk } from "@/types/walk";
@@ -91,7 +91,7 @@ function buildLocations(content: ClassicsContent, unknownLabel: string): WalkLoc
 function buildWalk(content: ClassicsContent, locale: Locale): Walk {
   const t = createTranslator(locale);
   const routeLegs = loadRouteLegs(routesFile);
-  const totalMeters = routeLegs.reduce((sum, leg) => sum + leg.route.distanceMeters, 0);
+  const locations = buildLocations(content, t("guide.unknownArtist"));
 
   return {
     id: "walk-classics-of-antwerp",
@@ -103,8 +103,7 @@ function buildWalk(content: ClassicsContent, locale: Locale): Walk {
     city: t("common.cities.antwerp"),
     // About 80 minutes of walking plus reading and looking at 18 stops.
     estimatedDuration: { minMinutes: 165, maxMinutes: 195 },
-    // Rounded to 100 m: the routes are pre-calculated from draft coordinates.
-    distanceInMeters: Math.round(totalMeters / 100) * 100,
+    distanceInMeters: getMainRouteDistance("Classics of Antwerp", locations, routeLegs),
     difficulty: "easy",
     price: { amountInCents: 995, currency: "EUR" },
     coverImage: {
@@ -124,7 +123,7 @@ function buildWalk(content: ClassicsContent, locale: Locale): Walk {
     howItWorksSteps: content.walk.howItWorksSteps,
     practicalInfo: content.walk.practicalInfo,
     routeLegs,
-    locations: buildLocations(content, t("guide.unknownArtist")),
+    locations,
   };
 }
 

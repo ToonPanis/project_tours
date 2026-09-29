@@ -132,7 +132,6 @@ describe("NavigationScreen", () => {
     );
     await act(async () => emitPosition(farAway, 5));
 
-    // Cancel: nothing happens. (jsdom has no showModal, so the dialog counts as hidden.)
     fireEvent.click(screen.getByRole("button", { name: "I'm here" }));
     expect(screen.getByRole("heading", { name: `Are you at ${deMuze.name}?`, hidden: true })).toBeDefined();
     fireEvent.click(screen.getByRole("button", { name: "Cancel", hidden: true }));

@@ -6,7 +6,9 @@ import { getOrderedLocations } from "@/lib/walk-locations";
 import { getCorrectAnswer, getJumpToStopActions } from "@/features/walk-session/playtest/get-correct-answer";
 import { applySessionAction } from "@/features/walk-session/logic/session-reducer";
 import { REVEAL_ANSWER_AFTER_WRONG_ATTEMPTS } from "@/features/walk-session/logic/reveal-answer";
+import type { WalkLocation } from "@/types/location";
 import type { SessionAction, WalkSession } from "@/types/session";
+import type { Challenge } from "@/types/challenge";
 import type { Team } from "@/types/team";
 import type { Walk } from "@/types/walk";
 
@@ -18,6 +20,36 @@ const team: Team = {
     { id: "p2", name: "Player 2" },
   ],
 };
+
+// Answers, drinks and clues come from the walk data (never typed here), so
+// researchers can correct the content without breaking these tests.
+const stops = getOrderedLocations(hiddenPubsWalk);
+
+function stop(id: string): WalkLocation {
+  const location = stops.find((candidate) => candidate.id === id);
+  if (!location) throw new Error(`Unknown stop ${id}`);
+  return location;
+}
+
+/** The id of the clue earned at a stop. */
+function clueIdOf(location: WalkLocation): string {
+  const clue = hiddenPubsWalk.clues?.find((candidate) => candidate.sourceLocationId === location.id);
+  if (!clue) throw new Error(`${location.id} has no clue`);
+  return clue.id;
+}
+
+/** Every answer a typed challenge accepts. */
+function acceptedAnswersOf(location: WalkLocation): string[] {
+  const challenge = location.challenge;
+  if (challenge?.type !== "text-answer" && challenge?.type !== "code") {
+    throw new Error(`${location.id} needs a typed challenge`);
+  }
+  return challenge.acceptedAnswers;
+}
+
+const denEngel = stop("pubs-den-engel");
+const quintenMatsijs = stop("pubs-quinten-matsijs");
+const [drinkA, drinkB, drinkC] = stops[0].drinkRound!.options.map((option) => option.id);
 
 function startSession(walk: Walk): WalkSession {
   return createWalkSession({ walk, team, sessionId: "s1", startedAt: "2026-09-23T14:00:00.000Z" });
@@ -51,17 +83,17 @@ describe("drink round", () => {
 
   test("records one vote per player; a new vote replaces the old one", () => {
     const session = play(hiddenPubsWalk, arrived, [
-      { type: "CAST_VOTE", playerId: "p1", drinkOptionId: "pubs-rococo-drink-a" },
-      { type: "CAST_VOTE", playerId: "p1", drinkOptionId: "pubs-rococo-drink-c" },
+      { type: "CAST_VOTE", playerId: "p1", drinkOptionId: drinkA },
+      { type: "CAST_VOTE", playerId: "p1", drinkOptionId: drinkC },
     ]);
     expect(currentProgress(session).votes).toEqual([
-      { playerId: "p1", drinkOptionId: "pubs-rococo-drink-c" },
+      { playerId: "p1", drinkOptionId: drinkC },
     ]);
   });
 
   test("ignores votes from unknown players or for unknown drinks", () => {
     const session = play(hiddenPubsWalk, arrived, [
-      { type: "CAST_VOTE", playerId: "stranger", drinkOptionId: "pubs-rococo-drink-a" },
+      { type: "CAST_VOTE", playerId: "stranger", drinkOptionId: drinkA },
       { type: "CAST_VOTE", playerId: "p1", drinkOptionId: "not-a-drink" },
     ]);
     expect(currentProgress(session).votes).toEqual([]);
@@ -69,30 +101,30 @@ describe("drink round", () => {
 
   test("closing the vote selects the winner", () => {
     const session = play(hiddenPubsWalk, arrived, [
-      { type: "CAST_VOTE", playerId: "p1", drinkOptionId: "pubs-rococo-drink-a" },
-      { type: "CAST_VOTE", playerId: "p2", drinkOptionId: "pubs-rococo-drink-a" },
-      { type: "CLOSE_VOTING", winnerOptionId: "pubs-rococo-drink-a", wasTie: false },
+      { type: "CAST_VOTE", playerId: "p1", drinkOptionId: drinkA },
+      { type: "CAST_VOTE", playerId: "p2", drinkOptionId: drinkA },
+      { type: "CLOSE_VOTING", winnerOptionId: drinkA, wasTie: false },
     ]);
     expect(currentProgress(session).status).toBe("drink-selected");
-    expect(currentProgress(session).selectedDrinkOptionId).toBe("pubs-rococo-drink-a");
+    expect(currentProgress(session).selectedDrinkOptionId).toBe(drinkA);
   });
 
   test("rejects a 'winner' that didn't get the most votes", () => {
     const session = play(hiddenPubsWalk, arrived, [
-      { type: "CAST_VOTE", playerId: "p1", drinkOptionId: "pubs-rococo-drink-a" },
-      { type: "CAST_VOTE", playerId: "p2", drinkOptionId: "pubs-rococo-drink-a" },
-      { type: "CLOSE_VOTING", winnerOptionId: "pubs-rococo-drink-b", wasTie: false },
+      { type: "CAST_VOTE", playerId: "p1", drinkOptionId: drinkA },
+      { type: "CAST_VOTE", playerId: "p2", drinkOptionId: drinkA },
+      { type: "CLOSE_VOTING", winnerOptionId: drinkB, wasTie: false },
     ]);
     expect(currentProgress(session).status).toBe("voting");
   });
 
   test("a tie accepts either tied option", () => {
     const session = play(hiddenPubsWalk, arrived, [
-      { type: "CAST_VOTE", playerId: "p1", drinkOptionId: "pubs-rococo-drink-a" },
-      { type: "CAST_VOTE", playerId: "p2", drinkOptionId: "pubs-rococo-drink-c" },
-      { type: "CLOSE_VOTING", winnerOptionId: "pubs-rococo-drink-c", wasTie: true },
+      { type: "CAST_VOTE", playerId: "p1", drinkOptionId: drinkA },
+      { type: "CAST_VOTE", playerId: "p2", drinkOptionId: drinkC },
+      { type: "CLOSE_VOTING", winnerOptionId: drinkC, wasTie: true },
     ]);
-    expect(currentProgress(session).selectedDrinkOptionId).toBe("pubs-rococo-drink-c");
+    expect(currentProgress(session).selectedDrinkOptionId).toBe(drinkC);
     expect(currentProgress(session).wasTie).toBe(true);
   });
 
@@ -117,10 +149,10 @@ describe("drink round", () => {
 });
 
 describe("challenge and hints", () => {
-  // Stop 2 (Den Engel) has a text challenge with two hints.
+  // Stop 2 (Den Engel) has a text challenge with hints.
   function atStop2Challenge(): WalkSession {
     const session = play(hiddenPubsWalk, startSession(hiddenPubsWalk), [
-      ...getJumpToStopActions(hiddenPubsWalk, 2, "2026-09-23T14:20:00.000Z"),
+      ...getJumpToStopActions(hiddenPubsWalk, denEngel.order, "2026-09-23T14:20:00.000Z"),
       { type: "ARRIVE" },
       { type: "SKIP_DRINK_ROUND" },
       { type: "SHOW_STORY" },
@@ -145,23 +177,35 @@ describe("challenge and hints", () => {
     expect(currentProgress(session).wrongAttempts).toBe(1);
     expect(currentProgress(session).hintsRevealed).toBe(1);
 
-    session = play(hiddenPubsWalk, session, [
-      { type: "SUBMIT_ANSWER", answer: "still wrong" },
-      { type: "REVEAL_HINT" },
-      { type: "SUBMIT_ANSWER", answer: "wrong again" },
-      { type: "REVEAL_HINT" }, // only 2 hints exist
-    ]);
-    expect(currentProgress(session).hintsRevealed).toBe(2);
+    // One wrong answer more than there are hints: never more hints than exist.
+    const hintCount = denEngel.challenge!.hints.length;
+    for (let attempt = 2; attempt <= hintCount + 1; attempt++) {
+      session = play(hiddenPubsWalk, session, [
+        { type: "SUBMIT_ANSWER", answer: "still wrong" },
+        { type: "REVEAL_HINT" },
+      ]);
+    }
+    expect(currentProgress(session).wrongAttempts).toBe(hintCount + 1);
+    expect(currentProgress(session).hintsRevealed).toBe(hintCount);
   });
 
-  test.each(["11:55", "23:55", "11.55", "Vijf voor twaalf", "5 voor 12"])(
-    "the Den Engel clock accepts %j",
-    (answer) => {
-      const session = play(hiddenPubsWalk, atStop2Challenge(), [{ type: "SUBMIT_ANSWER", answer }]);
-      expect(currentProgress(session).status).toBe("solved");
-      expect(session.collectedClueIds).toContain("pubs-clue-time");
-    },
-  );
+  test("the Den Engel clock has accepted answers to test", () => {
+    expect(acceptedAnswersOf(denEngel).length).toBeGreaterThan(0);
+  });
+
+  test.each(acceptedAnswersOf(denEngel))("the Den Engel clock accepts %j", (answer) => {
+    const session = play(hiddenPubsWalk, atStop2Challenge(), [{ type: "SUBMIT_ANSWER", answer }]);
+    expect(currentProgress(session).status).toBe("solved");
+    expect(session.collectedClueIds).toContain(clueIdOf(denEngel));
+  });
+
+  // Case and punctuation don't matter ("11.55" = "11:55", "Vijf voor twaalf" = "vijf voor twaalf").
+  test.each(
+    acceptedAnswersOf(denEngel).flatMap((answer) => [answer.toUpperCase(), answer.replace(/[^\p{L}\p{N}\s]/gu, ".")]),
+  )("the Den Engel clock also accepts the variant %j", (answer) => {
+    const session = play(hiddenPubsWalk, atStop2Challenge(), [{ type: "SUBMIT_ANSWER", answer }]);
+    expect(currentProgress(session).status).toBe("solved");
+  });
 
   // H-02: after 3 wrong answers the team may see the answer, so nobody gets stuck.
   test("the answer can't be revealed before 3 wrong attempts", () => {
@@ -183,7 +227,7 @@ describe("challenge and hints", () => {
     expect(currentProgress(session).status).toBe("solved");
     expect(currentProgress(session).answerRevealed).toBe(true);
     // The clue is what the final puzzle needs: without it the finale would become the dead end.
-    expect(session.collectedClueIds).toContain("pubs-clue-time");
+    expect(session.collectedClueIds).toContain(clueIdOf(denEngel));
 
     // The walk goes on as usual.
     const next = play(hiddenPubsWalk, session, [{ type: "CONTINUE_TO_NEXT_LOCATION", at: "2026-09-23T15:00:00.000Z" }]);
@@ -191,12 +235,12 @@ describe("challenge and hints", () => {
   });
 
   test("an empty multiple-choice answer never counts as option A", () => {
-    // Rococo (stop 1): multiple choice whose correct option is the first one (index 0).
-    const rococo = hiddenPubsWalk.locations[0].challenge!;
-    expect(rococo.type === "multiple-choice" && rococo.correctOptionIndex).toBe(0);
-    const session = play(hiddenPubsWalk, startSession(hiddenPubsWalk), [
+    // The fixture's first gate: multiple choice whose correct option is the first one (index 0).
+    // (A fixture, so the test doesn't depend on a playtest answer in the live walk.)
+    const firstGate = getOrderedLocations(the17GatesWalk)[0].challenge!;
+    expect(firstGate.type === "multiple-choice" && firstGate.correctOptionIndex).toBe(0);
+    const session = play(the17GatesWalk, startSession(the17GatesWalk), [
       { type: "ARRIVE" },
-      { type: "SKIP_DRINK_ROUND" },
       { type: "SHOW_STORY" },
       { type: "START_CHALLENGE" },
       { type: "SUBMIT_ANSWER", answer: "" },
@@ -205,7 +249,7 @@ describe("challenge and hints", () => {
   });
 
   test("revealing is ignored outside the challenge step (e.g. a stale double tap)", () => {
-    const solved = play(hiddenPubsWalk, atStop2Challenge(), [{ type: "SUBMIT_ANSWER", answer: "11:55" }]);
+    const solved = play(hiddenPubsWalk, atStop2Challenge(), [{ type: "SUBMIT_ANSWER", answer: getCorrectAnswer(denEngel.challenge!) }]);
     expect(play(hiddenPubsWalk, solved, [{ type: "REVEAL_ANSWER" }])).toBe(solved);
   });
 
@@ -223,12 +267,12 @@ describe("challenge and hints", () => {
 describe("bonus question (Quinten Matsijs)", () => {
   function atSolvedStop6(): WalkSession {
     const session = play(hiddenPubsWalk, startSession(hiddenPubsWalk), [
-      ...getJumpToStopActions(hiddenPubsWalk, 6, "2026-09-23T15:00:00.000Z"),
+      ...getJumpToStopActions(hiddenPubsWalk, quintenMatsijs.order, "2026-09-23T15:00:00.000Z"),
       { type: "ARRIVE" },
       { type: "SKIP_DRINK_ROUND" },
       { type: "SHOW_STORY" },
       { type: "START_CHALLENGE" },
-      { type: "SUBMIT_ANSWER", answer: "tonspel" },
+      { type: "SUBMIT_ANSWER", answer: getCorrectAnswer(quintenMatsijs.challenge!) },
     ]);
     expect(currentProgress(session).status).toBe("solved");
     return session;
@@ -236,7 +280,7 @@ describe("bonus question (Quinten Matsijs)", () => {
 
   test("a correct bonus answer is recorded", () => {
     const session = play(hiddenPubsWalk, atSolvedStop6(), [
-      { type: "SUBMIT_BONUS_ANSWER", answer: "'t Gulick" },
+      { type: "SUBMIT_BONUS_ANSWER", answer: getCorrectAnswer(quintenMatsijs.bonusChallenge!) },
     ]);
     expect(currentProgress(session).bonusStatus).toBe("solved");
   });
@@ -303,23 +347,39 @@ describe("full play-through", () => {
     expect(session.finale?.status).toBe("active");
     expect(session.completedAt).toBeUndefined();
 
+    const questions = hiddenPubsWalk.finale!.questions;
+    const lastQuestion = questions[questions.length - 1];
+    // Any accepted answer counts, not only the first one: use the last one of each list.
+    const otherAcceptedAnswer = (question: Challenge) =>
+      question.type === "text-answer" || question.type === "code"
+        ? question.acceptedAnswers[question.acceptedAnswers.length - 1]
+        : getCorrectAnswer(question);
+
     // A wrong finale answer is counted and completes nothing.
     session = play(hiddenPubsWalk, session, [
-      { type: "SUBMIT_FINALE_ANSWER", questionId: "pubs-finale-time", answer: "noon", at: "x" },
+      { type: "SUBMIT_FINALE_ANSWER", questionId: questions[0].id, answer: "noon", at: "x" },
     ]);
-    expect(session.finale?.wrongAttemptsByQuestion["pubs-finale-time"]).toBe(1);
+    expect(session.finale?.wrongAttemptsByQuestion[questions[0].id]).toBe(1);
 
-    session = play(hiddenPubsWalk, session, [
-      { type: "SUBMIT_FINALE_ANSWER", questionId: "pubs-finale-time", answer: "five to twelve", at: "x" },
-      { type: "SUBMIT_FINALE_ANSWER", questionId: "pubs-finale-animal", answer: "Paard", at: "x" },
-    ]);
+    session = play(
+      hiddenPubsWalk,
+      session,
+      questions.slice(0, -1).map(
+        (question): SessionAction => ({
+          type: "SUBMIT_FINALE_ANSWER",
+          questionId: question.id,
+          answer: otherAcceptedAnswer(question),
+          at: "x",
+        }),
+      ),
+    );
     expect(session.finale?.status).toBe("active");
 
     session = play(hiddenPubsWalk, session, [
       {
         type: "SUBMIT_FINALE_ANSWER",
-        questionId: "pubs-finale-game",
-        answer: "barrel game",
+        questionId: lastQuestion.id,
+        answer: otherAcceptedAnswer(lastQuestion),
         at: "2026-09-23T16:47:00.000Z",
       },
     ]);
@@ -328,7 +388,7 @@ describe("full play-through", () => {
   });
 
   test("the final puzzle can't become a dead end: after 3 wrong answers each question can be revealed", () => {
-    let session = play(hiddenPubsWalk, startSession(hiddenPubsWalk), getJumpToStopActions(hiddenPubsWalk, 9, "x"));
+    let session = play(hiddenPubsWalk, startSession(hiddenPubsWalk), getJumpToStopActions(hiddenPubsWalk, stops.length + 1, "x"));
     expect(session.finale?.status).toBe("active");
 
     for (const question of hiddenPubsWalk.finale!.questions) {
