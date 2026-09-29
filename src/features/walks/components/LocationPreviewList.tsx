@@ -1,8 +1,10 @@
+import { englishTranslator, type Translator } from "@/i18n/translate";
 import { getOrderedLocations, isRevealedBeforeStart } from "@/features/walk-session/logic/route";
 import type { Walk } from "@/types/walk";
 
 interface LocationPreviewListProps {
   walk: Walk;
+  t?: Translator;
 }
 
 /**
@@ -12,7 +14,7 @@ interface LocationPreviewListProps {
  * For walks with a progressive route, locked stops show "???". This is a
  * Server Component, so hidden names are never sent to the browser.
  */
-export function LocationPreviewList({ walk }: LocationPreviewListProps) {
+export function LocationPreviewList({ walk, t = englishTranslator }: LocationPreviewListProps) {
   const orderedLocations = getOrderedLocations(walk);
   const lastLocationId = orderedLocations.at(-1)?.id;
 
@@ -34,12 +36,12 @@ export function LocationPreviewList({ walk }: LocationPreviewListProps) {
             {isRevealed ? (
               <>
                 <h3 className="font-display text-lg font-semibold leading-snug text-ink">
-                  <span className="sr-only">Stop {location.order}: </span>
+                  <span className="sr-only">{t("walks.preview.stopLabel", { number: location.order })}</span>
                   {location.name}
                 </h3>
                 {location.isBonus && (
                   <p className="text-xs font-semibold uppercase tracking-wider text-gold-deep">
-                    Bonus stop · optional
+                    {t("walks.preview.bonus")}
                   </p>
                 )}
                 <p className="text-sm text-sepia">{location.description}</p>
@@ -47,11 +49,11 @@ export function LocationPreviewList({ walk }: LocationPreviewListProps) {
             ) : (
               <>
                 <h3 className="font-display text-lg font-semibold leading-snug text-sepia/70">
-                  <span className="sr-only">Stop {location.order}: hidden location</span>
+                  <span className="sr-only">{t("walks.preview.hiddenStop", { number: location.order })}</span>
                   <span aria-hidden="true">???</span>
                 </h3>
                 <p className="text-xs font-semibold uppercase tracking-wider text-sepia/70">
-                  {isFinal ? "Final destination" : "Locked"}
+                  {isFinal ? t("walks.preview.finalDestination") : t("walks.preview.locked")}
                 </p>
               </>
             )}

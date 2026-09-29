@@ -61,6 +61,6 @@ describe("formatDifficulty", () => {
 
 describe("formatLanguages", () => {
   test("lists language names", () => {
-    expect(formatLanguages(["en", "nl"])).toBe("English, Dutch");
+    expect(formatLanguages(["en", "nl"])).toBe("English and Dutch");
   });
 });

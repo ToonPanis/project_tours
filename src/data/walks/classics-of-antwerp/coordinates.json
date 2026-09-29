@@ -1,0 +1,23 @@
+{
+  "_comment": "Classics of Antwerp stop positions, in route order. DRAFT: geocoded from OpenStreetMap (Nominatim) on 2026-09-23; status 'to-verify' until checked on site. After changing any coordinate, run: node scripts/generate-walking-routes.mjs classics-of-antwerp",
+  "locations": [
+    { "id": "classics-central-station", "name": "Antwerpen-Centraal", "latitude": 51.216221, "longitude": 4.421069, "status": "to-verify" },
+    { "id": "classics-diamond-district", "name": "Diamond District", "latitude": 51.215207, "longitude": 4.418734, "status": "to-verify" },
+    { "id": "classics-keyserlei-meir", "name": "De Keyserlei & Meir", "latitude": 51.217502, "longitude": 4.418381, "status": "to-verify" },
+    { "id": "classics-stadsfeestzaal", "name": "Stadsfeestzaal", "latitude": 51.217637, "longitude": 4.411308, "status": "to-verify" },
+    { "id": "classics-handelsbeurs", "name": "Handelsbeurs", "latitude": 51.21846, "longitude": 4.405785, "status": "to-verify" },
+    { "id": "classics-boerentoren", "name": "Boerentoren", "latitude": 51.21883, "longitude": 4.403938, "status": "to-verify" },
+    { "id": "classics-groenplaats", "name": "Groenplaats", "latitude": 51.218614, "longitude": 4.401639, "status": "to-verify" },
+    { "id": "classics-cathedral", "name": "Cathedral of Our Lady", "latitude": 51.22029, "longitude": 4.401356, "status": "to-verify" },
+    { "id": "classics-vlaeykensgang", "name": "Vlaeykensgang", "latitude": 51.219937, "longitude": 4.399503, "status": "to-verify" },
+    { "id": "classics-grote-markt", "name": "Grote Markt", "latitude": 51.221171, "longitude": 4.400351, "status": "to-verify" },
+    { "id": "classics-brabo", "name": "Brabo Fountain", "latitude": 51.221177, "longitude": 4.399677, "status": "to-verify" },
+    { "id": "classics-stadhuis", "name": "City Hall", "latitude": 51.221311, "longitude": 4.399174, "status": "to-verify" },
+    { "id": "classics-conscienceplein", "name": "Hendrik Conscienceplein", "latitude": 51.220946, "longitude": 4.404166, "status": "to-verify" },
+    { "id": "classics-carolus-borromeus", "name": "St Charles Borromeo Church", "latitude": 51.220961, "longitude": 4.404784, "status": "to-verify" },
+    { "id": "classics-vleeshuis", "name": "Vleeshuis", "latitude": 51.222688, "longitude": 4.39925, "status": "to-verify" },
+    { "id": "classics-sint-paulus", "name": "St Paul's Church", "latitude": 51.223943, "longitude": 4.401378, "status": "to-verify" },
+    { "id": "classics-het-steen", "name": "Het Steen", "latitude": 51.222767, "longitude": 4.397418, "status": "to-verify" },
+    { "id": "classics-scheldt", "name": "The Scheldt", "latitude": 51.221344, "longitude": 4.397136, "status": "to-verify" }
+  ]
+}

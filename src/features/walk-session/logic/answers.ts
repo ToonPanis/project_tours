@@ -24,9 +24,18 @@ function parseNumber(input: string): number | null {
   return Number.isFinite(value) ? value : null;
 }
 
+/**
+ * Answers are compared without spaces, because punctuation disappears without
+ * leaving one: "11:55" becomes "1155", so "11 55" must too. The same goes for
+ * apostrophes, e.g. Ukrainian "п'ять" typed as "пять".
+ */
+function toComparable(input: string): string {
+  return normalizeAnswer(input).replace(/ /g, "");
+}
+
 function matchesAny(input: string, acceptedAnswers: string[]): boolean {
-  const normalizedInput = normalizeAnswer(input);
-  return acceptedAnswers.some((accepted) => normalizeAnswer(accepted) === normalizedInput);
+  const comparableInput = toComparable(input);
+  return acceptedAnswers.some((accepted) => toComparable(accepted) === comparableInput);
 }
 
 /** Checks a submitted answer against a challenge. Pure: no side effects. */

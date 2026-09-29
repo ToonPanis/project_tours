@@ -1,0 +1,157 @@
+{
+  "header": {
+    "stopProgress": "Station {current} / {total}",
+    "clues": "Hinweise {found} / {total}",
+    "ledger": "Kassenbuch",
+    "route": "Route",
+    "progressLabel": "Fortschritt des Rundgangs",
+    "stopCounter": "Station {current} / {total}"
+  },
+  "start": {
+    "newAdventure": "Neues Abenteuer starten",
+    "welcomeBack": "Willkommen zurück",
+    "continueWalk": "Rundgang fortsetzen",
+    "restartPlaytest": "Test neu starten",
+    "savedAdventure": "Gespeichertes Abenteuer",
+    "completed": "Abgeschlossen",
+    "stopOf": "Station {current} von {total}",
+    "team": "Team: {team}",
+    "restartTitle": "Test neu starten?",
+    "restartMessage": "Dadurch wird der gespeicherte Fortschritt auf diesem Handy gelöscht und ihr beginnt wieder bei der ersten Station.",
+    "restartConfirm": "Ja, neu starten"
+  },
+  "team": {
+    "eyebrow": "Team zusammenstellen",
+    "howMany": "Wie viele Spieler?",
+    "onePhone": "Alle spielen auf diesem Handy. Beim Abstimmen gebt ihr es weiter.",
+    "yourName": "Dein Name",
+    "whoIsPlaying": "Wer spielt mit?",
+    "startAdventure": "Abenteuer starten",
+    "teamName": "Teamname (optional)",
+    "teamNamePlaceholder": "Die Antwerpener Entdecker",
+    "player": "Spieler {number}"
+  },
+  "intro": {
+    "eyebrow": "Das Kassenbuch · Fiktion",
+    "begin": "Das Abenteuer beginnt",
+    "atEveryStop": "An jeder Station",
+    "drinkNote": "Die Getränkeabstimmung des Teams ist nur ein Vorschlag. Es gibt immer eine alkoholfreie Option, jeder wählt sein eigenes Getränk, und ihr könnt jede Runde überspringen. Der Fortschritt hängt nie vom Trinken ab."
+  },
+  "arrived": {
+    "eyebrow": "Ihr seid da",
+    "startVote": "Abstimmung starten",
+    "skipRound": "Getränkerunde überspringen",
+    "teamChooses": "Bevor das Kassenbuch spricht, wählt das Team ein Getränk. Alle stimmen geheim ab: Gebt das Handy herum.",
+    "soloChooses": "Bevor das Kassenbuch spricht, wähle ein Getränk.",
+    "alcoholFreeNote": "Es gibt immer eine alkoholfreie Option, und das Ergebnis ist nur ein Vorschlag. Jeder wählt sein eigenes Getränk."
+  },
+  "voting": {
+    "voteSaved": "Stimme gespeichert",
+    "passPhone": "Gib das Handy an {name} weiter",
+    "iAm": "Ich bin {name}",
+    "votesCast": "{cast} von {total} Stimmen abgegeben. Die Stimmen bleiben geheim, bis alle gewählt haben.",
+    "drinkVote": "Getränkeabstimmung",
+    "playerTurn": "{name} ist dran",
+    "yourChoice": "Wofür entscheidest du dich?",
+    "confirm": "Stimme bestätigen",
+    "skip": "Diese Runde überspringen",
+    "options": "Getränkeauswahl",
+    "alcoholFree": "Alkoholfrei",
+    "drinkToVerify": "{name} (bitte Karte prüfen)"
+  },
+  "result": {
+    "votingClosed": "Abstimmung beendet",
+    "votesCounted": {
+      "one": "{count} Stimme gezählt",
+      "other": "{count} Stimmen gezählt"
+    },
+    "votes": {
+      "one": "{count} Stimme",
+      "other": "{count} Stimmen"
+    },
+    "chosenByLedger": "Vom Kassenbuch gewählt",
+    "teamChoice": "Die Wahl des Teams",
+    "preferElse": "Lieber etwas anderes? Jeder kann immer sein eigenes Getränk wählen, auch die alkoholfreie Option."
+  },
+  "story": {
+    "title": "Das Kassenbuch öffnet sich",
+    "toChallenge": "Zur Aufgabe",
+    "translation": "Übersetzung"
+  },
+  "challenge": {
+    "eyebrow": "Aufgabe",
+    "onSiteVerification": "Vor Ort noch zu prüfen",
+    "researchRequired": "Recherche nötig",
+    "yourClues": "Eure Hinweise",
+    "notPlayable": "Diese Art von Aufgabe kann noch nicht gespielt werden.",
+    "hint": "Tipp {number}: ",
+    "needHint": "Brauchst du einen Tipp?"
+  },
+  "solved": {
+    "correct": "Richtig",
+    "discoverWhy": "Erfahre, warum das wichtig ist",
+    "whyItMatters": "Warum das wichtig ist",
+    "bonusSolved": "Bonus gelöst ✓",
+    "clueDiscovered": "Hinweis entdeckt",
+    "finalPageAwaits": "Die letzte Seite wartet",
+    "endOfRoute": "Das Ende der Route",
+    "openFinalPage": "Die letzte Seite öffnen",
+    "closeCase": "Den Fall abschließen",
+    "startWalking": "Losgehen",
+    "showRoute": "Route anzeigen",
+    "newLocation": "Neuer Ort entdeckt",
+    "optionalBonus": "Freiwilliger Bonus",
+    "skipBonus": "Bonus überspringen"
+  },
+  "completion": {
+    "shareText": "Wir haben {title} mit Hidden Antwerp gelöst: {solved}/{total} {label} in {time}!",
+    "cluesRecovered": "Gefundene Hinweise",
+    "challengesCompleted": "Gelöste Aufgaben",
+    "time": "Zeit",
+    "lastPage": "Die letzte Seite",
+    "closeLedger": "Das Kassenbuch schließen",
+    "viewLedger": "Kassenbuch ansehen",
+    "viewRoute": "Route ansehen",
+    "share": "Ergebnis teilen",
+    "discoverAnother": "Weiteren Rundgang entdecken",
+    "team": "Team: ",
+    "shareUnavailable": "Teilen ist hier nicht möglich. Kopiere diesen Text:"
+  },
+  "finale": {
+    "openFinalPage": "Die letzte Seite öffnen",
+    "questionOf": "Letzte Frage {number} von {total}",
+    "showClues": "Eure Hinweise anzeigen",
+    "hideClues": "Eure Hinweise ausblenden"
+  },
+  "content": {
+    "story": "Das Kassenbuch · Fiktion",
+    "legend": "Lokale Legende",
+    "history": "Geschichte",
+    "historyPartial": "Geschichte · teilweise geprüft",
+    "historyResearch": "Geschichte · Recherche nötig",
+    "source": "Quelle:"
+  },
+  "ledger": {
+    "yourRoute": "{title}: deine Route",
+    "discoveredClues": "Entdeckte Hinweise · {found} / {total}",
+    "clueLocked": "Hinweis {number} · gesperrt",
+    "current": "Aktuell",
+    "extraStop": "Extrastation",
+    "skipped": "Übersprungen"
+  },
+  "copy": {
+    "voteResultTitle": "Die Stimmen sind ausgezählt",
+    "tieTitle": "Gleichstand!",
+    "tieSubtitle": "Der Zufall entscheidet…",
+    "afterVoteMessage": "Nimm dir Zeit und schau dich in Ruhe um.",
+    "wrongAnswer": "Nicht ganz. Versuch es noch einmal.",
+    "correctAnswer": "Richtig!",
+    "nextLocationTitle": "Nächste Station freigeschaltet",
+    "completionTitle": "Rundgang geschafft",
+    "completionMessage": "Du hast den Rundgang abgeschlossen.",
+    "startLabel": "Abenteuer starten",
+    "clueCollectedTitle": "Hinweis gesammelt",
+    "locationsTitle": "Die Route",
+    "locationsDiscoveredLabel": "Stationen entdeckt"
+  }
+}

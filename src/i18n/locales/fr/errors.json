@@ -1,0 +1,12 @@
+{
+  "notFound": {
+    "title": "Vous êtes sorti de la carte",
+    "text": "Cette page n'existe pas. Revenons sur le bon chemin.",
+    "back": "Retour à l'accueil"
+  },
+  "walkNotFound": {
+    "title": "Cette balade n'existe pas",
+    "text": "Le parcours que vous cherchez a peut-être été déplacé, ou n'est pas encore disponible.",
+    "seeAll": "Toutes les balades"
+  }
+}

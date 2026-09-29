@@ -1,0 +1,61 @@
+{
+  "explore": {
+    "eyebrow": "Anversa",
+    "title": "Scopri le passeggiate",
+    "intro": "Ogni passeggiata è un percorso pieno di storie e sfide. Scegline una e parti quando vuoi.",
+    "availableWalks": "Passeggiate disponibili",
+    "empty": "Non ci sono ancora passeggiate disponibili. Torna presto.",
+    "comingSoon": "In arrivo"
+  },
+  "card": {
+    "stops": {
+      "one": "{count} tappa",
+      "other": "{count} tappe"
+    },
+    "previewContent": "Contenuto provvisorio",
+    "perTeam": "per squadra"
+  },
+  "stats": {
+    "duration": "Durata",
+    "distance": "Distanza",
+    "difficulty": "Difficoltà",
+    "stops": "Tappe",
+    "toBeConfirmed": "Da confermare"
+  },
+  "difficulty": {
+    "easy": "Facile",
+    "moderate": "Media",
+    "challenging": "Impegnativa"
+  },
+  "practical": {
+    "languages": "Lingue"
+  },
+  "detail": {
+    "allWalks": "← Tutte le passeggiate",
+    "about": "Informazioni su questa passeggiata",
+    "readyTitle": "Pronto a partire?",
+    "perTeam": "per squadra",
+    "whatToExpect": "Cosa ti aspetta",
+    "howItWorks": "Come funziona",
+    "route": "Il percorso",
+    "routeIntro": "Un'anteprima delle tappe. Le storie si svelano durante la passeggiata.",
+    "storyFiction": "La storia · finzione"
+  },
+  "preview": {
+    "stopLabel": "Tappa {number}: ",
+    "hiddenStop": "Tappa {number}: luogo nascosto",
+    "bonus": "Tappa bonus · facoltativa",
+    "finalDestination": "Destinazione finale",
+    "locked": "Bloccata"
+  },
+  "placeholder": {
+    "title": "Ricerca in corso: ",
+    "message": "Questa passeggiata contiene contenuti provvisori. Storie, luoghi e dettagli storici sono ancora in fase di ricerca."
+  },
+  "defaultHowItWorks": {
+    "step1": "Segui il percorso",
+    "step2": "Scopri il luogo",
+    "step3": "Supera la sfida",
+    "step4": "Sblocca la tappa successiva"
+  }
+}

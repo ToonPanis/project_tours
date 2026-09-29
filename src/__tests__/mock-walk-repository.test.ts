@@ -7,19 +7,20 @@ describe("MockWalkRepository", () => {
 
   test("getAllWalks returns summaries without locations", async () => {
     const walks = await repository.getAllWalks();
-    const gates = walks.find((walk) => walk.slug === "the-17-gates");
+    const gates = walks.find((walk) => walk.slug === "poortjes-van-antwerpen");
 
     expect(gates).toBeDefined();
-    expect(gates?.locationCount).toBe(3);
+    // 35 stops, of which 2 are optional detours.
+    expect(gates?.locationCount).toBe(33);
     expect(gates).not.toHaveProperty("locations");
     expect(gates).not.toHaveProperty("description");
   });
 
   test("getWalkBySlug returns the full walk", async () => {
-    const walk = await repository.getWalkBySlug("the-17-gates");
+    const walk = await repository.getWalkBySlug("poortjes-van-antwerpen");
 
-    expect(walk?.title).toBe("The 17 Gates");
-    expect(walk?.locations).toHaveLength(3);
+    expect(walk?.title).toBe("The Gates of Antwerp");
+    expect(walk?.locations).toHaveLength(35);
   });
 
   test("getWalkBySlug returns null for an unknown slug", async () => {

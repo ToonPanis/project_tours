@@ -1,0 +1,22 @@
+{
+  "eyebrow": "Interactive city walks",
+  "titleStart": "Antwerp keeps its secrets.",
+  "titleHighlight": "Come find them.",
+  "intro": "Self-guided walks full of stories, riddles and hidden places. Part city guide, part treasure hunt, all in your mobile browser.",
+  "exploreWalks": "Explore walks",
+  "howItWorks": "How it works",
+  "steps": {
+    "chooseTitle": "Choose your walk",
+    "chooseText": "Pick a route and start it on your phone. No app to download.",
+    "followTitle": "Follow the trail",
+    "followText": "Walk from stop to stop. Each location reveals its story when you arrive.",
+    "solveTitle": "Solve & discover",
+    "solveText": "Crack riddles and answer questions to unlock the next hidden place."
+  },
+  "featured": {
+    "eyebrow": "Featured walk",
+    "title": "Start with {title}",
+    "text": "Our first route, and a great place to begin. Explore the other walks, and keep an eye out for new routes on the way.",
+    "seeAll": "See all walks"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "notFound": {
+    "title": "Te has salido del mapa",
+    "text": "Esta página no existe. Volvamos al camino.",
+    "back": "Volver al inicio"
+  },
+  "walkNotFound": {
+    "title": "Este paseo no existe",
+    "text": "Puede que la ruta que buscas se haya movido o que todavía no esté disponible.",
+    "seeAll": "Ver todos los paseos"
+  }
+}

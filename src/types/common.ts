@@ -1,3 +1,5 @@
+import type { Locale } from "@/i18n/config";
+
 /**
  * Marks whether content has been checked against historical sources.
  * "placeholder" content must be shown with a visible notice in the UI.
@@ -5,7 +7,7 @@
 export type ContentStatus = "placeholder" | "verified";
 
 /** Languages the platform supports (content may be available in a subset). */
-export type LanguageCode = "en" | "nl" | "fr" | "de";
+export type LanguageCode = Locale;
 
 export interface ImageAsset {
   src: string;

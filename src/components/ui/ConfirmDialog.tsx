@@ -1,5 +1,6 @@
 "use client";
 
+import { useT } from "@/i18n/client";
 import { Button } from "./Button";
 import { Dialog } from "./Dialog";
 
@@ -20,6 +21,7 @@ export function ConfirmDialog({
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
+  const t = useT();
   return (
     <Dialog open={open} onClose={onCancel} title={title} size="alert">
       <div className="flex flex-col gap-4 p-6">
@@ -30,7 +32,7 @@ export function ConfirmDialog({
             {confirmLabel}
           </Button>
           <Button variant="outline" onClick={onCancel} fullWidth>
-            Cancel
+            {t("common.cancel")}
           </Button>
         </div>
       </div>

@@ -1,0 +1,61 @@
+{
+  "explore": {
+    "eyebrow": "Antwerpen",
+    "title": "Rundgänge entdecken",
+    "intro": "Jeder Rundgang ist eine Route voller Geschichten und Herausforderungen. Wähle einen aus und starte, wann du willst.",
+    "availableWalks": "Verfügbare Rundgänge",
+    "empty": "Noch sind keine Rundgänge verfügbar. Schau bald wieder vorbei.",
+    "comingSoon": "Demnächst"
+  },
+  "card": {
+    "stops": {
+      "one": "{count} Station",
+      "other": "{count} Stationen"
+    },
+    "previewContent": "Vorläufiger Inhalt",
+    "perTeam": "pro Team"
+  },
+  "stats": {
+    "duration": "Dauer",
+    "distance": "Strecke",
+    "difficulty": "Schwierigkeit",
+    "stops": "Stationen",
+    "toBeConfirmed": "Folgt noch"
+  },
+  "difficulty": {
+    "easy": "Leicht",
+    "moderate": "Mittel",
+    "challenging": "Anspruchsvoll"
+  },
+  "practical": {
+    "languages": "Sprachen"
+  },
+  "detail": {
+    "allWalks": "← Alle Rundgänge",
+    "about": "Über diesen Rundgang",
+    "readyTitle": "Bereit für die Entdeckungstour?",
+    "perTeam": "pro Team",
+    "whatToExpect": "Das erwartet dich",
+    "howItWorks": "So funktioniert's",
+    "route": "Die Route",
+    "routeIntro": "Eine Vorschau auf die Stationen. Die Geschichten erfährst du unterwegs.",
+    "storyFiction": "Die Geschichte · Fiktion"
+  },
+  "preview": {
+    "stopLabel": "Station {number}: ",
+    "hiddenStop": "Station {number}: versteckter Ort",
+    "bonus": "Bonusstation · optional",
+    "finalDestination": "Endstation",
+    "locked": "Gesperrt"
+  },
+  "placeholder": {
+    "title": "Recherche läuft: ",
+    "message": "Dieser Rundgang enthält vorläufige Inhalte. Geschichten, Orte und historische Details werden noch recherchiert."
+  },
+  "defaultHowItWorks": {
+    "step1": "Folge der Route",
+    "step2": "Entdecke den Ort",
+    "step3": "Löse die Aufgabe",
+    "step4": "Schalte die nächste Station frei"
+  }
+}

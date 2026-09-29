@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
 import { the17GatesWalk } from "@/data/walks/the-17-gates";
 import { defaultGameCopy, getGameCopy } from "@/features/walk-session/logic/game-copy";
-import { distanceInMeters } from "@/features/walk-session/logic/geo";
+import { distanceInMeters } from "@/lib/geo";
 import {
   getOrderedLocations,
   isLocationRevealed,

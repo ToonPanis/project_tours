@@ -1,5 +1,6 @@
 "use client";
 
+import { useT } from "@/i18n/client";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import type { DrinkRound } from "@/types/drink";
@@ -8,6 +9,7 @@ import type { Team, Vote } from "@/types/team";
 import { optionLetter } from "../logic/option-letter";
 import { findLeadingOptionIds, haveAllPlayersVoted, pickRandomWinner, tallyVotes } from "../logic/voting";
 import { PlayScreen } from "./PlayScreen";
+import { getDrinkLabel } from "../logic/drink-label";
 
 interface DrinkVotingProps {
   drinkRound: DrinkRound;
@@ -24,6 +26,7 @@ interface DrinkVotingProps {
  * A player's choice is never shown again after they confirm it.
  */
 export function DrinkVoting({ drinkRound, team, progress, dispatch, onVotingClosed }: DrinkVotingProps) {
+  const t = useT();
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
   const [isPassingPhone, setIsPassingPhone] = useState(false);
 
@@ -65,17 +68,16 @@ export function DrinkVoting({ drinkRound, team, progress, dispatch, onVotingClos
   if (isPassingPhone) {
     return (
       <PlayScreen
-        eyebrow="Vote saved"
-        title={`Pass the phone to ${currentPlayer.name}`}
+        eyebrow={t("game.voting.voteSaved")}
+        title={t("game.voting.passPhone", { name: currentPlayer.name })}
         actions={
           <Button onClick={() => setIsPassingPhone(false)} fullWidth>
-            I&apos;m {currentPlayer.name}
+            {t("game.voting.iAm", { name: currentPlayer.name })}
           </Button>
         }
       >
         <p className="text-parchment/75">
-          {progress.votes.length} of {team.players.length} votes cast. Votes stay secret until
-          everyone has chosen.
+          {t("game.voting.votesCast", { cast: progress.votes.length, total: team.players.length })}
         </p>
       </PlayScreen>
     );
@@ -83,21 +85,21 @@ export function DrinkVoting({ drinkRound, team, progress, dispatch, onVotingClos
 
   return (
     <PlayScreen
-      eyebrow={isSolo ? "Drink vote" : `${currentPlayer.name}'s turn`}
-      title="What is your choice?"
+      eyebrow={isSolo ? t("game.voting.drinkVote") : t("game.voting.playerTurn", { name: currentPlayer.name })}
+      title={t("game.voting.yourChoice")}
       actions={
         <>
           <Button onClick={confirmVote} disabled={!selectedOptionId} fullWidth>
-            Confirm vote
+            {t("game.voting.confirm")}
           </Button>
           <Button variant="outline" onClick={skipRound} fullWidth>
-            Skip this round
+            {t("game.voting.skip")}
           </Button>
         </>
       }
     >
       <fieldset className="flex flex-col gap-3">
-        <legend className="sr-only">Drink options</legend>
+        <legend className="sr-only">{t("game.voting.options")}</legend>
         {drinkRound.options.map((option, index) => {
           const isSelected = option.id === selectedOptionId;
           return (
@@ -124,10 +126,10 @@ export function DrinkVoting({ drinkRound, team, progress, dispatch, onVotingClos
                 {optionLetter(index)}
               </span>
               <span className="flex flex-col">
-                <span className="text-lg font-semibold text-parchment">{option.name}</span>
+                <span className="text-lg font-semibold text-parchment">{getDrinkLabel(option, t)}</span>
                 {!option.alcoholic && (
                   <span className="text-xs font-semibold uppercase tracking-wider text-gold">
-                    Alcohol-free
+                    {t("game.voting.alcoholFree")}
                   </span>
                 )}
               </span>

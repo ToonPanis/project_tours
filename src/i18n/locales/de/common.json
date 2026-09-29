@@ -1,0 +1,24 @@
+{
+  "loading": "Wird geladen…",
+  "close": "Schließen",
+  "cancel": "Abbrechen",
+  "continue": "Weiter",
+  "back": "Zurück",
+  "next": "Weiter",
+  "previous": "Zurück",
+  "submit": "Prüfen",
+  "yourAnswer": "Deine Antwort",
+  "units": {
+    "meters": "{value} m",
+    "kilometers": "{value} km",
+    "minutes": "{value} Min.",
+    "hours": "{value} Std.",
+    "hoursMinutes": "{hours} Std. {minutes} Min.",
+    "range": "{from}–{to}",
+    "elapsedHoursMinutes": "{hours} Std. {minutes} Min.",
+    "elapsedMinutes": "{minutes} Min."
+  },
+  "cities": {
+    "antwerp": "Antwerpen"
+  }
+}

@@ -1,8 +1,10 @@
 import type { Challenge } from "./challenge";
 import type { Clue } from "./clue";
 import type { StoryBlock } from "./content";
+import type { GuideIntro, WalkChapter, WalkCollection } from "./guide";
 import type { ContentStatus, ImageAsset, LanguageCode } from "./common";
 import type { WalkLocation } from "./location";
+import type { RouteLeg } from "./navigation";
 
 export type Difficulty = "easy" | "moderate" | "challenging";
 
@@ -10,7 +12,13 @@ export type Difficulty = "easy" | "moderate" | "challenging";
  * Visual theme of a walk. Each theme overrides the color tokens in globals.css
  * via `data-walk-theme`, so components never need walk-specific conditions.
  */
-export type WalkTheme = "classic" | "tavern";
+export type WalkTheme = "classic" | "tavern" | "archive";
+
+/**
+ * "game": an interactive walk (challenges, clues, votes…).
+ * "guide": a narrated city guide with no game elements.
+ */
+export type WalkExperience = "game" | "guide";
 
 /** Money is stored in cents to avoid floating-point rounding (and matches Stripe). */
 export interface Price {
@@ -49,6 +57,8 @@ export interface GameCopy {
   nextLocationTitle: string;
   completionTitle: string;
   completionMessage: string;
+  /** Label of the button that starts the walk, e.g. "Start adventure". */
+  startLabel: string;
   /** Shown when a clue is added, e.g. "The ledger has changed". */
   clueCollectedTitle: string;
   /** Heading of the route list, e.g. "Taverns". */
@@ -83,7 +93,7 @@ export interface WalkNarrative {
 /** The lightweight version of a walk, used in lists and cards. */
 export interface WalkSummary {
   id: string;
-  /** URL-friendly identifier, e.g. "the-17-gates". */
+  /** URL-friendly identifier, e.g. "poortjes-van-antwerpen". */
   slug: string;
   title: string;
   /** Short line shown under the title. */
@@ -98,6 +108,7 @@ export interface WalkSummary {
   price: Price;
   coverImage?: ImageAsset;
   theme: WalkTheme;
+  experience: WalkExperience;
   /** Main stops only; bonus stops are not counted. */
   locationCount: number;
   contentStatus: ContentStatus;
@@ -118,8 +129,16 @@ export interface Walk extends Omit<WalkSummary, "locationCount"> {
   practicalInfo?: PracticalInfoItem[];
   locations: WalkLocation[];
   finale?: WalkFinale;
+  /** Start-screen texts for guide walks. */
+  guideIntro?: GuideIntro;
+  /** Pre-calculated walking routes between consecutive locations. */
+  routeLegs?: RouteLeg[];
   /** Collectible clues. Walks without clues simply omit this. */
   clues?: Clue[];
+  /** Parts of the route with their own character, each introduced by a chapter card. */
+  chapters?: WalkChapter[];
+  /** Historical collection shown alongside the route (e.g. all drawn gates, also vanished ones). */
+  collection?: WalkCollection;
 }
 
 /** A walk that is announced but not yet playable. Only basic info is known. */

@@ -1,0 +1,22 @@
+{
+  "eyebrow": "Paseos interactivos por la ciudad",
+  "titleStart": "Amberes guarda sus secretos.",
+  "titleHighlight": "Ven a descubrirlos.",
+  "intro": "Paseos autoguiados llenos de historias, enigmas y rincones escondidos. Mitad guía de la ciudad, mitad búsqueda del tesoro, todo en el navegador de tu móvil.",
+  "exploreWalks": "Descubre los paseos",
+  "howItWorks": "Cómo funciona",
+  "steps": {
+    "chooseTitle": "Elige tu paseo",
+    "chooseText": "Elige una ruta y empiézala en tu móvil. No hace falta descargar ninguna app.",
+    "followTitle": "Sigue el rastro",
+    "followText": "Camina de parada en parada. Cada lugar revela su historia cuando llegas.",
+    "solveTitle": "Resuelve y descubre",
+    "solveText": "Descifra enigmas y responde preguntas para desbloquear el siguiente lugar escondido."
+  },
+  "featured": {
+    "eyebrow": "Paseo destacado",
+    "title": "Empieza con {title}",
+    "text": "Nuestra primera ruta y un buen lugar para empezar. Descubre también los otros paseos y atento a las nuevas rutas que están por llegar.",
+    "seeAll": "Ver todos los paseos"
+  }
+}

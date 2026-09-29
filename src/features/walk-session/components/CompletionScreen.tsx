@@ -1,5 +1,6 @@
 "use client";
 
+import { useT } from "@/i18n/client";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { ButtonLink } from "@/components/ui/ButtonLink";
@@ -21,17 +22,24 @@ interface CompletionScreenProps {
  * how many drinks were ordered.
  */
 export function CompletionScreen({ walk, session, copy, onOpenLedger }: CompletionScreenProps) {
+  const t = useT();
   const [shareFallbackText, setShareFallbackText] = useState<string | null>(null);
   const closingStory = walk.finale?.closingStory ?? [];
   // The closing story comes first; the summary follows.
   const [hasReadStory, setHasReadStory] = useState(closingStory.length === 0);
 
   const stats = getSessionStats(walk, session);
-  const elapsedTime = getElapsedTime(session, new Date());
+  const elapsedTime = getElapsedTime(session, new Date(), t);
   const playerNames = session.team.players.map((player) => player.name).join(", ");
 
   const teamLabel = session.team.name ? `${session.team.name} (${playerNames})` : playerNames;
-  const shareText = `We solved ${walk.narrative?.title ?? walk.title} with Hidden Antwerp: ${stats.solvedStops}/${stats.totalStops} ${copy.locationsDiscoveredLabel} in ${elapsedTime}!`;
+  const shareText = t("game.completion.shareText", {
+    title: walk.narrative?.title ?? walk.title,
+    solved: stats.solvedStops,
+    total: stats.totalStops,
+    label: copy.locationsDiscoveredLabel,
+    time: elapsedTime,
+  });
 
   async function shareResult() {
     // The Web Share API only works on HTTPS pages. Otherwise, show the text to copy.
@@ -49,20 +57,20 @@ export function CompletionScreen({ walk, session, copy, onOpenLedger }: Completi
   const statItems = [
     { label: copy.locationsDiscoveredLabel, value: `${stats.solvedStops} / ${stats.totalStops}` },
     ...(stats.totalClues > 0
-      ? [{ label: "Clues recovered", value: `${stats.collectedClues} / ${stats.totalClues}` }]
+      ? [{ label: t("game.completion.cluesRecovered"), value: `${stats.collectedClues} / ${stats.totalClues}` }]
       : []),
-    { label: "Challenges completed", value: String(stats.challengesCompleted) },
-    { label: "Time", value: elapsedTime },
+    { label: t("game.completion.challengesCompleted"), value: String(stats.challengesCompleted) },
+    { label: t("game.completion.time"), value: elapsedTime },
   ];
 
   if (!hasReadStory) {
     return (
       <PlayScreen
         eyebrow={walk.narrative?.title ?? walk.title}
-        title="The last page"
+        title={t("game.completion.lastPage")}
         actions={
           <Button onClick={() => setHasReadStory(true)} fullWidth>
-            Close the ledger
+            {t("game.completion.closeLedger")}
           </Button>
         }
       >
@@ -82,13 +90,13 @@ export function CompletionScreen({ walk, session, copy, onOpenLedger }: Completi
       actions={
         <>
           <Button onClick={onOpenLedger} fullWidth>
-            {walk.clues ? "View ledger" : "View route"}
+            {walk.clues ? t("game.completion.viewLedger") : t("game.completion.viewRoute")}
           </Button>
           <Button variant="outline" onClick={shareResult} fullWidth>
-            Share result
+            {t("game.completion.share")}
           </Button>
           <ButtonLink href="/walks" variant="outline" className="w-full">
-            Discover another walk
+            {t("game.completion.discoverAnother")}
           </ButtonLink>
         </>
       }
@@ -107,13 +115,13 @@ export function CompletionScreen({ walk, session, copy, onOpenLedger }: Completi
       </dl>
 
       <p className="text-parchment/75">
-        <span className="text-xs uppercase tracking-wider text-parchment/60">Team: </span>
+        <span className="text-xs uppercase tracking-wider text-parchment/60">{t("game.completion.team")}</span>
         {teamLabel}
       </p>
 
       {shareFallbackText && (
         <div className="rounded-sm border border-parchment/20 p-3 text-sm">
-          <p className="text-parchment/60">Sharing isn&apos;t available here. Copy this text:</p>
+          <p className="text-parchment/60">{t("game.completion.shareUnavailable")}</p>
           <p className="mt-1 select-all text-parchment">{shareFallbackText}</p>
         </div>
       )}

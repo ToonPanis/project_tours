@@ -1,0 +1,24 @@
+{
+  "loading": "Chargement…",
+  "close": "Fermer",
+  "cancel": "Annuler",
+  "continue": "Continuer",
+  "back": "Retour",
+  "next": "Suivant",
+  "previous": "Précédent",
+  "submit": "Valider",
+  "yourAnswer": "Votre réponse",
+  "units": {
+    "meters": "{value} m",
+    "kilometers": "{value} km",
+    "minutes": "{value} min",
+    "hours": "{value} h",
+    "hoursMinutes": "{hours} h {minutes} min",
+    "range": "{from}–{to}",
+    "elapsedHoursMinutes": "{hours} h {minutes} min",
+    "elapsedMinutes": "{minutes} min"
+  },
+  "cities": {
+    "antwerp": "Anvers"
+  }
+}

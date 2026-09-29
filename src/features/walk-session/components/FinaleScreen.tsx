@@ -1,5 +1,6 @@
 "use client";
 
+import { useT } from "@/i18n/client";
 import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import type { Clue } from "@/types/clue";
@@ -14,11 +15,14 @@ interface FinaleScreenProps {
   progress: FinaleProgress;
   collectedClues: Clue[];
   copy: GameCopy;
+  /** Small title above the finale, e.g. the name of the walk's story. */
+  eyebrow: string;
   onSubmit: (questionId: string, answer: ChallengeAnswer) => void;
 }
 
 /** The final page: first the collected clues, then one question per screen. */
-export function FinaleScreen({ finale, progress, collectedClues, copy, onSubmit }: FinaleScreenProps) {
+export function FinaleScreen({ finale, progress, collectedClues, copy, eyebrow, onSubmit }: FinaleScreenProps) {
+  const t = useT();
   // Skip the intro when coming back to a finale that's already under way.
   const [hasStarted, setHasStarted] = useState(progress.solvedQuestionIds.length > 0);
 
@@ -36,11 +40,11 @@ export function FinaleScreen({ finale, progress, collectedClues, copy, onSubmit 
   if (!hasStarted) {
     return (
       <PlayScreen
-        eyebrow="The Lost Tavern Ledger"
+        eyebrow={eyebrow}
         title={finale.title}
         actions={
           <Button onClick={() => setHasStarted(true)} fullWidth>
-            Open the final page
+            {t("game.finale.openFinalPage")}
           </Button>
         }
       >
@@ -90,6 +94,7 @@ function FinaleQuestion({
   clueList,
   onSubmit,
 }: FinaleQuestionProps) {
+  const t = useT();
   const [answer, setAnswer] = useState("");
   const [showClues, setShowClues] = useState(false);
 
@@ -99,16 +104,16 @@ function FinaleQuestion({
   }
 
   return (
-    <PlayScreen eyebrow={`Final question ${number} of ${total}`} title={question}>
+    <PlayScreen eyebrow={t("game.finale.questionOf", { number, total })} title={question}>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <label className="sr-only" htmlFor="finale-answer">
-          Your answer
+          {t("common.yourAnswer")}
         </label>
         <input
           id="finale-answer"
           value={answer}
           onChange={(event) => setAnswer(event.target.value)}
-          placeholder="Your answer"
+          placeholder={t("common.yourAnswer")}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
@@ -116,7 +121,7 @@ function FinaleQuestion({
           className="min-h-14 w-full rounded-sm border border-parchment/30 bg-ink/40 px-4 text-xl text-parchment focus:border-gold focus:outline-none"
         />
         <Button type="submit" disabled={answer.trim() === ""} fullWidth>
-          Submit
+          {t("common.submit")}
         </Button>
       </form>
 
@@ -127,7 +132,7 @@ function FinaleQuestion({
       )}
 
       <Button variant="outline" onClick={() => setShowClues((current) => !current)} fullWidth>
-        {showClues ? "Hide your clues" : "Show your clues"}
+        {showClues ? t("game.finale.hideClues") : t("game.finale.showClues")}
       </Button>
       {showClues && clueList}
     </PlayScreen>

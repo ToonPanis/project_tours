@@ -1,8 +1,15 @@
+import type { Locale } from "@/i18n/config";
 import type { Walk } from "@/types/walk";
-import { hiddenPubsWalk } from "./hidden-pubs";
-import { the17GatesWalk } from "./the-17-gates";
+import { getClassicsWalk } from "./classics-of-antwerp";
+import { getHiddenPubsWalk } from "./hidden-pubs";
+import { getPoortjesWalk } from "./poortjes-van-antwerpen";
 
-export { upcomingWalks } from "./upcoming-walks";
+export { getUpcomingWalks, upcomingWalks } from "./upcoming-walks";
 
-/** All playable walks. Add new walk files here. */
-export const walks: Walk[] = [the17GatesWalk, hiddenPubsWalk];
+/** All playable walks, with their texts in `locale` (English where a translation is missing). */
+export function getWalks(locale?: Locale): Walk[] {
+  return [getPoortjesWalk(locale), getHiddenPubsWalk(locale), getClassicsWalk(locale)];
+}
+
+/** All playable walks in English, e.g. for tests. Add new walk folders to getWalks(). */
+export const walks: Walk[] = getWalks("en");

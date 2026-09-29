@@ -1,9 +1,12 @@
 "use client";
 
+import { useT } from "@/i18n/client";
 import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import type { Clue } from "@/types/clue";
+import { formatWalkingDistance, formatWalkingTime } from "@/features/navigation/logic/maneuver-display";
 import type { WalkLocation } from "@/types/location";
+import type { WalkingRoute } from "@/types/navigation";
 import type { ChallengeAnswer, LocationProgress } from "@/types/session";
 import type { GameCopy } from "@/types/walk";
 import { ContentBlockView } from "./ContentBlockView";
@@ -17,6 +20,8 @@ interface SolvedScreenProps {
   progress: LocationProgress;
   earnedClues: Clue[];
   nextLocation: WalkLocation | undefined;
+  /** The walking route to the next location, if known (for distance and time). */
+  routeToNext: WalkingRoute | null;
   /** True when a final puzzle follows the last location. */
   hasFinale: boolean;
   copy: GameCopy;
@@ -32,6 +37,7 @@ interface SolvedScreenProps {
  * Steps without data (no bonus, no reveal, no clue) are left out.
  */
 export function SolvedScreen(props: SolvedScreenProps) {
+  const t = useT();
   const { location, progress, earnedClues, copy } = props;
 
   const steps: Step[] = [
@@ -50,11 +56,11 @@ export function SolvedScreen(props: SolvedScreenProps) {
     case "correct":
       return (
         <PlayScreen
-          eyebrow="Correct"
+          eyebrow={t("game.solved.correct")}
           title={copy.correctAnswer}
           actions={
             <Button onClick={goToNextStep} fullWidth>
-              {location.historicalReveal ? "Discover why it matters" : "Continue"}
+              {location.historicalReveal ? t("game.solved.discoverWhy") : t("common.continue")}
             </Button>
           }
         >
@@ -80,15 +86,15 @@ export function SolvedScreen(props: SolvedScreenProps) {
       return location.historicalReveal ? (
         <PlayScreen
           eyebrow={location.name}
-          title="Why it matters"
+          title={t("game.solved.whyItMatters")}
           actions={
             <Button onClick={goToNextStep} fullWidth>
-              Continue
+              {t("common.continue")}
             </Button>
           }
         >
           {progress.bonusStatus === "solved" && (
-            <p className="text-sm font-semibold uppercase tracking-wider text-gold">Bonus solved ✓</p>
+            <p className="text-sm font-semibold uppercase tracking-wider text-gold">{t("game.solved.bonusSolved")}</p>
           )}
           <HistoricalRevealView reveal={location.historicalReveal} />
         </PlayScreen>
@@ -98,10 +104,10 @@ export function SolvedScreen(props: SolvedScreenProps) {
       return (
         <PlayScreen
           eyebrow={copy.clueCollectedTitle}
-          title="Clue discovered"
+          title={t("game.solved.clueDiscovered")}
           actions={
             <Button onClick={goToNextStep} fullWidth>
-              Continue
+              {t("common.continue")}
             </Button>
           }
         >
@@ -125,17 +131,18 @@ export function SolvedScreen(props: SolvedScreenProps) {
 }
 
 /** The story teaser, then the next café, or the way into the final puzzle. */
-function NextStep({ location, nextLocation, hasFinale, copy, onContinue, onShowRoute }: SolvedScreenProps) {
+function NextStep({ location, nextLocation, routeToNext, hasFinale, copy, onContinue, onShowRoute }: SolvedScreenProps) {
+  const t = useT();
   const teaserBlocks = location.content.filter((block) => block.revealAt === "solved");
 
   if (!nextLocation) {
     return (
       <PlayScreen
         eyebrow={location.name}
-        title={hasFinale ? "The final page awaits" : "The end of the route"}
+        title={hasFinale ? t("game.solved.finalPageAwaits") : t("game.solved.endOfRoute")}
         actions={
           <Button onClick={onContinue} fullWidth>
-            {hasFinale ? "Open the final page" : "Close the case"}
+            {hasFinale ? t("game.solved.openFinalPage") : t("game.solved.closeCase")}
           </Button>
         }
       >
@@ -153,10 +160,10 @@ function NextStep({ location, nextLocation, hasFinale, copy, onContinue, onShowR
       actions={
         <>
           <Button onClick={onContinue} fullWidth>
-            Continue journey
+            {t("game.solved.startWalking")}
           </Button>
           <Button variant="outline" onClick={onShowRoute} fullWidth>
-            Show route
+            {t("game.solved.showRoute")}
           </Button>
         </>
       }
@@ -166,9 +173,17 @@ function NextStep({ location, nextLocation, hasFinale, copy, onContinue, onShowR
       ))}
       <div className="animate-[reveal_700ms_ease-out]">
         <p className="text-xs font-semibold uppercase tracking-[0.25em] text-gold">
-          New location discovered
+          {t("game.solved.newLocation")}
         </p>
         <p className="mt-2 text-lg">{nextLocation.address}</p>
+        {routeToNext && (
+          <p className="mt-3 font-display text-3xl font-semibold text-parchment">
+            {formatWalkingDistance(routeToNext.distanceMeters, t)}
+            <span className="ml-3 text-lg font-normal text-parchment/75">
+              {formatWalkingTime(routeToNext.durationSeconds, t)}
+            </span>
+          </p>
+        )}
       </div>
     </PlayScreen>
   );
@@ -185,6 +200,7 @@ interface BonusStepProps {
 
 /** An optional extra question. Skipping is always allowed. */
 function BonusStep({ title, question, wrongAttempts, wrongMessage, onSubmit, onSkip }: BonusStepProps) {
+  const t = useT();
   const [answer, setAnswer] = useState("");
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -193,17 +209,17 @@ function BonusStep({ title, question, wrongAttempts, wrongMessage, onSubmit, onS
   }
 
   return (
-    <PlayScreen eyebrow="Optional bonus" title={title}>
+    <PlayScreen eyebrow={t("game.solved.optionalBonus")} title={title}>
       <p className="font-display text-2xl leading-snug">{question}</p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <label className="sr-only" htmlFor="bonus-answer">
-          Your answer
+          {t("common.yourAnswer")}
         </label>
         <input
           id="bonus-answer"
           value={answer}
           onChange={(event) => setAnswer(event.target.value)}
-          placeholder="Your answer"
+          placeholder={t("common.yourAnswer")}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
@@ -211,7 +227,7 @@ function BonusStep({ title, question, wrongAttempts, wrongMessage, onSubmit, onS
           className="min-h-14 w-full rounded-sm border border-parchment/30 bg-ink/40 px-4 text-xl text-parchment focus:border-gold focus:outline-none"
         />
         <Button type="submit" disabled={answer.trim() === ""} fullWidth>
-          Submit
+          {t("common.submit")}
         </Button>
       </form>
       {wrongAttempts > 0 && (
@@ -220,7 +236,7 @@ function BonusStep({ title, question, wrongAttempts, wrongMessage, onSubmit, onS
         </p>
       )}
       <Button variant="outline" onClick={onSkip} fullWidth>
-        Skip the bonus
+        {t("game.solved.skipBonus")}
       </Button>
     </PlayScreen>
   );

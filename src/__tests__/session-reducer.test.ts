@@ -211,6 +211,23 @@ describe("bonus question (Quinten Matsijs)", () => {
   });
 });
 
+describe("COMPLETE_VISIT (guide walks)", () => {
+  test("completes a stop without a drink round or challenge", async () => {
+    const { classicsOfAntwerpWalk } = await import("@/data/walks/classics-of-antwerp");
+    let session = startSession(classicsOfAntwerpWalk);
+    session = play(classicsOfAntwerpWalk, session, [{ type: "ARRIVE" }, { type: "COMPLETE_VISIT" }]);
+    expect(currentProgress(session).status).toBe("solved");
+  });
+
+  test("is ignored at a stop that has a challenge", () => {
+    const session = play(hiddenPubsWalk, startSession(hiddenPubsWalk), [
+      { type: "ARRIVE" },
+      { type: "COMPLETE_VISIT" },
+    ]);
+    expect(currentProgress(session).status).toBe("arrived");
+  });
+});
+
 describe("full play-through", () => {
   test("Hidden Pubs: 8 cafés and 8 clues open the finale; 3 correct answers complete the walk", () => {
     let session = startSession(hiddenPubsWalk);

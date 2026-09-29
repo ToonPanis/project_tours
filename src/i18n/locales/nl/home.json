@@ -1,0 +1,22 @@
+{
+  "eyebrow": "Interactieve stadswandelingen",
+  "titleStart": "Antwerpen bewaart zijn geheimen.",
+  "titleHighlight": "Kom ze ontdekken.",
+  "intro": "Wandelingen op eigen tempo, vol verhalen, raadsels en verborgen plekken. Half stadsgids, half schattenjacht, helemaal in je mobiele browser.",
+  "exploreWalks": "Ontdek de wandelingen",
+  "howItWorks": "Hoe het werkt",
+  "steps": {
+    "chooseTitle": "Kies je wandeling",
+    "chooseText": "Kies een route en start ze op je telefoon. Je hoeft geen app te installeren.",
+    "followTitle": "Volg het spoor",
+    "followText": "Wandel van stop naar stop. Elke plek vertelt haar verhaal zodra je er bent.",
+    "solveTitle": "Los op en ontdek",
+    "solveText": "Kraak raadsels en beantwoord vragen om de volgende verborgen plek te ontgrendelen."
+  },
+  "featured": {
+    "eyebrow": "Uitgelichte wandeling",
+    "title": "Begin met {title}",
+    "text": "Onze eerste route, en een mooie plek om te beginnen. Bekijk ook de andere wandelingen, en hou nieuwe routes in de gaten.",
+    "seeAll": "Alle wandelingen"
+  }
+}

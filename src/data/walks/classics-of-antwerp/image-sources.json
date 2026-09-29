@@ -1,0 +1,135 @@
+{
+  "_comment": "Which Wikimedia Commons files to download for Classics of Antwerp. Run: node scripts/download-commons-images.mjs classics-of-antwerp",
+  "images": [
+    {
+      "id": "central-station-1906",
+      "localPath": "/images/classics/central-station/historical-1906.jpg",
+      "commonsTitle": "File:Anvers — Gare Centrale — (Station Antwerpen-Centraal).jpg"
+    },
+    {
+      "id": "central-station-hall-1909",
+      "localPath": "/images/classics/central-station/historical-hall-1909.jpg",
+      "commonsTitle": "File:Anvers. Gare Centrale. Intérieur (03), GP094449.jpg"
+    },
+    {
+      "id": "diamond-pelikaanstraat",
+      "localPath": "/images/classics/diamond-district/historical-pelikaanstraat.jpg",
+      "commonsTitle": "File:Anvers. La rue du Pélican, GP107143.jpg"
+    },
+    {
+      "id": "keyserlei-1903",
+      "localPath": "/images/classics/keyserlei-meir/historical-keyserlei-1903.jpg",
+      "commonsTitle": "File:Anvers. L'Avenue De Keyser & perspective de la rue Leys, GP105295.jpg"
+    },
+    {
+      "id": "meir-1910",
+      "localPath": "/images/classics/keyserlei-meir/historical-meir-1910.jpg",
+      "commonsTitle": "File:Anvers. Place de Meir (02), GP106402.jpg"
+    },
+    {
+      "id": "stadsfeestzaal-today",
+      "localPath": "/images/classics/stadsfeestzaal/modern-dome.jpg",
+      "commonsTitle": "File:Antwerp Stadsfeestzaal (25537423005).jpg"
+    },
+    {
+      "id": "handelsbeurs-1890",
+      "localPath": "/images/classics/handelsbeurs/historical-1890.jpg",
+      "commonsTitle": "File:Anvers. La Bourse. Interieur LCCN2017659114.jpg"
+    },
+    {
+      "id": "handelsbeurs-lalanne",
+      "localPath": "/images/classics/handelsbeurs/historical-etching-lalanne.jpg",
+      "commonsTitle": "File:Maxime Lalanne Börse von Antwerpen.jpg"
+    },
+    {
+      "id": "boerentoren-1930s",
+      "localPath": "/images/classics/boerentoren/historical-1930s.jpg",
+      "commonsTitle": "File:Antwerpen 1930s Boerentoren.jpg"
+    },
+    {
+      "id": "groenplaats-1899",
+      "localPath": "/images/classics/groenplaats/historical-1899.jpg",
+      "commonsTitle": "File:Anvers. Place Verte (15), GP105457.jpg"
+    },
+    {
+      "id": "cathedral-hollar-1649",
+      "localPath": "/images/classics/cathedral/historical-hollar-1649.jpg",
+      "commonsTitle": "File:View of west end of Antwerp Cathedral by Wenceslaus Hollar.jpg"
+    },
+    {
+      "id": "cathedral-1908",
+      "localPath": "/images/classics/cathedral/historical-spire-1908.jpg",
+      "commonsTitle": "File:Anvers. La Flèche de la Cathédrale (14), GP096235.jpg"
+    },
+    {
+      "id": "grote-markt-1905",
+      "localPath": "/images/classics/grote-markt/historical-1905.jpg",
+      "commonsTitle": "File:Anvers. La Grand' Place (12), GP105568.jpg"
+    },
+    {
+      "id": "brabo-photochrom",
+      "localPath": "/images/classics/brabo/historical-photochrom.jpg",
+      "commonsTitle": "File:Brabo monument, Antwerp, Belgium-LCCN2001697877.jpg"
+    },
+    {
+      "id": "stadhuis-1866",
+      "localPath": "/images/classics/stadhuis/historical-1866.jpg",
+      "commonsTitle": "File:Anvers l'hôtel de ville, 1305FOL14.jpg"
+    },
+    {
+      "id": "conscienceplein-historical",
+      "localPath": "/images/classics/conscienceplein/historical.jpg",
+      "commonsTitle": "File:Anvers. Place Henri Conscience (La Bibliothèque), GP105197.jpg"
+    },
+    {
+      "id": "carolus-ceiling-punt-1748",
+      "localPath": "/images/classics/carolus-borromeus/historical-ceiling-engraving-1748.jpg",
+      "commonsTitle": "File:Aanbidding door de koningen Les plat-fonds ou les tableaux des galeries De plafonds of gallerystukken (serietitel), RP-P-OB-66.336.jpg"
+    },
+    {
+      "id": "vleeshuis-1901",
+      "localPath": "/images/classics/vleeshuis/historical-1901.jpg",
+      "commonsTitle": "File:Anvers. Vieille Boucherie (01), GP105083.jpg"
+    },
+    {
+      "id": "sint-paulus-1901",
+      "localPath": "/images/classics/sint-paulus/historical-1901.jpg",
+      "commonsTitle": "File:Anvers. Eglise Saint Paul (02), GP098078.jpg"
+    },
+    {
+      "id": "steen-photochrom",
+      "localPath": "/images/classics/het-steen/historical-photochrom.jpg",
+      "commonsTitle": "File:View of the Steen with the port, Antwerp, Belgium-LCCN2001697879.jpg"
+    },
+    {
+      "id": "steen-1920",
+      "localPath": "/images/classics/het-steen/historical-1920.jpg",
+      "commonsTitle": "File:Anvers. Le Steen et le Port - Anvers. The Steen and the Harbor, GP107401.jpg"
+    },
+    {
+      "id": "scheldt-quays-1900",
+      "localPath": "/images/classics/scheldt/historical-quays-1900.jpg",
+      "commonsTitle": "File:Anvers. Port. Les Quais (02), GP095019.jpg"
+    },
+    {
+      "id": "scheldt-photochrom",
+      "localPath": "/images/classics/scheldt/historical-photochrom.jpg",
+      "commonsTitle": "File:Antwerp across the Scheldt, photochrom (unedited original).tiff"
+    },
+    {
+      "id": "central-station-today",
+      "localPath": "/images/classics/central-station/modern.jpg",
+      "commonsTitle": "File:Antwerpen Centraal Station 2023-05-16.jpg"
+    },
+    {
+      "id": "grote-markt-today",
+      "localPath": "/images/classics/grote-markt/modern.jpg",
+      "commonsTitle": "File:Grote Markt Antwerpen 39.jpg"
+    },
+    {
+      "id": "steen-today",
+      "localPath": "/images/classics/het-steen/modern.jpg",
+      "commonsTitle": "File:Antwerpen - Het Steen (3).jpg"
+    }
+  ]
+}

@@ -1,0 +1,157 @@
+{
+  "header": {
+    "stopProgress": "Stop {current} / {total}",
+    "clues": "Clues {found} / {total}",
+    "ledger": "Ledger",
+    "route": "Route",
+    "progressLabel": "Walk progress",
+    "stopCounter": "Stop {current} / {total}"
+  },
+  "start": {
+    "newAdventure": "Start new adventure",
+    "welcomeBack": "Welcome back",
+    "continueWalk": "Continue walk",
+    "restartPlaytest": "Restart playtest",
+    "savedAdventure": "Saved adventure",
+    "completed": "Completed",
+    "stopOf": "Stop {current} of {total}",
+    "team": "Team: {team}",
+    "restartTitle": "Restart the playtest?",
+    "restartMessage": "This deletes the saved progress on this phone and starts again from the first stop.",
+    "restartConfirm": "Yes, restart"
+  },
+  "team": {
+    "eyebrow": "Team setup",
+    "howMany": "How many players?",
+    "onePhone": "Everyone plays on this phone. You'll pass it around when it's time to vote.",
+    "yourName": "Your name",
+    "whoIsPlaying": "Who's playing?",
+    "startAdventure": "Start adventure",
+    "teamName": "Team name (optional)",
+    "teamNamePlaceholder": "The Antwerp Explorers",
+    "player": "Player {number}"
+  },
+  "intro": {
+    "eyebrow": "The Ledger · fiction",
+    "begin": "Begin the adventure",
+    "atEveryStop": "At every stop",
+    "drinkNote": "The team's drink vote is only a suggestion. There is always an alcohol-free option, everyone can choose their own drink, and you can skip any round. Progress never depends on drinking."
+  },
+  "arrived": {
+    "eyebrow": "You've arrived",
+    "startVote": "Start the drink vote",
+    "skipRound": "Skip the drink round",
+    "teamChooses": "Before the ledger speaks, the team chooses a drink. Everyone votes in secret: pass the phone around.",
+    "soloChooses": "Before the ledger speaks, choose a drink.",
+    "alcoholFreeNote": "There is always an alcohol-free option, and the result is only a suggestion. Everyone can choose their own drink."
+  },
+  "voting": {
+    "voteSaved": "Vote saved",
+    "passPhone": "Pass the phone to {name}",
+    "iAm": "I'm {name}",
+    "votesCast": "{cast} of {total} votes cast. Votes stay secret until everyone has chosen.",
+    "drinkVote": "Drink vote",
+    "playerTurn": "{name}'s turn",
+    "yourChoice": "What is your choice?",
+    "confirm": "Confirm vote",
+    "skip": "Skip this round",
+    "options": "Drink options",
+    "alcoholFree": "Alcohol-free",
+    "drinkToVerify": "{name} (check the menu)"
+  },
+  "result": {
+    "votingClosed": "Voting closed",
+    "votesCounted": {
+      "one": "{count} vote counted",
+      "other": "{count} votes counted"
+    },
+    "votes": {
+      "one": "{count} vote",
+      "other": "{count} votes"
+    },
+    "chosenByLedger": "Chosen by the ledger",
+    "teamChoice": "The team's choice",
+    "preferElse": "Prefer something else? Everyone can always choose their own drink, including the alcohol-free option."
+  },
+  "story": {
+    "title": "The ledger opens",
+    "toChallenge": "To the challenge",
+    "translation": "Translation"
+  },
+  "challenge": {
+    "eyebrow": "Challenge",
+    "onSiteVerification": "On-site verification required",
+    "researchRequired": "Research required",
+    "yourClues": "Your clues",
+    "notPlayable": "This challenge type can't be played yet.",
+    "hint": "Hint {number}: ",
+    "needHint": "Need a hint?"
+  },
+  "solved": {
+    "correct": "Correct",
+    "discoverWhy": "Discover why it matters",
+    "whyItMatters": "Why it matters",
+    "bonusSolved": "Bonus solved ✓",
+    "clueDiscovered": "Clue discovered",
+    "finalPageAwaits": "The final page awaits",
+    "endOfRoute": "The end of the route",
+    "openFinalPage": "Open the final page",
+    "closeCase": "Close the case",
+    "startWalking": "Start walking",
+    "showRoute": "Show route",
+    "newLocation": "New location discovered",
+    "optionalBonus": "Optional bonus",
+    "skipBonus": "Skip the bonus"
+  },
+  "completion": {
+    "shareText": "We solved {title} with Hidden Antwerp: {solved}/{total} {label} in {time}!",
+    "cluesRecovered": "Clues recovered",
+    "challengesCompleted": "Challenges completed",
+    "time": "Time",
+    "lastPage": "The last page",
+    "closeLedger": "Close the ledger",
+    "viewLedger": "View ledger",
+    "viewRoute": "View route",
+    "share": "Share result",
+    "discoverAnother": "Discover another walk",
+    "team": "Team: ",
+    "shareUnavailable": "Sharing isn't available here. Copy this text:"
+  },
+  "finale": {
+    "openFinalPage": "Open the final page",
+    "questionOf": "Final question {number} of {total}",
+    "showClues": "Show your clues",
+    "hideClues": "Hide your clues"
+  },
+  "content": {
+    "story": "The Ledger · fiction",
+    "legend": "Local legend",
+    "history": "History",
+    "historyPartial": "History · partially verified",
+    "historyResearch": "History · research required",
+    "source": "Source:"
+  },
+  "ledger": {
+    "yourRoute": "{title}: your route",
+    "discoveredClues": "Discovered clues · {found} / {total}",
+    "clueLocked": "Clue {number} · locked",
+    "current": "Current",
+    "extraStop": "Extra stop",
+    "skipped": "Skipped"
+  },
+  "copy": {
+    "voteResultTitle": "The votes are in",
+    "tieTitle": "It's a tie!",
+    "tieSubtitle": "Chance will decide…",
+    "afterVoteMessage": "Take your time and look around.",
+    "wrongAnswer": "Not quite. Try again.",
+    "correctAnswer": "Correct!",
+    "nextLocationTitle": "Next stop unlocked",
+    "completionTitle": "Walk complete",
+    "completionMessage": "You've finished the walk.",
+    "startLabel": "Start adventure",
+    "clueCollectedTitle": "Clue collected",
+    "locationsTitle": "The route",
+    "locationsDiscoveredLabel": "stops discovered"
+  }
+}

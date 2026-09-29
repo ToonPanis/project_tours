@@ -1,3 +1,4 @@
+import { useT } from "@/i18n/client";
 import { Button } from "@/components/ui/Button";
 import type { WalkLocation } from "@/types/location";
 import { ContentBlockView } from "./ContentBlockView";
@@ -9,16 +10,17 @@ interface StoryScreenProps {
 }
 
 export function StoryScreen({ location, onContinue }: StoryScreenProps) {
+  const t = useT();
   // Blocks marked "solved" are saved for after the challenge.
   const arrivalBlocks = location.content.filter((block) => block.revealAt !== "solved");
 
   return (
     <PlayScreen
       eyebrow={location.name}
-      title="The ledger opens"
+      title={t("game.story.title")}
       actions={
         <Button onClick={onContinue} fullWidth>
-          {location.challenge ? "To the challenge" : "Continue"}
+          {location.challenge ? t("game.story.toChallenge") : t("common.continue")}
         </Button>
       }
     >

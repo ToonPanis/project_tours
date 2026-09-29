@@ -1,0 +1,157 @@
+{
+  "header": {
+    "stopProgress": "Parada {current} / {total}",
+    "clues": "Pistas {found} / {total}",
+    "ledger": "Libro de cuentas",
+    "route": "Ruta",
+    "progressLabel": "Progreso del paseo",
+    "stopCounter": "Parada {current} / {total}"
+  },
+  "start": {
+    "newAdventure": "Empezar una nueva aventura",
+    "welcomeBack": "Bienvenido de nuevo",
+    "continueWalk": "Continuar el paseo",
+    "restartPlaytest": "Reiniciar la prueba",
+    "savedAdventure": "Aventura guardada",
+    "completed": "Completada",
+    "stopOf": "Parada {current} de {total}",
+    "team": "Equipo: {team}",
+    "restartTitle": "¿Reiniciar la prueba?",
+    "restartMessage": "Esto borra el progreso guardado en este móvil y vuelve a empezar desde la primera parada.",
+    "restartConfirm": "Sí, reiniciar"
+  },
+  "team": {
+    "eyebrow": "Formación del equipo",
+    "howMany": "¿Cuántos jugadores?",
+    "onePhone": "Todos juegan en este móvil. Os lo iréis pasando cuando toque votar.",
+    "yourName": "Tu nombre",
+    "whoIsPlaying": "¿Quién juega?",
+    "startAdventure": "Empezar la aventura",
+    "teamName": "Nombre del equipo (opcional)",
+    "teamNamePlaceholder": "Los Exploradores de Amberes",
+    "player": "Jugador {number}"
+  },
+  "intro": {
+    "eyebrow": "El libro de cuentas · ficción",
+    "begin": "Empezar la aventura",
+    "atEveryStop": "En cada parada",
+    "drinkNote": "La votación de bebidas del equipo es solo una sugerencia. Siempre hay una opción sin alcohol, cada uno elige su propia bebida y se puede saltar cualquier ronda. El progreso nunca depende de beber."
+  },
+  "arrived": {
+    "eyebrow": "Has llegado",
+    "startVote": "Empezar la votación",
+    "skipRound": "Saltar la ronda de bebidas",
+    "teamChooses": "Antes de que hable el libro de cuentas, el equipo elige una bebida. Todos votan en secreto: pasaos el móvil.",
+    "soloChooses": "Antes de que hable el libro de cuentas, elige una bebida.",
+    "alcoholFreeNote": "Siempre hay una opción sin alcohol, y el resultado es solo una sugerencia. Cada uno elige su propia bebida."
+  },
+  "voting": {
+    "voteSaved": "Voto guardado",
+    "passPhone": "Pasa el móvil a {name}",
+    "iAm": "Soy {name}",
+    "votesCast": "{cast} de {total} votos emitidos. Los votos son secretos hasta que todos hayan elegido.",
+    "drinkVote": "Votación de bebidas",
+    "playerTurn": "Turno de {name}",
+    "yourChoice": "¿Qué eliges?",
+    "confirm": "Confirmar voto",
+    "skip": "Saltar esta ronda",
+    "options": "Opciones de bebida",
+    "alcoholFree": "Sin alcohol",
+    "drinkToVerify": "{name} (comprobar en la carta)"
+  },
+  "result": {
+    "votingClosed": "Votación cerrada",
+    "votesCounted": {
+      "one": "{count} voto contado",
+      "other": "{count} votos contados"
+    },
+    "votes": {
+      "one": "{count} voto",
+      "other": "{count} votos"
+    },
+    "chosenByLedger": "Elegida por el libro de cuentas",
+    "teamChoice": "La elección del equipo",
+    "preferElse": "¿Prefieres otra cosa? Cada uno puede elegir siempre su propia bebida, también la opción sin alcohol."
+  },
+  "story": {
+    "title": "El libro de cuentas se abre",
+    "toChallenge": "Al reto",
+    "translation": "Traducción"
+  },
+  "challenge": {
+    "eyebrow": "Reto",
+    "onSiteVerification": "Pendiente de verificar in situ",
+    "researchRequired": "Pendiente de investigación",
+    "yourClues": "Vuestras pistas",
+    "notPlayable": "Este tipo de reto todavía no se puede jugar.",
+    "hint": "Pista {number}: ",
+    "needHint": "¿Necesitas una pista?"
+  },
+  "solved": {
+    "correct": "Correcto",
+    "discoverWhy": "Descubre por qué es importante",
+    "whyItMatters": "Por qué es importante",
+    "bonusSolved": "Bonus resuelto ✓",
+    "clueDiscovered": "Pista descubierta",
+    "finalPageAwaits": "Te espera la última página",
+    "endOfRoute": "El final de la ruta",
+    "openFinalPage": "Abrir la última página",
+    "closeCase": "Cerrar el caso",
+    "startWalking": "En marcha",
+    "showRoute": "Ver la ruta",
+    "newLocation": "Nuevo lugar descubierto",
+    "optionalBonus": "Bonus opcional",
+    "skipBonus": "Saltar el bonus"
+  },
+  "completion": {
+    "shareText": "¡Hemos resuelto {title} con Hidden Antwerp: {solved}/{total} {label} en {time}!",
+    "cluesRecovered": "Pistas recuperadas",
+    "challengesCompleted": "Retos superados",
+    "time": "Tiempo",
+    "lastPage": "La última página",
+    "closeLedger": "Cerrar el libro de cuentas",
+    "viewLedger": "Ver el libro de cuentas",
+    "viewRoute": "Ver la ruta",
+    "share": "Compartir el resultado",
+    "discoverAnother": "Descubre otro paseo",
+    "team": "Equipo: ",
+    "shareUnavailable": "Aquí no se puede compartir. Copia este texto:"
+  },
+  "finale": {
+    "openFinalPage": "Abrir la última página",
+    "questionOf": "Pregunta final {number} de {total}",
+    "showClues": "Mostrar vuestras pistas",
+    "hideClues": "Ocultar vuestras pistas"
+  },
+  "content": {
+    "story": "El libro de cuentas · ficción",
+    "legend": "Leyenda local",
+    "history": "Historia",
+    "historyPartial": "Historia · verificada en parte",
+    "historyResearch": "Historia · pendiente de investigación",
+    "source": "Fuente:"
+  },
+  "ledger": {
+    "yourRoute": "{title}: tu ruta",
+    "discoveredClues": "Pistas descubiertas · {found} / {total}",
+    "clueLocked": "Pista {number} · bloqueada",
+    "current": "Ahora",
+    "extraStop": "Parada extra",
+    "skipped": "Omitida"
+  },
+  "copy": {
+    "voteResultTitle": "Ya están los votos",
+    "tieTitle": "¡Empate!",
+    "tieSubtitle": "Decidirá el azar…",
+    "afterVoteMessage": "Tómate tu tiempo y mira a tu alrededor.",
+    "wrongAnswer": "No del todo. Inténtalo de nuevo.",
+    "correctAnswer": "¡Correcto!",
+    "nextLocationTitle": "Siguiente parada desbloqueada",
+    "completionTitle": "Paseo completado",
+    "completionMessage": "Has terminado el paseo.",
+    "startLabel": "Empezar la aventura",
+    "clueCollectedTitle": "Pista conseguida",
+    "locationsTitle": "La ruta",
+    "locationsDiscoveredLabel": "paradas descubiertas"
+  }
+}

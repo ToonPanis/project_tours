@@ -1,3 +1,6 @@
+"use client";
+
+import { useT } from "@/i18n/client";
 import type { HistoricalReveal } from "@/types/reveal";
 import { getVerificationLabel } from "./ContentBlockView";
 
@@ -7,6 +10,7 @@ interface HistoricalRevealViewProps {
 
 /** Real history, clearly labelled with how well it has been verified. */
 export function HistoricalRevealView({ reveal }: HistoricalRevealViewProps) {
+  const t = useT();
   const isVerified = reveal.status === "verified";
 
   return (
@@ -16,7 +20,7 @@ export function HistoricalRevealView({ reveal }: HistoricalRevealViewProps) {
       }`}
     >
       <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-gold/90">
-        {getVerificationLabel(reveal.status)}
+        {getVerificationLabel(reveal.status, t)}
       </p>
       <div className="mt-3 space-y-3 leading-relaxed text-parchment/90">
         {reveal.paragraphs.map((paragraph) => (
@@ -25,7 +29,7 @@ export function HistoricalRevealView({ reveal }: HistoricalRevealViewProps) {
       </div>
       {reveal.sources.length > 0 && (
         <p className="mt-4 text-xs text-parchment/60">
-          Source:{" "}
+          {t("game.content.source")}{" "}
           {reveal.sources.map((source, index) => (
             <span key={source.title}>
               {index > 0 && ", "}

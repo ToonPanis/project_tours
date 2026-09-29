@@ -25,11 +25,11 @@ describe("Home page", () => {
     expect(screen.getByRole("heading", { level: 3, name: "Choose your walk" })).toBeDefined();
   });
 
-  test("features The 17 Gates", async () => {
+  test("features the Poortjes walk (The Gates of Antwerp)", async () => {
     render(await HomePage());
 
-    expect(screen.getByRole("link", { name: "The 17 Gates" }).getAttribute("href")).toBe(
-      "/walks/the-17-gates",
+    expect(screen.getByRole("link", { name: "The Gates of Antwerp" }).getAttribute("href")).toBe(
+      "/walks/poortjes-van-antwerpen",
     );
   });
 });

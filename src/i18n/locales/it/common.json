@@ -1,0 +1,24 @@
+{
+  "loading": "Caricamento…",
+  "close": "Chiudi",
+  "cancel": "Annulla",
+  "continue": "Continua",
+  "back": "Indietro",
+  "next": "Avanti",
+  "previous": "Indietro",
+  "submit": "Verifica",
+  "yourAnswer": "La tua risposta",
+  "units": {
+    "meters": "{value} m",
+    "kilometers": "{value} km",
+    "minutes": "{value} min",
+    "hours": "{value} h",
+    "hoursMinutes": "{hours} h {minutes} min",
+    "range": "{from}–{to}",
+    "elapsedHoursMinutes": "{hours} h {minutes} min",
+    "elapsedMinutes": "{minutes} min"
+  },
+  "cities": {
+    "antwerp": "Anversa"
+  }
+}

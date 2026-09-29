@@ -42,6 +42,13 @@ export interface StoryBlock extends BaseBlock {
   chapterTitle?: string;
   /** "urgent" renders the text as hasty, shaky handwriting. */
   tone?: "normal" | "urgent";
+  /**
+   * The language `body` is written in when it is an in-world document (e.g.
+   * the Dutch tavern ledger), so screen readers pronounce it correctly.
+   */
+  originalLanguage?: string;
+  /** A translation of `body` in the visitor's language, shown underneath. */
+  translation?: string;
 }
 
 export type ContentBlock = HistoryBlock | LegendBlock | StoryBlock;

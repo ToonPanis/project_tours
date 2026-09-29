@@ -1,0 +1,22 @@
+{
+  "eyebrow": "Balades interactives en ville",
+  "titleStart": "Anvers garde ses secrets.",
+  "titleHighlight": "Venez les découvrir.",
+  "intro": "Des balades autoguidées pleines d'histoires, d'énigmes et de lieux cachés. Moitié guide de la ville, moitié chasse au trésor, entièrement dans votre navigateur mobile.",
+  "exploreWalks": "Découvrir les balades",
+  "howItWorks": "Comment ça marche",
+  "steps": {
+    "chooseTitle": "Choisissez votre balade",
+    "chooseText": "Choisissez un parcours et lancez-le sur votre téléphone. Aucune application à télécharger.",
+    "followTitle": "Suivez la piste",
+    "followText": "Marchez d'étape en étape. Chaque lieu dévoile son histoire à votre arrivée.",
+    "solveTitle": "Résolvez et découvrez",
+    "solveText": "Résolvez des énigmes et répondez aux questions pour débloquer le prochain lieu caché."
+  },
+  "featured": {
+    "eyebrow": "Balade à la une",
+    "title": "Commencez par {title}",
+    "text": "Notre premier parcours, idéal pour commencer. Découvrez aussi les autres balades, et restez attentif aux nouveaux itinéraires à venir.",
+    "seeAll": "Toutes les balades"
+  }
+}

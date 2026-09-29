@@ -1,0 +1,58 @@
+{
+  "explore": {
+    "eyebrow": "Antwerp",
+    "title": "Explore walks",
+    "intro": "Every walk is a route full of stories and challenges. Pick one and start whenever you like.",
+    "availableWalks": "Available walks",
+    "empty": "No walks are available yet. Check back soon.",
+    "comingSoon": "Coming soon"
+  },
+  "card": {
+    "stops": { "one": "{count} stop", "other": "{count} stops" },
+    "previewContent": "Preview content",
+    "perTeam": "per team"
+  },
+  "stats": {
+    "duration": "Duration",
+    "distance": "Distance",
+    "difficulty": "Difficulty",
+    "stops": "Stops",
+    "toBeConfirmed": "To be confirmed"
+  },
+  "difficulty": {
+    "easy": "Easy",
+    "moderate": "Moderate",
+    "challenging": "Challenging"
+  },
+  "practical": {
+    "languages": "Languages"
+  },
+  "detail": {
+    "allWalks": "← All walks",
+    "about": "About this walk",
+    "readyTitle": "Ready to explore?",
+    "perTeam": "per team",
+    "whatToExpect": "What to expect",
+    "howItWorks": "How it works",
+    "route": "The route",
+    "routeIntro": "A preview of the stops. The stories are revealed during the walk.",
+    "storyFiction": "The story · fiction"
+  },
+  "preview": {
+    "stopLabel": "Stop {number}: ",
+    "hiddenStop": "Stop {number}: hidden location",
+    "bonus": "Bonus stop · optional",
+    "finalDestination": "Final destination",
+    "locked": "Locked"
+  },
+  "placeholder": {
+    "title": "Research pending: ",
+    "message": "This walk contains placeholder content. Historical stories, locations and details are still being researched."
+  },
+  "defaultHowItWorks": {
+    "step1": "Follow the route",
+    "step2": "Discover the location",
+    "step3": "Solve the challenge",
+    "step4": "Unlock the next stop"
+  }
+}

@@ -32,6 +32,17 @@ describe("checkAnswer", () => {
     expect(checkAnswer(challenge, "antwerp")).toBe(true);
   });
 
+  test("text-answer ignores spaces left by punctuation, in any script", () => {
+    const time: Challenge = { ...base, type: "text-answer", acceptedAnswers: ["11:55"] };
+    expect(checkAnswer(time, "11 55")).toBe(true);
+    expect(checkAnswer(time, "11.55")).toBe(true);
+    const ukrainian: Challenge = { ...base, type: "text-answer", acceptedAnswers: ["за п'ять дванадцята"] };
+    expect(checkAnswer(ukrainian, "За пять дванадцята")).toBe(true);
+    const russian: Challenge = { ...base, type: "text-answer", acceptedAnswers: ["лошадь"] };
+    expect(checkAnswer(russian, "Лошадь!")).toBe(true);
+    expect(checkAnswer(russian, "кошка")).toBe(false);
+  });
+
   test("code works like text-answer", () => {
     const challenge: Challenge = { ...base, type: "code", acceptedAnswers: ["ledger"] };
     expect(checkAnswer(challenge, "Ledger")).toBe(true);

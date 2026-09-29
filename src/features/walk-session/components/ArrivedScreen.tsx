@@ -1,3 +1,4 @@
+import { useT } from "@/i18n/client";
 import { Button } from "@/components/ui/Button";
 import type { WalkLocation } from "@/types/location";
 import { PlayScreen } from "./PlayScreen";
@@ -17,15 +18,16 @@ export function ArrivedScreen({
   onSkipDrinkRound,
   onContinue,
 }: ArrivedScreenProps) {
+  const t = useT();
   // Locations without a drink round go straight on to the story.
   if (!location.drinkRound) {
     return (
       <PlayScreen
-        eyebrow="You've arrived"
+        eyebrow={t("game.arrived.eyebrow")}
         title={location.name}
         actions={
           <Button onClick={onContinue} fullWidth>
-            Continue
+            {t("common.continue")}
           </Button>
         }
       />
@@ -34,27 +36,26 @@ export function ArrivedScreen({
 
   return (
     <PlayScreen
-      eyebrow="You've arrived"
+      eyebrow={t("game.arrived.eyebrow")}
       title={location.name}
       actions={
         <>
           <Button onClick={onStartVote} fullWidth>
-            Start the drink vote
+            {t("game.arrived.startVote")}
           </Button>
           <Button variant="outline" onClick={onSkipDrinkRound} fullWidth>
-            Skip the drink round
+            {t("game.arrived.skipRound")}
           </Button>
         </>
       }
     >
       <p className="font-display text-xl leading-relaxed">
         {playerCount > 1
-          ? "Before the ledger speaks, the team chooses a drink. Everyone votes in secret: pass the phone around."
-          : "Before the ledger speaks, choose a drink."}
+          ? t("game.arrived.teamChooses")
+          : t("game.arrived.soloChooses")}
       </p>
       <p className="text-sm text-parchment/70">
-        There is always an alcohol-free option, and the result is only a suggestion. Everyone can
-        choose their own drink.
+        {t("game.arrived.alcoholFreeNote")}
       </p>
     </PlayScreen>
   );

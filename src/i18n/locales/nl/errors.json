@@ -1,0 +1,12 @@
+{
+  "notFound": {
+    "title": "Je bent van de kaart geraakt",
+    "text": "Deze pagina bestaat niet. We helpen je terug op het juiste spoor.",
+    "back": "Terug naar het begin"
+  },
+  "walkNotFound": {
+    "title": "Deze wandeling bestaat niet",
+    "text": "De route die je zoekt is misschien verplaatst, of nog niet beschikbaar.",
+    "seeAll": "Alle wandelingen"
+  }
+}

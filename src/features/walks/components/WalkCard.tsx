@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
 import type { WalkSummary } from "@/types/walk";
+import { englishTranslator, type Translator } from "@/i18n/translate";
 import { formatDistance, formatDurationRange, formatPrice } from "../utils/format-walk";
 import { WalkCover } from "./WalkCover";
 
@@ -8,9 +9,11 @@ interface WalkCardProps {
   walk: WalkSummary;
   /** Heading level, so the card fits the page's heading outline. */
   headingLevel?: "h2" | "h3";
+  /** Translator of the current language (English when omitted). */
+  t?: Translator;
 }
 
-export function WalkCard({ walk, headingLevel: Heading = "h3" }: WalkCardProps) {
+export function WalkCard({ walk, headingLevel: Heading = "h3", t = englishTranslator }: WalkCardProps) {
   const walkUrl = `/walks/${walk.slug}`;
 
   return (
@@ -29,8 +32,8 @@ export function WalkCard({ walk, headingLevel: Heading = "h3" }: WalkCardProps) 
 
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div className="flex flex-wrap gap-2">
-          <Badge>{walk.locationCount} stops</Badge>
-          {walk.contentStatus === "placeholder" && <Badge tone="muted">Preview content</Badge>}
+          <Badge>{t.plural("walks.card.stops", walk.locationCount)}</Badge>
+          {walk.contentStatus === "placeholder" && <Badge tone="muted">{t("walks.card.previewContent")}</Badge>}
         </div>
 
         <Heading className="font-display text-2xl font-semibold leading-tight text-ink">
@@ -47,12 +50,12 @@ export function WalkCard({ walk, headingLevel: Heading = "h3" }: WalkCardProps) 
 
         <div className="mt-auto flex items-end justify-between border-t border-gold-deep/20 pt-3 text-sm">
           <p className="text-sepia">
-            {formatDurationRange(walk.estimatedDuration)}
-            {walk.distanceInMeters !== null && ` · ${formatDistance(walk.distanceInMeters)}`}
+            {formatDurationRange(walk.estimatedDuration, t)}
+            {walk.distanceInMeters !== null && ` · ${formatDistance(walk.distanceInMeters, t)}`}
           </p>
           <p className="font-display text-xl font-semibold text-ink">
-            {formatPrice(walk.price)}
-            <span className="sr-only"> per team</span>
+            {formatPrice(walk.price, `${t.locale}-BE`)}
+            <span className="sr-only"> {t("walks.card.perTeam")}</span>
           </p>
         </div>
       </div>

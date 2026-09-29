@@ -1,0 +1,22 @@
+{
+  "eyebrow": "Interaktive Stadtrundgänge",
+  "titleStart": "Antwerpen hütet seine Geheimnisse.",
+  "titleHighlight": "Finde sie.",
+  "intro": "Rundgänge auf eigene Faust voller Geschichten, Rätsel und versteckter Orte. Halb Stadtführer, halb Schatzsuche, ganz im Browser deines Handys.",
+  "exploreWalks": "Rundgänge entdecken",
+  "howItWorks": "So funktioniert's",
+  "steps": {
+    "chooseTitle": "Wähle deinen Rundgang",
+    "chooseText": "Such dir eine Route aus und starte sie auf deinem Handy. Keine App nötig.",
+    "followTitle": "Folge der Spur",
+    "followText": "Geh von Station zu Station. Jeder Ort erzählt seine Geschichte, sobald du dort bist.",
+    "solveTitle": "Lösen und entdecken",
+    "solveText": "Knacke Rätsel und beantworte Fragen, um den nächsten versteckten Ort freizuschalten."
+  },
+  "featured": {
+    "eyebrow": "Empfohlener Rundgang",
+    "title": "Starte mit {title}",
+    "text": "Unsere erste Route und ein idealer Einstieg. Entdecke auch die anderen Rundgänge und halte Ausschau nach neuen Routen.",
+    "seeAll": "Alle Rundgänge"
+  }
+}

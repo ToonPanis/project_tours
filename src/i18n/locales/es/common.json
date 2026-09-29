@@ -1,0 +1,24 @@
+{
+  "loading": "Cargando…",
+  "close": "Cerrar",
+  "cancel": "Cancelar",
+  "continue": "Continuar",
+  "back": "Atrás",
+  "next": "Siguiente",
+  "previous": "Anterior",
+  "submit": "Comprobar",
+  "yourAnswer": "Tu respuesta",
+  "units": {
+    "meters": "{value} m",
+    "kilometers": "{value} km",
+    "minutes": "{value} min",
+    "hours": "{value} h",
+    "hoursMinutes": "{hours} h {minutes} min",
+    "range": "{from}–{to}",
+    "elapsedHoursMinutes": "{hours} h {minutes} min",
+    "elapsedMinutes": "{minutes} min"
+  },
+  "cities": {
+    "antwerp": "Amberes"
+  }
+}

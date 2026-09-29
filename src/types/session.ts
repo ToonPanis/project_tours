@@ -75,9 +75,11 @@ export type SessionAction =
   | { type: "SKIP_DRINK_ROUND" }
   | { type: "SHOW_STORY" }
   | { type: "START_CHALLENGE" }
+  | { type: "COMPLETE_VISIT" }
   | { type: "SUBMIT_ANSWER"; answer: ChallengeAnswer }
   | { type: "REVEAL_HINT" }
   | { type: "SUBMIT_BONUS_ANSWER"; answer: ChallengeAnswer }
   | { type: "SKIP_BONUS" }
   | { type: "SUBMIT_FINALE_ANSWER"; questionId: string; answer: ChallengeAnswer; at: string }
-  | { type: "CONTINUE_TO_NEXT_LOCATION"; at: string };
+  /** `skipBonus`: pass over optional (bonus) stops, e.g. "continue the route" instead of a detour. */
+  | { type: "CONTINUE_TO_NEXT_LOCATION"; at: string; skipBonus?: boolean };

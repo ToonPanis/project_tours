@@ -1,0 +1,157 @@
+{
+  "header": {
+    "stopProgress": "Stop {current} / {total}",
+    "clues": "Aanwijzingen {found} / {total}",
+    "ledger": "Kasboek",
+    "route": "Route",
+    "progressLabel": "Voortgang van de wandeling",
+    "stopCounter": "Stop {current} / {total}"
+  },
+  "start": {
+    "newAdventure": "Start een nieuw avontuur",
+    "welcomeBack": "Welkom terug",
+    "continueWalk": "Verder wandelen",
+    "restartPlaytest": "Playtest opnieuw starten",
+    "savedAdventure": "Opgeslagen avontuur",
+    "completed": "Voltooid",
+    "stopOf": "Stop {current} van {total}",
+    "team": "Team: {team}",
+    "restartTitle": "Playtest opnieuw starten?",
+    "restartMessage": "Hiermee wis je de opgeslagen voortgang op deze telefoon en begin je opnieuw bij de eerste stop.",
+    "restartConfirm": "Ja, opnieuw starten"
+  },
+  "team": {
+    "eyebrow": "Team samenstellen",
+    "howMany": "Met hoeveel spelers?",
+    "onePhone": "Iedereen speelt op deze telefoon. Bij het stemmen geef je hem door.",
+    "yourName": "Jouw naam",
+    "whoIsPlaying": "Wie speelt er mee?",
+    "startAdventure": "Start het avontuur",
+    "teamName": "Teamnaam (optioneel)",
+    "teamNamePlaceholder": "De Antwerpse Ontdekkers",
+    "player": "Speler {number}"
+  },
+  "intro": {
+    "eyebrow": "Het kasboek · fictie",
+    "begin": "Begin het avontuur",
+    "atEveryStop": "Bij elke stop",
+    "drinkNote": "De drankstemming van het team is alleen een suggestie. Er is altijd een alcoholvrije optie, iedereen kiest zelf wat hij drinkt en je kunt elke ronde overslaan. Je voortgang hangt nooit af van drinken."
+  },
+  "arrived": {
+    "eyebrow": "Je bent er",
+    "startVote": "Start de drankstemming",
+    "skipRound": "Sla de drankronde over",
+    "teamChooses": "Voor het kasboek spreekt, kiest het team een drankje. Iedereen stemt in het geheim: geef de telefoon door.",
+    "soloChooses": "Voor het kasboek spreekt, kies je een drankje.",
+    "alcoholFreeNote": "Er is altijd een alcoholvrije optie, en het resultaat is alleen een suggestie. Iedereen kiest zelf wat hij drinkt."
+  },
+  "voting": {
+    "voteSaved": "Stem opgeslagen",
+    "passPhone": "Geef de telefoon aan {name}",
+    "iAm": "Ik ben {name}",
+    "votesCast": "{cast} van de {total} stemmen uitgebracht. De stemmen blijven geheim tot iedereen gekozen heeft.",
+    "drinkVote": "Drankstemming",
+    "playerTurn": "{name} is aan de beurt",
+    "yourChoice": "Wat kies jij?",
+    "confirm": "Stem bevestigen",
+    "skip": "Sla deze ronde over",
+    "options": "Drankopties",
+    "alcoholFree": "Alcoholvrij",
+    "drinkToVerify": "{name} (nog na te kijken op de kaart)"
+  },
+  "result": {
+    "votingClosed": "Stemming gesloten",
+    "votesCounted": {
+      "one": "{count} stem geteld",
+      "other": "{count} stemmen geteld"
+    },
+    "votes": {
+      "one": "{count} stem",
+      "other": "{count} stemmen"
+    },
+    "chosenByLedger": "Gekozen door het kasboek",
+    "teamChoice": "De keuze van het team",
+    "preferElse": "Liever iets anders? Iedereen kan altijd zelf zijn drankje kiezen, ook de alcoholvrije optie."
+  },
+  "story": {
+    "title": "Het kasboek gaat open",
+    "toChallenge": "Naar de uitdaging",
+    "translation": "Vertaling"
+  },
+  "challenge": {
+    "eyebrow": "Uitdaging",
+    "onSiteVerification": "Nog ter plaatse te controleren",
+    "researchRequired": "Onderzoek vereist",
+    "yourClues": "Jullie aanwijzingen",
+    "notPlayable": "Dit type uitdaging kan nog niet gespeeld worden.",
+    "hint": "Hint {number}: ",
+    "needHint": "Een hint nodig?"
+  },
+  "solved": {
+    "correct": "Juist",
+    "discoverWhy": "Ontdek waarom het ertoe doet",
+    "whyItMatters": "Waarom het ertoe doet",
+    "bonusSolved": "Bonus opgelost ✓",
+    "clueDiscovered": "Aanwijzing ontdekt",
+    "finalPageAwaits": "De laatste bladzijde wacht",
+    "endOfRoute": "Het einde van de route",
+    "openFinalPage": "Open de laatste bladzijde",
+    "closeCase": "Sluit de zaak",
+    "startWalking": "Begin te wandelen",
+    "showRoute": "Toon de route",
+    "newLocation": "Nieuwe plek ontdekt",
+    "optionalBonus": "Optionele bonus",
+    "skipBonus": "Sla de bonus over"
+  },
+  "completion": {
+    "shareText": "We hebben {title} opgelost met Hidden Antwerp: {solved}/{total} {label} in {time}!",
+    "cluesRecovered": "Aanwijzingen teruggevonden",
+    "challengesCompleted": "Uitdagingen voltooid",
+    "time": "Tijd",
+    "lastPage": "De laatste bladzijde",
+    "closeLedger": "Sluit het kasboek",
+    "viewLedger": "Bekijk het kasboek",
+    "viewRoute": "Bekijk de route",
+    "share": "Deel het resultaat",
+    "discoverAnother": "Ontdek een andere wandeling",
+    "team": "Team: ",
+    "shareUnavailable": "Delen is hier niet mogelijk. Kopieer deze tekst:"
+  },
+  "finale": {
+    "openFinalPage": "Open de laatste bladzijde",
+    "questionOf": "Laatste vraag {number} van {total}",
+    "showClues": "Toon jullie aanwijzingen",
+    "hideClues": "Verberg jullie aanwijzingen"
+  },
+  "content": {
+    "story": "Het kasboek · fictie",
+    "legend": "Lokale legende",
+    "history": "Geschiedenis",
+    "historyPartial": "Geschiedenis · deels gecontroleerd",
+    "historyResearch": "Geschiedenis · onderzoek vereist",
+    "source": "Bron:"
+  },
+  "ledger": {
+    "yourRoute": "{title}: je route",
+    "discoveredClues": "Ontdekte aanwijzingen · {found} / {total}",
+    "clueLocked": "Aanwijzing {number} · vergrendeld",
+    "current": "Nu",
+    "extraStop": "Extra stop",
+    "skipped": "Overgeslagen"
+  },
+  "copy": {
+    "voteResultTitle": "De stemmen zijn geteld",
+    "tieTitle": "Gelijkspel!",
+    "tieSubtitle": "Het toeval beslist…",
+    "afterVoteMessage": "Neem je tijd en kijk rustig rond.",
+    "wrongAnswer": "Nog niet helemaal. Probeer opnieuw.",
+    "correctAnswer": "Juist!",
+    "nextLocationTitle": "Volgende stop ontgrendeld",
+    "completionTitle": "Wandeling voltooid",
+    "completionMessage": "Je hebt de wandeling afgerond.",
+    "startLabel": "Start het avontuur",
+    "clueCollectedTitle": "Aanwijzing verzameld",
+    "locationsTitle": "De route",
+    "locationsDiscoveredLabel": "stops ontdekt"
+  }
+}

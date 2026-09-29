@@ -1,0 +1,161 @@
+{
+  "header": {
+    "stopProgress": "Остановка {current} / {total}",
+    "clues": "Улики {found} / {total}",
+    "ledger": "Книга",
+    "route": "Маршрут",
+    "progressLabel": "Ход прогулки",
+    "stopCounter": "Остановка {current} / {total}"
+  },
+  "start": {
+    "newAdventure": "Начать новое приключение",
+    "welcomeBack": "С возвращением",
+    "continueWalk": "Продолжить прогулку",
+    "restartPlaytest": "Начать тест заново",
+    "savedAdventure": "Сохранённое приключение",
+    "completed": "Завершено",
+    "stopOf": "Остановка {current} из {total}",
+    "team": "Команда: {team}",
+    "restartTitle": "Начать тест заново?",
+    "restartMessage": "Сохранённый прогресс на этом телефоне будет удалён, и игра начнётся с первой остановки.",
+    "restartConfirm": "Да, начать заново"
+  },
+  "team": {
+    "eyebrow": "Состав команды",
+    "howMany": "Сколько игроков?",
+    "onePhone": "Все играют на этом телефоне. Во время голосования передавайте его друг другу.",
+    "yourName": "Ваше имя",
+    "whoIsPlaying": "Кто играет?",
+    "startAdventure": "Начать приключение",
+    "teamName": "Название команды (необязательно)",
+    "teamNamePlaceholder": "Исследователи Антверпена",
+    "player": "Игрок {number}"
+  },
+  "intro": {
+    "eyebrow": "Книга трактирщика · вымысел",
+    "begin": "Начать приключение",
+    "atEveryStop": "На каждой остановке",
+    "drinkNote": "Голосование команды за напиток — лишь предложение. Всегда есть безалкогольный вариант, каждый выбирает напиток сам, и любой раунд можно пропустить. Прохождение никогда не зависит от того, пьёте ли вы."
+  },
+  "arrived": {
+    "eyebrow": "Вы на месте",
+    "startVote": "Начать голосование",
+    "skipRound": "Пропустить раунд напитков",
+    "teamChooses": "Прежде чем книга заговорит, команда выбирает напиток. Все голосуют тайно: передавайте телефон по кругу.",
+    "soloChooses": "Прежде чем книга заговорит, выберите напиток.",
+    "alcoholFreeNote": "Всегда есть безалкогольный вариант, а результат — лишь предложение. Каждый выбирает напиток сам."
+  },
+  "voting": {
+    "voteSaved": "Голос сохранён",
+    "passPhone": "Передайте телефон: {name}",
+    "iAm": "Я — {name}",
+    "votesCast": "Отдано голосов: {cast} из {total}. Голоса остаются тайными, пока все не сделают выбор.",
+    "drinkVote": "Голосование за напиток",
+    "playerTurn": "Ходит {name}",
+    "yourChoice": "Что вы выбираете?",
+    "confirm": "Подтвердить голос",
+    "skip": "Пропустить раунд",
+    "options": "Варианты напитков",
+    "alcoholFree": "Без алкоголя",
+    "drinkToVerify": "{name} (уточните в меню)"
+  },
+  "result": {
+    "votingClosed": "Голосование завершено",
+    "votesCounted": {
+      "one": "Подсчитан {count} голос",
+      "few": "Подсчитано {count} голоса",
+      "many": "Подсчитано {count} голосов",
+      "other": "Подсчитано {count} голоса"
+    },
+    "votes": {
+      "one": "{count} голос",
+      "few": "{count} голоса",
+      "many": "{count} голосов",
+      "other": "{count} голоса"
+    },
+    "chosenByLedger": "Выбор книги",
+    "teamChoice": "Выбор команды",
+    "preferElse": "Хотите что-то другое? Каждый всегда может выбрать свой напиток, в том числе безалкогольный."
+  },
+  "story": {
+    "title": "Книга открывается",
+    "toChallenge": "К заданию",
+    "translation": "Перевод"
+  },
+  "challenge": {
+    "eyebrow": "Задание",
+    "onSiteVerification": "Требует проверки на месте",
+    "researchRequired": "Требует исследования",
+    "yourClues": "Ваши улики",
+    "notPlayable": "Этот тип задания пока недоступен.",
+    "hint": "Подсказка {number}: ",
+    "needHint": "Нужна подсказка?"
+  },
+  "solved": {
+    "correct": "Верно",
+    "discoverWhy": "Узнать, почему это важно",
+    "whyItMatters": "Почему это важно",
+    "bonusSolved": "Бонус решён ✓",
+    "clueDiscovered": "Найдена улика",
+    "finalPageAwaits": "Вас ждёт последняя страница",
+    "endOfRoute": "Конец маршрута",
+    "openFinalPage": "Открыть последнюю страницу",
+    "closeCase": "Закрыть дело",
+    "startWalking": "В путь",
+    "showRoute": "Показать маршрут",
+    "newLocation": "Открыто новое место",
+    "optionalBonus": "Бонус по желанию",
+    "skipBonus": "Пропустить бонус"
+  },
+  "completion": {
+    "shareText": "Мы разгадали «{title}» с Hidden Antwerp: {solved}/{total} — {label}, за {time}!",
+    "cluesRecovered": "Найдено улик",
+    "challengesCompleted": "Выполнено заданий",
+    "time": "Время",
+    "lastPage": "Последняя страница",
+    "closeLedger": "Закрыть книгу",
+    "viewLedger": "Открыть книгу",
+    "viewRoute": "Посмотреть маршрут",
+    "share": "Поделиться результатом",
+    "discoverAnother": "Выбрать другую прогулку",
+    "team": "Команда: ",
+    "shareUnavailable": "Здесь нельзя поделиться. Скопируйте этот текст:"
+  },
+  "finale": {
+    "openFinalPage": "Открыть последнюю страницу",
+    "questionOf": "Последний вопрос {number} из {total}",
+    "showClues": "Показать ваши улики",
+    "hideClues": "Скрыть ваши улики"
+  },
+  "content": {
+    "story": "Книга трактирщика · вымысел",
+    "legend": "Местная легенда",
+    "history": "История",
+    "historyPartial": "История · частично проверено",
+    "historyResearch": "История · требует исследования",
+    "source": "Источник:"
+  },
+  "ledger": {
+    "yourRoute": "{title}: ваш маршрут",
+    "discoveredClues": "Найденные улики · {found} / {total}",
+    "clueLocked": "Улика {number} · закрыта",
+    "current": "Сейчас",
+    "extraStop": "Доп. остановка",
+    "skipped": "Пропущено"
+  },
+  "copy": {
+    "voteResultTitle": "Голоса подсчитаны",
+    "tieTitle": "Ничья!",
+    "tieSubtitle": "Решит случай…",
+    "afterVoteMessage": "Не спешите и осмотритесь.",
+    "wrongAnswer": "Не совсем. Попробуйте ещё раз.",
+    "correctAnswer": "Верно!",
+    "nextLocationTitle": "Следующая остановка открыта",
+    "completionTitle": "Прогулка завершена",
+    "completionMessage": "Вы прошли прогулку до конца.",
+    "startLabel": "Начать приключение",
+    "clueCollectedTitle": "Улика получена",
+    "locationsTitle": "Маршрут",
+    "locationsDiscoveredLabel": "остановок пройдено"
+  }
+}

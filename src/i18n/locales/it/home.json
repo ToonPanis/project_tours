@@ -1,0 +1,22 @@
+{
+  "eyebrow": "Passeggiate interattive in città",
+  "titleStart": "Anversa custodisce i suoi segreti.",
+  "titleHighlight": "Vieni a scoprirli.",
+  "intro": "Passeggiate autoguidate piene di storie, enigmi e luoghi nascosti. Un po' guida della città, un po' caccia al tesoro, tutto nel browser del tuo telefono.",
+  "exploreWalks": "Scopri le passeggiate",
+  "howItWorks": "Come funziona",
+  "steps": {
+    "chooseTitle": "Scegli la tua passeggiata",
+    "chooseText": "Scegli un percorso e avvialo sul telefono. Nessuna app da scaricare.",
+    "followTitle": "Segui le tracce",
+    "followText": "Cammina di tappa in tappa. Ogni luogo svela la sua storia quando arrivi.",
+    "solveTitle": "Risolvi e scopri",
+    "solveText": "Risolvi enigmi e rispondi alle domande per sbloccare il prossimo luogo nascosto."
+  },
+  "featured": {
+    "eyebrow": "Passeggiata in evidenza",
+    "title": "Inizia con {title}",
+    "text": "Il nostro primo percorso, perfetto per cominciare. Scopri anche le altre passeggiate e tieni d'occhio i nuovi itinerari in arrivo.",
+    "seeAll": "Tutte le passeggiate"
+  }
+}

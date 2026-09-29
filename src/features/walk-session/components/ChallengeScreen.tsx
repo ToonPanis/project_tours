@@ -1,5 +1,6 @@
 "use client";
 
+import { useT } from "@/i18n/client";
 import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import type { Challenge } from "@/types/challenge";
@@ -30,6 +31,7 @@ export function ChallengeScreen({
   onSubmit,
   onRevealHint,
 }: ChallengeScreenProps) {
+  const t = useT();
   const [answer, setAnswer] = useState("");
 
   const hasWrongAnswer = progress.wrongAttempts > 0;
@@ -44,12 +46,12 @@ export function ChallengeScreen({
   }
 
   return (
-    <PlayScreen eyebrow="Challenge" title={challenge.title}>
+    <PlayScreen eyebrow={t("game.challenge.eyebrow")} title={challenge.title}>
       {challenge.researchStatus && (
         <p className="self-start rounded-full border border-dashed border-parchment/40 px-3 py-1 text-xs uppercase tracking-wider text-parchment/70">
           {challenge.researchStatus === "on-site-verification-required"
-            ? "On-site verification required"
-            : "Research required"}
+            ? t("game.challenge.onSiteVerification")
+            : t("game.challenge.researchRequired")}
         </p>
       )}
 
@@ -61,7 +63,7 @@ export function ChallengeScreen({
 
       {requiredClues.length > 0 && (
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-gold">Your clues</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-gold">{t("game.challenge.yourClues")}</p>
           <ol className="mt-2 flex flex-wrap gap-2">
             {requiredClues.map((clue) => (
               <li
@@ -95,13 +97,13 @@ export function ChallengeScreen({
       {(challenge.type === "text-answer" || challenge.type === "code" || challenge.type === "number-answer") && (
         <form onSubmit={submitTypedAnswer} className="flex flex-col gap-3">
           <label className="sr-only" htmlFor="challenge-answer">
-            Your answer
+            {t("common.yourAnswer")}
           </label>
           <input
             id="challenge-answer"
             value={answer}
             onChange={(event) => setAnswer(event.target.value)}
-            placeholder="Your answer"
+            placeholder={t("common.yourAnswer")}
             // Number challenges open the number keypad on phones.
             inputMode={challenge.type === "number-answer" ? "numeric" : "text"}
             autoComplete="off"
@@ -111,7 +113,7 @@ export function ChallengeScreen({
             className={inputClasses}
           />
           <Button type="submit" disabled={answer.trim() === ""} fullWidth>
-            Submit
+            {t("common.submit")}
           </Button>
         </form>
       )}
@@ -126,7 +128,7 @@ export function ChallengeScreen({
       )}
 
       {challenge.type === "sequence" && (
-        <p className="text-parchment/70">This challenge type can&apos;t be played yet.</p>
+        <p className="text-parchment/70">{t("game.challenge.notPlayable")}</p>
       )}
 
       {/* Feedback and hints */}
@@ -140,7 +142,7 @@ export function ChallengeScreen({
         <ol className="flex flex-col gap-2">
           {revealedHints.map((hint, index) => (
             <li key={hint} className="rounded-sm bg-parchment/10 p-3 text-sm">
-              <span className="font-semibold text-gold">Hint {index + 1}: </span>
+              <span className="font-semibold text-gold">{t("game.challenge.hint", { number: index + 1 })}</span>
               {hint}
             </li>
           ))}
@@ -149,7 +151,7 @@ export function ChallengeScreen({
 
       {canRevealHint && (
         <Button variant="outline" onClick={onRevealHint} fullWidth>
-          Need a hint?
+          {t("game.challenge.needHint")}
         </Button>
       )}
     </PlayScreen>

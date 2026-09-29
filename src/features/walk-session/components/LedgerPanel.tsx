@@ -1,7 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
+import type { ReactNode } from "react";
 import { Dialog } from "@/components/ui/Dialog";
+import { useT } from "@/i18n/client";
 import type { WalkSession } from "@/types/session";
 import type { GameCopy, Walk } from "@/types/walk";
 import { getOrderedLocations, isLocationRevealed } from "../logic/route";
@@ -12,12 +14,20 @@ interface LedgerPanelProps {
   copy: GameCopy;
   open: boolean;
   onClose: () => void;
+  /** Extra content under the route, e.g. a walk's collection. */
+  children?: ReactNode;
 }
 
 /** The team's notebook: discovered clues and the route so far. */
-export function LedgerPanel({ walk, session, copy, open, onClose }: LedgerPanelProps) {
-  const title = walk.narrative?.title ?? `${walk.title}: your route`;
+export function LedgerPanel({ walk, session, copy, open, onClose, children }: LedgerPanelProps) {
+  const t = useT();
+  const title = walk.narrative?.title ?? t("game.ledger.yourRoute", { title: walk.title });
   const orderedLocations = getOrderedLocations(walk);
+  const currentIndex = orderedLocations.findIndex((location) => location.id === session.currentLocationId);
+  // Main stops are numbered 1, 2, 3…; optional bonus stops get a "+" instead.
+  const mainStopNumbers = new Map(
+    orderedLocations.filter((location) => !location.isBonus).map((location, index) => [location.id, index + 1]),
+  );
   const clues = walk.clues ?? [];
 
   return (
@@ -59,11 +69,13 @@ export function LedgerPanel({ walk, session, copy, open, onClose }: LedgerPanelP
             {copy.locationsTitle}
           </h3>
           <ol className="mt-3 space-y-2">
-            {orderedLocations.map((location) => {
+            {orderedLocations.map((location, index) => {
               const status = session.locations[location.id]?.status ?? "locked";
               const isCurrent = location.id === session.currentLocationId && !session.completedAt;
               const isRevealed = isLocationRevealed(walk.routeReveal, status);
-              const marker = status === "solved" ? "✓" : isCurrent ? "→" : "?";
+              const isSkipped = location.isBonus && status === "locked" && (index < currentIndex || !!session.completedAt);
+              const marker = status === "solved" ? "✓" : isCurrent ? "→" : isSkipped ? "–" : "?";
+              const mainNumber = mainStopNumbers.get(location.id);
 
               return (
                 <li
@@ -75,11 +87,15 @@ export function LedgerPanel({ walk, session, copy, open, onClose }: LedgerPanelP
                     {marker}
                   </span>
                   <span className="font-display text-sm text-parchment/50">
-                    {String(location.order).padStart(2, "0")}
+                    {mainNumber !== undefined ? String(mainNumber).padStart(2, "0") : "+"}
                   </span>
                   <span className={isRevealed ? "text-parchment" : "text-parchment/40"}>
                     {isRevealed ? location.name : "???"}
-                    {isCurrent && <span className="ml-2 text-xs uppercase tracking-wider text-gold">Current</span>}
+                    {location.isBonus && !isSkipped && (
+                      <span className="ml-2 text-xs uppercase tracking-wider text-parchment/60">{t("guide.extraStop")}</span>
+                    )}
+                    {isSkipped && <span className="ml-2 text-xs uppercase tracking-wider text-parchment/60">{t("game.ledger.skipped")}</span>}
+                    {isCurrent && <span className="ml-2 text-xs uppercase tracking-wider text-gold">{t("game.ledger.current")}</span>}
                   </span>
                 </li>
               );
@@ -87,9 +103,11 @@ export function LedgerPanel({ walk, session, copy, open, onClose }: LedgerPanelP
           </ol>
         </section>
 
+        {children}
+
         <div className="mt-auto">
           <Button onClick={onClose} fullWidth>
-            Close
+            {t("common.close")}
           </Button>
         </div>
       </div>

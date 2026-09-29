@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { WalkPlayer } from "@/features/walk-session/components/WalkPlayer";
+import { getTranslator } from "@/i18n/server";
 import { walkRepository } from "@/lib/repositories";
 
 export async function generateStaticParams() {
@@ -12,9 +13,10 @@ export async function generateMetadata({
   params,
 }: PageProps<"/walks/[slug]/play">): Promise<Metadata> {
   const { slug } = await params;
-  const walk = await walkRepository.getWalkBySlug(slug);
+  const t = await getTranslator();
+  const walk = await walkRepository.getWalkBySlug(slug, t.locale);
   return {
-    title: walk ? `Play ${walk.title}` : "Walk not found",
+    title: walk ? t("meta.playTitle", { title: walk.title }) : t("meta.walkNotFound"),
     // Game screens are not useful search results.
     robots: { index: false },
   };
@@ -26,7 +28,10 @@ export async function generateMetadata({
  */
 export default async function PlayWalkPage({ params }: PageProps<"/walks/[slug]/play">) {
   const { slug } = await params;
-  const walk = await walkRepository.getWalkBySlug(slug);
+  const t = await getTranslator();
+  // The walk arrives with its texts in the visitor's language. Switching the
+  // language re-renders this page; the saved progress (by stop id) stays.
+  const walk = await walkRepository.getWalkBySlug(slug, t.locale);
   if (!walk) notFound();
 
   return (

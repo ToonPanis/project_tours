@@ -1,12 +1,19 @@
 import { describe, expect, test } from "vitest";
-import { walks } from "@/data/walks";
+import { getWalks } from "@/data/walks";
+import { getDrinkLabel } from "@/features/walk-session/logic/drink-label";
 import { hasUnverifiedContent } from "@/features/walks/utils/walk-content";
+import { locales } from "@/i18n/config";
+import { createTranslator } from "@/i18n/translate";
 
 /**
- * Integrity checks that run against EVERY walk in `src/data/walks`.
- * A new walk is checked automatically as soon as it's added to the list.
+ * Integrity checks that run against EVERY walk in `src/data/walks`, in every
+ * language. A new walk is checked automatically as soon as it's added to the list.
  */
-describe.each(walks.map((walk) => [walk.title, walk] as const))("walk data: %s", (_title, walk) => {
+const walksInEveryLanguage = locales.flatMap((locale) =>
+  getWalks(locale).map((walk) => [`${walk.slug} (${locale})`, walk, locale] as const),
+);
+
+describe.each(walksInEveryLanguage)("walk data: %s", (_name, walk, locale) => {
   const locationIds = walk.locations.map((location) => location.id);
   const clueIds = (walk.clues ?? []).map((clue) => clue.id);
 
@@ -67,10 +74,12 @@ describe.each(walks.map((walk) => [walk.title, walk] as const))("walk data: %s",
   });
 
   test("unverified drinks are visibly marked", () => {
+    const t = createTranslator(locale);
     for (const location of walk.locations) {
       for (const option of location.drinkRound?.options ?? []) {
         if (option.menuVerification === "to-verify") {
-          expect(option.name).toMatch(/verify menu|\(test\)/i);
+          expect(getDrinkLabel(option, t)).not.toBe(option.name);
+          expect(getDrinkLabel(option, t)).toContain(option.name);
         }
       }
     }
@@ -139,7 +148,7 @@ describe.each(walks.map((walk) => [walk.title, walk] as const))("walk data: %s",
 });
 
 describe("hasUnverifiedContent", () => {
-  const baseLocation = walks[0].locations[0];
+  const baseLocation = getWalks("en")[0].locations[0];
 
   test("is true when a history block still needs research", () => {
     expect(

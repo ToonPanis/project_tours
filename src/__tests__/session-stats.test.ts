@@ -19,6 +19,7 @@ describe("session stats", () => {
       currentStopNumber: 1,
       totalStops: 8,
       solvedStops: 0,
+      isAtBonusStop: false,
       collectedClues: 0,
       totalClues: 8,
       challengesCompleted: 0,

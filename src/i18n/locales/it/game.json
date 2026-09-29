@@ -1,0 +1,157 @@
+{
+  "header": {
+    "stopProgress": "Tappa {current} / {total}",
+    "clues": "Indizi {found} / {total}",
+    "ledger": "Registro",
+    "route": "Percorso",
+    "progressLabel": "Avanzamento della passeggiata",
+    "stopCounter": "Tappa {current} / {total}"
+  },
+  "start": {
+    "newAdventure": "Inizia una nuova avventura",
+    "welcomeBack": "Bentornato",
+    "continueWalk": "Continua la passeggiata",
+    "restartPlaytest": "Ricomincia il test",
+    "savedAdventure": "Avventura salvata",
+    "completed": "Completata",
+    "stopOf": "Tappa {current} di {total}",
+    "team": "Squadra: {team}",
+    "restartTitle": "Ricominciare il test?",
+    "restartMessage": "Verranno cancellati i progressi salvati su questo telefono e si ricomincerà dalla prima tappa.",
+    "restartConfirm": "Sì, ricomincia"
+  },
+  "team": {
+    "eyebrow": "Formazione della squadra",
+    "howMany": "Quanti giocatori?",
+    "onePhone": "Tutti giocano su questo telefono. Ve lo passerete quando sarà il momento di votare.",
+    "yourName": "Il tuo nome",
+    "whoIsPlaying": "Chi gioca?",
+    "startAdventure": "Inizia l'avventura",
+    "teamName": "Nome della squadra (facoltativo)",
+    "teamNamePlaceholder": "Gli Esploratori di Anversa",
+    "player": "Giocatore {number}"
+  },
+  "intro": {
+    "eyebrow": "Il registro · finzione",
+    "begin": "Inizia l'avventura",
+    "atEveryStop": "A ogni tappa",
+    "drinkNote": "Il voto della squadra sulla bevanda è solo un suggerimento. C'è sempre un'opzione analcolica, ognuno sceglie la propria bevanda e si può saltare qualsiasi turno. I progressi non dipendono mai dal bere."
+  },
+  "arrived": {
+    "eyebrow": "Sei arrivato",
+    "startVote": "Avvia il voto",
+    "skipRound": "Salta il giro di bevande",
+    "teamChooses": "Prima che il registro parli, la squadra sceglie una bevanda. Tutti votano in segreto: passatevi il telefono.",
+    "soloChooses": "Prima che il registro parli, scegli una bevanda.",
+    "alcoholFreeNote": "C'è sempre un'opzione analcolica e il risultato è solo un suggerimento. Ognuno sceglie la propria bevanda."
+  },
+  "voting": {
+    "voteSaved": "Voto salvato",
+    "passPhone": "Passa il telefono a {name}",
+    "iAm": "Sono {name}",
+    "votesCast": "{cast} voti su {total}. I voti restano segreti finché tutti non hanno scelto.",
+    "drinkVote": "Voto delle bevande",
+    "playerTurn": "Tocca a {name}",
+    "yourChoice": "Qual è la tua scelta?",
+    "confirm": "Conferma il voto",
+    "skip": "Salta questo turno",
+    "options": "Scelta delle bevande",
+    "alcoholFree": "Analcolica",
+    "drinkToVerify": "{name} (da verificare sul menù)"
+  },
+  "result": {
+    "votingClosed": "Votazione chiusa",
+    "votesCounted": {
+      "one": "{count} voto contato",
+      "other": "{count} voti contati"
+    },
+    "votes": {
+      "one": "{count} voto",
+      "other": "{count} voti"
+    },
+    "chosenByLedger": "Scelta dal registro",
+    "teamChoice": "La scelta della squadra",
+    "preferElse": "Preferisci altro? Ognuno può sempre scegliere la propria bevanda, anche l'opzione analcolica."
+  },
+  "story": {
+    "title": "Il registro si apre",
+    "toChallenge": "Alla sfida",
+    "translation": "Traduzione"
+  },
+  "challenge": {
+    "eyebrow": "Sfida",
+    "onSiteVerification": "Da verificare sul posto",
+    "researchRequired": "Ricerca necessaria",
+    "yourClues": "I vostri indizi",
+    "notPlayable": "Questo tipo di sfida non è ancora disponibile.",
+    "hint": "Indizio {number}: ",
+    "needHint": "Ti serve un indizio?"
+  },
+  "solved": {
+    "correct": "Esatto",
+    "discoverWhy": "Scopri perché è importante",
+    "whyItMatters": "Perché è importante",
+    "bonusSolved": "Bonus risolto ✓",
+    "clueDiscovered": "Indizio scoperto",
+    "finalPageAwaits": "L'ultima pagina ti aspetta",
+    "endOfRoute": "La fine del percorso",
+    "openFinalPage": "Apri l'ultima pagina",
+    "closeCase": "Chiudi il caso",
+    "startWalking": "In cammino",
+    "showRoute": "Mostra il percorso",
+    "newLocation": "Nuovo luogo scoperto",
+    "optionalBonus": "Bonus facoltativo",
+    "skipBonus": "Salta il bonus"
+  },
+  "completion": {
+    "shareText": "Abbiamo risolto {title} con Hidden Antwerp: {solved}/{total} {label} in {time}!",
+    "cluesRecovered": "Indizi recuperati",
+    "challengesCompleted": "Sfide completate",
+    "time": "Tempo",
+    "lastPage": "L'ultima pagina",
+    "closeLedger": "Chiudi il registro",
+    "viewLedger": "Vedi il registro",
+    "viewRoute": "Vedi il percorso",
+    "share": "Condividi il risultato",
+    "discoverAnother": "Scopri un'altra passeggiata",
+    "team": "Squadra: ",
+    "shareUnavailable": "Qui non è possibile condividere. Copia questo testo:"
+  },
+  "finale": {
+    "openFinalPage": "Apri l'ultima pagina",
+    "questionOf": "Domanda finale {number} di {total}",
+    "showClues": "Mostra i vostri indizi",
+    "hideClues": "Nascondi i vostri indizi"
+  },
+  "content": {
+    "story": "Il registro · finzione",
+    "legend": "Leggenda locale",
+    "history": "Storia",
+    "historyPartial": "Storia · verificata in parte",
+    "historyResearch": "Storia · ricerca necessaria",
+    "source": "Fonte:"
+  },
+  "ledger": {
+    "yourRoute": "{title}: il tuo percorso",
+    "discoveredClues": "Indizi scoperti · {found} / {total}",
+    "clueLocked": "Indizio {number} · bloccato",
+    "current": "In corso",
+    "extraStop": "Tappa extra",
+    "skipped": "Saltata"
+  },
+  "copy": {
+    "voteResultTitle": "I voti sono stati contati",
+    "tieTitle": "Pareggio!",
+    "tieSubtitle": "Deciderà il caso…",
+    "afterVoteMessage": "Prenditi il tuo tempo e guardati intorno.",
+    "wrongAnswer": "Non proprio. Riprova.",
+    "correctAnswer": "Esatto!",
+    "nextLocationTitle": "Tappa successiva sbloccata",
+    "completionTitle": "Passeggiata completata",
+    "completionMessage": "Hai completato la passeggiata.",
+    "startLabel": "Inizia l'avventura",
+    "clueCollectedTitle": "Indizio raccolto",
+    "locationsTitle": "Il percorso",
+    "locationsDiscoveredLabel": "tappe scoperte"
+  }
+}

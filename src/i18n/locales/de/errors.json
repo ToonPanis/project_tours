@@ -1,0 +1,12 @@
+{
+  "notFound": {
+    "title": "Du bist vom Weg abgekommen",
+    "text": "Diese Seite gibt es nicht. Wir bringen dich zurück auf die Spur.",
+    "back": "Zurück zum Start"
+  },
+  "walkNotFound": {
+    "title": "Diesen Rundgang gibt es nicht",
+    "text": "Die gesuchte Route wurde vielleicht verschoben oder ist noch nicht verfügbar.",
+    "seeAll": "Alle Rundgänge"
+  }
+}

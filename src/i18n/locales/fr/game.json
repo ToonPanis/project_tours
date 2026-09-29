@@ -1,0 +1,157 @@
+{
+  "header": {
+    "stopProgress": "Étape {current} / {total}",
+    "clues": "Indices {found} / {total}",
+    "ledger": "Registre",
+    "route": "Parcours",
+    "progressLabel": "Progression de la balade",
+    "stopCounter": "Étape {current} / {total}"
+  },
+  "start": {
+    "newAdventure": "Commencer une nouvelle aventure",
+    "welcomeBack": "Bon retour",
+    "continueWalk": "Reprendre la balade",
+    "restartPlaytest": "Recommencer le test",
+    "savedAdventure": "Aventure enregistrée",
+    "completed": "Terminée",
+    "stopOf": "Étape {current} sur {total}",
+    "team": "Équipe : {team}",
+    "restartTitle": "Recommencer le test ?",
+    "restartMessage": "Cela efface la progression enregistrée sur ce téléphone et recommence à la première étape.",
+    "restartConfirm": "Oui, recommencer"
+  },
+  "team": {
+    "eyebrow": "Composition de l'équipe",
+    "howMany": "Combien de joueurs ?",
+    "onePhone": "Tout le monde joue sur ce téléphone. Vous le ferez passer au moment de voter.",
+    "yourName": "Votre nom",
+    "whoIsPlaying": "Qui joue ?",
+    "startAdventure": "Commencer l'aventure",
+    "teamName": "Nom de l'équipe (facultatif)",
+    "teamNamePlaceholder": "Les Explorateurs d'Anvers",
+    "player": "Joueur {number}"
+  },
+  "intro": {
+    "eyebrow": "Le registre · fiction",
+    "begin": "Commencer l'aventure",
+    "atEveryStop": "À chaque étape",
+    "drinkNote": "Le vote de l'équipe sur la boisson n'est qu'une suggestion. Il y a toujours une option sans alcool, chacun choisit sa propre boisson, et vous pouvez passer n'importe quel tour. La progression ne dépend jamais de ce que vous buvez."
+  },
+  "arrived": {
+    "eyebrow": "Vous êtes arrivés",
+    "startVote": "Lancer le vote",
+    "skipRound": "Passer le tour des boissons",
+    "teamChooses": "Avant que le registre ne parle, l'équipe choisit une boisson. Chacun vote en secret : faites passer le téléphone.",
+    "soloChooses": "Avant que le registre ne parle, choisissez une boisson.",
+    "alcoholFreeNote": "Il y a toujours une option sans alcool, et le résultat n'est qu'une suggestion. Chacun choisit sa propre boisson."
+  },
+  "voting": {
+    "voteSaved": "Vote enregistré",
+    "passPhone": "Passez le téléphone à {name}",
+    "iAm": "Je suis {name}",
+    "votesCast": "{cast} votes sur {total}. Les votes restent secrets jusqu'à ce que tout le monde ait choisi.",
+    "drinkVote": "Vote des boissons",
+    "playerTurn": "Au tour de {name}",
+    "yourChoice": "Quel est votre choix ?",
+    "confirm": "Confirmer le vote",
+    "skip": "Passer ce tour",
+    "options": "Choix de boissons",
+    "alcoholFree": "Sans alcool",
+    "drinkToVerify": "{name} (à vérifier sur la carte)"
+  },
+  "result": {
+    "votingClosed": "Vote clos",
+    "votesCounted": {
+      "one": "{count} vote compté",
+      "other": "{count} votes comptés"
+    },
+    "votes": {
+      "one": "{count} vote",
+      "other": "{count} votes"
+    },
+    "chosenByLedger": "Choisi par le registre",
+    "teamChoice": "Le choix de l'équipe",
+    "preferElse": "Envie d'autre chose ? Chacun peut toujours choisir sa propre boisson, y compris l'option sans alcool."
+  },
+  "story": {
+    "title": "Le registre s'ouvre",
+    "toChallenge": "Vers le défi",
+    "translation": "Traduction"
+  },
+  "challenge": {
+    "eyebrow": "Défi",
+    "onSiteVerification": "À vérifier sur place",
+    "researchRequired": "Recherche nécessaire",
+    "yourClues": "Vos indices",
+    "notPlayable": "Ce type de défi n'est pas encore jouable.",
+    "hint": "Indice {number} : ",
+    "needHint": "Besoin d'un indice ?"
+  },
+  "solved": {
+    "correct": "Bonne réponse",
+    "discoverWhy": "Découvrir pourquoi c'est important",
+    "whyItMatters": "Pourquoi c'est important",
+    "bonusSolved": "Bonus réussi ✓",
+    "clueDiscovered": "Indice découvert",
+    "finalPageAwaits": "La dernière page vous attend",
+    "endOfRoute": "La fin du parcours",
+    "openFinalPage": "Ouvrir la dernière page",
+    "closeCase": "Clore l'enquête",
+    "startWalking": "En route",
+    "showRoute": "Voir le parcours",
+    "newLocation": "Nouveau lieu découvert",
+    "optionalBonus": "Bonus facultatif",
+    "skipBonus": "Passer le bonus"
+  },
+  "completion": {
+    "shareText": "Nous avons résolu {title} avec Hidden Antwerp : {solved}/{total} {label} en {time} !",
+    "cluesRecovered": "Indices retrouvés",
+    "challengesCompleted": "Défis réussis",
+    "time": "Temps",
+    "lastPage": "La dernière page",
+    "closeLedger": "Refermer le registre",
+    "viewLedger": "Voir le registre",
+    "viewRoute": "Voir le parcours",
+    "share": "Partager le résultat",
+    "discoverAnother": "Découvrir une autre balade",
+    "team": "Équipe : ",
+    "shareUnavailable": "Le partage n'est pas disponible ici. Copiez ce texte :"
+  },
+  "finale": {
+    "openFinalPage": "Ouvrir la dernière page",
+    "questionOf": "Question finale {number} sur {total}",
+    "showClues": "Afficher vos indices",
+    "hideClues": "Masquer vos indices"
+  },
+  "content": {
+    "story": "Le registre · fiction",
+    "legend": "Légende locale",
+    "history": "Histoire",
+    "historyPartial": "Histoire · partiellement vérifiée",
+    "historyResearch": "Histoire · recherche nécessaire",
+    "source": "Source :"
+  },
+  "ledger": {
+    "yourRoute": "{title} : votre parcours",
+    "discoveredClues": "Indices découverts · {found} / {total}",
+    "clueLocked": "Indice {number} · verrouillé",
+    "current": "En cours",
+    "extraStop": "Étape bonus",
+    "skipped": "Passée"
+  },
+  "copy": {
+    "voteResultTitle": "Les votes sont comptés",
+    "tieTitle": "Égalité !",
+    "tieSubtitle": "Le hasard va trancher…",
+    "afterVoteMessage": "Prenez votre temps et regardez autour de vous.",
+    "wrongAnswer": "Pas tout à fait. Réessayez.",
+    "correctAnswer": "Bonne réponse !",
+    "nextLocationTitle": "Étape suivante débloquée",
+    "completionTitle": "Balade terminée",
+    "completionMessage": "Vous avez terminé la balade.",
+    "startLabel": "Commencer l'aventure",
+    "clueCollectedTitle": "Indice récupéré",
+    "locationsTitle": "Le parcours",
+    "locationsDiscoveredLabel": "étapes découvertes"
+  }
+}

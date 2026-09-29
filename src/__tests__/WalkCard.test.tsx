@@ -17,6 +17,7 @@ const exampleWalk: WalkSummary = {
   difficulty: "easy",
   price: { amountInCents: 995, currency: "EUR" },
   theme: "classic",
+  experience: "game",
   locationCount: 5,
   contentStatus: "verified",
 };

@@ -4,8 +4,8 @@ import type { Walk } from "@/types/walk";
  * MOCK DATA: "The 17 Gates"
  *
  * All historical content below is PLACEHOLDER text and must be replaced with
- * researched, sourced content. Addresses and coordinates are approximate
- * points in the Antwerp city centre, not the real gate locations.
+ * researched, sourced content. Addresses are placeholders and coordinates are
+ * unknown (null) until the real gate locations have been researched.
  */
 export const the17GatesWalk: Walk = {
   id: "walk-17-gates",
@@ -23,6 +23,7 @@ export const the17GatesWalk: Walk = {
   difficulty: "easy",
   price: { amountInCents: 1295, currency: "EUR" },
   theme: "classic",
+  experience: "game",
   languages: ["en"],
   routeReveal: "all",
   team: { minPlayers: 1, maxPlayers: 8 },
@@ -34,7 +35,7 @@ export const the17GatesWalk: Walk = {
       name: "Gate 1 (location to be researched)",
       type: "gateway",
       address: "Address to be confirmed, Antwerp city centre",
-      coordinates: { latitude: 51.2213, longitude: 4.3997 },
+      coordinates: null,
       description: "The first doorway on the route. Your adventure starts here.",
       content: [
         {
@@ -69,7 +70,7 @@ export const the17GatesWalk: Walk = {
       name: "Gate 2 (location to be researched)",
       type: "gateway",
       address: "Address to be confirmed, Antwerp city centre",
-      coordinates: { latitude: 51.2192, longitude: 4.401 },
+      coordinates: null,
       description: "A second doorway, hidden between the houses.",
       content: [
         {
@@ -103,7 +104,7 @@ export const the17GatesWalk: Walk = {
       name: "Gate 3 (location to be researched)",
       type: "gateway",
       address: "Address to be confirmed, Antwerp city centre",
-      coordinates: { latitude: 51.2215, longitude: 4.4062 },
+      coordinates: null,
       description: "The last gate of this preview route.",
       content: [
         {

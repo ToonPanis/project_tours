@@ -1,21 +1,23 @@
+import { englishTranslator, type Translator } from "@/i18n/translate";
 import type { WalkNarrative } from "@/types/walk";
 
 interface WalkNarrativeTeaserProps {
   narrative: WalkNarrative;
+  t?: Translator;
 }
 
 /**
  * The walk's fictional storyline. Always labelled as fiction, so it's never
  * confused with real history.
  */
-export function WalkNarrativeTeaser({ narrative }: WalkNarrativeTeaserProps) {
+export function WalkNarrativeTeaser({ narrative, t = englishTranslator }: WalkNarrativeTeaserProps) {
   return (
     <section
       aria-labelledby="narrative-heading"
       className="relative border border-gold-deep/30 bg-parchment-dark/50 px-5 py-6 sm:px-8"
     >
       <p className="text-xs font-semibold uppercase tracking-[0.25em] text-gold-deep">
-        The story · fiction
+        {t("walks.detail.storyFiction")}
       </p>
       <h2 id="narrative-heading" className="mt-1 font-display text-2xl font-semibold italic text-ink">
         {narrative.title}

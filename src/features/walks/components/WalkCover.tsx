@@ -5,7 +5,7 @@ interface WalkCoverProps {
   image?: ImageAsset;
   /** Tells the browser how wide the image is shown, for responsive loading. */
   sizes: string;
-  priority?: boolean;
+  preload?: boolean;
 }
 
 /**
@@ -13,7 +13,7 @@ interface WalkCoverProps {
  * when no real (archive) image is available yet.
  * The parent element must be `relative` and have a size/aspect ratio.
  */
-export function WalkCover({ image, sizes, priority = false }: WalkCoverProps) {
+export function WalkCover({ image, sizes, preload = false }: WalkCoverProps) {
   if (image) {
     return (
       <Image
@@ -21,7 +21,7 @@ export function WalkCover({ image, sizes, priority = false }: WalkCoverProps) {
         alt={image.alt}
         fill
         sizes={sizes}
-        priority={priority}
+        preload={preload}
         className="object-cover sepia-[.35]"
       />
     );

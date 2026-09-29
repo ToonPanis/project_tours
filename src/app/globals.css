@@ -65,6 +65,18 @@ body {
   --color-gold-deep: #6b4512;
 }
 
+/* Archive: warm paper, deep ink and restrained gold (e.g. Classics of Antwerp). */
+[data-walk-theme="archive"] {
+  --color-ink: #1d1915;
+  --color-umber: #2c241c;
+  --color-umber-light: #4a3d30;
+  --color-sepia: #45392c;
+  --color-parchment: #f6f0e4;
+  --color-parchment-dark: #e9e0ce;
+  --color-gold: #c9a55f;
+  --color-gold-deep: #7a5a22;
+}
+
 /* Game screen animations (used as e.g. `animate-[reveal_700ms_ease-out]`). */
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(6px); }
@@ -93,4 +105,33 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Navigation map markers (see WalkingMap.tsx). High contrast for outdoor use. */
+.walking-map-user {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: #2f7cf6;
+  border: 4px solid #fff;
+  box-shadow: 0 0 0 6px rgb(47 124 246 / 0.25), 0 1px 6px rgb(0 0 0 / 0.5);
+}
+
+.walking-map-destination {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 9999px;
+  background: #17120e;
+  color: #f3ead8;
+  border: 2px solid #d9a54e;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.4);
+}
+
+.walking-map-destination span {
+  color: #d9a54e;
+  font-size: 1.1rem;
 }

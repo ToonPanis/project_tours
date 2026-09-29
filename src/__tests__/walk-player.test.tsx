@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, test } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
 import { WalkPlayer } from "@/features/walk-session/components/WalkPlayer";
@@ -7,6 +7,11 @@ import { applySessionAction } from "@/features/walk-session/logic/session-reduce
 import { getJumpToStopActions } from "@/features/walk-session/playtest/get-correct-answer";
 import { localWalkSessionStore, storageKey } from "@/features/walk-session/storage/session-storage";
 import type { SessionAction } from "@/types/session";
+
+// The real map needs WebGL, which jsdom doesn't have.
+vi.mock("@/features/navigation/components/WalkingMap", () => ({
+  default: () => <div data-testid="walking-map" />,
+}));
 
 beforeEach(() => {
   window.localStorage.clear();
@@ -62,6 +67,7 @@ async function startTwoPlayerGameAndStartVote() {
 
   expect(screen.getByRole("heading", { level: 1, name: "Rococo Antwerp" })).toBeDefined();
   expect(screen.getByText("Stop 1 / 8")).toBeDefined();
+  click("Continue without live GPS");
   click("I've arrived");
   click("Start the drink vote");
 }
@@ -101,7 +107,7 @@ describe("WalkPlayer: Hidden Pubs", () => {
 
     // Story: fiction only, no history before the challenge.
     expect(screen.getByText("The First Page")).toBeDefined();
-    expect(screen.getByText("The Ledger · fiction")).toBeDefined();
+    expect(screen.getAllByText("The Ledger · fiction").length).toBeGreaterThan(0);
     expect(screen.queryByText(/History/)).toBeNull();
     click("To the challenge");
 
@@ -123,7 +129,8 @@ describe("WalkPlayer: Hidden Pubs", () => {
     click("Continue");
     expect(screen.getByRole("heading", { name: "Café Den Engel" })).toBeDefined();
     expect(screen.getByText(/Zoek de Engel aan de andere zijde van de markt/)).toBeDefined();
-    click("Continue journey");
+    expect(screen.getByText("min walk", { exact: false })).toBeDefined(); // distance + time
+    click("Start walking");
 
     expect(screen.getByText("Your next destination")).toBeDefined();
     expect(screen.getByText("Stop 2 / 8")).toBeDefined();

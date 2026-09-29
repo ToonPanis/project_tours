@@ -1,0 +1,24 @@
+{
+  "loading": "Завантаження…",
+  "close": "Закрити",
+  "cancel": "Скасувати",
+  "continue": "Продовжити",
+  "back": "Назад",
+  "next": "Далі",
+  "previous": "Назад",
+  "submit": "Перевірити",
+  "yourAnswer": "Ваша відповідь",
+  "units": {
+    "meters": "{value} м",
+    "kilometers": "{value} км",
+    "minutes": "{value} хв",
+    "hours": "{value} год",
+    "hoursMinutes": "{hours} год {minutes} хв",
+    "range": "{from}–{to}",
+    "elapsedHoursMinutes": "{hours} год {minutes} хв",
+    "elapsedMinutes": "{minutes} хв"
+  },
+  "cities": {
+    "antwerp": "Антверпен"
+  }
+}

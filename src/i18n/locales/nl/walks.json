@@ -1,0 +1,61 @@
+{
+  "explore": {
+    "eyebrow": "Antwerpen",
+    "title": "Ontdek de wandelingen",
+    "intro": "Elke wandeling is een route vol verhalen en uitdagingen. Kies er een en begin wanneer je wil.",
+    "availableWalks": "Beschikbare wandelingen",
+    "empty": "Er zijn nog geen wandelingen beschikbaar. Kom binnenkort terug.",
+    "comingSoon": "Binnenkort"
+  },
+  "card": {
+    "stops": {
+      "one": "{count} stop",
+      "other": "{count} stops"
+    },
+    "previewContent": "Voorlopige inhoud",
+    "perTeam": "per team"
+  },
+  "stats": {
+    "duration": "Duur",
+    "distance": "Afstand",
+    "difficulty": "Moeilijkheid",
+    "stops": "Stops",
+    "toBeConfirmed": "Nog te bevestigen"
+  },
+  "difficulty": {
+    "easy": "Makkelijk",
+    "moderate": "Gemiddeld",
+    "challenging": "Uitdagend"
+  },
+  "practical": {
+    "languages": "Talen"
+  },
+  "detail": {
+    "allWalks": "← Alle wandelingen",
+    "about": "Over deze wandeling",
+    "readyTitle": "Klaar om op pad te gaan?",
+    "perTeam": "per team",
+    "whatToExpect": "Wat je kunt verwachten",
+    "howItWorks": "Hoe het werkt",
+    "route": "De route",
+    "routeIntro": "Een voorproefje van de stops. De verhalen ontdek je tijdens de wandeling.",
+    "storyFiction": "Het verhaal · fictie"
+  },
+  "preview": {
+    "stopLabel": "Stop {number}: ",
+    "hiddenStop": "Stop {number}: verborgen plek",
+    "bonus": "Bonusstop · optioneel",
+    "finalDestination": "Eindbestemming",
+    "locked": "Vergrendeld"
+  },
+  "placeholder": {
+    "title": "Onderzoek loopt nog: ",
+    "message": "Deze wandeling bevat voorlopige inhoud. Historische verhalen, locaties en details worden nog onderzocht."
+  },
+  "defaultHowItWorks": {
+    "step1": "Volg de route",
+    "step2": "Ontdek de plek",
+    "step3": "Los de uitdaging op",
+    "step4": "Ontgrendel de volgende stop"
+  }
+}

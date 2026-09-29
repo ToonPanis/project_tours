@@ -13,16 +13,25 @@ async function renderWalkPage(slug: string) {
   render(page);
 }
 
+// Outside a request there is no language cookie, so the page renders in English.
 describe("Walk detail page", () => {
-  test("renders The 17 Gates without the optional Hidden Pubs sections", async () => {
-    await renderWalkPage("the-17-gates");
+  test("renders the Poortjes walk (The Gates of Antwerp) without the Hidden Pubs story", async () => {
+    await renderWalkPage("poortjes-van-antwerpen");
 
-    expect(screen.getByRole("heading", { level: 1, name: "The 17 Gates" })).toBeDefined();
-    expect(screen.getByRole("link", { name: /start adventure/i }).getAttribute("href")).toBe(
-      "/walks/the-17-gates/play",
+    expect(screen.getByRole("heading", { level: 1, name: "The Gates of Antwerp" })).toBeDefined();
+    expect(screen.getByRole("link", { name: /start the walk/i }).getAttribute("href")).toBe(
+      "/walks/poortjes-van-antwerpen/play",
     );
     expect(screen.queryByText("The story · fiction")).toBeNull();
-    expect(screen.queryByRole("heading", { name: "What to expect" })).toBeNull();
+  });
+
+  test("the Poortjes walk shows its collection, including vanished gates", async () => {
+    await renderWalkPage("poortjes-van-antwerpen");
+
+    expect(screen.getByRole("heading", { level: 2, name: "The collection: all the drawings" })).toBeDefined();
+    // Addresses are never translated.
+    expect(screen.getByRole("heading", { name: "Zilversmidstraat 5" })).toBeDefined();
+    expect(screen.getAllByText("Vanished").length).toBeGreaterThan(0);
   });
 
   test("renders Hidden Pubs with its story, highlights and practical info", async () => {
@@ -49,8 +58,8 @@ describe("Walk detail page", () => {
     expect(document.body.textContent).not.toContain("Boer van Tienen");
   });
 
-  test("The 17 Gates shows every stop", async () => {
-    await renderWalkPage("the-17-gates");
+  test("Poortjes van Antwerpen shows every stop", async () => {
+    await renderWalkPage("poortjes-van-antwerpen");
 
     expect(screen.queryAllByRole("heading", { name: /hidden location/ })).toHaveLength(0);
   });

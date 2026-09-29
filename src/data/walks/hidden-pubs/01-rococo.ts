@@ -1,74 +1,37 @@
-import { drinkOptions, type HiddenPubsStop } from "./helpers";
+import type { HiddenPubsStop } from "./helpers";
 
-const id = "pubs-rococo";
-
+/** Stop 1. Texts per language: content/<lang>.ts → stops["pubs-rococo"]. */
 export const rococo: HiddenPubsStop = {
-  location: {
-    id,
-    order: 1,
-    name: "Rococo Antwerp",
-    type: "pub",
-    address: "Grote Markt 32, 2000 Antwerpen",
-    coordinates: null,
-    description: "Chapter I: The First Page.",
+  id: "pubs-rococo",
+  order: 1,
+  name: "Rococo Antwerp",
+  type: "pub",
+  address: "Grote Markt 32, 2000 Antwerpen",
 
-    drinkRound: {
-      options: drinkOptions(id, [
-        { name: "Lazy Red Cheeks cocktail", category: "cocktail", alcoholic: true },
-        { name: "Super 8 IPA", category: "special-beer", alcoholic: true },
-        { name: "Tongerlo Blond", category: "special-beer", alcoholic: true },
-        { name: "Tonic Water", category: "soft-drink", alcoholic: false },
-      ]),
-    },
+  drinks: [
+    { category: "cocktail", alcoholic: true },
+    { category: "special-beer", alcoholic: true },
+    { category: "special-beer", alcoholic: true },
+    { category: "soft-drink", alcoholic: false },
+  ],
 
-    // FICTION: the Lost Tavern Ledger.
-    content: [
-      {
-        kind: "story",
-        chapterTitle: "The First Page",
-        body: "You have been handed a damaged old tavern ledger. Most of its first page has disappeared. Only one sentence remains:\n\n\"Wie Antwerpen wil begrijpen, moet omhoog kijken.\nNiet alles wat oud lijkt, is wat het lijkt.\"",
-      },
-      {
-        kind: "story",
-        revealAt: "solved",
-        body: "\"Zoek de Engel aan de andere zijde van de markt.\"",
-      },
-    ],
+  // FICTION: the Lost Tavern Ledger.
+  story: [
+    {}, // narration: "You have been handed a damaged old tavern ledger…"
+    { ledger: "\"Wie Antwerpen wil begrijpen, moet omhoog kijken.\nNiet alles wat oud lijkt, is wat het lijkt.\"" },
+    { ledger: "\"Zoek de Engel aan de andere zijde van de markt.\"", revealAt: "solved" },
+  ],
 
-    challenge: {
-      id: "pubs-challenge-rococo",
-      title: "Look Up",
-      type: "multiple-choice",
-      instruction: "Go outside and look at the building above Rococo.",
-      question: "What shape does the top of the façade have?",
-      options: ["Stepped", "Rounded", "Flat", "Triangular"],
-      // PLAYTEST ANSWER: to be confirmed on site.
-      correctOptionIndex: 0,
-      researchStatus: "on-site-verification-required",
-      hints: [
-        "Step back far enough to see the whole building.",
-        "Follow the outline of the façade against the sky.",
-      ],
-      explanation: "Stepped, like a stair climbing towards the sky.",
-    },
-
-    historicalReveal: {
-      status: "research-required",
-      paragraphs: [
-        "The history of this building still has to be researched. For now, remember the shape you just found.",
-      ],
-      sources: [],
-    },
-
-    unlockCondition: { type: "none" },
-    nearbyPlaces: [],
+  challenge: {
+    id: "pubs-challenge-rococo",
+    type: "multiple-choice",
+    // PLAYTEST ANSWER: to be confirmed on site.
+    correctOptionIndex: 0,
+    researchStatus: "on-site-verification-required",
   },
 
-  clue: {
-    id: "pubs-clue-stair",
-    title: "I · The First Page",
-    value: "THE STAIR",
-    icon: "key",
-    sourceLocationId: id,
-  },
+  historicalReveal: { status: "research-required", sources: [] },
+
+  unlockCondition: { type: "none" },
+  clue: { id: "pubs-clue-stair", icon: "key" },
 };

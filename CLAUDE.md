@@ -41,6 +41,11 @@ A mobile-first platform for interactive self-guided city walks. Every walk (The 
 
 - **Never add walk-specific conditions** like `if (walk.slug === "hidden-pubs")`. Drive differences through data (optional fields, `theme`, `clues`, …) so any walk can use the same components.
 - Walk visual themes are CSS token overrides under `[data-walk-theme="…"]` in `globals.css`.
+- **Navigation** (`src/features/navigation/`): walking routes are pre-generated per leg by `scripts/generate-walking-routes.mjs` from each walk's coordinates and stored as data (free OSM routing, no runtime API). Maps use MapLibre + OpenFreeMap (no key). Rerun the script after changing coordinates.
+- **Two kinds of walk** (`walk.experience`): `"game"` (Hidden Pubs, 17 Gates: challenges, clues, votes) and `"guide"` (Classics of Antwerp: narrated stop pages, no game elements, played by `src/features/guide/`). Both share sessions, saving, navigation and the route panel.
+- **Guide walk content** lives in `src/data/walks/<walk>/`: `stops.ts` (language-independent), `content/<lang>.ts` (all text; add a language by adding a file), `coordinates.json`, and the generated `routes.json` / `images.json`.
+- **Images:** only from sources with a clear reusable license (public domain / CC0 for historical images; CC BY / BY-SA with attribution for modern photos). Add them to `image-sources.json` and run `node scripts/download-commons-images.mjs <walk>`, which refuses other licenses and records attribution. Always check each downloaded image visually (e.g. postcard backs), and show caption + credit + license under every image.
+- **Location privacy:** GPS positions are kept in memory only while a navigation screen is open. Never store them (not in localStorage, not on a server) and never build a location history. Only game progress is saved.
 
 ## Content rules
 

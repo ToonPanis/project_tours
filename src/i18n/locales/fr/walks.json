@@ -1,0 +1,61 @@
+{
+  "explore": {
+    "eyebrow": "Anvers",
+    "title": "Découvrir les balades",
+    "intro": "Chaque balade est un parcours rempli d'histoires et de défis. Choisissez-en une et partez quand vous voulez.",
+    "availableWalks": "Balades disponibles",
+    "empty": "Aucune balade n'est encore disponible. Revenez bientôt.",
+    "comingSoon": "Bientôt disponible"
+  },
+  "card": {
+    "stops": {
+      "one": "{count} étape",
+      "other": "{count} étapes"
+    },
+    "previewContent": "Contenu provisoire",
+    "perTeam": "par équipe"
+  },
+  "stats": {
+    "duration": "Durée",
+    "distance": "Distance",
+    "difficulty": "Difficulté",
+    "stops": "Étapes",
+    "toBeConfirmed": "À confirmer"
+  },
+  "difficulty": {
+    "easy": "Facile",
+    "moderate": "Moyenne",
+    "challenging": "Exigeante"
+  },
+  "practical": {
+    "languages": "Langues"
+  },
+  "detail": {
+    "allWalks": "← Toutes les balades",
+    "about": "À propos de cette balade",
+    "readyTitle": "Prêt à explorer ?",
+    "perTeam": "par équipe",
+    "whatToExpect": "Au programme",
+    "howItWorks": "Comment ça marche",
+    "route": "Le parcours",
+    "routeIntro": "Un aperçu des étapes. Les histoires se dévoilent pendant la balade.",
+    "storyFiction": "L'histoire · fiction"
+  },
+  "preview": {
+    "stopLabel": "Étape {number} : ",
+    "hiddenStop": "Étape {number} : lieu caché",
+    "bonus": "Étape bonus · facultative",
+    "finalDestination": "Destination finale",
+    "locked": "Verrouillée"
+  },
+  "placeholder": {
+    "title": "Recherches en cours : ",
+    "message": "Cette balade contient du contenu provisoire. Les récits historiques, les lieux et les détails sont encore en cours de recherche."
+  },
+  "defaultHowItWorks": {
+    "step1": "Suivez le parcours",
+    "step2": "Découvrez le lieu",
+    "step3": "Relevez le défi",
+    "step4": "Débloquez l'étape suivante"
+  }
+}

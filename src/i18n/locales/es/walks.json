@@ -1,0 +1,61 @@
+{
+  "explore": {
+    "eyebrow": "Amberes",
+    "title": "Descubre los paseos",
+    "intro": "Cada paseo es una ruta llena de historias y retos. Elige uno y empieza cuando quieras.",
+    "availableWalks": "Paseos disponibles",
+    "empty": "Todavía no hay paseos disponibles. Vuelve pronto.",
+    "comingSoon": "Próximamente"
+  },
+  "card": {
+    "stops": {
+      "one": "{count} parada",
+      "other": "{count} paradas"
+    },
+    "previewContent": "Contenido provisional",
+    "perTeam": "por equipo"
+  },
+  "stats": {
+    "duration": "Duración",
+    "distance": "Distancia",
+    "difficulty": "Dificultad",
+    "stops": "Paradas",
+    "toBeConfirmed": "Por confirmar"
+  },
+  "difficulty": {
+    "easy": "Fácil",
+    "moderate": "Media",
+    "challenging": "Exigente"
+  },
+  "practical": {
+    "languages": "Idiomas"
+  },
+  "detail": {
+    "allWalks": "← Todos los paseos",
+    "about": "Sobre este paseo",
+    "readyTitle": "¿Listo para explorar?",
+    "perTeam": "por equipo",
+    "whatToExpect": "Qué te espera",
+    "howItWorks": "Cómo funciona",
+    "route": "La ruta",
+    "routeIntro": "Un adelanto de las paradas. Las historias se revelan durante el paseo.",
+    "storyFiction": "La historia · ficción"
+  },
+  "preview": {
+    "stopLabel": "Parada {number}: ",
+    "hiddenStop": "Parada {number}: lugar oculto",
+    "bonus": "Parada extra · opcional",
+    "finalDestination": "Destino final",
+    "locked": "Bloqueada"
+  },
+  "placeholder": {
+    "title": "Investigación en curso: ",
+    "message": "Este paseo contiene contenido provisional. Las historias, los lugares y los detalles históricos todavía se están investigando."
+  },
+  "defaultHowItWorks": {
+    "step1": "Sigue la ruta",
+    "step2": "Descubre el lugar",
+    "step3": "Supera el reto",
+    "step4": "Desbloquea la siguiente parada"
+  }
+}

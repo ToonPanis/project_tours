@@ -1,5 +1,6 @@
 "use client";
 
+import { useT } from "@/i18n/client";
 import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { createId } from "@/lib/create-id";
@@ -14,6 +15,7 @@ interface TeamSetupProps {
 
 /** Two steps: pick the number of players, then enter their names. */
 export function TeamSetup({ teamSize, onComplete }: TeamSetupProps) {
+  const t = useT();
   const [playerCount, setPlayerCount] = useState<number | null>(null);
   const [names, setNames] = useState<string[]>([]);
   const [teamName, setTeamName] = useState("");
@@ -25,7 +27,7 @@ export function TeamSetup({ teamSize, onComplete }: TeamSetupProps) {
 
   function choosePlayerCount(count: number) {
     setPlayerCount(count);
-    setNames(Array.from({ length: count }, (_, index) => `Player ${index + 1}`));
+    setNames(Array.from({ length: count }, (_, index) => t("game.team.player", { number: index + 1 })));
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -33,15 +35,15 @@ export function TeamSetup({ teamSize, onComplete }: TeamSetupProps) {
     const players = names.map((name, index) => ({
       id: `player-${index + 1}`,
       // An emptied field falls back to the default name.
-      name: name.trim() || `Player ${index + 1}`,
+      name: name.trim() || t("game.team.player", { number: index + 1 }),
     }));
     onComplete({ id: createId(), name: teamName.trim(), players });
   }
 
   if (playerCount === null) {
     return (
-      <PlayScreen eyebrow="Team setup" title="How many players?">
-        <p>Everyone plays on this phone. You&apos;ll pass it around when it&apos;s time to vote.</p>
+      <PlayScreen eyebrow={t("game.team.eyebrow")} title={t("game.team.howMany")}>
+        <p>{t("game.team.onePhone")}</p>
         <div className="grid grid-cols-3 gap-3">
           {countOptions.map((count) => (
             <button
@@ -61,27 +63,27 @@ export function TeamSetup({ teamSize, onComplete }: TeamSetupProps) {
   return (
     <form onSubmit={handleSubmit}>
       <PlayScreen
-        eyebrow="Team setup"
-        title={playerCount === 1 ? "Your name" : "Who's playing?"}
+        eyebrow={t("game.team.eyebrow")}
+        title={playerCount === 1 ? t("game.team.yourName") : t("game.team.whoIsPlaying")}
         actions={
           <>
             <Button type="submit" fullWidth>
-              Start adventure
+              {t("game.team.startAdventure")}
             </Button>
             <Button variant="outline" onClick={() => setPlayerCount(null)} fullWidth>
-              Back
+              {t("common.back")}
             </Button>
           </>
         }
       >
         <label className="flex flex-col gap-1">
           <span className="text-xs font-semibold uppercase tracking-wider text-gold">
-            Team name (optional)
+            {t("game.team.teamName")}
           </span>
           <input
             value={teamName}
             onChange={(event) => setTeamName(event.target.value)}
-            placeholder="The Antwerp Explorers"
+            placeholder={t("game.team.teamNamePlaceholder")}
             maxLength={30}
             autoComplete="off"
             className="min-h-12 rounded-sm border border-parchment/30 bg-ink/40 px-4 text-lg text-parchment placeholder:text-parchment/35 focus:border-gold focus:outline-none"
@@ -91,7 +93,7 @@ export function TeamSetup({ teamSize, onComplete }: TeamSetupProps) {
         {names.map((name, index) => (
           <label key={index} className="flex flex-col gap-1">
             <span className="text-xs font-semibold uppercase tracking-wider text-gold">
-              Player {index + 1}
+              {t("game.team.player", { number: index + 1 })}
             </span>
             <input
               value={name}

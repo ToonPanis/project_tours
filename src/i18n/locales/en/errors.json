@@ -1,0 +1,12 @@
+{
+  "notFound": {
+    "title": "You've wandered off the map",
+    "text": "This page doesn't exist. Let's get you back on the trail.",
+    "back": "Back to the start"
+  },
+  "walkNotFound": {
+    "title": "This walk doesn't exist",
+    "text": "The route you're looking for may have moved, or it isn't available yet.",
+    "seeAll": "See all walks"
+  }
+}

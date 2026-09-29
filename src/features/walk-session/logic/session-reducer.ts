@@ -107,6 +107,13 @@ export function applySessionAction(
       return updateProgress({ status: "challenge" });
     }
 
+    case "COMPLETE_VISIT": {
+      // Guide walks: a stop without a drink round or challenge is done once visited.
+      if (progress.status !== "arrived" && progress.status !== "story") return session;
+      if (location.drinkRound || location.challenge) return session;
+      return solveLocation(walk, session, location);
+    }
+
     case "SUBMIT_ANSWER": {
       if (progress.status !== "challenge" || !location.challenge) return session;
 
@@ -147,7 +154,10 @@ export function applySessionAction(
 
       const orderedLocations = getOrderedLocations(walk);
       const currentIndex = orderedLocations.findIndex((candidate) => candidate.id === location.id);
-      const nextLocation = orderedLocations[currentIndex + 1];
+      // Skipped bonus stops stay "locked": they were never visited.
+      const nextLocation = orderedLocations
+        .slice(currentIndex + 1)
+        .find((candidate) => !(action.skipBonus && candidate.isBonus));
 
       // No next stop: open the finale if there is one, otherwise the walk is complete.
       if (!nextLocation) {

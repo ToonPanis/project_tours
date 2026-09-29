@@ -1,3 +1,7 @@
+import type { Locale } from "@/i18n/config";
+import { availableLocales, cachePerLocale, pickContent } from "@/i18n/content";
+import { createTranslator } from "@/i18n/translate";
+import { normalizeOsrmRoute, type SavedOsrmRoute } from "@/lib/routing/osrm";
 import type { Walk } from "@/types/walk";
 import { rococo } from "./01-rococo";
 import { denEngel } from "./02-den-engel";
@@ -7,103 +11,77 @@ import { deKat } from "./05-de-kat";
 import { quintenMatsijs } from "./06-quinten-matsijs";
 import { deVarkenspoot } from "./07-de-varkenspoot";
 import { boerVanTienen } from "./08-boer-van-tienen";
-import { hiddenPubsFinale } from "./finale";
+import { hiddenPubsContent } from "./content";
+import type { HiddenPubsContent } from "./content/types";
+import { finaleClosingStory, finaleQuestions } from "./finale";
+import { buildChallenge, buildClue, buildLocation, buildStory } from "./helpers";
+import routesFile from "./routes.json";
 
 /**
  * "Hidden Pubs": The Lost Tavern Ledger
  *
- * Each stop lives in its own file (01-rococo.ts … 08-boer-van-tienen.ts):
- * location, drinks, ledger story (FICTION), challenge, hints, historical
- * reveal (REAL HISTORY, with a verification status) and the clue it earns.
- * The final puzzle is in finale.ts.
+ *   01-rococo.ts … 08-boer-van-tienen.ts   one stop each: café, drinks, ledger
+ *                                          (FICTION, in Dutch), answers, clue
+ *   finale.ts                              the final puzzle's answers
+ *   content/<lang>.ts                      all text per language (English is the master)
+ *   coordinates.json / routes.json         positions and generated walking routes
  */
-const stops = [
-  rococo,
-  denEngel,
-  patersVaetje,
-  deMuze,
-  deKat,
-  quintenMatsijs,
-  deVarkenspoot,
-  boerVanTienen,
-];
+const stops = [rococo, denEngel, patersVaetje, deMuze, deKat, quintenMatsijs, deVarkenspoot, boerVanTienen];
 
-export const hiddenPubsWalk: Walk = {
-  id: "walk-hidden-pubs",
-  slug: "hidden-pubs",
-  title: "Hidden Pubs",
-  tagline: "Antwerp's hidden drinking history",
-  shortDescription:
-    "A team adventure through eight Antwerp cafés. Vote on drinks, solve challenges on location and recover the pages of a lost tavern ledger.",
-  description:
-    "An old tavern ledger has resurfaced, and eight of its pieces are missing. Your team travels from café to café through the heart of Antwerp. At every stop you vote on the team's drink, read a page of the ledger and solve a challenge you can only crack on location. Only then do you learn the history behind what you found, and the ledger reveals the next café.\n\nAlcohol is never required. Every drink vote includes an alcohol-free option, everyone can always choose their own drink, and you can skip any round.",
-  city: "Antwerp",
-  // Estimates until the route has been walked and timed.
-  estimatedDuration: { minMinutes: 150, maxMinutes: 210 },
-  distanceInMeters: null,
-  difficulty: "moderate",
-  price: { amountInCents: 1495, currency: "EUR" },
-  theme: "tavern",
-  languages: ["en"],
-  routeReveal: "progressive",
-  team: { minPlayers: 1, maxPlayers: 6 },
-  // Several challenges and reveals still need on-site verification or sources.
-  contentStatus: "placeholder",
+function stopText(content: HiddenPubsContent, stopId: string) {
+  const text = content.stops[stopId];
+  if (!text) throw new Error(`Hidden Pubs: missing text for "${stopId}"`);
+  return text;
+}
 
-  copy: {
-    voteResultTitle: "The tavern has spoken",
-    tieTitle: "Tie!",
-    tieSubtitle: "The ledger must decide…",
-    afterVoteMessage: "Order your drink, take your time and look around.",
-    wrongAnswer: "The Ledger remains silent.",
-    correctAnswer: "The ink begins to move…",
-    nextLocationTitle: "The ledger reveals another name…",
-    completionTitle: "Case closed",
-    completionMessage: "Antwerp has revealed one of its secrets.",
-    clueCollectedTitle: "The ledger has changed",
-    locationsTitle: "Taverns",
-    locationsDiscoveredLabel: "taverns discovered",
-  },
+function buildWalk(content: HiddenPubsContent, locale: Locale): Walk {
+  return {
+    id: "walk-hidden-pubs",
+    slug: "hidden-pubs",
+    // A brand name: the same in every language.
+    title: "Hidden Pubs",
+    tagline: content.walk.tagline,
+    shortDescription: content.walk.shortDescription,
+    description: content.walk.description,
+    city: createTranslator(locale)("common.cities.antwerp"),
+    // Estimates until the route has been walked and timed.
+    estimatedDuration: { minMinutes: 150, maxMinutes: 210 },
+    distanceInMeters: null,
+    difficulty: "moderate",
+    price: { amountInCents: 1495, currency: "EUR" },
+    theme: "tavern",
+    experience: "game",
+    languages: availableLocales(hiddenPubsContent),
+    routeReveal: "progressive",
+    team: { minPlayers: 1, maxPlayers: 6 },
+    // Several challenges and reveals still need on-site verification or sources.
+    contentStatus: "placeholder",
 
-  narrative: {
-    title: "The Lost Tavern Ledger",
-    premise:
-      "An old tavern ledger has resurfaced. Most of the names have faded, and eight pieces are missing. Follow the trail from café to café, recover what was lost and find out whose ledger it was.",
-  },
+    copy: content.walk.copy,
+    narrative: content.walk.narrative,
+    highlights: content.walk.highlights,
+    howItWorksSteps: content.walk.howItWorksSteps,
+    practicalInfo: content.walk.practicalInfo,
 
-  highlights: [
-    "Eight Antwerp cafés",
-    "A team mystery to solve",
-    "Challenges you can only solve on location",
-    "The real history behind what you discover",
-    "Team drink votes, always with an alcohol-free option",
-    "A final puzzle that tests what you remember",
-  ],
-
-  howItWorksSteps: [
-    "Arrive at the café",
-    "Vote on the team's drink",
-    "Read a page of the ledger",
-    "Solve the challenge on location",
-    "Discover the history and collect the clue",
-    "Solve the final mystery",
-  ],
-
-  practicalInfo: [
-    { label: "Team", value: "1 to 6 players, sharing one phone" },
-    { label: "Recommended age", value: "18+ (because of the pub theme)" },
-    {
-      label: "Alcohol",
-      value:
-        "Never required. Every vote includes an alcohol-free option and everyone can choose their own drink.",
+    finale: {
+      title: content.finale.title,
+      intro: content.finale.intro,
+      questions: finaleQuestions.map((question, index) => buildChallenge(question, content.finale.questions[index])),
+      closingStory: buildStory(finaleClosingStory, content.finale.closingStory, locale),
     },
-    {
-      label: "Drink votes",
-      value: "The team vote is a suggestion. You can skip any round; progress never depends on ordering.",
-    },
-  ],
+    // Generated by scripts/generate-walking-routes.mjs from coordinates.json.
+    routeLegs: routesFile.legs.map((leg) => ({
+      fromLocationId: leg.fromLocationId,
+      toLocationId: leg.toLocationId,
+      route: normalizeOsrmRoute(leg.osrm as SavedOsrmRoute),
+    })),
+    clues: stops.map((stop) => buildClue(stop, stopText(content, stop.id))),
+    locations: stops.map((stop) => buildLocation(stop, stopText(content, stop.id), locale)),
+  };
+}
 
-  finale: hiddenPubsFinale,
-  clues: stops.map((stop) => stop.clue),
-  locations: stops.map((stop) => stop.location),
-};
+/** The walk with its texts in `locale` (English where a translation is missing). */
+export const getHiddenPubsWalk = cachePerLocale((locale) => buildWalk(pickContent(hiddenPubsContent, locale), locale));
+
+/** English, e.g. for tests. */
+export const hiddenPubsWalk: Walk = getHiddenPubsWalk("en");

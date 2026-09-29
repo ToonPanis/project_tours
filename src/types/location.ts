@@ -2,6 +2,7 @@ import type { Challenge } from "./challenge";
 import type { GeoCoordinates, ImageAsset } from "./common";
 import type { ContentBlock } from "./content";
 import type { DrinkRound } from "./drink";
+import type { GuideStopContent } from "./guide";
 import type { HistoricalReveal } from "./reveal";
 
 /** What kind of place a location is. (Whether it's a bonus stop is a separate flag.) */
@@ -69,6 +70,8 @@ export interface WalkLocation {
   address: string;
   /** `null` until the exact position has been researched. Never guess coordinates. */
   coordinates: GeoCoordinates | null;
+  /** "to-verify" for drafted coordinates (e.g. geocoded) not yet checked on site. */
+  coordinatesStatus?: "verified" | "to-verify";
   /** Short introduction, safe to show before the walk starts. */
   description: string;
   /** History, legends and story fragments, revealed during the walk. */
@@ -83,6 +86,8 @@ export interface WalkLocation {
   bonusChallenge?: Challenge;
   /** Real history, revealed after the challenge is solved. */
   historicalReveal?: HistoricalReveal;
+  /** The narrated stop page, for guide walks. */
+  guide?: GuideStopContent;
   unlockCondition: UnlockCondition;
   nearbyPlaces: NearbyPlace[];
   optionalBreak?: OptionalBreak;
