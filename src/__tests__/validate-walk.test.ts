@@ -42,6 +42,18 @@ describe("validateWalk catches structural mistakes", () => {
     expect(validateWalk(broken).join()).toMatch(/must be a whole number \(1\.5\)/);
   });
 
+  test("a challenge type the player can't play yet (a team would be stuck)", () => {
+    const broken: Walk = {
+      ...hiddenPubsWalk,
+      locations: hiddenPubsWalk.locations.map((stop, index) =>
+        index === 0
+          ? { ...stop, challenge: { id: "c", type: "sequence", title: "", question: "", hints: [], items: ["a", "b"], correctOrder: [1, 0] } }
+          : stop,
+      ),
+    };
+    expect(validateWalk(broken).join()).toMatch(/can't be played yet/);
+  });
+
   test("a missing walking route between two stops", () => {
     const broken: Walk = { ...hiddenPubsWalk, routeLegs: hiddenPubsWalk.routeLegs!.slice(1) };
     expect(validateWalk(broken).join()).toMatch(/no walking route pubs-rococo → pubs-den-engel/);

@@ -1,6 +1,5 @@
 {
   "header": {
-    "stopProgress": "Tappa {current} / {total}",
     "clues": "Indizi {found} / {total}",
     "route": "Percorso",
     "progressLabel": "Avanzamento della passeggiata",
@@ -140,7 +139,6 @@
     "discoveredClues": "Indizi scoperti · {found} / {total}",
     "clueLocked": "Indizio {number} · bloccato",
     "current": "In corso",
-    "extraStop": "Tappa extra",
     "skipped": "Saltata"
   },
   "copy": {

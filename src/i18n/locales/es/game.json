@@ -1,6 +1,5 @@
 {
   "header": {
-    "stopProgress": "Parada {current} / {total}",
     "clues": "Pistas {found} / {total}",
     "route": "Ruta",
     "progressLabel": "Progreso del paseo",
@@ -140,7 +139,6 @@
     "discoveredClues": "Pistas descubiertas · {found} / {total}",
     "clueLocked": "Pista {number} · bloqueada",
     "current": "Ahora",
-    "extraStop": "Parada extra",
     "skipped": "Omitida"
   },
   "copy": {

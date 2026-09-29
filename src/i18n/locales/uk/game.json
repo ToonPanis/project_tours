@@ -1,6 +1,5 @@
 {
   "header": {
-    "stopProgress": "Зупинка {current} / {total}",
     "clues": "Підказки {found} / {total}",
     "route": "Маршрут",
     "progressLabel": "Перебіг прогулянки",
@@ -144,7 +143,6 @@
     "discoveredClues": "Знайдені підказки · {found} / {total}",
     "clueLocked": "Підказка {number} · закрита",
     "current": "Зараз",
-    "extraStop": "Дод. зупинка",
     "skipped": "Пропущено"
   },
   "copy": {

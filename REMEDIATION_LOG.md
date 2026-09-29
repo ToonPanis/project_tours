@@ -783,7 +783,7 @@ New tests: `i18n-phase7.test.tsx` and `no-hardcoded-text.test.ts`; 22 of their 2
   - the MapLibre language-switch limitation is documented in I18N.md.
 - **QA / translation / Guardian:** PASS. Data: only the 8 `routeButtonLabel` lines; same translations as the removed key. New texts natural; "С"/"Пн" are the standard compass abbreviations. On a production build in nl/ru/de: no "Clues"/"Ledger"/"Discovered clues", `og:locale` nl_BE/ru_RU/de_DE, play page `noindex, nofollow`. Fixed after QA: the play page has its own `og:title`; team names are joined per language (`Intl.ListFormat`: "Tony and Sarah" / "Tony en Sarah").
 - **Intended visible change:** team names read "Tony and Sarah" instead of "Tony, Sarah".
-- **Known, unchanged:** `global-error.tsx` stays English (it can't read the language cookie when the whole app has crashed).
+- **Correction (Phase 9 re-audit):** `global-error.tsx` is not English-only: it renders English on the server and switches to the cookie's language in the browser (since Phase 1).
 
 ---
 
@@ -851,3 +851,33 @@ New tests: `i18n-phase7.test.tsx` and `no-hardcoded-text.test.ts`; 22 of their 2
   - tie vote: the choice is checked absent during the suspense; the camera test also checks gliding without reduced motion;
   - **privacy at player level:** a whole walk to a café with GPS readings until arrival; nothing of any reading reaches storage or cookies (mutation: saving a reading fails both privacy tests).
 - **Accepted as is:** the 60 m route tolerance can't see a pin moved less than that (storing the generator's input coordinates would, but needs a route regeneration with network); the dialog stand-in doesn't make the page behind a modal inert (a real-browser test would).
+
+---
+
+## Phase 9 — Final production validation (2026-09-29)
+
+- **Branch:** `fix/phase-9-production-validation`, branched from `c8d377b`. Committed after approval and pushed (owner permission, 2026-09-29).
+- **Decision document:** `GO_NO_GO.md` — private playtest **GO**; public launch **NO-GO** until 17 listed conditions (legal, content, field, configuration, engineering).
+
+### New tooling (approved by the owner)
+- **Playwright** (`@playwright/test`, dev) with Chromium; `playwright.config.ts`: a 390 px phone against `next start` (production build). `npm run test:e2e`.
+- **Coverage** (`@vitest/coverage-v8` 4.1.11, dev): `npm run test:coverage` over the logic folders, thresholds lines 95 / statements 90 / branches 85 / functions 95 (today 97.6 / 93.7 / 89.4 / 99.1).
+- `npm audit`: 0 vulnerabilities. Generated output (`coverage/`, `playwright-report/`, `test-results/`) is git- and ESLint-ignored; Vitest only runs `src/**/*.test.*`.
+- CI: unit tests now run with coverage; after the build, Playwright installs Chromium and runs the browser tests; the report is uploaded when they fail.
+
+### Browser tests (`e2e/`, 20 tests)
+- `pages.spec.ts`: every public page loads with no console errors or failed requests; a real 404; no playtest tools in production; security headers.
+- `gps-walk.spec.ts`: Classics with emulated GPS (arrival, a leg along the route, the map canvas and versioned worker), a reload mid-walk, location refused. **Privacy:** no coordinate in any storage, cookie, IndexedDB or request URL.
+- `hidden-pubs-game.spec.ts`: a complete game without GPS (8 cafés, bonuses skipped, final puzzle, completion), no drink counts.
+- `language.spec.ts`: nl-BE first visit → Dutch; switch to Ukrainian mid-walk; the choice survives cleared cookies.
+- `layout-and-data.spec.ts`: no sideways scrolling at 390 px in de/ru/es (screenshots reviewed: German navigation, Russian route panel with the sticky ✕); data use for the start of a walk: **about 1.3 MB**.
+- Tile-server console errors are ignored (their availability isn't ours to test).
+
+### H-03 guard
+- `data-integrity.test.ts`: a walk marked `verified` fails the tests while any image in it still says "to be verified" (and the check provably sees the Smekens drawings today).
+
+### Re-audit (lighter, 3 independent auditors)
+- **Security / privacy / GPS / performance / build:** go with conditions. No path from GPS data to storage, network or logs. Fixed after it: a misleading `NEXT_PUBLIC_PLAYTEST_TOOLS` override in the Playwright config (build-time value; the pages test guards it instead). Open: pin CI actions to commit SHAs (Low).
+- **i18n / UX / accessibility / content:** go with conditions; content unchanged since the baseline except metadata. Fixed after it: `validateWalk` rejects `sequence` challenges (not playable yet: a dead end); a wrong line in this log about `global-error.tsx` corrected. Open (content/product): outdoor fallback or "we can't do this here" for closed cafés.
+- **Architecture / code / tests:** go with conditions. Fixed after it: three unused texts removed in 8 languages (`game.header.stopProgress`, `game.ledger.extraStop`, `guide.collection`); phase-named test files renamed by feature (`accessibility`, `i18n-screens`, `navigation-guidance`, `security`); CLAUDE.md corrected (session hook, commands, CI, e2e folder). Open: the English `instruction` field in route data is unused (removing it means regenerating routes); branches not pushed, so CI never ran on GitHub.
+- Counts: see `GO_NO_GO.md` (High 3 → 0 open code defects; Medium 20 → 0; Low 44 → 0; the rest are decisions, content, legal or field items).

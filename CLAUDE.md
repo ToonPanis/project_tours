@@ -16,7 +16,8 @@ I'm a programming student. I'm comfortable with TypeScript, JavaScript, React, N
 - **Only runtime dependency besides Next/React: `maplibre-gl` 6.** No i18n library, no state library, no UI kit.
 - ESLint 9 (`eslint-config-next`). Vitest 4 + React Testing Library (jsdom), tests in `src/__tests__/`. Shared setup in `src/__tests__/setup.ts` (cleanup, empty storage, `<dialog>` stand-in); mocks and global stubs are restored between tests. Tests take content from the data and texts from the translations (never type café names, answers or UI text literally); `fixtures/fake-maplibre.ts` stands in for MapLibre.
 - Node 20 locally (end-of-life; upgrade planned). CI uses the version in `.nvmrc` (22); `engines` allows Next's minimum (≥ 20.9). Windows machine (use Git Bash / PowerShell syntax accordingly).
-- CI: `.github/workflows/ci.yml` runs typecheck → lint → i18n:check → tests → build on every push to `main` and every PR.
+- Playwright (dev) for browser tests in `e2e/` (a 390 px Chromium phone against the production build); `@vitest/coverage-v8` for coverage of the logic folders (thresholds in `vitest.config.mts`).
+- CI: `.github/workflows/ci.yml` runs typecheck → lint → i18n:check → unit tests with coverage → build → browser tests on every push to `main` and every PR.
 
 ## Commands
 
@@ -26,7 +27,9 @@ npm run build          # production build (prebuild copies the worker too)
 npm start              # serve the build (use e.g. `npx next start -p 3200` if 3000 is taken)
 npm run typecheck      # = npx tsc --noEmit
 npm run lint
-npm run test:run       # = npx vitest run, all tests once (~1,190, ~30 s); `npm test` = watch mode
+npm run test:run       # = npx vitest run, all unit/component tests once (~1,200, 30–70 s); `npm test` = watch mode
+npm run test:coverage  # the same, plus coverage of the logic folders (fails under the thresholds)
+npm run test:e2e       # browser tests (Playwright); run `npm run build` first. First time: `npx playwright install chromium`
 npm run i18n:check     # every language has every UI text (en = master)
 node scripts/generate-walking-routes.mjs <walk-folder>   # after changing coordinates.json
 node scripts/download-commons-images.mjs <walk-folder>   # after changing image-sources.json
@@ -51,6 +54,7 @@ src/lib/                      repositories/ (walkRepository, cached getWalk), ro
 src/types/                    shared models (walk, location, challenge, content, guide, navigation, session, …)
 src/data/walks/               ALL walk data (see "Walks")
 scripts/                      route generator, Commons image downloader, MapLibre worker copy, translation check
+e2e/                          Playwright browser tests: pages, GPS walk + privacy, full Hidden Pubs game, languages, layout at 390 px, data use
 public/images/classics|poortjes/   walk images (committed). public/maplibre/<version>/ is generated + git-ignored.
 I18N.md                       full i18n guide (how to add texts / translate a stop / add a 9th language)
 ```
@@ -59,7 +63,7 @@ I18N.md                       full i18n guide (how to add texts / translate a st
 
 - Pages are Server Components that read walks through **`walkRepository`** (`src/lib/repositories/`, currently `MockWalkRepository` over `src/data/walks`, methods take a `locale`). Swap this for a real DB later; keep pages unaware of the source.
 - `/walks/[slug]/play` renders the client `<WalkPlayer>`. It picks **`GuideWalkPlayer`** when `walk.experience === "guide"`, else the game flow.
-- Session state: `useReducer` with the pure `session-reducer.ts` (`SessionAction`s), saved to **localStorage** key `hidden-antwerp:playtest:<slug>` (`STORAGE_VERSION = 3`). Only progress is saved. When bumping the version, add a step to `migrateToCurrent` in `storage/session-storage.ts` so mid-walk saves survive (versions without a step are discarded). Saves are validated field by field (`isWellFormedSession`), then adapted to the walk's current stops by `logic/reconcile-session.ts`: new stops are added as locked, removed stops and their clues dropped; only a removed *current* stop resets the game. The same reconcile runs on in-memory state when the page re-renders (language switch), so the game is never reloaded from storage for the same walk.
+- Session state: `useWalkSession` (`useState` + the pure `applySessionAction` in `session-reducer.ts`, `SessionAction`s), saved to **localStorage** key `hidden-antwerp:playtest:<slug>` (`STORAGE_VERSION = 3`). Only progress is saved. When bumping the version, add a step to `migrateToCurrent` in `storage/session-storage.ts` so mid-walk saves survive (versions without a step are discarded). Saves are validated field by field (`isWellFormedSession`), then adapted to the walk's current stops by `logic/reconcile-session.ts`: new stops are added as locked, removed stops and their clues dropped; only a removed *current* stop resets the game. The same reconcile runs on in-memory state when the page re-renders (language switch), so the game is never reloaded from storage for the same walk.
 - Game flow per stop: navigate ("I'm here" always available; asks to confirm when GPS says > 150 m away) → arrive → drink vote (skippable) → story (ledger page) → challenge (hints unlock after wrong answers; after 3 wrong answers the team may **show the answer**, `logic/reveal-answer.ts`: the stop still counts as solved and gives its clue, and the translated explanation is shown) → solved → historical reveal → clue → next stop; finale after the last stop.
 - Errors: `app/walks/[slug]/play/error.tsx` (retry = full reload, or restart only this walk) and `app/global-error.tsx`. Production error logs contain only the error name (`lib/log-error.ts`), never messages (could contain positions).
 - Guide flow: start screen → chapter card (when a chapter starts) → navigate → stop page (intro, sections by kind, cards, search task, then/now, "did you know", glossary, info boxes with "checked on" date, sources) → optional detour choice → … → closing/completion.

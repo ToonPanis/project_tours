@@ -1,6 +1,5 @@
 {
   "header": {
-    "stopProgress": "Station {current} / {total}",
     "clues": "Hinweise {found} / {total}",
     "route": "Route",
     "progressLabel": "Fortschritt des Rundgangs",
@@ -140,7 +139,6 @@
     "discoveredClues": "Entdeckte Hinweise · {found} / {total}",
     "clueLocked": "Hinweis {number} · gesperrt",
     "current": "Aktuell",
-    "extraStop": "Extrastation",
     "skipped": "Übersprungen"
   },
   "copy": {

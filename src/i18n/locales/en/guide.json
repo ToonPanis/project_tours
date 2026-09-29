@@ -77,7 +77,6 @@
   "finishWithoutDetour": "Finish the walk here",
   "chapter": "Part {number}",
   "chapterOf": "Part {number} / {total}",
-  "collection": "Collection",
   "notOnRoute": "Not on the route",
   "distance": "Distance",
   "time": "Time",

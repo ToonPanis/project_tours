@@ -44,3 +44,8 @@ next-env.d.ts
 
 # Copied from node_modules by scripts/copy-maplibre-worker.mjs
 /public/maplibre/
+
+# Playwright and coverage output
+/test-results/
+/playwright-report/
+/coverage/

@@ -77,7 +77,6 @@
   "finishWithoutDetour": "Terminer la balade ici",
   "chapter": "Partie {number}",
   "chapterOf": "Partie {number} / {total}",
-  "collection": "Collection",
   "notOnRoute": "Hors parcours",
   "distance": "Distance",
   "time": "Temps",

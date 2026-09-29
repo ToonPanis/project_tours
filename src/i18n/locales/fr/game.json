@@ -1,6 +1,5 @@
 {
   "header": {
-    "stopProgress": "Étape {current} / {total}",
     "clues": "Indices {found} / {total}",
     "route": "Parcours",
     "progressLabel": "Progression de la balade",
@@ -140,7 +139,6 @@
     "discoveredClues": "Indices découverts · {found} / {total}",
     "clueLocked": "Indice {number} · verrouillé",
     "current": "En cours",
-    "extraStop": "Étape bonus",
     "skipped": "Passée"
   },
   "copy": {

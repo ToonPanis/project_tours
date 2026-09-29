@@ -1,6 +1,5 @@
 {
   "header": {
-    "stopProgress": "Stop {current} / {total}",
     "clues": "Clues {found} / {total}",
     "route": "Route",
     "progressLabel": "Walk progress",
@@ -140,7 +139,6 @@
     "discoveredClues": "Discovered clues · {found} / {total}",
     "clueLocked": "Clue {number} · locked",
     "current": "Current",
-    "extraStop": "Extra stop",
     "skipped": "Skipped"
   },
   "copy": {

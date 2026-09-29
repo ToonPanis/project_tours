@@ -28,6 +28,8 @@ export function validateWalk(walk: Walk): string[] {
       if (challenge?.type === "number-answer" && !Number.isInteger(challenge.correctNumber)) {
         problems.push(`${stop.id}: a number answer must be a whole number (${challenge.correctNumber})`);
       }
+      // The player can't play "sequence" challenges yet: a team would be stuck there.
+      if (challenge?.type === "sequence") problems.push(`${stop.id}: "sequence" challenges can't be played yet (dead end)`);
     }
   }
 

@@ -77,7 +77,6 @@
   "finishWithoutDetour": "Rundgang hier beenden",
   "chapter": "Teil {number}",
   "chapterOf": "Teil {number} / {total}",
-  "collection": "Sammlung",
   "notOnRoute": "Nicht auf der Route",
   "distance": "Strecke",
   "time": "Zeit",

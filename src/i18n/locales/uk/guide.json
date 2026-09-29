@@ -81,7 +81,6 @@
   "finishWithoutDetour": "Завершити прогулянку тут",
   "chapter": "Частина {number}",
   "chapterOf": "Частина {number} / {total}",
-  "collection": "Колекція",
   "notOnRoute": "Поза маршрутом",
   "distance": "Відстань",
   "time": "Час",

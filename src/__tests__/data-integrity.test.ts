@@ -269,3 +269,35 @@ describe("search tasks (L-44)", () => {
     expect(found).toEqual(EXPECTED_SEARCH_TASKS);
   });
 });
+
+/**
+ * H-03: Smekens' drawings (1951) carry "Rights still to be verified" until the rights
+ * are cleared. A walk can only be marked `verified` (ready for the public) once no
+ * image in it has an unverified license: this test fails otherwise.
+ */
+describe("no walk is published with image rights still to be verified (H-03)", () => {
+  const UNVERIFIED_LICENSE = /to be verified/i;
+
+  /** Every object with a `license` in the walk (cover, stop images, collection drawings…). */
+  function licensesIn(value: unknown, found: string[] = []): string[] {
+    if (Array.isArray(value)) for (const item of value) licensesIn(item, found);
+    else if (value && typeof value === "object") {
+      for (const [key, child] of Object.entries(value)) {
+        if (key === "license" && typeof child === "string") found.push(child);
+        else licensesIn(child, found);
+      }
+    }
+    return found;
+  }
+
+  test.each(walks.map((walk) => [walk.slug, walk] as const))("%s", (_slug, walk) => {
+    const unverified = licensesIn(walk).filter((license) => UNVERIFIED_LICENSE.test(license));
+    if (walk.contentStatus === "verified") expect(unverified).toEqual([]);
+  });
+
+  test("the check sees the drawings' rights note today", () => {
+    const poortjes = walks.find((walk) => walk.slug === "poortjes-van-antwerpen")!;
+    expect(licensesIn(poortjes).some((license) => UNVERIFIED_LICENSE.test(license))).toBe(true);
+    expect(poortjes.contentStatus).toBe("placeholder");
+  });
+});

@@ -1,6 +1,5 @@
 {
   "header": {
-    "stopProgress": "Остановка {current} / {total}",
     "clues": "Улики {found} / {total}",
     "route": "Маршрут",
     "progressLabel": "Ход прогулки",
@@ -144,7 +143,6 @@
     "discoveredClues": "Найденные улики · {found} / {total}",
     "clueLocked": "Улика {number} · закрыта",
     "current": "Сейчас",
-    "extraStop": "Доп. остановка",
     "skipped": "Пропущено"
   },
   "copy": {

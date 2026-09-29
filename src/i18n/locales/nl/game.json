@@ -1,6 +1,5 @@
 {
   "header": {
-    "stopProgress": "Stop {current} / {total}",
     "clues": "Aanwijzingen {found} / {total}",
     "route": "Route",
     "progressLabel": "Voortgang van de wandeling",
@@ -140,7 +139,6 @@
     "discoveredClues": "Ontdekte aanwijzingen · {found} / {total}",
     "clueLocked": "Aanwijzing {number} · vergrendeld",
     "current": "Nu",
-    "extraStop": "Extra stop",
     "skipped": "Overgeslagen"
   },
   "copy": {
