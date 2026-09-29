@@ -174,6 +174,6 @@ Security headers for every response come from `src/lib/security-headers.ts` via 
 - **Before any major architectural change**, explain the plan and why. Wait for my OK.
 - Don't rewrite large parts of working code without a good reason; preserve existing functionality.
 - On errors, find the root cause; no random fixes.
-- **After implementing**, run `npx tsc --noEmit`, `npm run lint`, the relevant tests (and `npm run i18n:check` when texts changed), then report the results.
+- **After implementing**, run `npm run typecheck`, `npm run lint`, the relevant tests (and `npm run i18n:check` when texts changed), then report the results.
 - Always list the files you created or modified.
 - When implementing an important feature, briefly explain **what** changed, **where**, **how** the important parts work (especially Next.js concepts) and **how to test** it (manually and automated). Don't over-explain basic syntax.
