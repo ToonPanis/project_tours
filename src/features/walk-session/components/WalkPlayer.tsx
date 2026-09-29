@@ -3,22 +3,21 @@
 import { useT } from "@/i18n/client";
 import { useState } from "react";
 import { GuideWalkPlayer } from "@/features/guide/components/GuideWalkPlayer";
-import { NavigationScreen } from "@/features/navigation/components/NavigationScreen";
-import { getRouteLegTo } from "@/features/navigation/logic/route-legs";
 import { PositionSimulationProvider } from "@/features/navigation/simulation/PositionSimulation";
 import type { WalkSession } from "@/types/session";
 import type { Walk } from "@/types/walk";
-import { getGameCopy } from "../logic/game-copy";
-import { getOrderedLocations } from "../logic/route";
-import { PlaytestControls } from "../playtest/PlaytestControls";
-import { useWalkSession } from "../state/useWalkSession";
+import { getWalkCopy } from "../logic/walk-copy";
+import { getPlaytestNavigation, PlaytestControls } from "../playtest/PlaytestControls";
+import { usePlayerShell } from "../state/usePlayerShell";
+import { getCurrentStop } from "../logic/current-stop";
+import { StopNavigation } from "./StopNavigation";
 import { ArrivedScreen } from "./ArrivedScreen";
 import { ChallengeScreen } from "./ChallengeScreen";
 import { CompletionScreen } from "./CompletionScreen";
 import { DrinkVoting } from "./DrinkVoting";
 import { FinaleScreen } from "./FinaleScreen";
 import { GameIntro } from "./GameIntro";
-import { LedgerPanel } from "./LedgerPanel";
+import { RoutePanel } from "./RoutePanel";
 import { PlayHeader } from "./PlayHeader";
 import { SolvedScreen } from "./SolvedScreen";
 import { StartScreen } from "./StartScreen";
@@ -49,28 +48,19 @@ export function WalkPlayer({ walk }: WalkPlayerProps) {
 
 function WalkPlayerContent({ walk }: WalkPlayerProps) {
   const t = useT();
-  const { isLoaded, session, dispatch, startNewSession, resetSession } = useWalkSession(walk);
+  // Shared with the guide player: saved session, route panel, GPS flag, navigation reset.
+  const shell = usePlayerShell(walk);
+  const { isLoaded, session, dispatch, startNewSession } = shell;
   const [phase, setPhase] = useState<Phase>("start");
-  const [isLedgerOpen, setIsLedgerOpen] = useState(false);
   // Remembers which stop's vote was JUST closed, so the tie animation plays
   // only then and not again after a page refresh.
   const [justVotedLocationId, setJustVotedLocationId] = useState<string | null>(null);
-  // Live GPS is only asked for once per game (not remembered after a reload).
-  const [isGpsEnabled, setIsGpsEnabled] = useState(false);
-  // Changing this key restarts the navigation screen (playtest "reset navigation").
-  const [navigationKey, setNavigationKey] = useState(0);
 
-  const copy = getGameCopy(walk, t);
-  const orderedLocations = getOrderedLocations(walk);
+  const copy = getWalkCopy(walk, t);
 
   function restart() {
-    resetSession();
+    shell.restartBase();
     setPhase("start");
-    setIsLedgerOpen(false);
-  }
-
-  if (!isLoaded) {
-    return <p className="px-4 py-16 text-center text-parchment/70">{t("common.loading")}</p>;
   }
 
   // ── Before the game ────────────────────────────────────────────────
@@ -90,6 +80,8 @@ function WalkPlayerContent({ walk }: WalkPlayerProps) {
       <StartScreen
         walk={walk}
         savedSession={session}
+        // Until the save is read (also during server rendering) the screen shows without buttons.
+        isLoading={!isLoaded}
         onNewAdventure={() => setPhase("team-setup")}
         onContinue={() => setPhase("playing")}
         onRestart={restart}
@@ -102,23 +94,13 @@ function WalkPlayerContent({ walk }: WalkPlayerProps) {
   }
 
   // ── The game ───────────────────────────────────────────────────────
-  const currentIndex = orderedLocations.findIndex((location) => location.id === session.currentLocationId);
-  const location = orderedLocations[currentIndex];
-  const nextLocation = orderedLocations[currentIndex + 1];
-  const progress = session.locations[session.currentLocationId];
-  const routeToCurrent = getRouteLegTo(walk, location.id)?.route ?? null;
-  const routeToNext = nextLocation ? (getRouteLegTo(walk, nextLocation.id)?.route ?? null) : null;
+  const stop = getCurrentStop(walk, session);
+  const { location, nextLocation, progress, routeToNext } = stop;
   // A named constant keeps TypeScript's "not null" knowledge inside the function below.
   const activeSession: WalkSession = session;
 
   const ledger = (
-    <LedgerPanel
-      walk={walk}
-      session={session}
-      copy={copy}
-      open={isLedgerOpen}
-      onClose={() => setIsLedgerOpen(false)}
-    />
+    <RoutePanel walk={walk} session={session} copy={copy} open={shell.isRouteOpen} onClose={shell.closeRoute} />
   );
   const playtestControls = (
     <PlaytestControls
@@ -127,22 +109,14 @@ function WalkPlayerContent({ walk }: WalkPlayerProps) {
       dispatch={dispatch}
       startNewSession={startNewSession}
       onRestart={restart}
-      navigation={
-        progress.status === "travelling"
-          ? {
-              route: routeToCurrent,
-              destination: location.coordinates,
-              onReset: () => setNavigationKey((key) => key + 1),
-            }
-          : null
-      }
+      navigation={getPlaytestNavigation(stop, shell.resetNavigation)}
     />
   );
 
   if (session.completedAt) {
     return (
       <>
-        <CompletionScreen walk={walk} session={session} copy={copy} onOpenLedger={() => setIsLedgerOpen(true)} />
+        <CompletionScreen walk={walk} session={session} copy={copy} onOpenRoute={shell.openRoute} />
         {ledger}
         {playtestControls}
       </>
@@ -162,10 +136,14 @@ function WalkPlayerContent({ walk }: WalkPlayerProps) {
           finale={walk.finale}
           progress={activeSession.finale}
           collectedClues={collectedClues}
+          allClues={walk.clues ?? []}
           copy={copy}
           eyebrow={walk.narrative?.title ?? walk.title}
           onSubmit={(questionId, answer) =>
             dispatch({ type: "SUBMIT_FINALE_ANSWER", questionId, answer, at: new Date().toISOString() })
+          }
+          onRevealAnswer={(questionId) =>
+            dispatch({ type: "REVEAL_FINALE_ANSWER", questionId, at: new Date().toISOString() })
           }
         />
       );
@@ -174,17 +152,7 @@ function WalkPlayerContent({ walk }: WalkPlayerProps) {
     switch (progress.status) {
       case "locked":
       case "travelling":
-        return (
-          <NavigationScreen
-            key={`${location.id}-${navigationKey}`}
-            destination={location}
-            route={routeToCurrent}
-            gpsAlreadyEnabled={isGpsEnabled}
-            onGpsEnabled={() => setIsGpsEnabled(true)}
-            onArrive={() => dispatch({ type: "ARRIVE" })}
-            onShowRoute={() => setIsLedgerOpen(true)}
-          />
-        );
+        return <StopNavigation shell={shell} stop={stop} onArrive={() => dispatch({ type: "ARRIVE" })} />;
 
       case "arrived":
         return (
@@ -241,6 +209,7 @@ function WalkPlayerContent({ walk }: WalkPlayerProps) {
             )}
             onSubmit={(answer) => dispatch({ type: "SUBMIT_ANSWER", answer })}
             onRevealHint={() => dispatch({ type: "REVEAL_HINT" })}
+            onRevealAnswer={() => dispatch({ type: "REVEAL_ANSWER" })}
           />
         ) : null;
 
@@ -258,7 +227,7 @@ function WalkPlayerContent({ walk }: WalkPlayerProps) {
             onSubmitBonus={(answer) => dispatch({ type: "SUBMIT_BONUS_ANSWER", answer })}
             onSkipBonus={() => dispatch({ type: "SKIP_BONUS" })}
             onContinue={() => dispatch({ type: "CONTINUE_TO_NEXT_LOCATION", at: new Date().toISOString() })}
-            onShowRoute={() => setIsLedgerOpen(true)}
+            onShowRoute={shell.openRoute}
           />
         );
     }
@@ -266,7 +235,7 @@ function WalkPlayerContent({ walk }: WalkPlayerProps) {
 
   return (
     <>
-      <PlayHeader walk={walk} session={session} onOpenLedger={() => setIsLedgerOpen(true)} />
+      <PlayHeader walk={walk} session={session} onOpenRoute={shell.openRoute} />
       {renderCurrentScreen()}
       {ledger}
       {playtestControls}

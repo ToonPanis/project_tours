@@ -29,6 +29,7 @@ export const hiddenPubsContentDe: HiddenPubsContent = {
       clueCollectedTitle: "Das Buch hat sich verändert",
       locationsTitle: "Schenken",
       locationsDiscoveredLabel: "Schenken entdeckt",
+      routeButtonLabel: "Kassenbuch",
     },
     narrative: {
       title: "Das verschollene Wirtshausbuch",

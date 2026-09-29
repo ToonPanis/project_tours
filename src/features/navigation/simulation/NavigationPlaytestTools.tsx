@@ -36,8 +36,13 @@ export function NavigationPlaytestTools({
   const distanceAlongRef = useRef(0);
   const lastPositionRef = useRef<GeoCoordinates | null>(null);
 
+  /**
+   * A teleport: navigation treats a sudden jump as GPS noise until a second
+   * reading at the same spot confirms it, so a teleport sends two readings.
+   */
   function emit(coordinates: GeoCoordinates) {
     lastPositionRef.current = coordinates;
+    simulation.emit(coordinates);
     simulation.emit(coordinates);
   }
 

@@ -1,7 +1,7 @@
-import type { LocationProgress, WalkSession } from "@/types/session";
+import type { FinaleProgress, LocationProgress, WalkSession } from "@/types/session";
 import type { Team } from "@/types/team";
 import type { Walk } from "@/types/walk";
-import { getOrderedLocations } from "./route";
+import { getOrderedLocations } from "@/lib/walk-locations";
 
 export function createLocationProgress(status: LocationProgress["status"]): LocationProgress {
   return {
@@ -11,9 +11,15 @@ export function createLocationProgress(status: LocationProgress["status"]): Loca
     wasTie: false,
     wrongAttempts: 0,
     hintsRevealed: 0,
+    answerRevealed: false,
     bonusStatus: "unanswered",
     bonusWrongAttempts: 0,
   };
+}
+
+/** Progress for a walk's final puzzle before it starts. */
+export function createFinaleProgress(): FinaleProgress {
+  return { status: "locked", solvedQuestionIds: [], wrongAttemptsByQuestion: {} };
 }
 
 interface CreateWalkSessionInput {
@@ -49,8 +55,6 @@ export function createWalkSession({
     currentLocationId: orderedLocations[0].id,
     locations,
     collectedClueIds: [],
-    finale: walk.finale
-      ? { status: "locked", solvedQuestionIds: [], wrongAttemptsByQuestion: {} }
-      : null,
+    finale: walk.finale ? createFinaleProgress() : null,
   };
 }

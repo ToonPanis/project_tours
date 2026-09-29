@@ -12,13 +12,17 @@
   "continueWithoutGps": "Continuer sans GPS en direct",
   "permissionTitle": "Accès à la position nécessaire",
   "permissionBody": "Sans votre position, nous ne pouvons pas vous situer ; la carte et le parcours restent visibles.",
-  "permissionHelp": "Si votre navigateur ne vous le redemande pas, autorisez la localisation pour ce site dans ses réglages.",
+  "permissionHelp": "Si votre navigateur ne vous le redemande pas, autorisez la localisation pour ce site dans ses réglages. Vérifiez aussi que la localisation est activée pour votre navigateur dans les réglages de votre téléphone.",
   "tryAgain": "Réessayer",
   "followDirection": "Suivre la direction",
   "northUp": "Nord en haut",
+  "northShort": "N",
   "recenter": "Recentrer",
   "notOnMap": "Ce lieu n'est pas encore sur la carte.",
   "mapUnavailable": "Impossible de charger la carte (pas de connexion, ou ce navigateur ne peut pas afficher de cartes). Les indications et la carte externe fonctionnent toujours.",
+  "mapTilesFailing": "Une partie de la carte ne peut pas être chargée pour l'instant (connexion faible ?). Les indications ci-dessous fonctionnent toujours.",
+  "mapRegion": "Carte : itinéraire vers {name}",
+  "mapLoading": "Chargement de la carte…",
   "gpsUnavailable": "Le GPS n'est pas disponible ici. La localisation nécessite une page sécurisée (https) et des services de localisation activés.",
   "gpsWeak": "Signal GPS faible.",
   "gpsWeakDetail": "Votre position peut être moins précise.",
@@ -48,5 +52,30 @@
     "u-turn": "Faites demi-tour",
     "roundabout": "Prenez le rond-point",
     "arrive": "Destination droit devant"
+  },
+  "confirmArrival": {
+    "title": "Êtes-vous à {name} ?",
+    "message": "Votre GPS indique que vous êtes encore à environ {distance}. Continuer quand même avec cette étape ?",
+    "confirm": "Oui, je suis là"
+  },
+  "stillSearching": "Nous cherchons encore votre position. Dehors, avec une vue dégagée sur le ciel, c'est plus rapide.",
+  "direction": "Cap : {direction}",
+  "compass": {
+    "n": "nord",
+    "ne": "nord-est",
+    "e": "est",
+    "se": "sud-est",
+    "s": "sud",
+    "sw": "sud-ouest",
+    "w": "ouest",
+    "nw": "nord-ouest"
+  },
+  "mapControls": {
+    "zoomIn": "Zoom avant",
+    "zoomOut": "Zoom arrière",
+    "toggleAttribution": "Afficher ou masquer les crédits de la carte",
+    "mapFeedback": "Signaler un problème sur la carte",
+    "map": "Carte",
+    "marker": "Repère sur la carte"
   }
 }

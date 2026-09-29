@@ -29,7 +29,7 @@ function SourceCaption({ item, t }: { item: CollectionItem; t: Translator }) {
   return (
     <details className="text-sm">
       <summary className="min-h-11 cursor-pointer py-2 font-semibold text-sepia">{t("guide.sourceCaption")}</summary>
-      <blockquote className="border-l-2 border-gold-deep/50 pl-3 font-display italic leading-snug">
+      <blockquote lang={item.sourceCaptionLanguage} className="border-l-2 border-gold-deep/50 pl-3 font-display italic leading-snug">
         “{item.sourceCaption}”
       </blockquote>
       {item.note && <p className="mt-2 leading-relaxed text-sepia">{item.note}</p>}

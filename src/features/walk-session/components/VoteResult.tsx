@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import type { DrinkRound } from "@/types/drink";
 import type { LocationProgress } from "@/types/session";
-import type { GameCopy } from "@/types/walk";
+import type { WalkCopy } from "@/types/walk";
 import { tallyVotes } from "../logic/voting";
 import { PlayScreen } from "./PlayScreen";
 import { getDrinkLabel } from "../logic/drink-label";
@@ -15,7 +15,7 @@ const TIE_SUSPENSE_MS = 1800;
 interface VoteResultProps {
   drinkRound: DrinkRound;
   progress: LocationProgress;
-  copy: GameCopy;
+  copy: WalkCopy;
   /** True only right after voting closed with a tie (not after a page refresh). */
   playTieAnimation: boolean;
   onContinue: () => void;
@@ -33,7 +33,7 @@ export function VoteResult({ drinkRound, progress, copy, playTieAnimation, onCon
 
   if (!isRevealed) {
     return (
-      <PlayScreen eyebrow={t("game.result.votingClosed")} title={copy.tieTitle}>
+      <PlayScreen eyebrow={t("game.result.votingClosed")} title={copy.tieTitle} screenId="vote-tie">
         <p className="animate-pulse font-display text-2xl italic text-gold" role="status">
           {copy.tieSubtitle}
         </p>
@@ -49,6 +49,7 @@ export function VoteResult({ drinkRound, progress, copy, playTieAnimation, onCon
     <PlayScreen
       eyebrow={t.plural("game.result.votesCounted", progress.votes.length)}
       title={copy.voteResultTitle}
+      screenId="vote-result"
       actions={
         <Button onClick={onContinue} fullWidth>
           {t("common.continue")}

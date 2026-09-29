@@ -29,6 +29,12 @@ export interface LocationProgress {
   wasTie: boolean;
   wrongAttempts: number;
   hintsRevealed: number;
+  /**
+   * True when the team asked to see the answer (possible after a few wrong
+   * attempts, so nobody gets stuck). The stop still counts as solved and
+   * still gives its clue. Never shown as a penalty.
+   */
+  answerRevealed: boolean;
   /** Only relevant for locations with a bonus challenge. */
   bonusStatus: "unanswered" | "solved" | "skipped";
   bonusWrongAttempts: number;
@@ -78,8 +84,10 @@ export type SessionAction =
   | { type: "COMPLETE_VISIT" }
   | { type: "SUBMIT_ANSWER"; answer: ChallengeAnswer }
   | { type: "REVEAL_HINT" }
+  | { type: "REVEAL_ANSWER" }
   | { type: "SUBMIT_BONUS_ANSWER"; answer: ChallengeAnswer }
   | { type: "SKIP_BONUS" }
   | { type: "SUBMIT_FINALE_ANSWER"; questionId: string; answer: ChallengeAnswer; at: string }
+  | { type: "REVEAL_FINALE_ANSWER"; questionId: string; at: string }
   /** `skipBonus`: pass over optional (bonus) stops, e.g. "continue the route" instead of a detour. */
   | { type: "CONTINUE_TO_NEXT_LOCATION"; at: string; skipBonus?: boolean };

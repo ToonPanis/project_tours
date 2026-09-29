@@ -1,8 +1,6 @@
 {
   "header": {
-    "stopProgress": "Tappa {current} / {total}",
     "clues": "Indizi {found} / {total}",
-    "ledger": "Registro",
     "route": "Percorso",
     "progressLabel": "Avanzamento della passeggiata",
     "stopCounter": "Tappa {current} / {total}"
@@ -11,12 +9,12 @@
     "newAdventure": "Inizia una nuova avventura",
     "welcomeBack": "Bentornato",
     "continueWalk": "Continua la passeggiata",
-    "restartPlaytest": "Ricomincia il test",
+    "startAgain": "Ricomincia",
     "savedAdventure": "Avventura salvata",
     "completed": "Completata",
     "stopOf": "Tappa {current} di {total}",
     "team": "Squadra: {team}",
-    "restartTitle": "Ricominciare il test?",
+    "restartTitle": "Ricominciare l'avventura?",
     "restartMessage": "Verranno cancellati i progressi salvati su questo telefono e si ricomincerà dalla prima tappa.",
     "restartConfirm": "Sì, ricomincia"
   },
@@ -85,7 +83,12 @@
     "yourClues": "I vostri indizi",
     "notPlayable": "Questo tipo di sfida non è ancora disponibile.",
     "hint": "Indizio {number}: ",
-    "needHint": "Ti serve un indizio?"
+    "needHint": "Ti serve un indizio?",
+    "revealOffer": "Siete bloccati? Potete vedere la risposta e continuare la passeggiata.",
+    "revealAnswer": "Mostra la risposta",
+    "answerIs": "La risposta: {answer}",
+    "wrongAttempts": "Risposte sbagliate: {count}",
+    "wrongOption": "risposta sbagliata"
   },
   "solved": {
     "correct": "Esatto",
@@ -136,7 +139,6 @@
     "discoveredClues": "Indizi scoperti · {found} / {total}",
     "clueLocked": "Indizio {number} · bloccato",
     "current": "In corso",
-    "extraStop": "Tappa extra",
     "skipped": "Saltata"
   },
   "copy": {

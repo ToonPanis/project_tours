@@ -3,24 +3,33 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useScreenFocus } from "@/hooks/useScreenFocus";
 import { useT } from "@/i18n/client";
+import { distanceInMeters } from "@/lib/geo";
 import type { WalkLocation } from "@/types/location";
 import type { GpsFix, WalkingRoute } from "@/types/navigation";
 import { useGeolocation } from "../hooks/useGeolocation";
 import { usePositionSimulation } from "../simulation/PositionSimulation";
 import { useWakeLock } from "../hooks/useWakeLock";
+import { NAVIGATION_CONFIG } from "../config";
 import { formatWalkingDistance } from "../logic/maneuver-display";
 import { getNavigationView } from "../logic/navigation-view";
-import { initialTracking, isLowAccuracy, trackFix, type NavigationTracking } from "../logic/tracking";
+import { hasWeakSignal, initialTracking, trackFix, type NavigationTracking } from "../logic/tracking";
 import { DirectionPanel } from "./DirectionPanel";
 import type { MapOrientation } from "./WalkingMap";
 
 // The map library is large and browser-only: load it only when this screen opens.
-// (The loading text is a neutral "…" because it can't know the walk's language.)
 const WalkingMap = dynamic(() => import("./WalkingMap"), {
   ssr: false,
-  loading: () => <div className="flex h-full items-center justify-center text-parchment/60">…</div>,
+  loading: () => <MapLoading />,
 });
+
+/** Shown while the map code downloads. (A component, so it can read the visitor's language.) */
+function MapLoading() {
+  const t = useT();
+  return <div className="flex h-full items-center justify-center text-parchment/70">{t("gps.mapLoading")}</div>;
+}
 
 type Phase = "intro" | "gps" | "manual";
 
@@ -74,9 +83,14 @@ export function NavigationScreen({
   // Playtest tools: a simulated position switches navigation to live mode.
   const { isActive: isSimulating } = usePositionSimulation();
   const phase: Phase = isSimulating && destinationCoordinates ? "gps" : chosenPhase;
+  // The explainer and the map each focus their title when they open (the button
+  // that was pressed disappears). GPS ↔ manual stays the same screen: no jump.
+  const headingRef = useScreenFocus(`${destination.id}:${phase === "intro" ? "intro" : "map"}`);
   const [tracking, setTracking] = useState<NavigationTracking>(initialTracking);
   const trackingRef = useRef(tracking);
   const [isFollowing, setIsFollowing] = useState(true);
+  // The distance shown in the "are you here?" question, frozen when it opens (null = closed).
+  const [confirmArrivalDistance, setConfirmArrivalDistance] = useState<number | null>(null);
   const [orientation, setOrientation] = useState<MapOrientation>("follow-direction");
 
   // Every GPS reading updates the tracking state; arrival is detected here.
@@ -94,7 +108,9 @@ export function NavigationScreen({
     [route, destinationCoordinates, onArrive],
   );
 
-  const { status } = useGeolocation({ enabled: phase === "gps", onFix: handleFix });
+  // Bumped by "Try again": restarts the GPS watch, so the browser can ask again.
+  const [gpsRestartKey, setGpsRestartKey] = useState(0);
+  const { status } = useGeolocation({ enabled: phase === "gps", onFix: handleFix, restartKey: gpsRestartKey });
   useWakeLock(phase === "gps");
 
   const externalMapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
@@ -106,7 +122,9 @@ export function NavigationScreen({
     return (
       <section className="flex flex-col gap-5 px-4 pb-6 pt-8">
         <p className="text-xs font-semibold uppercase tracking-[0.25em] text-gold">{t("gps.yourNextDestination")}</p>
-        <h1 className="font-display text-4xl font-semibold text-parchment">{destination.name}</h1>
+        <h1 ref={headingRef} tabIndex={-1} className="font-display text-4xl font-semibold text-parchment outline-none">
+          {destination.name}
+        </h1>
         <p className="text-parchment/80">{destination.address}</p>
         {route && (
           <p className="text-lg text-parchment">
@@ -147,23 +165,43 @@ export function NavigationScreen({
   const view = getNavigationView(fix, route, destination.name, destinationCoordinates, tracking);
   // Refused permission doesn't end navigation: the map stays, with a clear message.
   const isPermissionDenied = phase === "gps" && status === "permission-denied";
-  const gpsProblem = phase === "gps" && (status === "unavailable" || isPermissionDenied || isLowAccuracy(fix));
+  const gpsProblem = phase === "gps" && (status === "unavailable" || (status === "searching" && !tracking.fix) || isPermissionDenied || hasWeakSignal(tracking));
 
   function retryGps() {
     // Restart the GPS watch, which asks the browser again (if it still allows asking).
-    setPhase("manual");
-    setTimeout(() => setPhase("gps"), 0);
+    setGpsRestartKey((key) => key + 1);
   }
-  const showManualArrival = phase === "manual" || gpsProblem || !destinationCoordinates;
+  // "I'm here" is always available, so nobody can get stuck: GPS can report good
+  // accuracy while being wrong (narrow streets), or a stop's pin can be unreachable.
+  // With working GPS it's a secondary button: automatic arrival stays the main path.
+  const isManualArrivalPrimary = phase === "manual" || gpsProblem || !destinationCoordinates;
+  // A good GPS fix that is still far away: ask before moving on (an accidental tap
+  // can't be undone). With weak or no GPS the position can't be trusted, so no question.
+  const manualArrivalDistance =
+    fix && destinationCoordinates && !gpsProblem ? distanceInMeters(fix.coordinates, destinationCoordinates) : null;
+  function handleManualArrival() {
+    if (manualArrivalDistance !== null && manualArrivalDistance > NAVIGATION_CONFIG.MANUAL_ARRIVAL_CONFIRM_METERS) {
+      setConfirmArrivalDistance(manualArrivalDistance);
+    } else {
+      onArrive();
+    }
+  }
 
   return (
-    <section className="flex h-[calc(100dvh-9.5rem)] flex-col">
+    // min-h (not a fixed height): if the headers above wrap (long German/Russian titles),
+    // the screen grows instead of squeezing the map, and the sticky bottom bar stays visible.
+    <section className="flex min-h-[calc(100dvh-9.5rem)] flex-col">
       {/* Top: destination + remaining distance */}
       <div className="flex items-baseline justify-between gap-3 bg-ink px-4 py-2">
-        <p className="min-w-0 truncate font-display text-xl font-semibold text-parchment">
+        <h1
+          ref={headingRef}
+          tabIndex={-1}
+          className="min-w-0 truncate font-display text-xl font-semibold text-parchment outline-none"
+        >
+          <span className="sr-only">{t("gps.yourNextDestination")}: </span>
           <span aria-hidden="true" className="text-gold">★ </span>
           {destination.name}
-        </p>
+        </h1>
         {view.remainingMeters !== null && (
           <p className="shrink-0 text-lg font-semibold tabular-nums text-parchment">
             {formatWalkingDistance(view.remainingMeters, t)}
@@ -181,17 +219,31 @@ export function NavigationScreen({
       )}
 
       {/* Middle: the map */}
-      <div className="relative min-h-0 flex-1">
-        <WalkingMap
-          destination={{ name: destination.name, coordinates: destinationCoordinates }}
-          routeGeometry={route?.geometry ?? null}
-          userPosition={fix?.coordinates ?? null}
-          isFollowing={isFollowing}
-          orientation={orientation}
-          travelBearing={view.travelBearing}
-          onUserMovedMap={() => setIsFollowing(false)}
-          loadErrorText={t("gps.mapUnavailable")}
-        />
+      <div className="relative min-h-48 flex-1">
+        {/* absolute inset-0 gives the map a definite size inside the growing flex area. */}
+        <div className="absolute inset-0">
+          <WalkingMap
+            destination={{ name: destination.name, coordinates: destinationCoordinates }}
+            routeGeometry={route?.geometry ?? null}
+            userPosition={fix?.coordinates ?? null}
+            userAccuracyMeters={fix?.accuracyMeters ?? null}
+            isFollowing={isFollowing}
+            orientation={orientation}
+            travelBearing={view.travelBearing}
+            onUserMovedMap={() => setIsFollowing(false)}
+            regionLabel={t("gps.mapRegion", { name: destination.name })}
+            controlLabels={{
+              "NavigationControl.ZoomIn": t("gps.mapControls.zoomIn"),
+              "NavigationControl.ZoomOut": t("gps.mapControls.zoomOut"),
+              "AttributionControl.ToggleAttribution": t("gps.mapControls.toggleAttribution"),
+              "AttributionControl.MapFeedback": t("gps.mapControls.mapFeedback"),
+              "Map.Title": t("gps.mapControls.map"),
+              "Marker.Title": t("gps.mapControls.marker"),
+            }}
+            loadErrorText={t("gps.mapUnavailable")}
+            tilesFailingText={t("gps.mapTilesFailing")}
+          />
+        </div>
         {destinationCoordinates ? (
           <>
             <div className="absolute right-3 top-3 flex flex-col gap-2">
@@ -199,7 +251,7 @@ export function NavigationScreen({
                 label={orientation === "north-up" ? t("gps.followDirection") : t("gps.northUp")}
                 onClick={() => setOrientation((current) => (current === "north-up" ? "follow-direction" : "north-up"))}
               >
-                {orientation === "north-up" ? "N" : "➤"}
+                {orientation === "north-up" ? t("gps.northShort") : "➤"}
               </MapButton>
               {!isFollowing && (
                 <MapButton label={t("gps.recenter")} onClick={() => setIsFollowing(true)}>
@@ -217,8 +269,8 @@ export function NavigationScreen({
         )}
       </div>
 
-      {/* Bottom: GPS status + fallbacks */}
-      <div className="flex flex-col gap-2 bg-ink px-4 py-3">
+      {/* Bottom: GPS status + fallbacks. Sticky, so "I'm here" is always on screen. */}
+      <div className="sticky bottom-0 z-10 flex flex-col gap-2 bg-ink px-4 py-3">
         {isPermissionDenied && (
           <div role="alert" className="flex flex-col gap-1 text-sm text-yellow-300">
             <p>
@@ -235,16 +287,19 @@ export function NavigationScreen({
             {t("gps.gpsUnavailable")}
           </p>
         )}
-        {phase === "gps" && isLowAccuracy(fix) && (
+        {phase === "gps" && status === "searching" && !tracking.fix && (
+          <p role="status" className="text-sm text-yellow-300">
+            {t("gps.stillSearching")}
+          </p>
+        )}
+        {phase === "gps" && hasWeakSignal(tracking) && (
           <p role="status" className="text-sm text-yellow-300">
             <strong>{t("gps.gpsWeak")}</strong> {t("gps.gpsWeakDetail")}
           </p>
         )}
-        {showManualArrival && (
-          <Button onClick={onArrive} fullWidth>
-            {phase === "manual" || !destinationCoordinates ? t("gps.arrived") : t("gps.imHere")}
-          </Button>
-        )}
+        <Button onClick={handleManualArrival} variant={isManualArrivalPrimary ? "primary" : "outline"} fullWidth>
+          {phase === "manual" || !destinationCoordinates ? t("gps.arrived") : t("gps.imHere")}
+        </Button>
         <div className="flex justify-between text-sm">
           <button type="button" onClick={onShowRoute} className="min-h-11 text-gold underline underline-offset-4">
             {t("gps.showRoute")}
@@ -254,6 +309,19 @@ export function NavigationScreen({
           </a>
         </div>
       </div>
+      <ConfirmDialog
+        open={confirmArrivalDistance !== null}
+        title={t("gps.confirmArrival.title", { name: destination.name })}
+        message={t("gps.confirmArrival.message", {
+          distance: formatWalkingDistance(confirmArrivalDistance ?? 0, t),
+        })}
+        confirmLabel={t("gps.confirmArrival.confirm")}
+        onConfirm={() => {
+          setConfirmArrivalDistance(null);
+          onArrive();
+        }}
+        onCancel={() => setConfirmArrivalDistance(null)}
+      />
     </section>
   );
 }

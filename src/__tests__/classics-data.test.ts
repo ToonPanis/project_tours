@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { describe, expect, test } from "vitest";
 import { classicsOfAntwerpWalk } from "@/data/walks/classics-of-antwerp";
 import { getReadingMinutes } from "@/features/guide/logic/reading-time";
-import { getOrderedLocations } from "@/features/walk-session/logic/route";
+import { getOrderedLocations } from "@/lib/walk-locations";
 
 const locations = getOrderedLocations(classicsOfAntwerpWalk);
 

@@ -8,6 +8,7 @@
   "previous": "Indietro",
   "submit": "Verifica",
   "yourAnswer": "La tua risposta",
+  "labelValue": "{label}: {value}",
   "units": {
     "meters": "{value} m",
     "kilometers": "{value} km",

@@ -77,11 +77,11 @@
   "finishWithoutDetour": "Finish the walk here",
   "chapter": "Part {number}",
   "chapterOf": "Part {number} / {total}",
-  "collection": "Collection",
   "notOnRoute": "Not on the route",
   "distance": "Distance",
   "time": "Time",
   "viewRoute": "View the route",
   "discoverAnotherWalk": "Discover another walk",
-  "unknownArtist": "Unknown"
+  "unknownArtist": "Unknown",
+  "stopUnavailable": "The story for this stop isn't available right now. You can simply continue the walk."
 }

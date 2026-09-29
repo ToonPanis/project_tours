@@ -1,8 +1,6 @@
 {
   "header": {
-    "stopProgress": "Stop {current} / {total}",
     "clues": "Clues {found} / {total}",
-    "ledger": "Ledger",
     "route": "Route",
     "progressLabel": "Walk progress",
     "stopCounter": "Stop {current} / {total}"
@@ -11,12 +9,12 @@
     "newAdventure": "Start new adventure",
     "welcomeBack": "Welcome back",
     "continueWalk": "Continue walk",
-    "restartPlaytest": "Restart playtest",
+    "startAgain": "Start again",
     "savedAdventure": "Saved adventure",
     "completed": "Completed",
     "stopOf": "Stop {current} of {total}",
     "team": "Team: {team}",
-    "restartTitle": "Restart the playtest?",
+    "restartTitle": "Start the adventure again?",
     "restartMessage": "This deletes the saved progress on this phone and starts again from the first stop.",
     "restartConfirm": "Yes, restart"
   },
@@ -85,7 +83,12 @@
     "yourClues": "Your clues",
     "notPlayable": "This challenge type can't be played yet.",
     "hint": "Hint {number}: ",
-    "needHint": "Need a hint?"
+    "needHint": "Need a hint?",
+    "revealOffer": "Stuck? You can see the answer and carry on with the walk.",
+    "revealAnswer": "Show the answer",
+    "answerIs": "The answer: {answer}",
+    "wrongAttempts": "Wrong answers: {count}",
+    "wrongOption": "wrong answer"
   },
   "solved": {
     "correct": "Correct",
@@ -136,7 +139,6 @@
     "discoveredClues": "Discovered clues · {found} / {total}",
     "clueLocked": "Clue {number} · locked",
     "current": "Current",
-    "extraStop": "Extra stop",
     "skipped": "Skipped"
   },
   "copy": {

@@ -29,6 +29,7 @@ export const hiddenPubsContentEn: HiddenPubsContent = {
       clueCollectedTitle: "The ledger has changed",
       locationsTitle: "Taverns",
       locationsDiscoveredLabel: "taverns discovered",
+      routeButtonLabel: "Ledger",
     },
     narrative: {
       title: "The Lost Tavern Ledger",

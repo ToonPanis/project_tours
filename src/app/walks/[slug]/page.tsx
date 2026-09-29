@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { baseOpenGraph } from "@/lib/shared-metadata";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
@@ -14,28 +15,25 @@ import { WalkPracticalInfo } from "@/features/walks/components/WalkPracticalInfo
 import { WalkStats } from "@/features/walks/components/WalkStats";
 import { formatPrice } from "@/features/walks/utils/format-walk";
 import { getHowItWorksSteps } from "@/features/walks/utils/walk-content";
-import { getGameCopy } from "@/features/walk-session/logic/game-copy";
+import { getWalkCopy } from "@/features/walk-session/logic/walk-copy";
 import { getTranslator } from "@/i18n/server";
-import { walkRepository } from "@/lib/repositories";
+import { getWalk } from "@/lib/repositories";
 
-// Pre-render a page for every known walk at build time.
-export async function generateStaticParams() {
-  const walks = await walkRepository.getAllWalks();
-  return walks.map((walk) => ({ slug: walk.slug }));
-}
+// No generateStaticParams: these pages read the language cookie, so Next.js renders
+// them per request (in the visitor's language) instead of at build time.
 
 export async function generateMetadata({
   params,
 }: PageProps<"/walks/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const t = await getTranslator();
-  const walk = await walkRepository.getWalkBySlug(slug, t.locale);
+  const walk = await getWalk(slug, t.locale);
   if (!walk) return { title: t("meta.walkNotFound") };
 
   return {
     title: walk.title,
     description: walk.shortDescription,
-    openGraph: { title: walk.title, description: walk.shortDescription },
+    openGraph: { ...baseOpenGraph(t.locale), title: walk.title, description: walk.shortDescription },
   };
 }
 
@@ -43,7 +41,7 @@ export default async function WalkDetailPage({ params }: PageProps<"/walks/[slug
   // In this Next.js version, `params` is a Promise and must be awaited.
   const { slug } = await params;
   const t = await getTranslator();
-  const walk = await walkRepository.getWalkBySlug(slug, t.locale);
+  const walk = await getWalk(slug, t.locale);
 
   // Renders the nearest not-found.tsx (./not-found.tsx).
   if (!walk) notFound();
@@ -64,10 +62,10 @@ export default async function WalkDetailPage({ params }: PageProps<"/walks/[slug
           <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
         </div>
         <div className="relative mx-auto -mt-24 max-w-3xl px-4 pb-6 sm:px-6">
-          <Link href="/walks" className="text-sm text-gold underline-offset-4 hover:underline">
+          <Link href="/walks" className="inline-flex min-h-11 items-center text-sm text-gold underline-offset-4 hover:underline">
             {t("walks.detail.allWalks")}
           </Link>
-          <h1 className="mt-2 font-display text-4xl font-semibold leading-tight text-parchment sm:text-5xl">
+          <h1 className="font-display text-4xl font-semibold leading-tight text-parchment sm:text-5xl">
             {walk.title}
           </h1>
           <p className="mt-1 text-lg italic text-gold">{walk.tagline}</p>
@@ -114,7 +112,7 @@ export default async function WalkDetailPage({ params }: PageProps<"/walks/[slug
               {t("walks.detail.perTeam")}
             </p>
           </div>
-          <ButtonLink href={`/walks/${walk.slug}/play`}>{getGameCopy(walk, t).startLabel}</ButtonLink>
+          <ButtonLink href={`/walks/${walk.slug}/play`}>{getWalkCopy(walk, t).startLabel}</ButtonLink>
         </section>
 
         {walk.highlights && walk.highlights.length > 0 && (

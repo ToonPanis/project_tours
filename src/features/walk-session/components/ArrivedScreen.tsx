@@ -25,6 +25,7 @@ export function ArrivedScreen({
       <PlayScreen
         eyebrow={t("game.arrived.eyebrow")}
         title={location.name}
+        screenId={`arrived-${location.id}`}
         actions={
           <Button onClick={onContinue} fullWidth>
             {t("common.continue")}
@@ -38,6 +39,7 @@ export function ArrivedScreen({
     <PlayScreen
       eyebrow={t("game.arrived.eyebrow")}
       title={location.name}
+      screenId={`arrived-${location.id}`}
       actions={
         <>
           <Button onClick={onStartVote} fullWidth>

@@ -1,16 +1,16 @@
-import { englishTranslator, type Translator } from "@/i18n/translate";
+import type { Translator } from "@/i18n/translate";
 import type { WalkNarrative } from "@/types/walk";
 
 interface WalkNarrativeTeaserProps {
   narrative: WalkNarrative;
-  t?: Translator;
+  t: Translator;
 }
 
 /**
  * The walk's fictional storyline. Always labelled as fiction, so it's never
  * confused with real history.
  */
-export function WalkNarrativeTeaser({ narrative, t = englishTranslator }: WalkNarrativeTeaserProps) {
+export function WalkNarrativeTeaser({ narrative, t }: WalkNarrativeTeaserProps) {
   return (
     <section
       aria-labelledby="narrative-heading"

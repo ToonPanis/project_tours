@@ -15,12 +15,12 @@
  * a valid User-Agent. See https://routing.openstreetmap.de/about.html
  */
 import { readFile, writeFile } from "node:fs/promises";
+import { fetchWithRetry, readWalkFolderArg, USER_AGENT_CONTACT } from "./lib/script-utils.mjs";
 
-const walk = process.argv[2];
-if (!walk) throw new Error("Usage: node scripts/generate-walking-routes.mjs <walk-folder>");
+const walk = readWalkFolderArg(process.argv[2], "node scripts/generate-walking-routes.mjs <walk-folder>");
 const DATA_DIR = new URL(`../src/data/walks/${walk}/`, import.meta.url);
 const ROUTER_URL = "https://routing.openstreetmap.de/routed-foot/route/v1/foot";
-const USER_AGENT = "HiddenAntwerp-route-generator/0.1 (student prototype)";
+const USER_AGENT = `HiddenAntwerp-route-generator/0.1 (${USER_AGENT_CONTACT})`;
 
 const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
@@ -28,8 +28,8 @@ async function fetchWalkingRoute(from, to) {
   const url =
     `${ROUTER_URL}/${from.longitude},${from.latitude};${to.longitude},${to.latitude}` +
     "?overview=full&geometries=geojson&steps=true";
-  const response = await fetch(url, { headers: { "User-Agent": USER_AGENT } });
-  if (!response.ok) throw new Error(`Router answered ${response.status} for ${from.name} → ${to.name}`);
+  // Retries temporary errors (busy router, network); a timeout never hangs the script.
+  const response = await fetchWithRetry(url, { headers: { "User-Agent": USER_AGENT } });
 
   const data = await response.json();
   if (data.code !== "Ok" || !data.routes?.[0]) throw new Error(`No route for ${from.name} → ${to.name}`);
@@ -51,6 +51,14 @@ async function fetchWalkingRoute(from, to) {
 }
 
 const { locations } = JSON.parse(await readFile(new URL("coordinates.json", DATA_DIR), "utf8"));
+
+// A stop without coordinates can't be routed: fail clearly instead of asking the router for "null,null".
+const missing = locations.filter(
+  (location) => !Number.isFinite(location.latitude) || !Number.isFinite(location.longitude),
+);
+if (missing.length > 0) {
+  throw new Error(`No coordinates yet for: ${missing.map((location) => location.id).join(", ")}. Add them to coordinates.json first.`);
+}
 const legs = [];
 
 // Every consecutive pair, plus a bypass around each optional stop.

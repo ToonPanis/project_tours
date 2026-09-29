@@ -1,9 +1,10 @@
-import { distanceInMeters } from "@/lib/geo";
+import { bearingInDegrees, distanceInMeters } from "@/lib/geo";
 import type { GeoCoordinates } from "@/types/common";
 import type { GpsFix, Maneuver, WalkingRoute } from "@/types/navigation";
 import type { DirectionInstruction } from "../components/DirectionPanel";
 import { NAVIGATION_CONFIG } from "../config";
 import { isOffRoute } from "./arrival";
+import { getTravelHeading } from "./compass";
 import { getRouteProgress } from "./route-progress";
 import type { NavigationTracking } from "./tracking";
 
@@ -33,11 +34,19 @@ export function getNavigationView(
   }
 
   const directDistance = distanceInMeters(fix.coordinates, destination);
+  // Straight towards the destination, with a direction to walk in.
+  const headTo: DirectionInstruction = {
+    kind: "head-to-destination",
+    destinationName,
+    distanceMeters: directDistance,
+    bearingDegrees: bearingInDegrees(fix.coordinates, destination),
+    travelHeadingDegrees: getTravelHeading(fix),
+  };
 
   // No route (e.g. the first stop): head straight for the destination.
   if (!route) {
     return {
-      instruction: { kind: "head-to-destination", destinationName, distanceMeters: directDistance },
+      instruction: headTo,
       remainingMeters: directDistance,
       travelBearing: null,
     };
@@ -45,10 +54,14 @@ export function getNavigationView(
 
   const progress = getRouteProgress(route, fix.coordinates);
 
-  // Far away from the route: the route no longer helps, point at the café.
-  if (progress.distanceFromRouteMeters > NAVIGATION_CONFIG.FAR_FROM_ROUTE_METERS) {
+  // Far away from the route (confirmed over several readings, so one GPS jump
+  // doesn't switch modes): the route no longer helps, point at the destination.
+  if (
+    progress.distanceFromRouteMeters > NAVIGATION_CONFIG.FAR_FROM_ROUTE_METERS &&
+    tracking.farFromRouteCount >= NAVIGATION_CONFIG.FAR_FROM_ROUTE_CONFIRMATIONS
+  ) {
     return {
-      instruction: { kind: "head-to-destination", destinationName, distanceMeters: directDistance },
+      instruction: headTo,
       remainingMeters: directDistance,
       travelBearing: null,
     };
@@ -72,7 +85,7 @@ export function getNavigationView(
           distanceMeters: progress.distanceToNextStepMeters,
           streetName: nextStep.streetName,
         }
-      : { kind: "head-to-destination", destinationName, distanceMeters: directDistance },
+      : headTo,
     thenManeuver: progress.stepAfterNext?.maneuver,
     thenAfterMeters: progress.stepAfterNext ? nextStep?.distanceMeters : undefined,
     remainingMeters: progress.remainingMeters,

@@ -12,13 +12,17 @@
   "continueWithoutGps": "Verder zonder live gps",
   "permissionTitle": "Toegang tot locatie nodig",
   "permissionBody": "Zonder je locatie kunnen we je positie niet op de kaart tonen; de kaart en de route blijven wel zichtbaar.",
-  "permissionHelp": "Vraagt je browser het niet opnieuw? Sta locatie voor deze site toe in de instellingen van je browser.",
+  "permissionHelp": "Vraagt je browser het niet opnieuw? Sta locatie voor deze site toe in de instellingen van je browser. Controleer ook in de instellingen van je telefoon of locatie aan staat voor je browser.",
   "tryAgain": "Opnieuw proberen",
   "followDirection": "Volg looprichting",
   "northUp": "Noorden boven",
+  "northShort": "N",
   "recenter": "Centreren",
   "notOnMap": "Deze plek staat nog niet op de kaart.",
   "mapUnavailable": "De kaart kon niet geladen worden (geen verbinding, of deze browser kan geen kaarten tonen). De richtingaanwijzingen en de externe kaart werken nog.",
+  "mapTilesFailing": "Een deel van de kaart kan nu niet geladen worden (zwakke verbinding?). De richtingaanwijzingen hieronder werken nog.",
+  "mapRegion": "Kaart: route naar {name}",
+  "mapLoading": "Kaart laden…",
   "gpsUnavailable": "Gps is hier niet beschikbaar. Locatie vraagt een beveiligde (https) pagina en ingeschakelde locatievoorzieningen.",
   "gpsWeak": "Zwak gps-signaal.",
   "gpsWeakDetail": "Je positie kan minder nauwkeurig zijn.",
@@ -48,5 +52,30 @@
     "u-turn": "Keer om",
     "roundabout": "Neem de rotonde",
     "arrive": "Bestemming vlakbij"
+  },
+  "confirmArrival": {
+    "title": "Ben je bij {name}?",
+    "message": "Volgens je gps ben je nog ongeveer {distance} verwijderd. Toch doorgaan naar deze stop?",
+    "confirm": "Ja, ik ben hier"
+  },
+  "stillSearching": "Je positie wordt nog gezocht. Buiten, met zicht op de lucht, gaat dat sneller.",
+  "direction": "Richting: {direction}",
+  "compass": {
+    "n": "noord",
+    "ne": "noordoost",
+    "e": "oost",
+    "se": "zuidoost",
+    "s": "zuid",
+    "sw": "zuidwest",
+    "w": "west",
+    "nw": "noordwest"
+  },
+  "mapControls": {
+    "zoomIn": "Inzoomen",
+    "zoomOut": "Uitzoomen",
+    "toggleAttribution": "Kaartbronnen tonen of verbergen",
+    "mapFeedback": "Feedback over de kaart",
+    "map": "Kaart",
+    "marker": "Kaartmarkering"
   }
 }

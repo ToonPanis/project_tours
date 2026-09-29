@@ -1,5 +1,5 @@
 import type { GlossaryTerm, GuideClosing, GuideIntro, GuideSection, InfoBox, LookAtItem } from "@/types/guide";
-import type { GameCopy, PracticalInfoItem } from "@/types/walk";
+import type { WalkCopy, PracticalInfoItem } from "@/types/walk";
 
 /**
  * Everything in "Poortjes van Antwerpen" that is written in a language.
@@ -99,7 +99,7 @@ export interface PoortjesContent {
     howItWorksSteps: string[];
     practicalInfo: PracticalInfoItem[];
     guideIntro: GuideIntro;
-    copy: Partial<GameCopy>;
+    copy: Partial<WalkCopy>;
     collection: { title: string; intro: string; sourceNote: string };
   };
   chapters: ChapterText[];

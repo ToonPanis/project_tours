@@ -1,7 +1,7 @@
-import { englishTranslator, type Translator } from "@/i18n/translate";
+import type { Translator } from "@/i18n/translate";
 import type { WalkSession } from "@/types/session";
 import type { Walk } from "@/types/walk";
-import { getOrderedLocations } from "./route";
+import { getOrderedLocations } from "@/lib/walk-locations";
 
 export interface SessionStats {
   /** 1-based number of the current stop, counting main stops only. */
@@ -42,7 +42,7 @@ export function getSessionStats(walk: Walk, session: WalkSession): SessionStats 
 }
 
 /** 10_020_000 ms → "2h 47m", 300_000 ms → "5m" (in the translator's language). */
-export function formatElapsedTime(milliseconds: number, t: Translator = englishTranslator): string {
+export function formatElapsedTime(milliseconds: number, t: Translator): string {
   const totalMinutes = Math.max(0, Math.floor(milliseconds / 60_000));
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
@@ -51,7 +51,12 @@ export function formatElapsedTime(milliseconds: number, t: Translator = englishT
     : t("common.units.elapsedMinutes", { minutes });
 }
 
-export function getElapsedTime(session: WalkSession, now: Date, t: Translator = englishTranslator): string {
+/** "Tony, Sarah and Jan" / "Tony, Sarah en Jan": the team's names, joined the way the language does it. */
+export function formatPlayerNames(players: { name: string }[], t: Translator): string {
+  return new Intl.ListFormat(t.locale, { type: "conjunction" }).format(players.map((player) => player.name));
+}
+
+export function getElapsedTime(session: WalkSession, now: Date, t: Translator): string {
   const end = session.completedAt ? new Date(session.completedAt) : now;
   return formatElapsedTime(end.getTime() - new Date(session.startedAt).getTime(), t);
 }

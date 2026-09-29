@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SITE_NAME } from "@/lib/site";
 import { getTranslator } from "@/i18n/server";
 
 export async function SiteFooter() {
@@ -8,7 +9,7 @@ export async function SiteFooter() {
     <footer className="border-t border-gold/20 bg-ink text-parchment/70">
       <div className="mx-auto flex max-w-5xl flex-col gap-2 px-4 py-8 text-sm sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <p>
-          <span className="font-display text-base text-parchment">Hidden Antwerp</span>
+          <span className="font-display text-base text-parchment">{SITE_NAME}</span>
           {" · "}
           {t("navigation.footerTagline")}
         </p>

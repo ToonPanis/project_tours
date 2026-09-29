@@ -1,3 +1,4 @@
+import { englishTranslator as t } from "@/i18n/translate";
 import { afterEach, describe, expect, test } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import { WalkCard } from "@/features/walks/components/WalkCard";
@@ -24,14 +25,14 @@ const exampleWalk: WalkSummary = {
 
 describe("WalkCard", () => {
   test("links the title to the walk detail page", () => {
-    render(<WalkCard walk={exampleWalk} />);
+    render(<WalkCard walk={exampleWalk} t={t} />);
 
     const link = screen.getByRole("link", { name: "Test Walk" });
     expect(link.getAttribute("href")).toBe("/walks/test-walk");
   });
 
   test("shows key facts about the walk", () => {
-    render(<WalkCard walk={exampleWalk} />);
+    render(<WalkCard walk={exampleWalk} t={t} />);
 
     expect(screen.getByText("5 stops")).toBeDefined();
     expect(screen.getByText(/1–2 h/)).toBeDefined();
@@ -39,24 +40,24 @@ describe("WalkCard", () => {
   });
 
   test("hides the distance while it is still unknown", () => {
-    render(<WalkCard walk={{ ...exampleWalk, distanceInMeters: null }} />);
+    render(<WalkCard walk={{ ...exampleWalk, distanceInMeters: null }} t={t} />);
 
     expect(screen.queryByText(/km/)).toBeNull();
     expect(screen.queryByText(/To be confirmed/)).toBeNull();
   });
 
   test("applies the walk's visual theme", () => {
-    render(<WalkCard walk={{ ...exampleWalk, theme: "tavern" }} />);
+    render(<WalkCard walk={{ ...exampleWalk, theme: "tavern" }} t={t} />);
 
     const card = screen.getByRole("article");
     expect(card.getAttribute("data-walk-theme")).toBe("tavern");
   });
 
   test("only shows the preview badge for placeholder content", () => {
-    const { rerender } = render(<WalkCard walk={exampleWalk} />);
+    const { rerender } = render(<WalkCard walk={exampleWalk} t={t} />);
     expect(screen.queryByText("Preview content")).toBeNull();
 
-    rerender(<WalkCard walk={{ ...exampleWalk, contentStatus: "placeholder" }} />);
+    rerender(<WalkCard walk={{ ...exampleWalk, contentStatus: "placeholder" }} t={t} />);
     expect(screen.getByText("Preview content")).toBeDefined();
   });
 });

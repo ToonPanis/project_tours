@@ -8,6 +8,9 @@ import { useChangeLocale, useLocale, useT } from "@/i18n/client";
  * 🌐 EN ▾: a small language menu in the header. Every language is shown in
  * its own language ("Deutsch", not "German"), so visitors always recognise
  * theirs. The choice is remembered (cookie + localStorage).
+ *
+ * A disclosure (a button that shows a list of buttons), not an ARIA menu: the
+ * list is reached with Tab like any other buttons, and closes when focus leaves it.
  */
 export function LanguageSelector() {
   const t = useT();
@@ -44,14 +47,23 @@ export function LanguageSelector() {
   }
 
   return (
-    <div ref={containerRef} className="relative">
+    <div
+      ref={containerRef}
+      className="relative"
+      // Close when keyboard focus moves to something outside (e.g. Tab past the last language).
+      // No relatedTarget means focus went nowhere, e.g. iOS Safari doesn't focus a tapped
+      // button: don't close then, or the tap on a language would be lost.
+      onBlur={(event) => {
+        const next = event.relatedTarget;
+        if (next && !containerRef.current?.contains(next)) setIsOpen(false);
+      }}
+    >
       <button
         ref={buttonRef}
         type="button"
-        aria-haspopup="true"
         aria-expanded={isOpen}
         aria-controls={menuId}
-        aria-label={`${t("navigation.language")}: ${localeNames[currentLocale].nativeName}`}
+        aria-label={t("common.labelValue", { label: t("navigation.language"), value: localeNames[currentLocale].nativeName })}
         onClick={() => setIsOpen((open) => !open)}
         className="flex min-h-11 items-center gap-1.5 rounded-sm px-2 text-sm font-semibold uppercase tracking-wider text-parchment/85 transition-colors hover:text-gold focus-visible:outline-2 focus-visible:outline-gold"
       >

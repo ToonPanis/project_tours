@@ -1,19 +1,25 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { formatWalkingDistance } from "@/features/navigation/logic/maneuver-display";
+import { formatDistance } from "@/features/walks/utils/format-walk";
 import { getSessionStats } from "@/features/walk-session/logic/session-stats";
-import { englishTranslator, type Translator } from "@/i18n/translate";
+import type { Translator } from "@/i18n/translate";
 import type { WalkSession } from "@/types/session";
 import type { Walk } from "@/types/walk";
 
 interface GuideStartScreenProps {
   walk: Walk;
   savedSession: WalkSession | null;
-  t?: Translator;
+  /**
+   * True until the saved walk has been read (in the browser, after the first render).
+   * The hero already shows, so the page isn't blank while JavaScript loads, but the
+   * buttons wait: starting before the save is known could overwrite it.
+   */
+  isLoading?: boolean;
+  t: Translator;
   onStart: () => void;
   onContinue: () => void;
   onRestart: () => void;
@@ -25,13 +31,34 @@ function getApproximateHours(minMinutes: number, maxMinutes: number): number {
 }
 
 /** The hero screen of a guide walk. */
-export function GuideStartScreen({ walk, savedSession, t = englishTranslator, onStart, onContinue, onRestart }: GuideStartScreenProps) {
+export function GuideStartScreen({
+  walk,
+  savedSession,
+  isLoading = false,
+  t,
+  onStart,
+  onContinue,
+  onRestart,
+}: GuideStartScreenProps) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  // The entry screen: after a page load, focus follows the browser's normal order
+  // (skip link, header…). Only after "start again", whose buttons disappear, the
+  // title takes the focus.
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const focusTitleAfterCloseRef = useRef(false);
+
+  // Runs after the dialog's own effect has closed it (while a modal is open, the page
+  // behind it can't take focus).
+  useEffect(() => {
+    if (isConfirmOpen || !focusTitleAfterCloseRef.current) return;
+    focusTitleAfterCloseRef.current = false;
+    headingRef.current?.focus();
+  }, [isConfirmOpen]);
   const intro = walk.guideIntro;
 
   const stats = [
     { icon: "⏱", label: t.plural("guide.hours", getApproximateHours(walk.estimatedDuration.minMinutes, walk.estimatedDuration.maxMinutes)) },
-    ...(walk.distanceInMeters ? [{ icon: "🚶", label: `± ${formatWalkingDistance(walk.distanceInMeters, t)}` }] : []),
+    ...(walk.distanceInMeters ? [{ icon: "🚶", label: `± ${formatDistance(walk.distanceInMeters, t)}` }] : []),
     { icon: "📍", label: t.plural("guide.stops", walk.locations.filter((location) => !location.isBonus).length) },
     ...(intro ? [{ icon: "🏛", label: intro.categoryLabel }] : []),
   ];
@@ -53,7 +80,13 @@ export function GuideStartScreen({ walk, savedSession, t = englishTranslator, on
 
       <div className="relative flex flex-col gap-5 px-5 pb-8 pt-40">
         <div>
-          <h1 className="font-display text-5xl font-semibold uppercase leading-none tracking-wide">{walk.title}</h1>
+          <h1
+            ref={headingRef}
+            tabIndex={-1}
+            className="font-display text-5xl font-semibold uppercase leading-none tracking-wide outline-none"
+          >
+            {walk.title}
+          </h1>
           <p className="mt-2 font-display text-2xl italic text-gold">{walk.tagline}</p>
         </div>
 
@@ -68,7 +101,11 @@ export function GuideStartScreen({ walk, savedSession, t = englishTranslator, on
           ))}
         </ul>
 
-        {savedSession ? (
+        {isLoading ? (
+          <Button disabled aria-busy="true" fullWidth>
+            {t("common.loading")}
+          </Button>
+        ) : savedSession ? (
           <div className="flex flex-col gap-3">
             <Button onClick={onContinue} fullWidth>
               {savedSession.completedAt
@@ -93,8 +130,10 @@ export function GuideStartScreen({ walk, savedSession, t = englishTranslator, on
         title={t("guide.startAgainTitle")}
         message={t("guide.startAgainMessage")}
         confirmLabel={t("guide.startAgainConfirm")}
+        isDestructive
         onConfirm={() => {
           setIsConfirmOpen(false);
+          focusTitleAfterCloseRef.current = true;
           onRestart();
         }}
         onCancel={() => setIsConfirmOpen(false)}

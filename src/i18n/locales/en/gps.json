@@ -12,13 +12,17 @@
   "continueWithoutGps": "Continue without live GPS",
   "permissionTitle": "Location access needed",
   "permissionBody": "Without your location we can't show where you are; the map and the route stay visible.",
-  "permissionHelp": "If your browser doesn't ask again, allow location for this site in your browser settings.",
+  "permissionHelp": "If your browser doesn't ask again, allow location for this site in your browser settings. Also check that location is switched on for your browser in your phone's settings.",
   "tryAgain": "Try again",
   "followDirection": "Follow direction",
   "northUp": "North up",
+  "northShort": "N",
   "recenter": "Recenter",
   "notOnMap": "This location isn't on the map yet.",
   "mapUnavailable": "The map couldn't be loaded (no connection, or this browser can't show maps). The directions and the external map still work.",
+  "mapTilesFailing": "Part of the map can't be loaded right now (weak connection?). The directions below still work.",
+  "mapRegion": "Map: route to {name}",
+  "mapLoading": "Loading map…",
   "gpsUnavailable": "GPS isn't available here. Location needs a secure (https) page and location services turned on.",
   "gpsWeak": "GPS signal is weak.",
   "gpsWeakDetail": "Your position may be less accurate.",
@@ -48,5 +52,30 @@
     "u-turn": "Turn around",
     "roundabout": "Take the roundabout",
     "arrive": "Destination ahead"
+  },
+  "confirmArrival": {
+    "title": "Are you at {name}?",
+    "message": "Your GPS shows you're still about {distance} away. Continue to this stop anyway?",
+    "confirm": "Yes, I'm here"
+  },
+  "stillSearching": "Still looking for your position. Outdoors, with a view of the sky, this goes faster.",
+  "direction": "Direction: {direction}",
+  "compass": {
+    "n": "north",
+    "ne": "north-east",
+    "e": "east",
+    "se": "south-east",
+    "s": "south",
+    "sw": "south-west",
+    "w": "west",
+    "nw": "north-west"
+  },
+  "mapControls": {
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "toggleAttribution": "Show or hide map credits",
+    "mapFeedback": "Map feedback",
+    "map": "Map",
+    "marker": "Map marker"
   }
 }

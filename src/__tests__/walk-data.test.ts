@@ -4,6 +4,7 @@ import { getDrinkLabel } from "@/features/walk-session/logic/drink-label";
 import { hasUnverifiedContent } from "@/features/walks/utils/walk-content";
 import { locales } from "@/i18n/config";
 import { createTranslator } from "@/i18n/translate";
+import { validateWalk } from "@/lib/validate-walk";
 
 /**
  * Integrity checks that run against EVERY walk in `src/data/walks`, in every
@@ -16,6 +17,10 @@ const walksInEveryLanguage = locales.flatMap((locale) =>
 describe.each(walksInEveryLanguage)("walk data: %s", (_name, walk, locale) => {
   const locationIds = walk.locations.map((location) => location.id);
   const clueIds = (walk.clues ?? []).map((clue) => clue.id);
+
+  test("passes the structural checks every walk must pass (validateWalk)", () => {
+    expect(validateWalk(walk)).toEqual([]);
+  });
 
   test("has unique location ids and stop numbers", () => {
     expect(new Set(locationIds).size).toBe(locationIds.length);

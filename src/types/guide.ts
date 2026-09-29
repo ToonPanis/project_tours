@@ -68,6 +68,8 @@ export interface CollectionItem {
   stopId: string | null;
   /** Literal transcription of the caption in the source. */
   sourceCaption: string;
+  /** Language of `sourceCaption` (it is quoted, never translated), e.g. "nl". Rendered as `lang`. */
+  sourceCaptionLanguage?: string;
   /** Extra explanation, e.g. "The house number has changed since 1951". */
   note?: string;
   verification: VerificationStatus;

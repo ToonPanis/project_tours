@@ -47,7 +47,7 @@ export type RouteReveal = "all" | "progressive";
  * Flavour text used during play. Walks can override any line
  * (e.g. "The tavern has spoken."); defaults live in the walk-session feature.
  */
-export interface GameCopy {
+export interface WalkCopy {
   voteResultTitle: string;
   tieTitle: string;
   tieSubtitle: string;
@@ -65,6 +65,8 @@ export interface GameCopy {
   locationsTitle: string;
   /** Completion stat label, e.g. "taverns discovered". */
   locationsDiscoveredLabel: string;
+  /** The button that opens the route panel, e.g. "Route", or "Ledger" in Hidden Pubs. */
+  routeButtonLabel: string;
 }
 
 /**
@@ -120,7 +122,7 @@ export interface Walk extends Omit<WalkSummary, "locationCount"> {
   languages: LanguageCode[];
   routeReveal: RouteReveal;
   team: TeamSize;
-  copy?: Partial<GameCopy>;
+  copy?: Partial<WalkCopy>;
   narrative?: WalkNarrative;
   /** "What to expect" bullet points. */
   highlights?: string[];

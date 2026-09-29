@@ -5,23 +5,23 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import type { WalkSession } from "@/types/session";
-import type { GameCopy, Walk } from "@/types/walk";
-import { getElapsedTime, getSessionStats } from "../logic/session-stats";
+import type { WalkCopy, Walk } from "@/types/walk";
+import { formatPlayerNames, getElapsedTime, getSessionStats } from "../logic/session-stats";
 import { ContentBlockView } from "./ContentBlockView";
 import { PlayScreen } from "./PlayScreen";
 
 interface CompletionScreenProps {
   walk: Walk;
   session: WalkSession;
-  copy: GameCopy;
-  onOpenLedger: () => void;
+  copy: WalkCopy;
+  onOpenRoute: () => void;
 }
 
 /**
  * The finale. Deliberately shows stops, clues, challenges and time, and never
  * how many drinks were ordered.
  */
-export function CompletionScreen({ walk, session, copy, onOpenLedger }: CompletionScreenProps) {
+export function CompletionScreen({ walk, session, copy, onOpenRoute }: CompletionScreenProps) {
   const t = useT();
   const [shareFallbackText, setShareFallbackText] = useState<string | null>(null);
   const closingStory = walk.finale?.closingStory ?? [];
@@ -30,7 +30,7 @@ export function CompletionScreen({ walk, session, copy, onOpenLedger }: Completi
 
   const stats = getSessionStats(walk, session);
   const elapsedTime = getElapsedTime(session, new Date(), t);
-  const playerNames = session.team.players.map((player) => player.name).join(", ");
+  const playerNames = formatPlayerNames(session.team.players, t);
 
   const teamLabel = session.team.name ? `${session.team.name} (${playerNames})` : playerNames;
   const shareText = t("game.completion.shareText", {
@@ -68,6 +68,7 @@ export function CompletionScreen({ walk, session, copy, onOpenLedger }: Completi
       <PlayScreen
         eyebrow={walk.narrative?.title ?? walk.title}
         title={t("game.completion.lastPage")}
+        screenId="completion-last-page"
         actions={
           <Button onClick={() => setHasReadStory(true)} fullWidth>
             {t("game.completion.closeLedger")}
@@ -87,9 +88,10 @@ export function CompletionScreen({ walk, session, copy, onOpenLedger }: Completi
     <PlayScreen
       eyebrow={walk.narrative ? `${walk.title} · ${walk.narrative.title}` : walk.title}
       title={copy.completionTitle}
+      screenId="completion"
       actions={
         <>
-          <Button onClick={onOpenLedger} fullWidth>
+          <Button onClick={onOpenRoute} fullWidth>
             {walk.clues ? t("game.completion.viewLedger") : t("game.completion.viewRoute")}
           </Button>
           <Button variant="outline" onClick={shareResult} fullWidth>

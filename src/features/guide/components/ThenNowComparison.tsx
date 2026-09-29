@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { englishTranslator, type Translator } from "@/i18n/translate";
+import type { Translator } from "@/i18n/translate";
 import type { ThenNowPair } from "@/types/guide";
 import { ImageCredit } from "./GuideImageFigure";
 
@@ -11,7 +11,7 @@ import { ImageCredit } from "./GuideImageFigure";
  * A toggle rather than a drag slider: the two photos are rarely taken from the
  * exact same spot, and a slider over mismatched photos looks broken.
  */
-export function ThenNowComparison({ pair, t = englishTranslator }: { pair: ThenNowPair; t?: Translator }) {
+export function ThenNowComparison({ pair, t }: { pair: ThenNowPair; t: Translator }) {
   const [showing, setShowing] = useState<"then" | "now">("then");
   const image = showing === "then" ? pair.then : pair.now;
 

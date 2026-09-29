@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import type { Translator } from "@/i18n/translate";
 import type { SearchTask, SearchTaskItem } from "@/types/guide";
@@ -32,10 +32,19 @@ interface SearchTaskViewProps {
  */
 export function SearchTaskView({ task, t, onAllRevealed, onSkip }: SearchTaskViewProps) {
   const [progress, setProgress] = useState<Record<string, ItemProgress>>({});
+  // The item whose solution was just shown: the button that was pressed disappears,
+  // so focus moves to the solution (screen readers read it, keyboard users keep their place).
+  const [justRevealedId, setJustRevealedId] = useState<string | null>(null);
+  const revealedSolutionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (justRevealedId) revealedSolutionRef.current?.focus();
+  }, [justRevealedId]);
 
   function update(item: SearchTaskItem, changes: Partial<ItemProgress>) {
     const next = { ...progress, [item.id]: { ...(progress[item.id] ?? START), ...changes } };
     setProgress(next);
+    if (changes.revealed) setJustRevealedId(item.id);
     if (task.items.every((candidate) => next[candidate.id]?.revealed)) onAllRevealed?.();
   }
 
@@ -71,7 +80,7 @@ export function SearchTaskView({ task, t, onAllRevealed, onSkip }: SearchTaskVie
               <figure>
                 <Image
                   src={item.drawing.image.src}
-                  alt={`${t("guide.searchTask")}: ${item.question}`}
+                  alt={t("common.labelValue", { label: t("guide.searchTask"), value: item.question })}
                   width={item.drawing.image.width}
                   height={item.drawing.image.height}
                   sizes="(min-width: 32rem) 20rem, 100vw"
@@ -94,7 +103,11 @@ export function SearchTaskView({ task, t, onAllRevealed, onSkip }: SearchTaskVie
               )}
 
               {itemProgress.revealed ? (
-                <div aria-live="polite" className="flex flex-col gap-2 rounded-sm bg-white/60 p-4">
+                <div
+                  ref={item.id === justRevealedId ? revealedSolutionRef : undefined}
+                  tabIndex={-1}
+                  className="flex flex-col gap-2 rounded-sm bg-white/60 p-4 outline-none"
+                >
                   <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold-deep">{t("guide.solution")}</p>
                   <p className="font-display text-xl font-semibold leading-snug">{item.solution}</p>
                   <CollectionItemLabel item={item.drawing} t={t} />

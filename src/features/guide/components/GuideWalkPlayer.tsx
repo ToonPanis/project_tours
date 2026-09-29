@@ -1,16 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { NavigationScreen } from "@/features/navigation/components/NavigationScreen";
-import { getDetourCost, getRouteLeg, getRouteLegToCurrent } from "@/features/navigation/logic/route-legs";
-import { LedgerPanel } from "@/features/walk-session/components/LedgerPanel";
+import { Button } from "@/components/ui/Button";
+import { getDetourCost } from "@/features/navigation/logic/route-legs";
 import { PlayHeader } from "@/features/walk-session/components/PlayHeader";
-import { getGameCopy } from "@/features/walk-session/logic/game-copy";
-import { getOrderedLocations } from "@/features/walk-session/logic/route";
+import { PlayScreen } from "@/features/walk-session/components/PlayScreen";
+import { RoutePanel } from "@/features/walk-session/components/RoutePanel";
+import { StopNavigation } from "@/features/walk-session/components/StopNavigation";
+import { getCurrentStop } from "@/features/walk-session/logic/current-stop";
 import { getSessionStats } from "@/features/walk-session/logic/session-stats";
-import { PlaytestControls } from "@/features/walk-session/playtest/PlaytestControls";
-import { useWalkSession } from "@/features/walk-session/state/useWalkSession";
+import { getWalkCopy } from "@/features/walk-session/logic/walk-copy";
+import { getPlaytestNavigation, PlaytestControls } from "@/features/walk-session/playtest/PlaytestControls";
+import { usePlayerShell } from "@/features/walk-session/state/usePlayerShell";
 import { useT } from "@/i18n/client";
+import { getOrderedLocations } from "@/lib/walk-locations";
 import type { Team } from "@/types/team";
 import type { Walk } from "@/types/walk";
 import { ChapterCard } from "./ChapterCard";
@@ -33,27 +36,21 @@ const VISITOR_TEAM: Team = { id: "visitor", name: "", players: [{ id: "visitor",
  * them; skipping one navigates straight to the stop after it.
  */
 export function GuideWalkPlayer({ walk }: { walk: Walk }) {
-  const { isLoaded, session, dispatch, startNewSession, resetSession } = useWalkSession(walk);
+  // Shared with the game player: saved session, route panel, GPS flag, navigation reset.
+  const shell = usePlayerShell(walk);
+  const { isLoaded, session, dispatch, startNewSession } = shell;
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isRouteOpen, setIsRouteOpen] = useState(false);
-  const [isGpsEnabled, setIsGpsEnabled] = useState(false);
-  const [navigationKey, setNavigationKey] = useState(0);
   // Chapter cards seen in this visit (not saved: after a reload the card simply shows again).
   const [seenChapterIds, setSeenChapterIds] = useState<string[]>([]);
 
   const t = useT();
-  const copy = getGameCopy(walk, t);
+  const copy = getWalkCopy(walk, t);
   const orderedLocations = getOrderedLocations(walk);
 
   function restart() {
-    resetSession();
+    shell.restartBase();
     setIsPlaying(false);
-    setIsRouteOpen(false);
     setSeenChapterIds([]);
-  }
-
-  if (!isLoaded) {
-    return <p className="px-4 py-16 text-center text-parchment/70">{t("common.loading")}</p>;
   }
 
   if (!session || !isPlaying) {
@@ -61,6 +58,8 @@ export function GuideWalkPlayer({ walk }: { walk: Walk }) {
       <GuideStartScreen
         walk={walk}
         savedSession={session}
+        // Until the save is read (also during server rendering) the hero shows without buttons.
+        isLoading={!isLoaded}
         t={t}
         onStart={() => {
           startNewSession(VISITOR_TEAM);
@@ -72,13 +71,9 @@ export function GuideWalkPlayer({ walk }: { walk: Walk }) {
     );
   }
 
-  const currentIndex = orderedLocations.findIndex((location) => location.id === session.currentLocationId);
-  const location = orderedLocations[currentIndex];
-  const nextLocation = orderedLocations[currentIndex + 1];
-  const progress = session.locations[session.currentLocationId];
+  const stop = getCurrentStop(walk, session);
+  const { index: currentIndex, location, nextLocation, progress, routeToNext } = stop;
   const stats = getSessionStats(walk, session);
-  const routeToCurrent = getRouteLegToCurrent(walk, session)?.route ?? null;
-  const routeToNext = nextLocation ? (getRouteLeg(walk, location.id, nextLocation.id)?.route ?? null) : null;
 
   const detourOption: DetourOption | null = nextLocation?.isBonus
     ? {
@@ -100,12 +95,12 @@ export function GuideWalkPlayer({ walk }: { walk: Walk }) {
   }
 
   const routePanel = (
-    <LedgerPanel
+    <RoutePanel
       walk={walk}
       session={session}
       copy={copy}
-      open={isRouteOpen}
-      onClose={() => setIsRouteOpen(false)}
+      open={shell.isRouteOpen}
+      onClose={shell.closeRoute}
     >
       {walk.collection && (
         <details className="rounded-sm bg-parchment p-4 text-ink">
@@ -117,7 +112,7 @@ export function GuideWalkPlayer({ walk }: { walk: Walk }) {
           </div>
         </details>
       )}
-    </LedgerPanel>
+    </RoutePanel>
   );
   const playtestControls = (
     <PlaytestControls
@@ -126,18 +121,14 @@ export function GuideWalkPlayer({ walk }: { walk: Walk }) {
       dispatch={dispatch}
       startNewSession={startNewSession}
       onRestart={restart}
-      navigation={
-        progress.status === "travelling"
-          ? { route: routeToCurrent, destination: location.coordinates, onReset: () => setNavigationKey((key) => key + 1) }
-          : null
-      }
+      navigation={getPlaytestNavigation(stop, shell.resetNavigation)}
     />
   );
 
   if (session.completedAt) {
     return (
       <>
-        <GuideCompletionScreen walk={walk} session={session} copy={copy} t={t} onShowRoute={() => setIsRouteOpen(true)} />
+        <GuideCompletionScreen walk={walk} session={session} copy={copy} t={t} onShowRoute={shell.openRoute} />
         {routePanel}
         {playtestControls}
       </>
@@ -146,7 +137,7 @@ export function GuideWalkPlayer({ walk }: { walk: Walk }) {
 
   return (
     <>
-      <PlayHeader walk={walk} session={session} onOpenLedger={() => setIsRouteOpen(true)} />
+      <PlayHeader walk={walk} session={session} onOpenRoute={shell.openRoute} />
 
       {showChapterCard ? (
         <ChapterCard
@@ -156,15 +147,7 @@ export function GuideWalkPlayer({ walk }: { walk: Walk }) {
           onContinue={() => setSeenChapterIds((ids) => [...ids, chapterStartingHere.id])}
         />
       ) : isTravelling ? (
-        <NavigationScreen
-          key={`${location.id}-${navigationKey}`}
-          destination={location}
-          route={routeToCurrent}
-          gpsAlreadyEnabled={isGpsEnabled}
-          onGpsEnabled={() => setIsGpsEnabled(true)}
-          onArrive={() => dispatch({ type: "ARRIVE" })}
-          onShowRoute={() => setIsRouteOpen(true)}
-        />
+        <StopNavigation shell={shell} stop={stop} onArrive={() => dispatch({ type: "ARRIVE" })} />
       ) : location.guide ? (
         <GuideStopPage
           key={location.id}
@@ -179,7 +162,22 @@ export function GuideWalkPlayer({ walk }: { walk: Walk }) {
           onSkipDetour={() => completeStop(true)}
           onFinish={() => completeStop()}
         />
-      ) : null}
+      ) : (
+        // A stop without its page (a data mistake; validateWalk catches it in tests):
+        // never a blank screen or a dead end, the walker can always go on.
+        // (PlayScreen: starts at the top and focuses the title, like every other screen.)
+        <PlayScreen
+          title={location.name}
+          screenId={`stop-unavailable-${location.id}`}
+          actions={
+            <Button onClick={() => completeStop()} fullWidth>
+              {t("common.continue")}
+            </Button>
+          }
+        >
+          <p className="text-parchment/80">{t("guide.stopUnavailable")}</p>
+        </PlayScreen>
+      )}
 
       {routePanel}
       {playtestControls}

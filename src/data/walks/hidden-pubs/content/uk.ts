@@ -30,6 +30,7 @@ export const hiddenPubsContentUk: HiddenPubsContent = {
       clueCollectedTitle: "Книга змінилася",
       locationsTitle: "Шинки",
       locationsDiscoveredLabel: "шинків відкрито",
+      routeButtonLabel: "Книга",
     },
     narrative: {
       title: "Загублена шинкова книга",

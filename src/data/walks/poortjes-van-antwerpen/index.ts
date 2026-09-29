@@ -1,4 +1,4 @@
-import { normalizeOsrmRoute, type SavedOsrmRoute } from "@/lib/routing/osrm";
+import { findPosition, getMainRouteDistance, loadRouteLegs } from "../shared";
 import type { CollectionItem, GuideCard, GuideImage, SearchTask } from "@/types/guide";
 import type { WalkLocation } from "@/types/location";
 import type { RouteLeg } from "@/types/navigation";
@@ -74,6 +74,7 @@ function buildCollectionItem(entry: CollectionEntry, content: PoortjesContent): 
     stopId: entry.stopId,
     // The book's own words: always the Dutch original.
     sourceCaption: entry.caption,
+    sourceCaptionLanguage: "nl",
     note: text.note,
     verification: entry.verification,
   };
@@ -149,7 +150,6 @@ function buildSearchTask(task: SearchTaskText, stopId: string, collectionItems: 
 function buildLocations(content: PoortjesContent, collectionItems: CollectionItem[]): WalkLocation[] {
   return stopDefinitions.map((stop, index) => {
     const text = content.stops[stop.id];
-    const position = coordinatesFile.locations.find((location) => location.id === stop.id);
     if (!text) throw new Error(`Poortjes van Antwerpen: missing text for "${stop.id}"`);
 
     const itemsHere = collectionItems.filter((item) => item.stopId === stop.id);
@@ -163,8 +163,7 @@ function buildLocations(content: PoortjesContent, collectionItems: CollectionIte
       type: stop.type,
       isBonus: stop.isBonus,
       address: stop.address,
-      coordinates: position ? { latitude: position.latitude, longitude: position.longitude } : null,
-      coordinatesStatus: position?.status === "verified" ? "verified" : "to-verify",
+      ...findPosition(coordinatesFile, stop.id),
       description: text.subtitle,
       content: [],
       unlockCondition: index === 0 ? { type: "none" } : { type: "proximity", radiusInMeters: 40 },
@@ -200,22 +199,8 @@ function buildLocations(content: PoortjesContent, collectionItems: CollectionIte
   });
 }
 
-/** The route of a walker who skips every optional stop: consecutive main stops. */
-function getMainRouteDistance(locations: WalkLocation[], legs: RouteLeg[]): number {
-  const mainStops = locations.filter((location) => !location.isBonus);
-  return mainStops.slice(1).reduce((sum, location, index) => {
-    const leg = legs.find((candidate) => candidate.fromLocationId === mainStops[index].id && candidate.toLocationId === location.id);
-    if (!leg) throw new Error(`Poortjes van Antwerpen: no route ${mainStops[index].id} → ${location.id}`);
-    return sum + leg.route.distanceMeters;
-  }, 0);
-}
-
 function buildWalk(content: PoortjesContent, locale: Locale): Walk {
-  const routeLegs: RouteLeg[] = routesFile.legs.map((leg) => ({
-    fromLocationId: leg.fromLocationId,
-    toLocationId: leg.toLocationId,
-    route: normalizeOsrmRoute(leg.osrm as SavedOsrmRoute),
-  }));
+  const routeLegs: RouteLeg[] = loadRouteLegs(routesFile);
   const collectionItems = buildCollectionItems(content);
   const locations = buildLocations(content, collectionItems);
 
@@ -229,8 +214,7 @@ function buildWalk(content: PoortjesContent, locale: Locale): Walk {
     city: createTranslator(locale)("common.cities.antwerp"),
     // ± 2 h 45 of walking plus reading at 33 stops and a pause.
     estimatedDuration: { minMinutes: 300, maxMinutes: 390 },
-    // Rounded to 100 m: the routes are pre-calculated from draft coordinates.
-    distanceInMeters: Math.round(getMainRouteDistance(locations, routeLegs) / 100) * 100,
+    distanceInMeters: getMainRouteDistance("Poortjes van Antwerpen", locations, routeLegs),
     difficulty: "moderate",
     price: { amountInCents: 1295, currency: "EUR" },
     coverImage: {

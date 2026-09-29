@@ -27,12 +27,14 @@ export interface StopDefinition {
 
 const inventaris = (id: number, title: string): Source => ({
   title: `Inventaris Onroerend Erfgoed: ${title}`,
+  language: "nl",
   url: `https://inventaris.onroerenderfgoed.be/erfgoedobjecten/${id}`,
 });
 
 /** The book with the drawings; every gate caption is quoted from it. */
 export const smekensSource: Source = {
   title: "P. Smekens, Oude poortjes in Antwerpen. 52 tekeningen (Antwerpen: De Sikkel, 1951)",
+  language: "nl",
   url: "https://bib.onroerenderfgoed.be/werken/9027",
 };
 
@@ -71,7 +73,7 @@ export const stopDefinitions: StopDefinition[] = [
       inventaris(4141, "Wolsack, Gulden Osch en Schilt van Mechelen"),
       inventaris(4140, "Grooten gulden Schilt"),
       inventaris(4446, "Vlaaikensgang"),
-      { title: "Inventaris Onroerend Erfgoed: Hoogstraat (thema)", url: "https://inventaris.onroerenderfgoed.be/themas/935" },
+      { title: "Inventaris Onroerend Erfgoed: Hoogstraat (thema)", language: "nl", url: "https://inventaris.onroerenderfgoed.be/themas/935" },
     ],
   },
   {
@@ -86,11 +88,11 @@ export const stopDefinitions: StopDefinition[] = [
     thenNow: { then: "grote-markt-1905", now: "grote-markt-today" },
     verification: "partially-verified",
     sources: [
-      { title: "Inventaris Onroerend Erfgoed: Grote Markt (thema)", url: "https://inventaris.onroerenderfgoed.be/themas/925" },
+      { title: "Inventaris Onroerend Erfgoed: Grote Markt (thema)", language: "nl", url: "https://inventaris.onroerenderfgoed.be/themas/925" },
       inventaris(4035, "Spaengien (De Oude Voetboog)"),
       inventaris(4032, "Stadhuis van Antwerpen"),
       inventaris(200821, "Brabofontein"),
-      { title: "Historiek: Spaanse Furie in Antwerpen (1576)", url: "https://historiek.net/spaanse-furie-antwerpen-tachtigjarige-oorlog/66376/" },
+      { title: "Historiek: Spaanse Furie in Antwerpen (1576)", language: "nl", url: "https://historiek.net/spaanse-furie-antwerpen-tachtigjarige-oorlog/66376/" },
     ],
   },
   {
@@ -110,7 +112,7 @@ export const stopDefinitions: StopDefinition[] = [
     sources: [
       smekensSource,
       { title: "DIVA: Leonie Glassplein", url: "https://divamuseum.be/nl/leonie-glassplein" },
-      { title: "AG Vespa: Iedereen welkom op het Leonie Glassplein (2020)", url: "https://www.agvespa.be/nieuws/iedereen-welkom-op-het-leonie-glassplein" },
+      { title: "AG Vespa: Iedereen welkom op het Leonie Glassplein (2020)", language: "nl", url: "https://www.agvespa.be/nieuws/iedereen-welkom-op-het-leonie-glassplein" },
     ],
   },
   {
@@ -145,7 +147,7 @@ export const stopDefinitions: StopDefinition[] = [
     sources: [
       smekensSource,
       inventaris(4763, "Zwartzusterklooster"),
-      { title: "VRT NWS: Historisch Zwartzusterklooster wordt cohousingproject (29 oktober 2025)", url: "https://www.vrt.be/vrtnws/nl/2025/10/29/zwartzusterklooster-antwerpen-renovatie-woonproject-cohousing-in/" },
+      { title: "VRT NWS: Historisch Zwartzusterklooster wordt cohousingproject (29 oktober 2025)", language: "nl", url: "https://www.vrt.be/vrtnws/nl/2025/10/29/zwartzusterklooster-antwerpen-renovatie-woonproject-cohousing-in/" },
     ],
   },
   {
@@ -161,7 +163,7 @@ export const stopDefinitions: StopDefinition[] = [
     sources: [
       inventaris(6243, "Handelsbeurs"),
       inventaris(4127, "Oude Beurs"),
-      { title: "Handelsbeurs Antwerpen: bezoek de Handelsbeurs (geraadpleegd 26-09-2026)", url: "https://handelsbeursantwerpen.be/en/bezoek-de-handelsbeurs/" },
+      { title: "Handelsbeurs Antwerpen: bezoek de Handelsbeurs (geraadpleegd 26-09-2026)", language: "nl", url: "https://handelsbeursantwerpen.be/en/bezoek-de-handelsbeurs/" },
     ],
   },
   {
@@ -174,7 +176,7 @@ export const stopDefinitions: StopDefinition[] = [
     verification: "partially-verified",
     sources: [
       inventaris(6155, "Parochiekerk Sint-Jacob"),
-      { title: "Stad Antwerpen (persbericht 13-05-2026): Sint-Jacobskerk opnieuw volledig toegankelijk na 7 jaar restauratie", url: "https://pers.antwerpen.be/sint-jacobskerk-opnieuw-volledig-toegankelijk-na-7-jaar-restauratie" },
+      { title: "Stad Antwerpen (persbericht 13-05-2026): Sint-Jacobskerk opnieuw volledig toegankelijk na 7 jaar restauratie", language: "nl", url: "https://pers.antwerpen.be/sint-jacobskerk-opnieuw-volledig-toegankelijk-na-7-jaar-restauratie" },
     ],
   },
   {
@@ -184,14 +186,14 @@ export const stopDefinitions: StopDefinition[] = [
       smekensSource,
       inventaris(5138, "De witte Lelie (Keizerstraat 16)"),
       inventaris(5134, "Rockoxhuis"),
-      { title: "Snijders&Rockoxhuis: openingsuren en prijzen (geraadpleegd 26-09-2026)", url: "https://www.snijdersrockoxhuis.be/en/visit/plan-your-visit/opening-hours-prices" },
+      { title: "Snijders&Rockoxhuis: openingsuren en prijzen (geraadpleegd 26-09-2026)", language: "nl", url: "https://www.snijdersrockoxhuis.be/en/visit/plan-your-visit/opening-hours-prices" },
       { title: "Snijders&Rockoxhuis: website", url: "https://www.snijdersrockoxhuis.be/" },
     ],
   },
   {
     id: "poortjes-markgravestraat", address: "Markgravestraat 14, 2000 Antwerpen", type: "gateway", chapterId: "universiteit-academie",
     verification: "research-required",
-    sources: [smekensSource, { title: "Inventaris Onroerend Erfgoed: Markgravestraat (thema)", url: "https://inventaris.onroerenderfgoed.be/themas/11204" }],
+    sources: [smekensSource, { title: "Inventaris Onroerend Erfgoed: Markgravestraat (thema)", language: "nl", url: "https://inventaris.onroerenderfgoed.be/themas/11204" }],
   },
   {
     id: "poortjes-koningstraat", address: "Koningstraat 17, 2000 Antwerpen", type: "gateway", chapterId: "universiteit-academie",
@@ -202,7 +204,7 @@ export const stopDefinitions: StopDefinition[] = [
     id: "poortjes-universiteit", address: "Prinsstraat 13, 2000 Antwerpen", type: "historic-building", chapterId: "universiteit-academie",
     verification: "partially-verified",
     sources: [
-      { title: "Universiteit Antwerpen: geschiedenis van de Stadscampus", url: "https://www.uantwerpen.be/nl/overuantwerpen/campussen/stadscampus/geschiedenis/" },
+      { title: "Universiteit Antwerpen: geschiedenis van de Stadscampus", language: "nl", url: "https://www.uantwerpen.be/nl/overuantwerpen/campussen/stadscampus/geschiedenis/" },
       inventaris(5764, "Hof van Liere"),
     ],
   },
@@ -228,7 +230,7 @@ export const stopDefinitions: StopDefinition[] = [
     sources: [
       smekensSource,
       inventaris(5577, "Koninklijke Academie voor Schone Kunsten"),
-      { title: "KMSKA: Vincent van Gogh in Antwerpen", url: "https://kmska.be/nl/vincent-van-gogh-in-antwerpen" },
+      { title: "KMSKA: Vincent van Gogh in Antwerpen", language: "nl", url: "https://kmska.be/nl/vincent-van-gogh-in-antwerpen" },
       { title: "Wikipedia: Royal Academy of Fine Arts (Antwerp)", url: "https://en.wikipedia.org/wiki/Royal_Academy_of_Fine_Arts_(Antwerp)" },
     ],
   },
@@ -257,7 +259,7 @@ export const stopDefinitions: StopDefinition[] = [
       inventaris(4782, "Samenstel van traditionele panden met barokpoort (nr. 17)"),
       inventaris(4786, "Brouwershuis (nr. 20)"),
       inventaris(4783, "De Roose (nr. 29)"),
-      { title: "Inventaris Onroerend Erfgoed: Adriaan Brouwerstraat (thema)", url: "https://inventaris.onroerenderfgoed.be/themas/11106" },
+      { title: "Inventaris Onroerend Erfgoed: Adriaan Brouwerstraat (thema)", language: "nl", url: "https://inventaris.onroerenderfgoed.be/themas/11106" },
     ],
   },
   // ── Deel 5: MAS ───────────────────────────────────────────────────────
@@ -265,10 +267,10 @@ export const stopDefinitions: StopDefinition[] = [
     id: "poortjes-mas", address: "Hanzestedenplaats 1, 2000 Antwerpen", type: "landmark", chapterId: "mas",
     verification: "partially-verified",
     sources: [
-      { title: "MAS: openingsuren en bereikbaarheid (geraadpleegd 26-09-2026)", url: "https://mas.be/en/page/how-when-get-here" },
-      { title: "MAS: wandelboulevard en panorama", url: "https://mas.be/en/page/boulevard-and-panorama" },
-      { title: "Wikipedia (NL): Museum aan de Stroom", url: "https://nl.wikipedia.org/wiki/Museum_aan_de_Stroom" },
-      { title: "Wikipedia (NL): Eilandje (Antwerpen)", url: "https://nl.wikipedia.org/wiki/Eilandje_(Antwerpen)" },
+      { title: "MAS: openingsuren en bereikbaarheid (geraadpleegd 26-09-2026)", language: "nl", url: "https://mas.be/en/page/how-when-get-here" },
+      { title: "MAS: wandelboulevard en panorama", language: "nl", url: "https://mas.be/en/page/boulevard-and-panorama" },
+      { title: "Wikipedia (NL): Museum aan de Stroom", language: "nl", url: "https://nl.wikipedia.org/wiki/Museum_aan_de_Stroom" },
+      { title: "Wikipedia (NL): Eilandje (Antwerpen)", language: "nl", url: "https://nl.wikipedia.org/wiki/Eilandje_(Antwerpen)" },
     ],
   },
   {
@@ -276,7 +278,7 @@ export const stopDefinitions: StopDefinition[] = [
     isBonus: true, status: "optional",
     verification: "partially-verified",
     sources: [
-      { title: "Red Star Line Museum: het museum", url: "https://redstarline.be/en/content/museum" },
+      { title: "Red Star Line Museum: het museum", language: "nl", url: "https://redstarline.be/en/content/museum" },
       { title: "Visit Antwerpen: Red Star Line Museum", url: "https://visit.antwerpen.be/en/info/red-star-line-museum-en" },
     ],
   },

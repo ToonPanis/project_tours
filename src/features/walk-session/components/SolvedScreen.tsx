@@ -8,10 +8,11 @@ import { formatWalkingDistance, formatWalkingTime } from "@/features/navigation/
 import type { WalkLocation } from "@/types/location";
 import type { WalkingRoute } from "@/types/navigation";
 import type { ChallengeAnswer, LocationProgress } from "@/types/session";
-import type { GameCopy } from "@/types/walk";
+import type { WalkCopy } from "@/types/walk";
 import { ContentBlockView } from "./ContentBlockView";
 import { HistoricalRevealView } from "./HistoricalRevealView";
 import { PlayScreen } from "./PlayScreen";
+import { WrongAnswerStatus } from "./WrongAnswerStatus";
 
 type Step = "correct" | "bonus" | "reveal" | "clue" | "next";
 
@@ -24,7 +25,7 @@ interface SolvedScreenProps {
   routeToNext: WalkingRoute | null;
   /** True when a final puzzle follows the last location. */
   hasFinale: boolean;
-  copy: GameCopy;
+  copy: WalkCopy;
   onSubmitBonus: (answer: ChallengeAnswer) => void;
   onSkipBonus: () => void;
   onContinue: () => void;
@@ -41,7 +42,9 @@ export function SolvedScreen(props: SolvedScreenProps) {
   const { location, progress, earnedClues, copy } = props;
 
   const steps: Step[] = [
-    "correct",
+    // After "show the answer" the team already saw the answer and explanation,
+    // and "Correct" would not be true: go straight on.
+    ...(progress.answerRevealed ? [] : (["correct"] as const)),
     ...(location.bonusChallenge && progress.bonusStatus === "unanswered" ? (["bonus"] as const) : []),
     ...(location.historicalReveal ? (["reveal"] as const) : []),
     ...(earnedClues.length > 0 ? (["clue"] as const) : []),
@@ -58,6 +61,7 @@ export function SolvedScreen(props: SolvedScreenProps) {
         <PlayScreen
           eyebrow={t("game.solved.correct")}
           title={copy.correctAnswer}
+          screenId={`solved-correct-${location.id}`}
           actions={
             <Button onClick={goToNextStep} fullWidth>
               {location.historicalReveal ? t("game.solved.discoverWhy") : t("common.continue")}
@@ -87,6 +91,7 @@ export function SolvedScreen(props: SolvedScreenProps) {
         <PlayScreen
           eyebrow={location.name}
           title={t("game.solved.whyItMatters")}
+          screenId={`solved-reveal-${location.id}`}
           actions={
             <Button onClick={goToNextStep} fullWidth>
               {t("common.continue")}
@@ -105,6 +110,7 @@ export function SolvedScreen(props: SolvedScreenProps) {
         <PlayScreen
           eyebrow={copy.clueCollectedTitle}
           title={t("game.solved.clueDiscovered")}
+          screenId={`solved-clue-${location.id}`}
           actions={
             <Button onClick={goToNextStep} fullWidth>
               {t("common.continue")}
@@ -140,6 +146,7 @@ function NextStep({ location, nextLocation, routeToNext, hasFinale, copy, onCont
       <PlayScreen
         eyebrow={location.name}
         title={hasFinale ? t("game.solved.finalPageAwaits") : t("game.solved.endOfRoute")}
+        screenId={`solved-end-${location.id}`}
         actions={
           <Button onClick={onContinue} fullWidth>
             {hasFinale ? t("game.solved.openFinalPage") : t("game.solved.closeCase")}
@@ -157,6 +164,7 @@ function NextStep({ location, nextLocation, routeToNext, hasFinale, copy, onCont
     <PlayScreen
       eyebrow={copy.nextLocationTitle}
       title={nextLocation.name}
+      screenId={`solved-next-${location.id}`}
       actions={
         <>
           <Button onClick={onContinue} fullWidth>
@@ -202,14 +210,18 @@ interface BonusStepProps {
 function BonusStep({ title, question, wrongAttempts, wrongMessage, onSubmit, onSkip }: BonusStepProps) {
   const t = useT();
   const [answer, setAnswer] = useState("");
+  // The last answer sent: the field is marked invalid while it still holds it.
+  const [submittedAnswer, setSubmittedAnswer] = useState<string | null>(null);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (answer.trim() !== "") onSubmit(answer);
+    if (answer.trim() === "") return;
+    setSubmittedAnswer(answer);
+    onSubmit(answer);
   }
 
   return (
-    <PlayScreen eyebrow={t("game.solved.optionalBonus")} title={title}>
+    <PlayScreen eyebrow={t("game.solved.optionalBonus")} title={title} screenId="solved-bonus">
       <p className="font-display text-2xl leading-snug">{question}</p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <label className="sr-only" htmlFor="bonus-answer">
@@ -224,17 +236,15 @@ function BonusStep({ title, question, wrongAttempts, wrongMessage, onSubmit, onS
           autoCorrect="off"
           autoCapitalize="off"
           spellCheck={false}
+          aria-invalid={wrongAttempts > 0 && answer === submittedAnswer}
+          aria-describedby="bonus-feedback"
           className="min-h-14 w-full rounded-sm border border-parchment/30 bg-ink/40 px-4 text-xl text-parchment focus:border-gold focus:outline-none"
         />
         <Button type="submit" disabled={answer.trim() === ""} fullWidth>
           {t("common.submit")}
         </Button>
       </form>
-      {wrongAttempts > 0 && (
-        <p role="status" className="font-display text-xl italic text-gold">
-          {wrongMessage}
-        </p>
-      )}
+      <WrongAnswerStatus id="bonus-feedback" wrongAttempts={wrongAttempts} message={wrongMessage} />
       <Button variant="outline" onClick={onSkip} fullWidth>
         {t("game.solved.skipBonus")}
       </Button>

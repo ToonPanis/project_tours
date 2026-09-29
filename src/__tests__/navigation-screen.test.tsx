@@ -5,9 +5,10 @@ import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
 import { NavigationScreen } from "@/features/navigation/components/NavigationScreen";
 import { getRouteLegTo } from "@/features/navigation/logic/route-legs";
 import { NAVIGATION_CONFIG } from "@/features/navigation/config";
-import { getImmediateLabel } from "@/features/navigation/logic/maneuver-display";
+import { getImmediateText } from "@/features/navigation/logic/maneuver-display";
 import { getRouteProgress, pointAlongRoute } from "@/features/navigation/logic/route-progress";
-import { getManeuverLabel } from "@/lib/routing/maneuver-labels";
+import { englishTranslator } from "@/i18n/translate";
+import { distanceInMeters } from "@/lib/geo";
 import {
   PositionSimulationProvider,
   usePositionSimulation,
@@ -39,14 +40,14 @@ function SimulationHandle() {
 const emitPosition = (coordinates: GeoCoordinates, accuracyMeters?: number) =>
   simulationHandle.emit(coordinates, accuracyMeters);
 
-function renderNavigation(onArrive = vi.fn()) {
+function renderNavigation(onArrive = vi.fn(), { gpsAlreadyEnabled = false } = {}) {
   render(
     <PositionSimulationProvider>
       <SimulationHandle />
       <NavigationScreen
         destination={deMuze}
         route={routeToDeMuze}
-        gpsAlreadyEnabled={false}
+        gpsAlreadyEnabled={gpsAlreadyEnabled}
         onGpsEnabled={() => {}}
         onArrive={onArrive}
         onShowRoute={() => {}}
@@ -79,8 +80,8 @@ describe("NavigationScreen", () => {
     const maneuver = progress.nextStep!.maneuver;
     const expectedLabel =
       progress.distanceToNextStepMeters <= NAVIGATION_CONFIG.MANEUVER_NOW_METERS
-        ? getImmediateLabel(maneuver)
-        : getManeuverLabel(maneuver);
+        ? getImmediateText(maneuver, englishTranslator)
+        : englishTranslator(`gps.maneuvers.${maneuver}`);
     expect(screen.getByText(expectedLabel)).toBeDefined();
     expect(await screen.findByTestId("walking-map")).toBeDefined();
   });
@@ -104,6 +105,75 @@ describe("NavigationScreen", () => {
     expect(screen.getByText("GPS signal is weak.")).toBeDefined();
     // A manual fallback is offered when GPS is weak.
     expect(screen.getByRole("button", { name: "I'm here" })).toBeDefined();
+  });
+
+  // H-01: with good GPS the walker must still be able to continue (unreachable pin,
+  // GPS reflections in narrow streets). Automatic arrival stays the main path.
+  test("with good GPS just outside the arrival radius, 'I'm here' moves the game on", async () => {
+    const onArrive = renderNavigation();
+    // 60 m before the end of the route: outside the 40 m radius, e.g. an unreachable pin.
+    const nearby = pointAlongRoute(routeToDeMuze.geometry, routeToDeMuze.distanceMeters - 60);
+    expect(distanceInMeters(nearby, deMuze.coordinates!)).toBeGreaterThan(NAVIGATION_CONFIG.ARRIVAL_RADIUS_METERS);
+    for (let reading = 0; reading < 3; reading++) {
+      await act(async () => emitPosition(nearby, 5)); // 5 m accuracy: a "good" fix
+    }
+    expect(onArrive).not.toHaveBeenCalled();
+    expect(screen.queryByText("GPS signal is weak.")).toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: "I'm here" }));
+    expect(onArrive).toHaveBeenCalledTimes(1);
+  });
+
+  test("far from the stop with good GPS, 'I'm here' asks first (an accidental tap can't skip ahead)", async () => {
+    const onArrive = renderNavigation();
+    const farAway = pointAlongRoute(routeToDeMuze.geometry, 5); // at the start of the route
+    expect(distanceInMeters(farAway, deMuze.coordinates!)).toBeGreaterThan(
+      NAVIGATION_CONFIG.MANUAL_ARRIVAL_CONFIRM_METERS,
+    );
+    await act(async () => emitPosition(farAway, 5));
+
+    fireEvent.click(screen.getByRole("button", { name: "I'm here" }));
+    expect(screen.getByRole("heading", { name: `Are you at ${deMuze.name}?`, hidden: true })).toBeDefined();
+    fireEvent.click(screen.getByRole("button", { name: "Cancel", hidden: true }));
+    expect(onArrive).not.toHaveBeenCalled();
+
+    // Confirm: the game moves on.
+    fireEvent.click(screen.getByRole("button", { name: "I'm here" }));
+    fireEvent.click(screen.getByRole("button", { name: "Yes, I'm here", hidden: true }));
+    expect(onArrive).toHaveBeenCalledTimes(1);
+  });
+
+  test("with weak GPS far away, 'I'm here' doesn't ask (the position can't be trusted)", async () => {
+    const onArrive = renderNavigation();
+    await act(async () => emitPosition(pointAlongRoute(routeToDeMuze.geometry, 5), 80));
+    fireEvent.click(screen.getByRole("button", { name: "I'm here" }));
+    expect(onArrive).toHaveBeenCalledTimes(1);
+  });
+
+  test("'I'm here' is offered while waiting for the first GPS reading", async () => {
+    // A browser GPS that is on but hasn't answered yet (e.g. indoors, or the permission prompt is open).
+    const realGeolocation = Object.getOwnPropertyDescriptor(navigator, "geolocation");
+    const realSecureContext = Object.getOwnPropertyDescriptor(window, "isSecureContext");
+    Object.defineProperty(navigator, "geolocation", {
+      configurable: true,
+      value: { watchPosition: vi.fn(() => 1), clearWatch: vi.fn() },
+    });
+    Object.defineProperty(window, "isSecureContext", { configurable: true, value: true });
+    try {
+      const onArrive = renderNavigation(vi.fn(), { gpsAlreadyEnabled: true });
+      await act(async () => {}); // let the GPS effect start
+      expect(navigator.geolocation.watchPosition).toHaveBeenCalled();
+      expect(screen.queryByText("GPS signal is weak.")).toBeNull();
+
+      fireEvent.click(screen.getByRole("button", { name: "I'm here" }));
+      expect(onArrive).toHaveBeenCalledTimes(1);
+    } finally {
+      cleanup();
+      if (realGeolocation) Object.defineProperty(navigator, "geolocation", realGeolocation);
+      else delete (navigator as { geolocation?: unknown }).geolocation;
+      if (realSecureContext) Object.defineProperty(window, "isSecureContext", realSecureContext);
+      else delete (window as { isSecureContext?: unknown }).isSecureContext;
+    }
   });
 
   test("no GPS position is ever written to localStorage", async () => {

@@ -1,8 +1,6 @@
 {
   "header": {
-    "stopProgress": "Étape {current} / {total}",
     "clues": "Indices {found} / {total}",
-    "ledger": "Registre",
     "route": "Parcours",
     "progressLabel": "Progression de la balade",
     "stopCounter": "Étape {current} / {total}"
@@ -11,12 +9,12 @@
     "newAdventure": "Commencer une nouvelle aventure",
     "welcomeBack": "Bon retour",
     "continueWalk": "Reprendre la balade",
-    "restartPlaytest": "Recommencer le test",
+    "startAgain": "Recommencer",
     "savedAdventure": "Aventure enregistrée",
     "completed": "Terminée",
     "stopOf": "Étape {current} sur {total}",
     "team": "Équipe : {team}",
-    "restartTitle": "Recommencer le test ?",
+    "restartTitle": "Recommencer l'aventure ?",
     "restartMessage": "Cela efface la progression enregistrée sur ce téléphone et recommence à la première étape.",
     "restartConfirm": "Oui, recommencer"
   },
@@ -85,7 +83,12 @@
     "yourClues": "Vos indices",
     "notPlayable": "Ce type de défi n'est pas encore jouable.",
     "hint": "Indice {number} : ",
-    "needHint": "Besoin d'un indice ?"
+    "needHint": "Besoin d'un indice ?",
+    "revealOffer": "Vous bloquez ? Vous pouvez voir la réponse et continuer la balade.",
+    "revealAnswer": "Voir la réponse",
+    "answerIs": "La réponse : {answer}",
+    "wrongAttempts": "Mauvaises réponses : {count}",
+    "wrongOption": "mauvaise réponse"
   },
   "solved": {
     "correct": "Bonne réponse",
@@ -136,7 +139,6 @@
     "discoveredClues": "Indices découverts · {found} / {total}",
     "clueLocked": "Indice {number} · verrouillé",
     "current": "En cours",
-    "extraStop": "Étape bonus",
     "skipped": "Passée"
   },
   "copy": {

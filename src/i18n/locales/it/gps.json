@@ -12,13 +12,17 @@
   "continueWithoutGps": "Continua senza GPS in tempo reale",
   "permissionTitle": "Serve l'accesso alla posizione",
   "permissionBody": "Senza la tua posizione non possiamo mostrare dove ti trovi; la mappa e il percorso restano visibili.",
-  "permissionHelp": "Se il browser non te lo chiede di nuovo, consenti la posizione per questo sito nelle impostazioni del browser.",
+  "permissionHelp": "Se il browser non te lo chiede di nuovo, consenti la posizione per questo sito nelle impostazioni del browser. Controlla anche nelle impostazioni del telefono che la posizione sia attiva per il browser.",
   "tryAgain": "Riprova",
   "followDirection": "Segui la direzione",
   "northUp": "Nord in alto",
+  "northShort": "N",
   "recenter": "Centra",
   "notOnMap": "Questo luogo non è ancora sulla mappa.",
   "mapUnavailable": "Impossibile caricare la mappa (nessuna connessione, oppure questo browser non può mostrare mappe). Le indicazioni e la mappa esterna funzionano comunque.",
+  "mapTilesFailing": "Al momento non è possibile caricare parte della mappa (connessione debole?). Le indicazioni qui sotto funzionano comunque.",
+  "mapRegion": "Mappa: percorso verso {name}",
+  "mapLoading": "Caricamento della mappa…",
   "gpsUnavailable": "Il GPS non è disponibile qui. La posizione richiede una pagina sicura (https) e i servizi di localizzazione attivi.",
   "gpsWeak": "Segnale GPS debole.",
   "gpsWeakDetail": "La tua posizione potrebbe essere meno precisa.",
@@ -48,5 +52,30 @@
     "u-turn": "Torna indietro",
     "roundabout": "Prendi la rotatoria",
     "arrive": "Destinazione davanti a te"
+  },
+  "confirmArrival": {
+    "title": "Sei arrivato a {name}?",
+    "message": "Il GPS indica che sei ancora a circa {distance}. Continuare comunque con questa tappa?",
+    "confirm": "Sì, sono qui"
+  },
+  "stillSearching": "Stiamo ancora cercando la tua posizione. All'aperto, con il cielo visibile, è più veloce.",
+  "direction": "Direzione: {direction}",
+  "compass": {
+    "n": "nord",
+    "ne": "nord-est",
+    "e": "est",
+    "se": "sud-est",
+    "s": "sud",
+    "sw": "sud-ovest",
+    "w": "ovest",
+    "nw": "nord-ovest"
+  },
+  "mapControls": {
+    "zoomIn": "Ingrandisci",
+    "zoomOut": "Riduci",
+    "toggleAttribution": "Mostra o nascondi i crediti della mappa",
+    "mapFeedback": "Segnala un problema della mappa",
+    "map": "Mappa",
+    "marker": "Indicatore sulla mappa"
   }
 }

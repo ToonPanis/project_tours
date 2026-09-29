@@ -1,8 +1,6 @@
 {
   "header": {
-    "stopProgress": "Stop {current} / {total}",
     "clues": "Aanwijzingen {found} / {total}",
-    "ledger": "Kasboek",
     "route": "Route",
     "progressLabel": "Voortgang van de wandeling",
     "stopCounter": "Stop {current} / {total}"
@@ -11,12 +9,12 @@
     "newAdventure": "Start een nieuw avontuur",
     "welcomeBack": "Welkom terug",
     "continueWalk": "Verder wandelen",
-    "restartPlaytest": "Playtest opnieuw starten",
+    "startAgain": "Opnieuw beginnen",
     "savedAdventure": "Opgeslagen avontuur",
     "completed": "Voltooid",
     "stopOf": "Stop {current} van {total}",
     "team": "Team: {team}",
-    "restartTitle": "Playtest opnieuw starten?",
+    "restartTitle": "Het avontuur opnieuw beginnen?",
     "restartMessage": "Hiermee wis je de opgeslagen voortgang op deze telefoon en begin je opnieuw bij de eerste stop.",
     "restartConfirm": "Ja, opnieuw starten"
   },
@@ -85,7 +83,12 @@
     "yourClues": "Jullie aanwijzingen",
     "notPlayable": "Dit type uitdaging kan nog niet gespeeld worden.",
     "hint": "Hint {number}: ",
-    "needHint": "Een hint nodig?"
+    "needHint": "Een hint nodig?",
+    "revealOffer": "Zitten jullie vast? Jullie kunnen het antwoord bekijken en verder wandelen.",
+    "revealAnswer": "Toon het antwoord",
+    "answerIs": "Het antwoord: {answer}",
+    "wrongAttempts": "Foute antwoorden: {count}",
+    "wrongOption": "fout antwoord"
   },
   "solved": {
     "correct": "Juist",
@@ -136,7 +139,6 @@
     "discoveredClues": "Ontdekte aanwijzingen · {found} / {total}",
     "clueLocked": "Aanwijzing {number} · vergrendeld",
     "current": "Nu",
-    "extraStop": "Extra stop",
     "skipped": "Overgeslagen"
   },
   "copy": {

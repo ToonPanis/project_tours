@@ -77,11 +77,11 @@
   "finishWithoutDetour": "Rundgang hier beenden",
   "chapter": "Teil {number}",
   "chapterOf": "Teil {number} / {total}",
-  "collection": "Sammlung",
   "notOnRoute": "Nicht auf der Route",
   "distance": "Strecke",
   "time": "Zeit",
   "viewRoute": "Route ansehen",
   "discoverAnotherWalk": "Weiteren Rundgang entdecken",
-  "unknownArtist": "Unbekannt"
+  "unknownArtist": "Unbekannt",
+  "stopUnavailable": "Die Geschichte zu dieser Station ist gerade nicht verfügbar. Du kannst den Rundgang einfach fortsetzen."
 }

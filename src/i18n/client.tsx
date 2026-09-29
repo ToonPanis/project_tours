@@ -25,7 +25,8 @@ function saveLocale(locale: Locale) {
   }
 }
 
-function readCookieLocale(): Locale | null {
+/** The language saved in the cookie, if any (also used by app/global-error.tsx, which has no provider). */
+export function readCookieLocale(): Locale | null {
   const match = document.cookie.match(new RegExp(`(?:^|; )${LOCALE_COOKIE}=([^;]*)`));
   return match && isLocale(match[1]) ? match[1] : null;
 }

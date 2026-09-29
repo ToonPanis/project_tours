@@ -1,8 +1,6 @@
 {
   "header": {
-    "stopProgress": "Station {current} / {total}",
     "clues": "Hinweise {found} / {total}",
-    "ledger": "Kassenbuch",
     "route": "Route",
     "progressLabel": "Fortschritt des Rundgangs",
     "stopCounter": "Station {current} / {total}"
@@ -11,12 +9,12 @@
     "newAdventure": "Neues Abenteuer starten",
     "welcomeBack": "Willkommen zurück",
     "continueWalk": "Rundgang fortsetzen",
-    "restartPlaytest": "Test neu starten",
+    "startAgain": "Neu beginnen",
     "savedAdventure": "Gespeichertes Abenteuer",
     "completed": "Abgeschlossen",
     "stopOf": "Station {current} von {total}",
     "team": "Team: {team}",
-    "restartTitle": "Test neu starten?",
+    "restartTitle": "Das Abenteuer neu beginnen?",
     "restartMessage": "Dadurch wird der gespeicherte Fortschritt auf diesem Handy gelöscht und ihr beginnt wieder bei der ersten Station.",
     "restartConfirm": "Ja, neu starten"
   },
@@ -85,7 +83,12 @@
     "yourClues": "Eure Hinweise",
     "notPlayable": "Diese Art von Aufgabe kann noch nicht gespielt werden.",
     "hint": "Tipp {number}: ",
-    "needHint": "Brauchst du einen Tipp?"
+    "needHint": "Brauchst du einen Tipp?",
+    "revealOffer": "Kommt ihr nicht weiter? Ihr könnt euch die Lösung ansehen und den Rundgang fortsetzen.",
+    "revealAnswer": "Lösung anzeigen",
+    "answerIs": "Die Lösung: {answer}",
+    "wrongAttempts": "Falsche Antworten: {count}",
+    "wrongOption": "falsche Antwort"
   },
   "solved": {
     "correct": "Richtig",
@@ -136,7 +139,6 @@
     "discoveredClues": "Entdeckte Hinweise · {found} / {total}",
     "clueLocked": "Hinweis {number} · gesperrt",
     "current": "Aktuell",
-    "extraStop": "Extrastation",
     "skipped": "Übersprungen"
   },
   "copy": {

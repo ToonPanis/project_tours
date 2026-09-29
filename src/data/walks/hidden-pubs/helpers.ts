@@ -5,6 +5,7 @@ import type { StoryBlock } from "@/types/content";
 import type { DrinkCategory, DrinkOption } from "@/types/drink";
 import type { LocationType, UnlockCondition, WalkLocation } from "@/types/location";
 import type { VerificationStatus } from "@/types/reveal";
+import { findPosition } from "../shared";
 import coordinatesFile from "./coordinates.json";
 import type { ChallengeText, HiddenPubsStopText, StoryText } from "./content/types";
 
@@ -61,12 +62,7 @@ export interface HiddenPubsStop {
  * app and the route generator script).
  */
 function cafePosition(locationId: string): Pick<WalkLocation, "coordinates" | "coordinatesStatus"> {
-  const entry = coordinatesFile.locations.find((location) => location.id === locationId);
-  if (!entry) return { coordinates: null };
-  return {
-    coordinates: { latitude: entry.latitude, longitude: entry.longitude },
-    coordinatesStatus: entry.status === "verified" ? "verified" : "to-verify",
-  };
+  return findPosition(coordinatesFile, locationId);
 }
 
 /** Drink options with stable ids: "<location>-drink-a", "-b", … */

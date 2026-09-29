@@ -10,6 +10,8 @@ interface UseGeolocationOptions {
   enabled: boolean;
   /** Called for every GPS reading. Readings are not stored anywhere. */
   onFix: (fix: GpsFix) => void;
+  /** Change this number to restart the watch (e.g. "Try again" after a refused permission). */
+  restartKey?: number;
 }
 
 function toGpsFix(position: GeolocationPosition): GpsFix {
@@ -32,7 +34,7 @@ function isGeolocationSupported(): boolean {
  * Watches the phone's position with watchPosition (not a one-off lookup),
  * so the position keeps updating while the player walks.
  */
-export function useGeolocation({ enabled, onFix }: UseGeolocationOptions): { status: GpsStatus } {
+export function useGeolocation({ enabled, onFix, restartKey = 0 }: UseGeolocationOptions): { status: GpsStatus } {
   const { isActive: isSimulating, subscribe } = usePositionSimulation();
   const [status, setStatus] = useState<GpsStatus>("idle");
 
@@ -68,7 +70,14 @@ export function useGeolocation({ enabled, onFix }: UseGeolocationOptions): { sta
         onFixRef.current(fix);
       },
       (error) => {
-        setStatus(error.code === error.PERMISSION_DENIED ? "permission-denied" : "unavailable");
+        // A timeout only means "no position yet": the watch keeps trying.
+        setStatus(
+          error.code === error.PERMISSION_DENIED
+            ? "permission-denied"
+            : error.code === error.TIMEOUT
+              ? "searching"
+              : "unavailable",
+        );
       },
       { enableHighAccuracy: true, maximumAge: 2_000, timeout: 20_000 },
     );
@@ -81,8 +90,11 @@ export function useGeolocation({ enabled, onFix }: UseGeolocationOptions): { sta
     return () => {
       window.clearTimeout(timer);
       navigator.geolocation.clearWatch(watchId);
+      // A restarted watch starts clean: no old "refused" or "unavailable" message.
+      // (If permission is still refused, the message briefly disappears and comes back: expected.)
+      setStatus("idle");
     };
-  }, [enabled, isSimulating]);
+  }, [enabled, isSimulating, restartKey]);
 
   return { status: enabled ? status : "idle" };
 }

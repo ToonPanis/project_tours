@@ -8,16 +8,22 @@ interface GuideImageFigureProps {
 }
 
 /** Credit line required by the image's license: year, maker, license and a link to the source. */
+/**
+ * The credit links sit in a line of small text. Vertical padding on an inline link makes
+ * its tap area taller without changing the line (a finger needs more than 11 px).
+ */
+const creditLinkClasses = "py-2 underline underline-offset-2";
+
 export function ImageCredit({ image }: { image: GuideImage }) {
   return (
     <>
       {image.approximateYear} · {image.photographerOrArtist} ·{" "}
-      <a href={image.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">
+      <a href={image.sourceUrl} target="_blank" rel="noopener noreferrer" className={creditLinkClasses}>
         {image.source}
       </a>{" "}
       ·{" "}
       {image.licenseUrl ? (
-        <a href={image.licenseUrl} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">
+        <a href={image.licenseUrl} target="_blank" rel="noopener noreferrer" className={creditLinkClasses}>
           {image.license}
         </a>
       ) : (

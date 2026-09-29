@@ -42,7 +42,9 @@ export function PositionSimulationProvider({ children }: { children: ReactNode }
       accuracyMeters,
       headingDegrees: null,
       speedMetersPerSecond: null,
-      timestamp: Date.now(),
+      // Always later than the previous reading (navigation ignores repeated readings),
+      // also when several are emitted within the same millisecond.
+      timestamp: Math.max(Date.now(), (lastFix.current?.timestamp ?? 0) + 1),
     };
     lastFix.current = fix;
     setIsActive(true);

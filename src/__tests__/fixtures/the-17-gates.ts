@@ -1,7 +1,8 @@
 import type { Walk } from "@/types/walk";
 
 /**
- * MOCK DATA: "The 17 Gates"
+ * TEST FIXTURE: "The 17 Gates". Not a live walk (the real gates walk is Poortjes
+ * van Antwerpen). Kept here, next to the tests, as small stable data for logic tests.
  *
  * All historical content below is PLACEHOLDER text and must be replaced with
  * researched, sourced content. Addresses are placeholders and coordinates are

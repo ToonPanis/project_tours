@@ -20,6 +20,7 @@ export interface StopDefinition {
 
 const inventaris = (id: number, title: string): Source => ({
   title: `Inventaris Onroerend Erfgoed: ${title}`,
+  language: "nl",
   url: `https://inventaris.onroerenderfgoed.be/erfgoedobjecten/${id}`,
 });
 
@@ -31,8 +32,8 @@ export const stopDefinitions: StopDefinition[] = [
     imageIds: ["central-station-1906", "central-station-hall-1909", "central-station-today"],
     verification: "partially-verified",
     sources: [
-      { title: "Historiek: Station Antwerpen-Centraal, de spoorwegkathedraal", url: "https://historiek.net/station-antwerpen-centraal-de-spoorwegkathedraal/151008/" },
-      { title: "Wikipedia (NL): Station Antwerpen-Centraal", url: "https://nl.wikipedia.org/wiki/Centraal-Station_(Antwerpen)" },
+      { title: "Historiek: Station Antwerpen-Centraal, de spoorwegkathedraal", language: "nl", url: "https://historiek.net/station-antwerpen-centraal-de-spoorwegkathedraal/151008/" },
+      { title: "Wikipedia (NL): Station Antwerpen-Centraal", language: "nl", url: "https://nl.wikipedia.org/wiki/Centraal-Station_(Antwerpen)" },
     ],
   },
   {
@@ -85,7 +86,7 @@ export const stopDefinitions: StopDefinition[] = [
     verification: "partially-verified",
     sources: [
       inventaris(3959, "Boerentoren"),
-      { title: "VRT NWS: De geschiedenis van de Boerentoren", url: "https://www.vrt.be/vrtnws/nl/2020/11/19/de-boerentoren-de-eerste-belgische-wolkenkrabber/" },
+      { title: "VRT NWS: De geschiedenis van de Boerentoren", language: "nl", url: "https://www.vrt.be/vrtnws/nl/2020/11/19/de-boerentoren-de-eerste-belgische-wolkenkrabber/" },
     ],
   },
   {
@@ -120,7 +121,7 @@ export const stopDefinitions: StopDefinition[] = [
     thenNow: { then: "grote-markt-1905", now: "grote-markt-today" },
     verification: "partially-verified",
     sources: [
-      { title: "Inventaris Onroerend Erfgoed: Grote Markt (thema)", url: "https://inventaris.onroerenderfgoed.be/themas/925" },
+      { title: "Inventaris Onroerend Erfgoed: Grote Markt (thema)", language: "nl", url: "https://inventaris.onroerenderfgoed.be/themas/925" },
       inventaris(4035, "Spaengien (De Oude Voetboog)"),
     ],
   },
@@ -143,7 +144,7 @@ export const stopDefinitions: StopDefinition[] = [
     verification: "partially-verified",
     sources: [
       inventaris(4032, "Stadhuis van Antwerpen"),
-      { title: "Historiek: Spaanse Furie in Antwerpen (1576)", url: "https://historiek.net/spaanse-furie-antwerpen-tachtigjarige-oorlog/66376/" },
+      { title: "Historiek: Spaanse Furie in Antwerpen (1576)", language: "nl", url: "https://historiek.net/spaanse-furie-antwerpen-tachtigjarige-oorlog/66376/" },
     ],
   },
   {
@@ -153,7 +154,7 @@ export const stopDefinitions: StopDefinition[] = [
     imageIds: ["conscienceplein-historical"],
     verification: "partially-verified",
     sources: [
-      { title: "Erfgoedbibliotheek Hendrik Conscience: “Hij leerde zijn volk lezen”", url: "https://consciencebibliotheek.be/nl/pagina/%E2%80%9Chij-leerde-zijn-volk-lezen%E2%80%9D" },
+      { title: "Erfgoedbibliotheek Hendrik Conscience: “Hij leerde zijn volk lezen”", language: "nl", url: "https://consciencebibliotheek.be/nl/pagina/%E2%80%9Chij-leerde-zijn-volk-lezen%E2%80%9D" },
     ],
   },
   {
@@ -163,8 +164,8 @@ export const stopDefinitions: StopDefinition[] = [
     imageIds: ["carolus-ceiling-punt-1748"],
     verification: "partially-verified",
     sources: [
-      { title: "Wikipedia (NL): Sint-Carolus Borromeuskerk (Antwerpen)", url: "https://nl.wikipedia.org/wiki/Sint-Carolus_Borromeuskerk_(Antwerpen)" },
-      { title: "OKV: Aguilon, Huyssens en Rubens", url: "https://www.okv.be/archief/aguillon-huyssens-en-rubens-sint-carolus-borromeuskerk" },
+      { title: "Wikipedia (NL): Sint-Carolus Borromeuskerk (Antwerpen)", language: "nl", url: "https://nl.wikipedia.org/wiki/Sint-Carolus_Borromeuskerk_(Antwerpen)" },
+      { title: "OKV: Aguilon, Huyssens en Rubens", language: "nl", url: "https://www.okv.be/archief/aguillon-huyssens-en-rubens-sint-carolus-borromeuskerk" },
     ],
   },
   {
@@ -202,7 +203,7 @@ export const stopDefinitions: StopDefinition[] = [
     imageIds: ["scheldt-photochrom", "scheldt-quays-1900"],
     verification: "partially-verified",
     sources: [
-      { title: "Wikipedia (NL): Sluiting van de Schelde", url: "https://nl.wikipedia.org/wiki/Sluiting_van_de_Schelde" },
+      { title: "Wikipedia (NL): Sluiting van de Schelde", language: "nl", url: "https://nl.wikipedia.org/wiki/Sluiting_van_de_Schelde" },
       { title: "Sigmaplan: about the Sigma Plan", url: "https://www.sigmaplan.be/en/about-sigma-plan" },
       inventaris(4602, "Het Steen (quay works in the 1880s)"),
     ],

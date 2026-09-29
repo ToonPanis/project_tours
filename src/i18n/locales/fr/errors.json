@@ -8,5 +8,19 @@
     "title": "Cette balade n'existe pas",
     "text": "Le parcours que vous cherchez a peut-être été déplacé, ou n'est pas encore disponible.",
     "seeAll": "Toutes les balades"
+  },
+  "playError": {
+    "title": "Un problème est survenu",
+    "text": "La balade s'est arrêtée de façon inattendue, par exemple à cause d'une connexion faible. Votre progression est normalement enregistrée sur ce téléphone.",
+    "tryAgain": "Réessayer",
+    "startOver": "Recommencer cette balade",
+    "startOverTitle": "Recommencer cette balade ?",
+    "startOverMessage": "Cela efface la progression enregistrée pour cette balade sur ce téléphone et recommence à la première étape.",
+    "startOverConfirm": "Oui, recommencer",
+    "allWalks": "Toutes les balades"
+  },
+  "globalError": {
+    "title": "Un problème est survenu",
+    "text": "Cette page n'a pas pu s'afficher. Veuillez réessayer dans un instant."
   }
 }

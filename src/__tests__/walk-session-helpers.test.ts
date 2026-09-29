@@ -1,13 +1,14 @@
+import { englishTranslator as t } from "@/i18n/translate";
 import { describe, expect, test } from "vitest";
 import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
-import { the17GatesWalk } from "@/data/walks/the-17-gates";
-import { defaultGameCopy, getGameCopy } from "@/features/walk-session/logic/game-copy";
+import { the17GatesWalk } from "./fixtures/the-17-gates";
+import { getDefaultWalkCopy, getWalkCopy } from "@/features/walk-session/logic/walk-copy";
 import { distanceInMeters } from "@/lib/geo";
 import {
   getOrderedLocations,
   isLocationRevealed,
   isRevealedBeforeStart,
-} from "@/features/walk-session/logic/route";
+} from "@/lib/walk-locations";
 
 describe("route visibility", () => {
   test("progressive routes hide locked stops", () => {
@@ -33,11 +34,11 @@ describe("route visibility", () => {
 
 describe("game copy", () => {
   test("walk texts override the defaults", () => {
-    expect(getGameCopy(hiddenPubsWalk).voteResultTitle).toBe("The tavern has spoken");
+    expect(getWalkCopy(hiddenPubsWalk, t).voteResultTitle).toBe("The tavern has spoken");
   });
 
   test("walks without their own texts use the defaults", () => {
-    expect(getGameCopy(the17GatesWalk)).toEqual(defaultGameCopy);
+    expect(getWalkCopy(the17GatesWalk, t)).toEqual(getDefaultWalkCopy(t));
   });
 });
 

@@ -1,8 +1,6 @@
 {
   "header": {
-    "stopProgress": "Parada {current} / {total}",
     "clues": "Pistas {found} / {total}",
-    "ledger": "Libro de cuentas",
     "route": "Ruta",
     "progressLabel": "Progreso del paseo",
     "stopCounter": "Parada {current} / {total}"
@@ -11,12 +9,12 @@
     "newAdventure": "Empezar una nueva aventura",
     "welcomeBack": "Bienvenido de nuevo",
     "continueWalk": "Continuar el paseo",
-    "restartPlaytest": "Reiniciar la prueba",
+    "startAgain": "Empezar de nuevo",
     "savedAdventure": "Aventura guardada",
     "completed": "Completada",
     "stopOf": "Parada {current} de {total}",
     "team": "Equipo: {team}",
-    "restartTitle": "¿Reiniciar la prueba?",
+    "restartTitle": "¿Empezar la aventura de nuevo?",
     "restartMessage": "Esto borra el progreso guardado en este móvil y vuelve a empezar desde la primera parada.",
     "restartConfirm": "Sí, reiniciar"
   },
@@ -85,7 +83,12 @@
     "yourClues": "Vuestras pistas",
     "notPlayable": "Este tipo de reto todavía no se puede jugar.",
     "hint": "Pista {number}: ",
-    "needHint": "¿Necesitas una pista?"
+    "needHint": "¿Necesitas una pista?",
+    "revealOffer": "¿Os habéis atascado? Podéis ver la respuesta y seguir con el paseo.",
+    "revealAnswer": "Ver la respuesta",
+    "answerIs": "La respuesta: {answer}",
+    "wrongAttempts": "Respuestas incorrectas: {count}",
+    "wrongOption": "respuesta incorrecta"
   },
   "solved": {
     "correct": "Correcto",
@@ -136,7 +139,6 @@
     "discoveredClues": "Pistas descubiertas · {found} / {total}",
     "clueLocked": "Pista {number} · bloqueada",
     "current": "Ahora",
-    "extraStop": "Parada extra",
     "skipped": "Omitida"
   },
   "copy": {

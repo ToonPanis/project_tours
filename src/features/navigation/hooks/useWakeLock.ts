@@ -12,9 +12,13 @@ export function useWakeLock(active: boolean): void {
     if (!active || typeof navigator === "undefined" || !("wakeLock" in navigator)) return;
 
     let wakeLock: WakeLockSentinel | null = null;
+    let isRequesting = false;
     let isCancelled = false;
 
     async function requestWakeLock() {
+      // At most one lock: skip while one is held or a request is still on its way.
+      if (isRequesting || (wakeLock && !wakeLock.released)) return;
+      isRequesting = true;
       try {
         const sentinel = await navigator.wakeLock.request("screen");
         if (isCancelled) {
@@ -24,6 +28,8 @@ export function useWakeLock(active: boolean): void {
         }
       } catch {
         // Not allowed right now (e.g. low battery mode). Not a problem.
+      } finally {
+        isRequesting = false;
       }
     }
 

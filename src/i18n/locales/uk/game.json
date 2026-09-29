@@ -1,8 +1,6 @@
 {
   "header": {
-    "stopProgress": "Зупинка {current} / {total}",
     "clues": "Підказки {found} / {total}",
-    "ledger": "Книга",
     "route": "Маршрут",
     "progressLabel": "Перебіг прогулянки",
     "stopCounter": "Зупинка {current} / {total}"
@@ -11,12 +9,12 @@
     "newAdventure": "Почати нову пригоду",
     "welcomeBack": "З поверненням",
     "continueWalk": "Продовжити прогулянку",
-    "restartPlaytest": "Почати тест заново",
+    "startAgain": "Почати заново",
     "savedAdventure": "Збережена пригода",
     "completed": "Завершено",
     "stopOf": "Зупинка {current} з {total}",
     "team": "Команда: {team}",
-    "restartTitle": "Почати тест заново?",
+    "restartTitle": "Почати пригоду заново?",
     "restartMessage": "Збережений прогрес на цьому телефоні буде видалено, і гра почнеться з першої зупинки.",
     "restartConfirm": "Так, почати заново"
   },
@@ -89,7 +87,12 @@
     "yourClues": "Ваші підказки",
     "notPlayable": "Цей тип завдання поки недоступний.",
     "hint": "Підказка {number}: ",
-    "needHint": "Потрібна підказка?"
+    "needHint": "Потрібна підказка?",
+    "revealOffer": "Не виходить? Можна подивитися відповідь і продовжити прогулянку.",
+    "revealAnswer": "Показати відповідь",
+    "answerIs": "Відповідь: {answer}",
+    "wrongAttempts": "Неправильних відповідей: {count}",
+    "wrongOption": "неправильна відповідь"
   },
   "solved": {
     "correct": "Правильно",
@@ -140,7 +143,6 @@
     "discoveredClues": "Знайдені підказки · {found} / {total}",
     "clueLocked": "Підказка {number} · закрита",
     "current": "Зараз",
-    "extraStop": "Дод. зупинка",
     "skipped": "Пропущено"
   },
   "copy": {

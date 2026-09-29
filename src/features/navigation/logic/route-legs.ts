@@ -1,4 +1,4 @@
-import { getOrderedLocations } from "@/features/walk-session/logic/route";
+import { getOrderedLocations } from "@/lib/walk-locations";
 import type { WalkLocation } from "@/types/location";
 import type { RouteLeg } from "@/types/navigation";
 import type { WalkSession } from "@/types/session";

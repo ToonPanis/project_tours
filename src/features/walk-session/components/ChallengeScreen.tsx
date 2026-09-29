@@ -6,18 +6,23 @@ import { Button } from "@/components/ui/Button";
 import type { Challenge } from "@/types/challenge";
 import type { Clue } from "@/types/clue";
 import type { ChallengeAnswer, LocationProgress } from "@/types/session";
-import type { GameCopy } from "@/types/walk";
+import type { WalkCopy } from "@/types/walk";
 import { optionLetter } from "../logic/option-letter";
+import { canRevealAnswer, getRevealContent } from "../logic/reveal-answer";
 import { PlayScreen } from "./PlayScreen";
+import { RevealAnswer } from "./RevealAnswer";
+import { WrongAnswerStatus } from "./WrongAnswerStatus";
 
 interface ChallengeScreenProps {
   challenge: Challenge;
   progress: LocationProgress;
-  copy: GameCopy;
+  copy: WalkCopy;
   /** Clues this challenge needs, as collected by the team (for final puzzles). */
   requiredClues: Clue[];
   onSubmit: (answer: ChallengeAnswer) => void;
   onRevealHint: () => void;
+  /** After a few wrong attempts: the team saw the answer and continues (the stop counts as solved). */
+  onRevealAnswer: () => void;
 }
 
 const inputClasses =
@@ -30,9 +35,21 @@ export function ChallengeScreen({
   requiredClues,
   onSubmit,
   onRevealHint,
+  onRevealAnswer,
 }: ChallengeScreenProps) {
   const t = useT();
   const [answer, setAnswer] = useState("");
+  // Step 1 shows the answer on screen; step 2 ("Continue") tells the game.
+  const [isAnswerShown, setIsAnswerShown] = useState(false);
+  // The last typed answer that was sent: the field is marked invalid while it still holds it.
+  const [submittedAnswer, setSubmittedAnswer] = useState<string | null>(null);
+  // Multiple choice: each tapped option with the wrong-answer count at that moment. If the
+  // count went up afterwards, that option was wrong (a right answer leaves this screen).
+  const [pickedOptions, setPickedOptions] = useState<{ index: number; wrongAttemptsBefore: number }[]>([]);
+  const wrongOptionIndexes = pickedOptions
+    .filter((pick) => progress.wrongAttempts > pick.wrongAttemptsBefore)
+    .map((pick) => pick.index);
+  const mayRevealAnswer = canRevealAnswer(challenge, progress);
 
   const hasWrongAnswer = progress.wrongAttempts > 0;
   const hintsAvailable = Math.min(progress.wrongAttempts, challenge.hints.length);
@@ -42,11 +59,12 @@ export function ChallengeScreen({
   function submitTypedAnswer(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (answer.trim() === "") return;
+    setSubmittedAnswer(answer);
     onSubmit(answer);
   }
 
   return (
-    <PlayScreen eyebrow={t("game.challenge.eyebrow")} title={challenge.title}>
+    <PlayScreen eyebrow={t("game.challenge.eyebrow")} title={challenge.title} screenId={`challenge-${challenge.id}`}>
       {challenge.researchStatus && (
         <p className="self-start rounded-full border border-dashed border-parchment/40 px-3 py-1 text-xs uppercase tracking-wider text-parchment/70">
           {challenge.researchStatus === "on-site-verification-required"
@@ -77,24 +95,43 @@ export function ChallengeScreen({
         </div>
       )}
 
-      {/* Answer input: one layout per challenge type. */}
-      {challenge.type === "multiple-choice" && (
+      {/* Answer input: one layout per challenge type. Hidden once the answer is shown. */}
+      {challenge.type === "multiple-choice" && !isAnswerShown && (
         <div className="flex flex-col gap-3">
-          {challenge.options.map((option, index) => (
-            <button
-              key={option}
-              type="button"
-              onClick={() => onSubmit(String(index))}
-              className="group flex min-h-14 w-full items-center gap-4 rounded-sm border border-gold/60 px-4 text-left text-lg text-parchment transition-colors hover:bg-gold hover:text-ink focus-visible:outline-2 focus-visible:outline-gold"
-            >
-              <span className="font-display text-xl font-semibold text-gold group-hover:text-ink">{optionLetter(index)}</span>
-              {option}
-            </button>
-          ))}
+          {challenge.options.map((option, index) => {
+            const isWrong = wrongOptionIndexes.includes(index);
+            return (
+              <button
+                key={option}
+                type="button"
+                // Already known to be wrong: another tap would only count as another wrong answer.
+                aria-disabled={isWrong || undefined}
+                onClick={() => {
+                  if (isWrong) return;
+                  setPickedOptions((picks) => [...picks, { index, wrongAttemptsBefore: progress.wrongAttempts }]);
+                  onSubmit(String(index));
+                }}
+                className={`group flex min-h-14 w-full items-center gap-4 rounded-sm border px-4 text-left text-lg transition-colors hover:bg-gold hover:text-ink focus-visible:outline-2 focus-visible:outline-gold ${
+                  isWrong ? "border-dashed border-parchment/40 text-parchment/70" : "border-gold/60 text-parchment"
+                }`}
+              >
+                <span className="font-display text-xl font-semibold text-gold group-hover:text-ink">{optionLetter(index)}</span>
+                {/* Only the option text is struck through (a decoration on the button would cover the letter and ✗ too). */}
+                <span className={isWrong ? "line-through" : undefined}>{option}</span>
+                {isWrong && (
+                  <span className="ml-auto">
+                    <span aria-hidden="true">✗</span>
+                    <span className="sr-only">, {t("game.challenge.wrongOption")}</span>
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
       )}
 
-      {(challenge.type === "text-answer" || challenge.type === "code" || challenge.type === "number-answer") && (
+      {(challenge.type === "text-answer" || challenge.type === "code" || challenge.type === "number-answer") &&
+        !isAnswerShown && (
         <form onSubmit={submitTypedAnswer} className="flex flex-col gap-3">
           <label className="sr-only" htmlFor="challenge-answer">
             {t("common.yourAnswer")}
@@ -110,6 +147,8 @@ export function ChallengeScreen({
             autoCorrect="off"
             autoCapitalize="off"
             spellCheck={false}
+            aria-invalid={hasWrongAnswer && answer === submittedAnswer}
+            aria-describedby="challenge-feedback"
             className={inputClasses}
           />
           <Button type="submit" disabled={answer.trim() === ""} fullWidth>
@@ -132,11 +171,7 @@ export function ChallengeScreen({
       )}
 
       {/* Feedback and hints */}
-      {hasWrongAnswer && (
-        <p role="status" className="font-display text-xl italic text-gold">
-          {copy.wrongAnswer}
-        </p>
-      )}
+      <WrongAnswerStatus id="challenge-feedback" wrongAttempts={progress.wrongAttempts} message={copy.wrongAnswer} />
 
       {revealedHints.length > 0 && (
         <ol className="flex flex-col gap-2">
@@ -149,10 +184,20 @@ export function ChallengeScreen({
         </ol>
       )}
 
-      {canRevealHint && (
+      {canRevealHint && !isAnswerShown && (
         <Button variant="outline" onClick={onRevealHint} fullWidth>
           {t("game.challenge.needHint")}
         </Button>
+      )}
+
+      {/* Nobody gets stuck: after a few wrong attempts the team may see the answer. */}
+      {mayRevealAnswer && (
+        <RevealAnswer
+          isShown={isAnswerShown}
+          onShow={() => setIsAnswerShown(true)}
+          {...getRevealContent(challenge)}
+          onContinue={onRevealAnswer}
+        />
       )}
     </PlayScreen>
   );

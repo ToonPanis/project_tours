@@ -16,6 +16,15 @@ const walkContents: Record<string, LocalizedContent<unknown>> = {
 /** Hidden Pubs' ledger is written in Dutch, so Dutch needs no translation of it. */
 const optionalKeysPerLocale: Partial<Record<string, string[]>> = { nl: ["translation"] };
 
+describe("structure check", () => {
+  it("reports a lost or renamed {placeholder}, not a moved one", () => {
+    const master = { caption: "Plate {plate}: {title}, {address}" };
+    expect(findStructureProblems(master, { caption: "Tafel {plate}: {title}" })).toEqual(["different {placeholders} caption"]);
+    expect(findStructureProblems(master, { caption: "Tafel {plate}: {title}, {adres}" })).toEqual(["different {placeholders} caption"]);
+    expect(findStructureProblems(master, { caption: "{title}, {address} (tafel {plate})" })).toEqual([]);
+  });
+});
+
 describe.each(Object.entries(walkContents))("translations of %s", (_walk, content) => {
   const translated = locales.filter((locale) => locale !== "en" && content[locale] !== undefined);
 

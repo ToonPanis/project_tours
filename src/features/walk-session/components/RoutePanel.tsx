@@ -5,21 +5,21 @@ import type { ReactNode } from "react";
 import { Dialog } from "@/components/ui/Dialog";
 import { useT } from "@/i18n/client";
 import type { WalkSession } from "@/types/session";
-import type { GameCopy, Walk } from "@/types/walk";
-import { getOrderedLocations, isLocationRevealed } from "../logic/route";
+import type { WalkCopy, Walk } from "@/types/walk";
+import { getOrderedLocations, isLocationRevealed } from "@/lib/walk-locations";
 
-interface LedgerPanelProps {
+interface RoutePanelProps {
   walk: Walk;
   session: WalkSession;
-  copy: GameCopy;
+  copy: WalkCopy;
   open: boolean;
   onClose: () => void;
   /** Extra content under the route, e.g. a walk's collection. */
   children?: ReactNode;
 }
 
-/** The team's notebook: discovered clues and the route so far. */
-export function LedgerPanel({ walk, session, copy, open, onClose, children }: LedgerPanelProps) {
+/** The route panel: the stops so far, plus the discovered clues when the walk has them (the Ledger in Hidden Pubs). */
+export function RoutePanel({ walk, session, copy, open, onClose, children }: RoutePanelProps) {
   const t = useT();
   const title = walk.narrative?.title ?? t("game.ledger.yourRoute", { title: walk.title });
   const orderedLocations = getOrderedLocations(walk);
@@ -33,19 +33,30 @@ export function LedgerPanel({ walk, session, copy, open, onClose, children }: Le
   return (
     <Dialog open={open} onClose={onClose} title={title}>
       <div className="flex h-full flex-col gap-6 overflow-y-auto p-6">
-        <h2 className="font-display text-3xl font-semibold text-gold">{title}</h2>
+        {/* Sticky: on a long route (35 stops) the panel can be closed without scrolling down. */}
+        <div className="sticky top-0 z-10 -mx-6 -mt-6 flex items-start justify-between gap-3 bg-umber px-6 pb-3 pt-6">
+          <h2 className="min-w-0 break-words font-display text-3xl font-semibold text-gold">{title}</h2>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={t("common.close")}
+            className="flex size-11 shrink-0 items-center justify-center rounded-full border border-parchment/30 text-xl text-parchment hover:bg-parchment/10 focus-visible:outline-2 focus-visible:outline-gold"
+          >
+            <span aria-hidden="true">✕</span>
+          </button>
+        </div>
 
         {clues.length > 0 && (
           <section aria-labelledby="ledger-clues">
             <h3 id="ledger-clues" className="text-xs font-semibold uppercase tracking-[0.25em] text-parchment/70">
-              Discovered clues · {session.collectedClueIds.length} / {clues.length}
+              {t("game.ledger.discoveredClues", { found: session.collectedClueIds.length, total: clues.length })}
             </h3>
             <ol className="mt-3 space-y-2">
               {clues.map((clue, index) => {
                 const isFound = session.collectedClueIds.includes(clue.id);
                 return (
                   <li key={clue.id} className="flex items-center gap-3 border-b border-parchment/10 pb-2">
-                    <span aria-hidden="true" className={`w-5 text-center ${isFound ? "text-gold" : "text-parchment/40"}`}>
+                    <span aria-hidden="true" className={`w-5 text-center ${isFound ? "text-gold" : "text-parchment/65"}`}>
                       {isFound ? "✓" : "?"}
                     </span>
                     {isFound ? (
@@ -53,8 +64,8 @@ export function LedgerPanel({ walk, session, copy, open, onClose, children }: Le
                         {clue.value}
                       </span>
                     ) : (
-                      <span className="uppercase tracking-wider text-parchment/40">
-                        Clue {index + 1} · locked
+                      <span className="uppercase italic tracking-wider text-parchment/65">
+                        {t("game.ledger.clueLocked", { number: index + 1 })}
                       </span>
                     )}
                   </li>
@@ -86,10 +97,10 @@ export function LedgerPanel({ walk, session, copy, open, onClose, children }: Le
                   <span aria-hidden="true" className="w-5 text-center text-gold">
                     {marker}
                   </span>
-                  <span className="font-display text-sm text-parchment/50">
+                  <span className="font-display text-sm text-parchment/65">
                     {mainNumber !== undefined ? String(mainNumber).padStart(2, "0") : "+"}
                   </span>
-                  <span className={isRevealed ? "text-parchment" : "text-parchment/40"}>
+                  <span className={isRevealed ? "text-parchment" : "italic text-parchment/65"}>
                     {isRevealed ? location.name : "???"}
                     {location.isBonus && !isSkipped && (
                       <span className="ml-2 text-xs uppercase tracking-wider text-parchment/60">{t("guide.extraStop")}</span>

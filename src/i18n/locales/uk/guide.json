@@ -81,11 +81,11 @@
   "finishWithoutDetour": "Завершити прогулянку тут",
   "chapter": "Частина {number}",
   "chapterOf": "Частина {number} / {total}",
-  "collection": "Колекція",
   "notOnRoute": "Поза маршрутом",
   "distance": "Відстань",
   "time": "Час",
   "viewRoute": "Переглянути маршрут",
   "discoverAnotherWalk": "Обрати іншу прогулянку",
-  "unknownArtist": "Невідомий"
+  "unknownArtist": "Невідомий",
+  "stopUnavailable": "Розповідь про цю зупинку зараз недоступна. Ви можете просто продовжити прогулянку."
 }

@@ -24,6 +24,7 @@ export const hiddenPubsContentNl: HiddenPubsContent = {
       clueCollectedTitle: "Het kasboek is veranderd",
       locationsTitle: "Herbergen",
       locationsDiscoveredLabel: "herbergen ontdekt",
+      routeButtonLabel: "Kasboek",
     },
     narrative: {
       title: "Het Verloren Herbergkasboek",

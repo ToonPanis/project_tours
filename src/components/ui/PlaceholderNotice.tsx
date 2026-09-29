@@ -1,15 +1,15 @@
-import { englishTranslator, type Translator } from "@/i18n/translate";
+import type { Translator } from "@/i18n/translate";
 
 interface PlaceholderNoticeProps {
   message?: string;
-  t?: Translator;
+  t: Translator;
 }
 
 /**
  * Shown wherever content has `contentStatus: "placeholder"`, so unverified
  * text is never presented as historical fact.
  */
-export function PlaceholderNotice({ message, t = englishTranslator }: PlaceholderNoticeProps) {
+export function PlaceholderNotice({ message, t }: PlaceholderNoticeProps) {
   return (
     <aside
       role="note"

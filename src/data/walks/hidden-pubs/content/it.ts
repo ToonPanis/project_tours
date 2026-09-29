@@ -29,6 +29,7 @@ export const hiddenPubsContentIt: HiddenPubsContent = {
       clueCollectedTitle: "Il registro è cambiato",
       locationsTitle: "Taverne",
       locationsDiscoveredLabel: "taverne scoperte",
+      routeButtonLabel: "Registro",
     },
     narrative: {
       title: "Il registro perduto della taverna",

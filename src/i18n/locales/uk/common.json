@@ -8,6 +8,7 @@
   "previous": "Назад",
   "submit": "Перевірити",
   "yourAnswer": "Ваша відповідь",
+  "labelValue": "{label}: {value}",
   "units": {
     "meters": "{value} м",
     "kilometers": "{value} км",

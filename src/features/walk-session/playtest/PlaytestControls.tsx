@@ -11,7 +11,9 @@ import type { Walk } from "@/types/walk";
 import { NavigationPlaytestTools } from "@/features/navigation/simulation/NavigationPlaytestTools";
 import type { GeoCoordinates } from "@/types/common";
 import type { WalkingRoute } from "@/types/navigation";
-import { getOrderedLocations } from "../logic/route";
+import { getOrderedLocations } from "@/lib/walk-locations";
+import type { CurrentStop } from "../logic/current-stop";
+import { storageKey } from "../storage/session-storage";
 import { getJumpToStopActions, getNextStageActions, getUnlockNextActions } from "./get-correct-answer";
 
 /**
@@ -19,8 +21,36 @@ import { getJumpToStopActions, getNextStageActions, getUnlockNextActions } from 
  * NEXT_PUBLIC_PLAYTEST_TOOLS=true is set. Remove that variable before real
  * players use the site.
  */
-export const isPlaytestToolsEnabled =
-  process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_PLAYTEST_TOOLS === "true";
+export function isPlaytestEnabled(env: { NODE_ENV?: string; NEXT_PUBLIC_PLAYTEST_TOOLS?: string }): boolean {
+  return env.NODE_ENV !== "production" || env.NEXT_PUBLIC_PLAYTEST_TOOLS === "true";
+}
+
+// Written out in full: Next.js only inlines NEXT_PUBLIC_ variables it can see literally.
+export const isPlaytestToolsEnabled = isPlaytestEnabled({
+  NODE_ENV: process.env.NODE_ENV,
+  NEXT_PUBLIC_PLAYTEST_TOOLS: process.env.NEXT_PUBLIC_PLAYTEST_TOOLS,
+});
+
+/** Saved walks start with this; the chosen language and anything else stay. */
+const SAVED_WALK_KEY_PREFIX = storageKey("");
+
+/** Deletes every saved walk on this device (only those keys, not the language choice). */
+export function clearSavedWalks(storage: Storage): void {
+  const keys = Array.from({ length: storage.length }, (_, index) => storage.key(index)).filter(
+    (key): key is string => key !== null && key.startsWith(SAVED_WALK_KEY_PREFIX),
+  );
+  for (const key of keys) storage.removeItem(key);
+}
+
+/** The simulated-GPS tools' input while the walker is travelling to a stop (else null). */
+export function getPlaytestNavigation(
+  stop: Pick<CurrentStop, "progress" | "routeToCurrent" | "location">,
+  resetNavigation: () => void,
+): PlaytestControlsProps["navigation"] {
+  return stop.progress.status === "travelling"
+    ? { route: stop.routeToCurrent, destination: stop.location.coordinates, onReset: resetNavigation }
+    : null;
+}
 
 interface PlaytestControlsProps {
   walk: Walk;
@@ -62,7 +92,11 @@ export function PlaytestControls({
   }
 
   function clearStorage() {
-    window.localStorage.clear();
+    try {
+      clearSavedWalks(window.localStorage);
+    } catch {
+      // Storage blocked (private mode): nothing saved to clear.
+    }
     window.location.reload();
   }
 
@@ -134,7 +168,7 @@ export function PlaytestControls({
           Reset walk
         </button>
         <button type="button" className={toolButtonClasses} onClick={clearStorage}>
-          Clear localStorage
+          Clear saved walks
         </button>
         <button type="button" className="mt-1 text-xs underline" onClick={() => setIsOpen(false)}>
           Hide

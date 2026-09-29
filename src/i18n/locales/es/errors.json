@@ -8,5 +8,19 @@
     "title": "Este paseo no existe",
     "text": "Puede que la ruta que buscas se haya movido o que todavía no esté disponible.",
     "seeAll": "Ver todos los paseos"
+  },
+  "playError": {
+    "title": "Algo ha salido mal",
+    "text": "El paseo se ha detenido de forma inesperada, por ejemplo por una conexión débil. Normalmente tu progreso se guarda en este móvil.",
+    "tryAgain": "Intentar de nuevo",
+    "startOver": "Empezar este paseo de nuevo",
+    "startOverTitle": "¿Empezar este paseo de nuevo?",
+    "startOverMessage": "Esto borra el progreso guardado de este paseo en este móvil y vuelve a empezar desde la primera parada.",
+    "startOverConfirm": "Sí, empezar de nuevo",
+    "allWalks": "Todos los paseos"
+  },
+  "globalError": {
+    "title": "Algo ha salido mal",
+    "text": "No se ha podido mostrar esta página. Inténtalo de nuevo en un momento."
   }
 }

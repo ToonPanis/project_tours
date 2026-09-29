@@ -8,5 +8,19 @@
     "title": "Diesen Rundgang gibt es nicht",
     "text": "Die gesuchte Route wurde vielleicht verschoben oder ist noch nicht verfügbar.",
     "seeAll": "Alle Rundgänge"
+  },
+  "playError": {
+    "title": "Etwas ist schiefgelaufen",
+    "text": "Der Rundgang wurde unerwartet unterbrochen, zum Beispiel durch eine schwache Verbindung. Euer Fortschritt wird normalerweise auf diesem Handy gespeichert.",
+    "tryAgain": "Erneut versuchen",
+    "startOver": "Diesen Rundgang neu beginnen",
+    "startOverTitle": "Diesen Rundgang neu beginnen?",
+    "startOverMessage": "Dadurch wird der gespeicherte Fortschritt dieses Rundgangs auf diesem Handy gelöscht und ihr beginnt wieder bei der ersten Station.",
+    "startOverConfirm": "Ja, neu beginnen",
+    "allWalks": "Alle Rundgänge"
+  },
+  "globalError": {
+    "title": "Etwas ist schiefgelaufen",
+    "text": "Diese Seite konnte nicht angezeigt werden. Bitte versuche es gleich noch einmal."
   }
 }

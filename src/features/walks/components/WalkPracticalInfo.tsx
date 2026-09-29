@@ -1,4 +1,4 @@
-import { englishTranslator, type Translator } from "@/i18n/translate";
+import type { Translator } from "@/i18n/translate";
 import type { LanguageCode } from "@/types/common";
 import type { PracticalInfoItem } from "@/types/walk";
 import { formatLanguages } from "../utils/format-walk";
@@ -6,11 +6,11 @@ import { formatLanguages } from "../utils/format-walk";
 interface WalkPracticalInfoProps {
   items: PracticalInfoItem[];
   languages: LanguageCode[];
-  t?: Translator;
+  t: Translator;
 }
 
 /** Practical facts such as age advice, alcohol policy and languages. */
-export function WalkPracticalInfo({ items, languages, t = englishTranslator }: WalkPracticalInfoProps) {
+export function WalkPracticalInfo({ items, languages, t }: WalkPracticalInfoProps) {
   const allItems = [...items, { label: t("walks.practical.languages"), value: formatLanguages(languages, t) }];
 
   return (

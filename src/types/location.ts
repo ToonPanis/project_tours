@@ -88,8 +88,10 @@ export interface WalkLocation {
   historicalReveal?: HistoricalReveal;
   /** The narrated stop page, for guide walks. */
   guide?: GuideStopContent;
-  unlockCondition: UnlockCondition;
-  nearbyPlaces: NearbyPlace[];
+  /** Not used by the app yet (the reducer decides when a stop unlocks). Kept for future rules. */
+  unlockCondition?: UnlockCondition;
+  /** Not shown by the app yet. */
+  nearbyPlaces?: NearbyPlace[];
   optionalBreak?: OptionalBreak;
   /** E.g. "Cobblestones and three steps at the entrance". */
   accessibilityNotes?: string;

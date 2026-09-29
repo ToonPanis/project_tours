@@ -1,10 +1,10 @@
-import { englishTranslator, type Translator } from "@/i18n/translate";
-import { getOrderedLocations, isRevealedBeforeStart } from "@/features/walk-session/logic/route";
+import type { Translator } from "@/i18n/translate";
+import { getOrderedLocations, isRevealedBeforeStart } from "@/lib/walk-locations";
 import type { Walk } from "@/types/walk";
 
 interface LocationPreviewListProps {
   walk: Walk;
-  t?: Translator;
+  t: Translator;
 }
 
 /**
@@ -14,7 +14,7 @@ interface LocationPreviewListProps {
  * For walks with a progressive route, locked stops show "???". This is a
  * Server Component, so hidden names are never sent to the browser.
  */
-export function LocationPreviewList({ walk, t = englishTranslator }: LocationPreviewListProps) {
+export function LocationPreviewList({ walk, t }: LocationPreviewListProps) {
   const orderedLocations = getOrderedLocations(walk);
   const lastLocationId = orderedLocations.at(-1)?.id;
 

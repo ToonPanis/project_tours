@@ -1,8 +1,6 @@
 {
   "header": {
-    "stopProgress": "Остановка {current} / {total}",
     "clues": "Улики {found} / {total}",
-    "ledger": "Книга",
     "route": "Маршрут",
     "progressLabel": "Ход прогулки",
     "stopCounter": "Остановка {current} / {total}"
@@ -11,12 +9,12 @@
     "newAdventure": "Начать новое приключение",
     "welcomeBack": "С возвращением",
     "continueWalk": "Продолжить прогулку",
-    "restartPlaytest": "Начать тест заново",
+    "startAgain": "Начать заново",
     "savedAdventure": "Сохранённое приключение",
     "completed": "Завершено",
     "stopOf": "Остановка {current} из {total}",
     "team": "Команда: {team}",
-    "restartTitle": "Начать тест заново?",
+    "restartTitle": "Начать приключение заново?",
     "restartMessage": "Сохранённый прогресс на этом телефоне будет удалён, и игра начнётся с первой остановки.",
     "restartConfirm": "Да, начать заново"
   },
@@ -89,7 +87,12 @@
     "yourClues": "Ваши улики",
     "notPlayable": "Этот тип задания пока недоступен.",
     "hint": "Подсказка {number}: ",
-    "needHint": "Нужна подсказка?"
+    "needHint": "Нужна подсказка?",
+    "revealOffer": "Не получается? Можно посмотреть ответ и продолжить прогулку.",
+    "revealAnswer": "Показать ответ",
+    "answerIs": "Ответ: {answer}",
+    "wrongAttempts": "Неверных ответов: {count}",
+    "wrongOption": "неверный ответ"
   },
   "solved": {
     "correct": "Верно",
@@ -140,7 +143,6 @@
     "discoveredClues": "Найденные улики · {found} / {total}",
     "clueLocked": "Улика {number} · закрыта",
     "current": "Сейчас",
-    "extraStop": "Доп. остановка",
     "skipped": "Пропущено"
   },
   "copy": {

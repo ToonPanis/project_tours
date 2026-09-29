@@ -12,13 +12,17 @@
   "continueWithoutGps": "Ohne Live-GPS weiter",
   "permissionTitle": "Standortzugriff nötig",
   "permissionBody": "Ohne deinen Standort können wir nicht zeigen, wo du bist; Karte und Route bleiben aber sichtbar.",
-  "permissionHelp": "Fragt dein Browser nicht erneut? Erlaube den Standort für diese Seite in den Browsereinstellungen.",
+  "permissionHelp": "Fragt dein Browser nicht erneut? Erlaube den Standort für diese Seite in den Browsereinstellungen. Prüfe auch in den Einstellungen deines Handys, ob der Standort für deinen Browser eingeschaltet ist.",
   "tryAgain": "Erneut versuchen",
   "followDirection": "Laufrichtung folgen",
   "northUp": "Norden oben",
+  "northShort": "N",
   "recenter": "Zentrieren",
   "notOnMap": "Dieser Ort ist noch nicht auf der Karte.",
   "mapUnavailable": "Die Karte konnte nicht geladen werden (keine Verbindung, oder dieser Browser kann keine Karten anzeigen). Die Wegbeschreibung und die externe Karte funktionieren weiterhin.",
+  "mapTilesFailing": "Ein Teil der Karte kann gerade nicht geladen werden (schwache Verbindung?). Die Wegbeschreibung unten funktioniert weiterhin.",
+  "mapRegion": "Karte: Route zu {name}",
+  "mapLoading": "Karte wird geladen…",
   "gpsUnavailable": "GPS ist hier nicht verfügbar. Der Standort braucht eine sichere (https) Seite und aktivierte Ortungsdienste.",
   "gpsWeak": "Schwaches GPS-Signal.",
   "gpsWeakDetail": "Deine Position ist möglicherweise ungenauer.",
@@ -48,5 +52,30 @@
     "u-turn": "Umkehren",
     "roundabout": "In den Kreisverkehr",
     "arrive": "Ziel voraus"
+  },
+  "confirmArrival": {
+    "title": "Bist du bei {name}?",
+    "message": "Laut GPS bist du noch etwa {distance} entfernt. Trotzdem mit dieser Station weitermachen?",
+    "confirm": "Ja, ich bin hier"
+  },
+  "stillSearching": "Deine Position wird noch gesucht. Draußen mit freiem Blick zum Himmel geht das schneller.",
+  "direction": "Himmelsrichtung: {direction}",
+  "compass": {
+    "n": "Norden",
+    "ne": "Nordosten",
+    "e": "Osten",
+    "se": "Südosten",
+    "s": "Süden",
+    "sw": "Südwesten",
+    "w": "Westen",
+    "nw": "Nordwesten"
+  },
+  "mapControls": {
+    "zoomIn": "Vergrößern",
+    "zoomOut": "Verkleinern",
+    "toggleAttribution": "Kartenquellen ein- oder ausblenden",
+    "mapFeedback": "Feedback zur Karte",
+    "map": "Karte",
+    "marker": "Kartenmarkierung"
   }
 }
