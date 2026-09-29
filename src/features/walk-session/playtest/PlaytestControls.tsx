@@ -12,6 +12,7 @@ import { NavigationPlaytestTools } from "@/features/navigation/simulation/Naviga
 import type { GeoCoordinates } from "@/types/common";
 import type { WalkingRoute } from "@/types/navigation";
 import { getOrderedLocations } from "@/lib/walk-locations";
+import type { CurrentStop } from "../logic/current-stop";
 import { storageKey } from "../storage/session-storage";
 import { getJumpToStopActions, getNextStageActions, getUnlockNextActions } from "./get-correct-answer";
 
@@ -39,6 +40,16 @@ export function clearSavedWalks(storage: Storage): void {
     (key): key is string => key !== null && key.startsWith(SAVED_WALK_KEY_PREFIX),
   );
   for (const key of keys) storage.removeItem(key);
+}
+
+/** The simulated-GPS tools' input while the walker is travelling to a stop (else null). */
+export function getPlaytestNavigation(
+  stop: Pick<CurrentStop, "progress" | "routeToCurrent" | "location">,
+  resetNavigation: () => void,
+): PlaytestControlsProps["navigation"] {
+  return stop.progress.status === "travelling"
+    ? { route: stop.routeToCurrent, destination: stop.location.coordinates, onReset: resetNavigation }
+    : null;
 }
 
 interface PlaytestControlsProps {

@@ -83,5 +83,6 @@
   "time": "Zeit",
   "viewRoute": "Route ansehen",
   "discoverAnotherWalk": "Weiteren Rundgang entdecken",
-  "unknownArtist": "Unbekannt"
+  "unknownArtist": "Unbekannt",
+  "stopUnavailable": "Die Geschichte zu dieser Station ist gerade nicht verfügbar. Du kannst den Rundgang einfach fortsetzen."
 }

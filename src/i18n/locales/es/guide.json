@@ -83,5 +83,6 @@
   "time": "Tiempo",
   "viewRoute": "Ver la ruta",
   "discoverAnotherWalk": "Descubre otro paseo",
-  "unknownArtist": "Desconocido"
+  "unknownArtist": "Desconocido",
+  "stopUnavailable": "La historia de esta parada no está disponible ahora mismo. Puedes seguir con el paseo sin problema."
 }

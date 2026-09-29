@@ -83,5 +83,6 @@
   "time": "Tijd",
   "viewRoute": "Bekijk de route",
   "discoverAnotherWalk": "Ontdek een andere wandeling",
-  "unknownArtist": "Onbekend"
+  "unknownArtist": "Onbekend",
+  "stopUnavailable": "Het verhaal van deze stop is nu niet beschikbaar. Je kunt de wandeling gewoon verderzetten."
 }

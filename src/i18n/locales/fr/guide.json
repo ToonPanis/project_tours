@@ -83,5 +83,6 @@
   "time": "Temps",
   "viewRoute": "Voir le parcours",
   "discoverAnotherWalk": "Découvrir une autre balade",
-  "unknownArtist": "Inconnu"
+  "unknownArtist": "Inconnu",
+  "stopUnavailable": "Le récit de cette étape n'est pas disponible pour le moment. Vous pouvez simplement continuer la balade."
 }

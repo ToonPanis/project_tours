@@ -38,13 +38,15 @@ node scripts/download-commons-images.mjs <walk-folder>   # after changing image-
 src/app/                      pages (Server Components): / , /walks, /walks/[slug], /walks/[slug]/play, not-found
 src/components/layout|ui/     SiteHeader/Footer, LanguageSelector (🌐), Button, Badge, Dialog, ConfirmDialog, ProgressBar…
 src/features/walks/           walk cards, detail-page sections, format-walk.ts (Intl formatting), walk-content.ts
-src/features/walk-session/    the player: WalkPlayer (routes to game or guide), game screens, session-reducer.ts,
+src/features/walk-session/    the player core: WalkPlayer (routes to game or guide), usePlayerShell + getCurrentStop +
+                              StopNavigation (shared by both players), game screens, session-reducer.ts,
                               answers.ts, voting.ts, session-stats.ts, storage/session-storage.ts, playtest/
 src/features/guide/           GuideWalkPlayer + stop page, chapter cards, card decks, search tasks, collection, glossary
 src/features/navigation/      NavigationScreen, WalkingMap (MapLibre), DirectionPanel, useGeolocation, useWakeLock,
                               logic/ (arrival, tracking, route-progress, route-legs), simulation/ (fake GPS), config.ts
 src/i18n/                     translation layer (see "Languages")
-src/lib/                      repositories/ (walkRepository), routing/ (OSRM normalising, maneuver labels), geo.ts
+src/lib/                      repositories/ (walkRepository, cached getWalk), routing/ (OSRM normalising, maneuver labels),
+                              geo.ts, walk-locations.ts (route order), validate-walk.ts, security-headers.ts
 src/types/                    shared models (walk, location, challenge, content, guide, navigation, session, …)
 src/data/walks/               ALL walk data (see "Walks")
 scripts/                      route generator, Commons image downloader, MapLibre worker copy, translation check
@@ -75,7 +77,7 @@ Registered in `src/data/walks/index.ts` → `getWalks(locale)`: **Poortjes, Hidd
 | **Classics of Antwerp** (`classics-of-antwerp`) | guide | 18 stops from Antwerpen-Centraal back in time to the Scheldt, historical photos + then/now. | `stops.ts`, `content/<lang>.ts`, `image-sources.json` → `images.json`, `coordinates.json`, `routes.json` |
 | Upcoming: Dark Antwerp, The Rubens Code | – | "coming soon" cards only | `upcoming-walks.ts` |
 
-**"The 17 Gates" (`the-17-gates.ts`) is NOT a live walk.** It's an old English placeholder walk kept only as a test fixture (5 tests import it). The real gates walk is Poortjes van Antwerpen.
+**"The 17 Gates" (`src/__tests__/fixtures/the-17-gates.ts`) is NOT a live walk.** It's an old English placeholder walk kept only as a test fixture (5 tests import it). The real gates walk is Poortjes van Antwerpen.
 
 Pattern: **technical data exists once** (ids, coordinates, addresses, images, answers, statuses); **texts exist per language** in `content/`. `content/types.ts` of each walk defines the text shape.
 
@@ -107,7 +109,7 @@ Pattern: **technical data exists once** (ids, coordinates, addresses, images, an
 
 ## Key types (`src/types/`)
 
-`Walk` (+ `WalkSummary`, `UpcomingWalk`, `GameCopy`, `WalkFinale`, `WalkNarrative`, `experience`, `theme`, `routeReveal`, `contentStatus`), `WalkLocation` (coordinates|null, `unlockCondition`, `content: ContentBlock[]`, `challenge`, `bonusChallenge`, `drinkRound`, `historicalReveal`, `guide?: GuideStopContent`, `isBonus`), `Challenge` (union: multiple-choice / text-answer / number-answer / observation / sequence / code, `hints`, `researchStatus`), `ContentBlock` (`history` with `verification` | `legend` | `story` with `originalLanguage`/`translation`), `HistoricalReveal`, `Clue`, `DrinkOption` (`alcoholic`, `menuVerification`), guide types (`GuideSection` kind history/interpretation/context/legend, `GuideImage`, `CollectionItem`, `HeritageStatus`, `SearchTask`, `InfoBox` with `checkedOn`, `WalkChapter`), navigation (`RouteLeg`, `WalkingRoute`, `Maneuver`, `GpsFix`), session (`WalkSession`, `LocationProgress`, `SessionAction`).
+`Walk` (+ `WalkSummary`, `UpcomingWalk`, `WalkCopy`, `WalkFinale`, `WalkNarrative`, `experience`, `theme`, `routeReveal`, `contentStatus`), `WalkLocation` (coordinates|null, `content: ContentBlock[]`, `challenge`, `bonusChallenge`, `drinkRound`, `historicalReveal`, `guide?: GuideStopContent`, `isBonus`), `Challenge` (union: multiple-choice / text-answer / number-answer / observation / sequence / code, `hints`, `researchStatus`), `ContentBlock` (`history` with `verification` | `legend` | `story` with `originalLanguage`/`translation`), `HistoricalReveal`, `Clue`, `DrinkOption` (`alcoholic`, `menuVerification`), guide types (`GuideSection` kind history/interpretation/context/legend, `GuideImage`, `CollectionItem`, `HeritageStatus`, `SearchTask`, `InfoBox` with `checkedOn`, `WalkChapter`), navigation (`RouteLeg`, `WalkingRoute`, `Maneuver`, `GpsFix`), session (`WalkSession`, `LocationProgress`, `SessionAction`).
 
 ## Environment & external services
 
@@ -136,7 +138,8 @@ Security headers for every response come from `src/lib/security-headers.ts` via 
 - Alcohol rules below. They are enforced by `walk-data.test.ts` in every language.
 - "Hidden Pubs" title and café/brand names untranslated; the ledger stays Dutch with a translation.
 - Vanished gates are never waypoints; optional stops get bypass legs.
-- `the-17-gates.ts` is a test fixture, not a walk to revive.
+- `the-17-gates.ts` is a test fixture (in `src/__tests__/fixtures/`), not a walk to revive.
+- Every walk must pass `validateWalk` (`src/lib/validate-walk.ts`, run in `walk-data.test.ts` for every walk × language): add new structural rules there, not per walk.
 
 ## Code guidelines
 

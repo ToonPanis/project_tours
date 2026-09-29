@@ -448,3 +448,124 @@ Status values: `VERIFIED FIXED` · `PARTIALLY FIXED` · `BLOCKED` · `NOT REPROD
 
 ### Not in scope
 - **L-03** (answers are in the client payload; server-side answer checking): PRODUCT OWNER DECISION REQUIRED, tied to payments or prizes.
+
+---
+
+## Phase 4 — Architecture & code quality (2026-09-29)
+
+- **Branch:** `fix/phase-4-architecture`, branched from `46f96f1`. Uncommitted, awaiting approval.
+- **Process:** the Architecture Guardian reviewed the plan **before** implementation and **amended** it:
+  - a narrower player shell;
+  - the storage-key rename deferred;
+  - the discriminated-union rewrite dropped.
+
+  That plan was followed.
+- **Constraint:** no change to the saved-game format or the reducer actions. Player tests pass without assertion changes, except the reworded restart label.
+
+### Validation gate
+
+| Command | Result |
+|---|---|
+| `npm run typecheck` | ✅ |
+| `npm run lint` | ✅ 0 problems |
+| `npm run i18n:check` | ✅ |
+| `npm run test:run` | ✅ 33 files, **872 tests** (was 813, +59) |
+| `npm run build` | ✅ All routes still dynamic (`ƒ`). The build now prepares 5 internal pages instead of 11, because the no-op `generateStaticParams` was removed. |
+
+### L-06: Duplicated player orchestration
+- **Status:** VERIFIED FIXED
+- **Fix:**
+  - `logic/current-stop.ts` `getCurrentStop()` (pure, tested): the current stop, the next stop, progress, the route to the current stop (bypass-aware) and the **exact** route to the next stop.
+  - `state/usePlayerShell.ts`: the session plus the route panel, GPS flag, navigation reset and `restartBase()`.
+  - `components/StopNavigation.tsx`: the same key as before.
+  - `getPlaytestNavigation()`.
+  - Each player keeps its own flow and local state: game phases, tie animation, chapter cards, detours.
+- **Tests:** `player-shell.test.tsx`:
+  - the exact next leg;
+  - after skipping a detour, the route comes from the bypass.
+
+### L-07: Coupling and naming
+- **Status:** VERIFIED FIXED (pure moves and renames; `git mv` keeps history; all imports updated, no re-exports):
+  - `walk-session/logic/route.ts` → `src/lib/walk-locations.ts`;
+  - `LedgerPanel` → `RoutePanel` (`onOpenLedger` → `onOpenRoute`);
+  - `GameCopy`/`game-copy.ts` → `WalkCopy`/`walk-copy.ts`.
+  - The i18n keys and the visible "Ledger" text are unchanged.
+
+### M-16: Walk model and structural checks
+- **Status:** VERIFIED FIXED
+- **Fix:**
+  - `src/lib/validate-walk.ts`, run in tests for every walk × language. It checks:
+    - unique stop ids;
+    - guide stops have content and no game fields;
+    - a route for every consecutive pair, plus a bypass around each optional stop;
+    - references (clues, chapters, required and answer clues).
+  - A guide stop without content shows a translated "continue" fallback: never a blank page or dead end.
+  - The discriminated-union rewrite was dropped (Guardian).
+- **Tests:**
+  - `validate-walk.test.ts`: the real walks are valid, and 6 deliberately broken cases are each caught;
+  - `walk-data.test.ts`: all 24 walk × language combinations pass;
+  - `player-shell.test.tsx`: the fallback moves on.
+
+### L-17: Double reads, misleading comment
+- **Status:** VERIFIED FIXED
+- **Fix:** `getWalk = cache(...)` in `src/lib/repositories/index.ts`, shared by `generateMetadata` and the page (the Next.js docs pattern). The no-op `generateStaticParams` was removed, with a comment explaining why pages are rendered per request.
+
+### L-18: Unused fields, fixture location, playtest wording
+- **Status:** VERIFIED FIXED (storage-key rename DEFERRED by the Guardian)
+- **Fix:**
+  - `unlockCondition` and `nearbyPlaces` are optional; the data is kept.
+  - The fixture moved to `src/__tests__/fixtures/the-17-gates.ts`.
+  - "Restart playtest" → "Start again", and "Restart the playtest?" → "Start the adventure again?", in all 8 languages (key `game.start.startAgain`).
+  - A comment on the historical storage key: never rename it without a migration.
+  - The privacy draft wording was aligned.
+
+### L-19: Repeated walk-assembly code
+- **Status:** VERIFIED FIXED
+- **Fix:** `src/data/walks/shared.ts` (`findPosition`, `loadRouteLegs`) is used by all 3 walks.
+- **Evidence:** every built walk in all 8 languages is **byte-identical** before and after (4.2 MB JSON compared).
+
+### L-20: Two distance formatters
+- **Status:** VERIFIED FIXED
+- **Fix:** walk totals on the guide start and completion screens use `formatDistance`, like the cards and detail page. The output is the same for today's walks.
+
+### L-21: A language switch scrolled to the top
+- **Status:** VERIFIED FIXED
+- **Fix:** `PlayScreen` has an optional `screenId` (falls back to the title), set on all in-walk screens from data ids.
+- **Tests:** `play-screen.test.tsx`: a language switch doesn't scroll, a new screen does.
+- **Intended difference:** switching language no longer jumps to the top or refocuses the heading.
+
+### L-22: Text used as list keys
+- **Status:** VERIFIED FIXED by a guard, not by changing keys. These lists have no ids, and the Guardian forbade index keys.
+- **Fix:** `unique-list-texts.test.ts` checks that every list of texts in every walk × language has unique entries, so text keys can never collide. There are no duplicates today.
+
+### Reviews
+- **Architecture Guardian:** approved the amended plan beforehand, and in the final check.
+  - The implementation matches the plan.
+  - Coupling is clean: nothing in `src/lib`, `src/data` or `src/types` imports from features or the app.
+  - No unnecessary abstraction; the L-22 guard is accepted.
+  - Two comment wordings fixed.
+- **Code reviewer:** APPROVE. It verified that every prop is passed identically, restart behaves as before, `cache()` is used correctly, and removing `generateStaticParams` has no side effects (unknown slugs still 404).
+- **QA:** no regressions across 9 scenarios, with 25 probe tests:
+  - all 3 walks end to end through the UI;
+  - Poortjes: after skipping the detour, the **bypass** is shown (595 m vs 687 m);
+  - the chapter card after a restart;
+  - reset navigation;
+  - a language switch mid-navigation in all 3 walks (same stop, GPS kept, no scroll);
+  - the tie animation plays once;
+  - the route panel and restart;
+  - old v2 and v3 saves continue in all 3 walks;
+  - the guide fallback.
+- **Minors fixed afterwards:**
+  - the game completion screen gets a `screenId` (no scroll on a language switch);
+  - the guide fallback reuses `PlayScreen` (scrolls to the top and focuses its title).
+
+### Documented side effects (intended or harmless)
+- **Drink vote:** passing the phone to the next player now scrolls to the top and focuses the title (screen id per player). Before, the title was the same for every player, so nothing happened. This is better for pass-the-phone and for screen readers.
+- **Hidden Pubs:** a café missing from `coordinates.json` would now also get `coordinatesStatus: "to-verify"` (shared `findPosition`). All cafés are listed, so the output is unchanged (byte-identical check).
+- **Game player's route to the next stop:** it no longer falls back to "any leg ending at the next stop". It uses the exact leg, which `validateWalk` guarantees for every walk.
+- **Walk total distance:** round totals now show without ".0" ("10 km"). Today's totals are unchanged.
+
+### Remaining (optional, not from this phase)
+- **Simulated GPS "arrive":** needs two clicks right after "Reset navigation". The first reading only switches to live mode. Playtest-only.
+- **Guide stop page → navigation:** no scroll to the top. Candidate for Phase 6 (UX).
+- **Start, team-setup and intro screens:** still follow the title (they come before the game).
