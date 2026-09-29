@@ -9,7 +9,7 @@ import type { Challenge } from "@/types/challenge";
 import type { WalkLocation } from "@/types/location";
 import type { ChallengeAnswer, SessionAction, WalkSession } from "@/types/session";
 import type { Walk } from "@/types/walk";
-import { getOrderedLocations } from "../logic/route";
+import { getOrderedLocations } from "@/lib/walk-locations";
 
 /** The answer that solves a challenge, taken from the walk data. */
 export function getCorrectAnswer(challenge: Challenge): ChallengeAnswer {

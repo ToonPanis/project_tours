@@ -8,8 +8,8 @@ import { getRouteLeg, getRouteLegTo, getRouteLegToCurrent } from "@/features/nav
 import { PositionSimulationProvider } from "@/features/navigation/simulation/PositionSimulation";
 import type { WalkSession } from "@/types/session";
 import type { Walk } from "@/types/walk";
-import { getGameCopy } from "../logic/game-copy";
-import { getOrderedLocations } from "../logic/route";
+import { getWalkCopy } from "../logic/walk-copy";
+import { getOrderedLocations } from "@/lib/walk-locations";
 import { PlaytestControls } from "../playtest/PlaytestControls";
 import { useWalkSession } from "../state/useWalkSession";
 import { ArrivedScreen } from "./ArrivedScreen";
@@ -18,7 +18,7 @@ import { CompletionScreen } from "./CompletionScreen";
 import { DrinkVoting } from "./DrinkVoting";
 import { FinaleScreen } from "./FinaleScreen";
 import { GameIntro } from "./GameIntro";
-import { LedgerPanel } from "./LedgerPanel";
+import { RoutePanel } from "./RoutePanel";
 import { PlayHeader } from "./PlayHeader";
 import { SolvedScreen } from "./SolvedScreen";
 import { StartScreen } from "./StartScreen";
@@ -51,7 +51,7 @@ function WalkPlayerContent({ walk }: WalkPlayerProps) {
   const t = useT();
   const { isLoaded, session, dispatch, startNewSession, resetSession } = useWalkSession(walk);
   const [phase, setPhase] = useState<Phase>("start");
-  const [isLedgerOpen, setIsLedgerOpen] = useState(false);
+  const [isRouteOpen, setIsRouteOpen] = useState(false);
   // Remembers which stop's vote was JUST closed, so the tie animation plays
   // only then and not again after a page refresh.
   const [justVotedLocationId, setJustVotedLocationId] = useState<string | null>(null);
@@ -60,13 +60,13 @@ function WalkPlayerContent({ walk }: WalkPlayerProps) {
   // Changing this key restarts the navigation screen (playtest "reset navigation").
   const [navigationKey, setNavigationKey] = useState(0);
 
-  const copy = getGameCopy(walk, t);
+  const copy = getWalkCopy(walk, t);
   const orderedLocations = getOrderedLocations(walk);
 
   function restart() {
     resetSession();
     setPhase("start");
-    setIsLedgerOpen(false);
+    setIsRouteOpen(false);
   }
 
   if (!isLoaded) {
@@ -116,12 +116,12 @@ function WalkPlayerContent({ walk }: WalkPlayerProps) {
   const activeSession: WalkSession = session;
 
   const ledger = (
-    <LedgerPanel
+    <RoutePanel
       walk={walk}
       session={session}
       copy={copy}
-      open={isLedgerOpen}
-      onClose={() => setIsLedgerOpen(false)}
+      open={isRouteOpen}
+      onClose={() => setIsRouteOpen(false)}
     />
   );
   const playtestControls = (
@@ -146,7 +146,7 @@ function WalkPlayerContent({ walk }: WalkPlayerProps) {
   if (session.completedAt) {
     return (
       <>
-        <CompletionScreen walk={walk} session={session} copy={copy} onOpenLedger={() => setIsLedgerOpen(true)} />
+        <CompletionScreen walk={walk} session={session} copy={copy} onOpenRoute={() => setIsRouteOpen(true)} />
         {ledger}
         {playtestControls}
       </>
@@ -190,7 +190,7 @@ function WalkPlayerContent({ walk }: WalkPlayerProps) {
             gpsAlreadyEnabled={isGpsEnabled}
             onGpsEnabled={() => setIsGpsEnabled(true)}
             onArrive={() => dispatch({ type: "ARRIVE" })}
-            onShowRoute={() => setIsLedgerOpen(true)}
+            onShowRoute={() => setIsRouteOpen(true)}
           />
         );
 
@@ -267,7 +267,7 @@ function WalkPlayerContent({ walk }: WalkPlayerProps) {
             onSubmitBonus={(answer) => dispatch({ type: "SUBMIT_BONUS_ANSWER", answer })}
             onSkipBonus={() => dispatch({ type: "SKIP_BONUS" })}
             onContinue={() => dispatch({ type: "CONTINUE_TO_NEXT_LOCATION", at: new Date().toISOString() })}
-            onShowRoute={() => setIsLedgerOpen(true)}
+            onShowRoute={() => setIsRouteOpen(true)}
           />
         );
     }
@@ -275,7 +275,7 @@ function WalkPlayerContent({ walk }: WalkPlayerProps) {
 
   return (
     <>
-      <PlayHeader walk={walk} session={session} onOpenLedger={() => setIsLedgerOpen(true)} />
+      <PlayHeader walk={walk} session={session} onOpenRoute={() => setIsRouteOpen(true)} />
       {renderCurrentScreen()}
       {ledger}
       {playtestControls}

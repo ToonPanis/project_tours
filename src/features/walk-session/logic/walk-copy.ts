@@ -1,8 +1,8 @@
 import { englishTranslator, type Translator } from "@/i18n/translate";
-import type { GameCopy, Walk } from "@/types/walk";
+import type { WalkCopy, Walk } from "@/types/walk";
 
 /** Neutral texts for walks that don't define their own flavour, in the translator's language. */
-export function getDefaultGameCopy(t: Translator = englishTranslator): GameCopy {
+export function getDefaultWalkCopy(t: Translator = englishTranslator): WalkCopy {
   return {
     voteResultTitle: t("game.copy.voteResultTitle"),
     tieTitle: t("game.copy.tieTitle"),
@@ -21,12 +21,12 @@ export function getDefaultGameCopy(t: Translator = englishTranslator): GameCopy 
 }
 
 /** The default texts in English. */
-export const defaultGameCopy: GameCopy = getDefaultGameCopy();
+export const defaultWalkCopy: WalkCopy = getDefaultWalkCopy();
 
 /**
  * The walk's own texts (already in the walk's language, see the walk's
  * content files), with defaults for anything it doesn't override.
  */
-export function getGameCopy(walk: Walk, t: Translator = englishTranslator): GameCopy {
-  return { ...getDefaultGameCopy(t), ...walk.copy };
+export function getWalkCopy(walk: Walk, t: Translator = englishTranslator): WalkCopy {
+  return { ...getDefaultWalkCopy(t), ...walk.copy };
 }

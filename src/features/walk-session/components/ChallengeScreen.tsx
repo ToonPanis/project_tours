@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 import type { Challenge } from "@/types/challenge";
 import type { Clue } from "@/types/clue";
 import type { ChallengeAnswer, LocationProgress } from "@/types/session";
-import type { GameCopy } from "@/types/walk";
+import type { WalkCopy } from "@/types/walk";
 import { optionLetter } from "../logic/option-letter";
 import { canRevealAnswer, getRevealContent } from "../logic/reveal-answer";
 import { PlayScreen } from "./PlayScreen";
@@ -15,7 +15,7 @@ import { RevealAnswer } from "./RevealAnswer";
 interface ChallengeScreenProps {
   challenge: Challenge;
   progress: LocationProgress;
-  copy: GameCopy;
+  copy: WalkCopy;
   /** Clues this challenge needs, as collected by the team (for final puzzles). */
   requiredClues: Clue[];
   onSubmit: (answer: ChallengeAnswer) => void;

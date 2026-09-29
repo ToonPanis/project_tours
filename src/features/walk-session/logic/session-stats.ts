@@ -1,7 +1,7 @@
 import { englishTranslator, type Translator } from "@/i18n/translate";
 import type { WalkSession } from "@/types/session";
 import type { Walk } from "@/types/walk";
-import { getOrderedLocations } from "./route";
+import { getOrderedLocations } from "@/lib/walk-locations";
 
 export interface SessionStats {
   /** 1-based number of the current stop, counting main stops only. */

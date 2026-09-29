@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { NavigationScreen } from "@/features/navigation/components/NavigationScreen";
 import { getDetourCost, getRouteLeg, getRouteLegToCurrent } from "@/features/navigation/logic/route-legs";
-import { LedgerPanel } from "@/features/walk-session/components/LedgerPanel";
+import { RoutePanel } from "@/features/walk-session/components/RoutePanel";
 import { PlayHeader } from "@/features/walk-session/components/PlayHeader";
-import { getGameCopy } from "@/features/walk-session/logic/game-copy";
-import { getOrderedLocations } from "@/features/walk-session/logic/route";
+import { getWalkCopy } from "@/features/walk-session/logic/walk-copy";
+import { getOrderedLocations } from "@/lib/walk-locations";
 import { getSessionStats } from "@/features/walk-session/logic/session-stats";
 import { PlaytestControls } from "@/features/walk-session/playtest/PlaytestControls";
 import { useWalkSession } from "@/features/walk-session/state/useWalkSession";
@@ -42,7 +42,7 @@ export function GuideWalkPlayer({ walk }: { walk: Walk }) {
   const [seenChapterIds, setSeenChapterIds] = useState<string[]>([]);
 
   const t = useT();
-  const copy = getGameCopy(walk, t);
+  const copy = getWalkCopy(walk, t);
   const orderedLocations = getOrderedLocations(walk);
 
   function restart() {
@@ -100,7 +100,7 @@ export function GuideWalkPlayer({ walk }: { walk: Walk }) {
   }
 
   const routePanel = (
-    <LedgerPanel
+    <RoutePanel
       walk={walk}
       session={session}
       copy={copy}
@@ -117,7 +117,7 @@ export function GuideWalkPlayer({ walk }: { walk: Walk }) {
           </div>
         </details>
       )}
-    </LedgerPanel>
+    </RoutePanel>
   );
   const playtestControls = (
     <PlaytestControls
@@ -146,7 +146,7 @@ export function GuideWalkPlayer({ walk }: { walk: Walk }) {
 
   return (
     <>
-      <PlayHeader walk={walk} session={session} onOpenLedger={() => setIsRouteOpen(true)} />
+      <PlayHeader walk={walk} session={session} onOpenRoute={() => setIsRouteOpen(true)} />
 
       {showChapterCard ? (
         <ChapterCard

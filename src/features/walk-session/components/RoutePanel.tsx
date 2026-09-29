@@ -5,13 +5,13 @@ import type { ReactNode } from "react";
 import { Dialog } from "@/components/ui/Dialog";
 import { useT } from "@/i18n/client";
 import type { WalkSession } from "@/types/session";
-import type { GameCopy, Walk } from "@/types/walk";
-import { getOrderedLocations, isLocationRevealed } from "../logic/route";
+import type { WalkCopy, Walk } from "@/types/walk";
+import { getOrderedLocations, isLocationRevealed } from "@/lib/walk-locations";
 
-interface LedgerPanelProps {
+interface RoutePanelProps {
   walk: Walk;
   session: WalkSession;
-  copy: GameCopy;
+  copy: WalkCopy;
   open: boolean;
   onClose: () => void;
   /** Extra content under the route, e.g. a walk's collection. */
@@ -19,7 +19,7 @@ interface LedgerPanelProps {
 }
 
 /** The team's notebook: discovered clues and the route so far. */
-export function LedgerPanel({ walk, session, copy, open, onClose, children }: LedgerPanelProps) {
+export function RoutePanel({ walk, session, copy, open, onClose, children }: RoutePanelProps) {
   const t = useT();
   const title = walk.narrative?.title ?? t("game.ledger.yourRoute", { title: walk.title });
   const orderedLocations = getOrderedLocations(walk);

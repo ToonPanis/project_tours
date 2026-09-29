@@ -8,7 +8,7 @@ import { formatWalkingDistance, formatWalkingTime } from "@/features/navigation/
 import type { WalkLocation } from "@/types/location";
 import type { WalkingRoute } from "@/types/navigation";
 import type { ChallengeAnswer, LocationProgress } from "@/types/session";
-import type { GameCopy } from "@/types/walk";
+import type { WalkCopy } from "@/types/walk";
 import { ContentBlockView } from "./ContentBlockView";
 import { HistoricalRevealView } from "./HistoricalRevealView";
 import { PlayScreen } from "./PlayScreen";
@@ -24,7 +24,7 @@ interface SolvedScreenProps {
   routeToNext: WalkingRoute | null;
   /** True when a final puzzle follows the last location. */
   hasFinale: boolean;
-  copy: GameCopy;
+  copy: WalkCopy;
   onSubmitBonus: (answer: ChallengeAnswer) => void;
   onSkipBonus: () => void;
   onContinue: () => void;

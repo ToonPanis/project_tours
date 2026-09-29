@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import type { DrinkRound } from "@/types/drink";
 import type { LocationProgress } from "@/types/session";
-import type { GameCopy } from "@/types/walk";
+import type { WalkCopy } from "@/types/walk";
 import { tallyVotes } from "../logic/voting";
 import { PlayScreen } from "./PlayScreen";
 import { getDrinkLabel } from "../logic/drink-label";
@@ -15,7 +15,7 @@ const TIE_SUSPENSE_MS = 1800;
 interface VoteResultProps {
   drinkRound: DrinkRound;
   progress: LocationProgress;
-  copy: GameCopy;
+  copy: WalkCopy;
   /** True only right after voting closed with a tie (not after a page refresh). */
   playTieAnimation: boolean;
   onContinue: () => void;

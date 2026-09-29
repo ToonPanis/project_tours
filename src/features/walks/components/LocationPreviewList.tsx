@@ -1,5 +1,5 @@
 import { englishTranslator, type Translator } from "@/i18n/translate";
-import { getOrderedLocations, isRevealedBeforeStart } from "@/features/walk-session/logic/route";
+import { getOrderedLocations, isRevealedBeforeStart } from "@/lib/walk-locations";
 import type { Walk } from "@/types/walk";
 
 interface LocationPreviewListProps {

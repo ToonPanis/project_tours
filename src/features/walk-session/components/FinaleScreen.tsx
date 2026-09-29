@@ -5,7 +5,7 @@ import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import type { Clue } from "@/types/clue";
 import type { ChallengeAnswer, FinaleProgress } from "@/types/session";
-import type { GameCopy, WalkFinale } from "@/types/walk";
+import type { WalkCopy, WalkFinale } from "@/types/walk";
 import { canRevealFinaleAnswer, getRevealContent } from "../logic/reveal-answer";
 import { PlayScreen } from "./PlayScreen";
 import { RevealAnswer } from "./RevealAnswer";
@@ -18,7 +18,7 @@ interface FinaleScreenProps {
   collectedClues: Clue[];
   /** Every clue of the walk: a revealed answer is read from its clue even if that one was missed. */
   allClues: Clue[];
-  copy: GameCopy;
+  copy: WalkCopy;
   /** Small title above the finale, e.g. the name of the walk's story. */
   eyebrow: string;
   onSubmit: (questionId: string, answer: ChallengeAnswer) => void;

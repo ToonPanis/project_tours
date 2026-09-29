@@ -7,11 +7,11 @@ import { getSessionStats } from "../logic/session-stats";
 interface PlayHeaderProps {
   walk: Walk;
   session: WalkSession;
-  onOpenLedger: () => void;
+  onOpenRoute: () => void;
 }
 
 /** Always-visible progress: stop number, progress bar, clues and the Ledger button. */
-export function PlayHeader({ walk, session, onOpenLedger }: PlayHeaderProps) {
+export function PlayHeader({ walk, session, onOpenRoute }: PlayHeaderProps) {
   const t = useT();
   const stats = getSessionStats(walk, session);
 
@@ -31,7 +31,7 @@ export function PlayHeader({ walk, session, onOpenLedger }: PlayHeaderProps) {
         </div>
         <button
           type="button"
-          onClick={onOpenLedger}
+          onClick={onOpenRoute}
           className="min-h-11 shrink-0 rounded-sm border border-gold/60 px-4 text-sm font-semibold uppercase tracking-wider text-gold transition-colors hover:bg-gold hover:text-ink"
         >
           {walk.clues ? "Ledger" : t("game.header.route")}

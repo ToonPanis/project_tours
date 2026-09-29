@@ -11,7 +11,7 @@ import type { Walk } from "@/types/walk";
 import { NavigationPlaytestTools } from "@/features/navigation/simulation/NavigationPlaytestTools";
 import type { GeoCoordinates } from "@/types/common";
 import type { WalkingRoute } from "@/types/navigation";
-import { getOrderedLocations } from "../logic/route";
+import { getOrderedLocations } from "@/lib/walk-locations";
 import { storageKey } from "../storage/session-storage";
 import { getJumpToStopActions, getNextStageActions, getUnlockNextActions } from "./get-correct-answer";
 

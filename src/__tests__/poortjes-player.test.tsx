@@ -7,7 +7,7 @@ import { WalkPlayer } from "@/features/walk-session/components/WalkPlayer";
 import { createWalkSession } from "@/features/walk-session/logic/create-session";
 import { applySessionAction } from "@/features/walk-session/logic/session-reducer";
 import { getSessionStats } from "@/features/walk-session/logic/session-stats";
-import { getOrderedLocations } from "@/features/walk-session/logic/route";
+import { getOrderedLocations } from "@/lib/walk-locations";
 import { localWalkSessionStore } from "@/features/walk-session/storage/session-storage";
 import type { SessionAction, WalkSession } from "@/types/session";
 

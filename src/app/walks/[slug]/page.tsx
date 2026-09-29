@@ -14,7 +14,7 @@ import { WalkPracticalInfo } from "@/features/walks/components/WalkPracticalInfo
 import { WalkStats } from "@/features/walks/components/WalkStats";
 import { formatPrice } from "@/features/walks/utils/format-walk";
 import { getHowItWorksSteps } from "@/features/walks/utils/walk-content";
-import { getGameCopy } from "@/features/walk-session/logic/game-copy";
+import { getWalkCopy } from "@/features/walk-session/logic/walk-copy";
 import { getTranslator } from "@/i18n/server";
 import { walkRepository } from "@/lib/repositories";
 
@@ -114,7 +114,7 @@ export default async function WalkDetailPage({ params }: PageProps<"/walks/[slug
               {t("walks.detail.perTeam")}
             </p>
           </div>
-          <ButtonLink href={`/walks/${walk.slug}/play`}>{getGameCopy(walk, t).startLabel}</ButtonLink>
+          <ButtonLink href={`/walks/${walk.slug}/play`}>{getWalkCopy(walk, t).startLabel}</ButtonLink>
         </section>
 
         {walk.highlights && walk.highlights.length > 0 && (

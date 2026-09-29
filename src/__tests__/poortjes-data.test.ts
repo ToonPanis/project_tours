@@ -4,7 +4,7 @@ import { describe, expect, test } from "vitest";
 import { getPoortjesWalk, poortjesWalk } from "@/data/walks/poortjes-van-antwerpen";
 import { locales } from "@/i18n/config";
 import { getDetourCost, getRouteLeg } from "@/features/navigation/logic/route-legs";
-import { getOrderedLocations } from "@/features/walk-session/logic/route";
+import { getOrderedLocations } from "@/lib/walk-locations";
 import { distanceInMeters } from "@/lib/geo";
 
 const walk = poortjesWalk;

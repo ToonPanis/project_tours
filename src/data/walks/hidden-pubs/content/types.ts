@@ -1,4 +1,4 @@
-import type { GameCopy, PracticalInfoItem, WalkNarrative } from "@/types/walk";
+import type { WalkCopy, PracticalInfoItem, WalkNarrative } from "@/types/walk";
 
 /**
  * Everything in Hidden Pubs that is written in a language. The game data
@@ -49,7 +49,7 @@ export interface HiddenPubsContent {
     tagline: string;
     shortDescription: string;
     description: string;
-    copy: Partial<GameCopy>;
+    copy: Partial<WalkCopy>;
     narrative: WalkNarrative;
     highlights: string[];
     howItWorksSteps: string[];

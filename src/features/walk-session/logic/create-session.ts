@@ -1,7 +1,7 @@
 import type { FinaleProgress, LocationProgress, WalkSession } from "@/types/session";
 import type { Team } from "@/types/team";
 import type { Walk } from "@/types/walk";
-import { getOrderedLocations } from "./route";
+import { getOrderedLocations } from "@/lib/walk-locations";
 
 export function createLocationProgress(status: LocationProgress["status"]): LocationProgress {
   return {

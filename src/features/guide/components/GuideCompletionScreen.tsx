@@ -4,12 +4,12 @@ import { formatWalkingDistance } from "@/features/navigation/logic/maneuver-disp
 import { getElapsedTime, getSessionStats } from "@/features/walk-session/logic/session-stats";
 import { englishTranslator, type Translator } from "@/i18n/translate";
 import type { WalkSession } from "@/types/session";
-import type { GameCopy, Walk } from "@/types/walk";
+import type { WalkCopy, Walk } from "@/types/walk";
 
 interface GuideCompletionScreenProps {
   walk: Walk;
   session: WalkSession;
-  copy: GameCopy;
+  copy: WalkCopy;
   t?: Translator;
   onShowRoute: () => void;
 }

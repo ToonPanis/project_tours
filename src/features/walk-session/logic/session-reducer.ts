@@ -3,7 +3,7 @@ import type { FinaleProgress, LocationProgress, SessionAction, WalkSession } fro
 import type { Walk } from "@/types/walk";
 import { checkAnswer } from "./answers";
 import { canRevealAnswer, canRevealFinaleAnswer } from "./reveal-answer";
-import { getOrderedLocations } from "./route";
+import { getOrderedLocations } from "@/lib/walk-locations";
 import { findLeadingOptionIds, tallyVotes } from "./voting";
 
 /**

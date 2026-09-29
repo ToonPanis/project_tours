@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
 import { the17GatesWalk } from "@/data/walks/the-17-gates";
 import { createWalkSession } from "@/features/walk-session/logic/create-session";
-import { getOrderedLocations } from "@/features/walk-session/logic/route";
+import { getOrderedLocations } from "@/lib/walk-locations";
 import { getCorrectAnswer, getJumpToStopActions } from "@/features/walk-session/playtest/get-correct-answer";
 import { applySessionAction } from "@/features/walk-session/logic/session-reducer";
 import { REVEAL_ANSWER_AFTER_WRONG_ATTEMPTS } from "@/features/walk-session/logic/reveal-answer";
