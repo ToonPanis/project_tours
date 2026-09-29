@@ -13,15 +13,23 @@
  * The worker imports ./maplibre-gl-shared.mjs, so both files are copied into
  * the same folder. Copying from node_modules keeps them the exact same version
  * as the installed library. The output folder is git-ignored.
+ *
+ * If a file is missing the script fails on purpose (exit code 1): a build
+ * without the worker would ship a map that stays blank.
+ *
+ * The copy logic lives in ./lib/maplibre-worker.mjs so tests can import it
+ * without running this command.
  */
-import { copyFile, mkdir } from "node:fs/promises";
+import { copyMaplibreWorker, MissingWorkerFileError, WORKER_FILES } from "./lib/maplibre-worker.mjs";
 
 const SOURCE_DIR = new URL("../node_modules/maplibre-gl/dist/", import.meta.url);
 const TARGET_DIR = new URL("../public/maplibre/", import.meta.url);
-const FILES = ["maplibre-gl-worker.mjs", "maplibre-gl-shared.mjs"];
 
-await mkdir(TARGET_DIR, { recursive: true });
-for (const file of FILES) {
-  await copyFile(new URL(file, SOURCE_DIR), new URL(file, TARGET_DIR));
+try {
+  await copyMaplibreWorker(SOURCE_DIR, TARGET_DIR);
+  console.log(`Copied MapLibre worker (${WORKER_FILES.join(", ")}) to public/maplibre/`);
+} catch (error) {
+  // A missing file gets the friendly explanation; anything else (e.g. EPERM) is printed in full.
+  console.error(error instanceof MissingWorkerFileError ? `\n[copy-maplibre-worker] ${error.message}\n` : error);
+  process.exit(1);
 }
-console.log(`Copied MapLibre worker (${FILES.join(", ")}) to public/maplibre/`);

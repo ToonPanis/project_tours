@@ -1,0 +1,42 @@
+# Runs the same checks as the local validation gate on every push to main and every pull request.
+# Order: cheapest checks first, the production build last.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+# On a pull request, a newer push cancels the run that is still going.
+# On main every commit gets a complete run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  validate:
+    name: Type-check, lint, translations, tests, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      # npm ci also runs "postinstall", which copies the MapLibre worker that map-worker.test.ts checks.
+      - run: npm ci
+
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run i18n:check
+      - run: npm run test:run
+      # No NEXT_PUBLIC_PLAYTEST_TOOLS here: CI builds exactly what production would build.
+      # Needs internet: next/font downloads the Google fonts at build time. If only this step
+      # fails with a font/network error, check Google Fonts availability before the code.
+      - run: npm run build

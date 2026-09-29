@@ -11,7 +11,12 @@
     "start": "next start",
     "lint": "eslint",
     "i18n:check": "node scripts/check-translations.mjs",
-    "test": "vitest"
+    "test": "vitest",
+    "test:run": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=20.9.0"
   },
   "dependencies": {
     "maplibre-gl": "^6.11.1",

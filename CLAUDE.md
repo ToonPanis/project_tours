@@ -15,7 +15,8 @@ I'm a programming student. I'm comfortable with TypeScript, JavaScript, React, N
 - Tailwind CSS v4 (`@tailwindcss/postcss`); design tokens + walk themes in `src/app/globals.css`. Fonts via `next/font/google`: Cormorant Garamond (display) + Source Sans 3 (body), both with `latin`, `latin-ext` and `cyrillic` subsets.
 - **Only runtime dependency besides Next/React: `maplibre-gl` 6.** No i18n library, no state library, no UI kit.
 - ESLint 9 (`eslint-config-next`). Vitest 4 + React Testing Library (jsdom), tests in `src/__tests__/`.
-- Node 20 locally. Windows machine (use Git Bash / PowerShell syntax accordingly).
+- Node 20 locally (end-of-life; upgrade planned). CI uses the version in `.nvmrc` (22); `engines` allows Next's minimum (≥ 20.9). Windows machine (use Git Bash / PowerShell syntax accordingly).
+- CI: `.github/workflows/ci.yml` runs typecheck → lint → i18n:check → tests → build on every push to `main` and every PR.
 
 ## Commands
 
@@ -23,9 +24,9 @@ I'm a programming student. I'm comfortable with TypeScript, JavaScript, React, N
 npm run dev            # dev server :3000 (predev copies the MapLibre worker)
 npm run build          # production build (prebuild copies the worker too)
 npm start              # serve the build (use e.g. `npx next start -p 3200` if 3000 is taken)
-npx tsc --noEmit       # type-check
+npm run typecheck      # = npx tsc --noEmit
 npm run lint
-npx vitest run         # all tests once (~670); `npm test` = watch mode
+npm run test:run       # = npx vitest run, all tests once (~670); `npm test` = watch mode
 npm run i18n:check     # every language has every UI text (en = master)
 node scripts/generate-walking-routes.mjs <walk-folder>   # after changing coordinates.json
 node scripts/download-commons-images.mjs <walk-folder>   # after changing image-sources.json
@@ -68,7 +69,7 @@ Registered in `src/data/walks/index.ts` → `getWalks(locale)`: **Poortjes, Hidd
 
 | Walk (slug) | Kind | What | Data files |
 |---|---|---|---|
-| **Poortjes van Antwerpen** (`poortjes-van-antwerpen`), EN title "The Gates of Antwerp" | guide | Full-day walk (~9.8 km) along the gates drawn by **Paul Smekens**, *Oude poortjes in Antwerpen. 52 tekeningen* (De Sikkel, 1951). 35 stops (33 main + 2 optional: Rodestraat detour, Red Star Line), 5 chapters, 52 drawings in a collection with status (`exists`/`vanished`/`in-renovation`/`optional`/`unknown`), 2 search tasks (Gildekamersstraat, Adriaan Brouwerstraat), cards (e.g. Rockox, Van Gogh), glossary. Vanished gates are never waypoints: they're shown at the nearest stop. | `stops.ts` (types, status, sources, which Classics photos), `collection.ts` (plate, number, address, status, **Dutch book caption**), `content/<lang>/{index,deel-1..4,collection}.ts`, `coordinates.json`, `routes.json` |
+| **Poortjes van Antwerpen** (`poortjes-van-antwerpen`), EN title "The Gates of Antwerp" | guide | Full-day walk (~9.8 km) along the gates drawn by **Paul Smekens**, *Oude poortjes in Antwerpen. 52 tekeningen* (De Sikkel, 1951). 35 stops (33 main + 2 optional: Rodestraat detour, Red Star Line), 5 chapters, 52 drawings in a collection with status (`exists`/`vanished`/`in-renovation`/`optional`/`unknown`), 3 search tasks (Gildekamersstraat, Academie garden, Adriaan Brouwerstraat), cards (e.g. Rockox, Van Gogh), glossary. Vanished gates are never waypoints: they're shown at the nearest stop. | `stops.ts` (types, status, sources, which Classics photos), `collection.ts` (plate, number, address, status, **Dutch book caption**), `content/<lang>/{index,deel-1..4,collection}.ts`, `coordinates.json`, `routes.json` |
 | **Hidden Pubs** (`hidden-pubs`), brand name, not translated | game | 8 cafés, fiction "The Lost Tavern Ledger", team drink votes, on-site challenges, clues, bonus question, 3-question finale. Route revealed progressively. | `01-rococo.ts`…`08-boer-van-tienen.ts` (café name, address, drink categories, Dutch ledger text, answers, clue icon), `finale.ts`, `helpers.ts` (builders), `content/<lang>.ts`, `coordinates.json`, `routes.json` |
 | **Classics of Antwerp** (`classics-of-antwerp`) | guide | 18 stops from Antwerpen-Centraal back in time to the Scheldt, historical photos + then/now. | `stops.ts`, `content/<lang>.ts`, `image-sources.json` → `images.json`, `coordinates.json`, `routes.json` |
 | Upcoming: Dark Antwerp, The Rubens Code | – | "coming soon" cards only | `upcoming-walks.ts` |
@@ -79,7 +80,7 @@ Pattern: **technical data exists once** (ids, coordinates, addresses, images, an
 
 ## GPS, map & navigation (`src/features/navigation/`)
 
-- Walking routes are **pre-generated** per leg (and a bypass leg around each optional stop) by `scripts/generate-walking-routes.mjs` using the free OSRM foot router at routing.openstreetmap.de, stored in `routes.json`. No routing API at runtime. Rerun after changing `coordinates.json`. Coordinates have `status` (`verified` / draft); unknown = `null`.
+- Walking routes are **pre-generated** per leg (and a bypass leg around each optional stop) by `scripts/generate-walking-routes.mjs` using the free OSRM foot router at routing.openstreetmap.de, stored in `routes.json`. No routing API at runtime. Rerun after changing `coordinates.json`. Coordinates have `status` (`verified` / `to-verify`); unknown = `null`. **All 61 are currently `to-verify`** (geocoded, not checked on site; see `FIELD_TEST_CHECKLIST.md`).
 - Map: **MapLibre GL 6 + OpenFreeMap tiles** (no key; `NEXT_PUBLIC_MAP_STYLE_URL` overrides). MapLibre's worker must be served from `/maplibre/` (copied by `scripts/copy-maplibre-worker.mjs`, set via `setWorkerUrl`); without it the map stays blank. Don't remove this.
 - Live position via `navigator.geolocation.watchPosition` (`useGeolocation`), screen wake lock while navigating. Thresholds in `config.ts` (arrival 40 m + accuracy ≤ 40 m + 2 confirmations; off-route 30 m ×3; far-from-route 150 m → straight-line guidance). Map fits user + destination; north-up above 1 km.
 - Permission explainer is skipped if already granted; if denied, the map and "I'm here"/"continue without GPS" still work.
