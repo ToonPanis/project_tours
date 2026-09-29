@@ -12,7 +12,7 @@
   "continueWithoutGps": "Continue without live GPS",
   "permissionTitle": "Location access needed",
   "permissionBody": "Without your location we can't show where you are; the map and the route stay visible.",
-  "permissionHelp": "If your browser doesn't ask again, allow location for this site in your browser settings.",
+  "permissionHelp": "If your browser doesn't ask again, allow location for this site in your browser settings. Also check that location is switched on for your browser in your phone's settings.",
   "tryAgain": "Try again",
   "followDirection": "Follow direction",
   "northUp": "North up",
@@ -53,5 +53,17 @@
     "title": "Are you at {name}?",
     "message": "Your GPS shows you're still about {distance} away. Continue to this stop anyway?",
     "confirm": "Yes, I'm here"
+  },
+  "stillSearching": "Still looking for your position. Outdoors, with a view of the sky, this goes faster.",
+  "direction": "Direction: {direction}",
+  "compass": {
+    "n": "north",
+    "ne": "north-east",
+    "e": "east",
+    "se": "south-east",
+    "s": "south",
+    "sw": "south-west",
+    "w": "west",
+    "nw": "north-west"
   }
 }

@@ -13,7 +13,8 @@ import {
   pointAlongRoute,
   projectOntoRoute,
 } from "@/features/navigation/logic/route-progress";
-import { initialTracking, trackFix } from "@/features/navigation/logic/tracking";
+import { hasWeakSignal, initialTracking, isImplausibleJump, trackFix } from "@/features/navigation/logic/tracking";
+import { NAVIGATION_CONFIG } from "@/features/navigation/config";
 import { distanceInMeters } from "@/lib/geo";
 import { normalizeOsrmRoute, toManeuver } from "@/lib/routing/osrm";
 import type { GeoCoordinates } from "@/types/common";
@@ -42,8 +43,10 @@ const route: WalkingRoute = normalizeOsrmRoute({
   ],
 });
 
-function fixAt(coordinates: GeoCoordinates, accuracyMeters = 5): GpsFix {
-  return { coordinates, accuracyMeters, headingDegrees: null, speedMetersPerSecond: null, timestamp: 0 };
+/** A test clock: each reading is one second after the previous one, like a real GPS. */
+let clock = 0;
+function fixAt(coordinates: GeoCoordinates, accuracyMeters = 5, timestamp = (clock += 1000)): GpsFix {
+  return { coordinates, accuracyMeters, headingDegrees: null, speedMetersPerSecond: null, timestamp };
 }
 
 describe("OSRM adapter", () => {
@@ -174,12 +177,117 @@ describe("tracking + navigation view", () => {
     expect(tracking.arrived).toBe(true);
   });
 
-  test("only the latest reading is kept (no location history)", () => {
+  test("only the latest reading (and at most one unconfirmed jump) is kept: no location history", () => {
     let tracking = initialTracking;
     for (const meters of [0, 20, 40, 60]) {
       tracking = trackFix(tracking, fixAt(pointAlongRoute(route.geometry, meters)), route, end);
     }
-    expect(Object.keys(tracking).sort()).toEqual(["arrivalCount", "arrived", "fix", "offRouteCount"]);
+    expect(Object.keys(tracking).sort()).toEqual([
+      "arrivalCount",
+      "arrived",
+      "farFromRouteCount",
+      "fix",
+      "latestAccuracyMeters",
+      "offRouteCount",
+      "pendingJump",
+    ]);
+  });
+});
+
+// M-07 / L-10: real GPS is noisy. One bad reading must never move the walker, the camera
+// or the instructions, and a repeated (cached) reading must never count twice.
+describe("tracking: noisy GPS", () => {
+  const onRoute = (meters: number) => pointAlongRoute(route.geometry, meters);
+
+  test("a repeated (cached) reading doesn't count twice towards arrival", () => {
+    const first = fixAt(end);
+    let tracking = trackFix(initialTracking, first, route, end);
+    tracking = trackFix(tracking, { ...first }, route, end); // same timestamp: the browser's cached reading
+    expect(tracking.arrivalCount).toBe(1);
+    expect(tracking.arrived).toBe(false);
+    tracking = trackFix(tracking, fixAt(end), route, end); // a genuinely new reading
+    expect(tracking.arrived).toBe(true);
+  });
+
+  test("repeated or stepped-back timestamps don't freeze the position (some devices do this)", () => {
+    let tracking = trackFix(initialTracking, fixAt(onRoute(40), 5, 5_000), route, end);
+    tracking = trackFix(tracking, fixAt(onRoute(44), 5, 5_000), route, end); // same timestamp, new position
+    expect(tracking.fix!.coordinates).toEqual(onRoute(44));
+    tracking = trackFix(tracking, fixAt(onRoute(48), 5, 4_000), route, end); // clock stepped back
+    expect(tracking.fix!.coordinates).toEqual(onRoute(48));
+  });
+
+  test("two readings with the same time count as one arrival confirmation", () => {
+    let tracking = trackFix(initialTracking, fixAt(end, 5, 9_000), route, end);
+    tracking = trackFix(tracking, fixAt({ latitude: end.latitude + 0.00001, longitude: end.longitude }, 5, 9_000), route, end);
+    expect(tracking.arrived).toBe(false);
+    tracking = trackFix(tracking, fixAt(end, 5, 10_000), route, end);
+    expect(tracking.arrived).toBe(true);
+  });
+
+  test("a cached copy of a jump can't confirm itself", () => {
+    const start = trackFix(initialTracking, fixAt(onRoute(20)), route, end);
+    const jump = fixAt({ latitude: onRoute(20).latitude + 0.0027, longitude: onRoute(20).longitude });
+    let tracking = trackFix(start, jump, route, end);
+    tracking = trackFix(tracking, { ...jump }, route, end); // the browser re-sends the same reading
+    expect(tracking.fix!.coordinates).toEqual(onRoute(20));
+    expect(tracking.pendingJump).not.toBeNull();
+  });
+
+  test("alternating network and GPS readings: the precise GPS reading wins at once", () => {
+    const real = onRoute(20);
+    const network = { latitude: real.latitude + 0.0045, longitude: real.longitude }; // ~500 m off
+    let tracking = trackFix(initialTracking, fixAt(network, 140), route, end); // first: an imprecise network fix
+    let gpsUsed = 0;
+    for (let reading = 0; reading < 5; reading++) {
+      tracking = trackFix(tracking, fixAt(real, 8), route, end);
+      if (tracking.fix!.coordinates === real) gpsUsed++;
+      tracking = trackFix(tracking, fixAt(network, 140), route, end);
+    }
+    expect(gpsUsed).toBe(5);
+    expect(tracking.fix!.coordinates).toEqual(real); // the network readings don't pull it back
+  });
+
+  test("a very inaccurate reading (e.g. indoors) doesn't move the position, but does show 'GPS weak'", () => {
+    let tracking = trackFix(initialTracking, fixAt(onRoute(20)), route, end);
+    tracking = trackFix(tracking, fixAt(onRoute(60), NAVIGATION_CONFIG.UNUSABLE_ACCURACY_METERS + 1), route, end);
+    expect(tracking.fix!.coordinates).toEqual(onRoute(20));
+    expect(hasWeakSignal(tracking)).toBe(true);
+  });
+
+  test("a single GPS jump of 300 m is held back; the next normal reading carries on", () => {
+    const start = trackFix(initialTracking, fixAt(onRoute(20)), route, end);
+    const jumped = { latitude: onRoute(20).latitude + 0.0027, longitude: onRoute(20).longitude }; // ~300 m north
+    let tracking = trackFix(start, fixAt(jumped), route, end);
+    expect(tracking.fix!.coordinates).toEqual(onRoute(20)); // not used
+    expect(tracking.pendingJump).not.toBeNull();
+
+    tracking = trackFix(tracking, fixAt(onRoute(24)), route, end); // back to normal
+    expect(tracking.fix!.coordinates).toEqual(onRoute(24));
+    expect(tracking.pendingJump).toBeNull();
+  });
+
+  test("a real big move is accepted once a second reading confirms it", () => {
+    const start = trackFix(initialTracking, fixAt(onRoute(0)), route, end);
+    const farAway = { latitude: start.fix!.coordinates.latitude + 0.0027, longitude: start.fix!.coordinates.longitude };
+    let tracking = trackFix(start, fixAt(farAway), route, end);
+    tracking = trackFix(tracking, fixAt(farAway), route, end);
+    expect(tracking.fix!.coordinates).toEqual(farAway);
+  });
+
+  test("a slow long move (e.g. after the screen was locked for minutes) is not a jump", () => {
+    const start = fixAt(onRoute(0), 5, 0);
+    const later = fixAt({ latitude: onRoute(0).latitude + 0.0027, longitude: onRoute(0).longitude }, 5, 5 * 60_000);
+    expect(isImplausibleJump(start, later)).toBe(false);
+  });
+
+  test("one reading far from the route doesn't switch to 'head to destination'; two in a row do", () => {
+    const far = { latitude: onRoute(20).latitude, longitude: onRoute(20).longitude + 0.0035 }; // ~240 m east
+    // Start there, so the far readings aren't treated as a jump.
+    let tracking = trackFix(initialTracking, fixAt(far), route, end);
+    expect(getNavigationView(tracking.fix, route, "De Muze", end, tracking).instruction.kind).not.toBe("head-to-destination");
+    tracking = trackFix(tracking, fixAt(far), route, end);
+    expect(getNavigationView(tracking.fix, route, "De Muze", end, tracking).instruction.kind).toBe("head-to-destination");
   });
 });
 

@@ -4,7 +4,7 @@ import { useT } from "@/i18n/client";
 import { useState } from "react";
 import { GuideWalkPlayer } from "@/features/guide/components/GuideWalkPlayer";
 import { NavigationScreen } from "@/features/navigation/components/NavigationScreen";
-import { getRouteLegTo } from "@/features/navigation/logic/route-legs";
+import { getRouteLeg, getRouteLegTo, getRouteLegToCurrent } from "@/features/navigation/logic/route-legs";
 import { PositionSimulationProvider } from "@/features/navigation/simulation/PositionSimulation";
 import type { WalkSession } from "@/types/session";
 import type { Walk } from "@/types/walk";
@@ -106,8 +106,12 @@ function WalkPlayerContent({ walk }: WalkPlayerProps) {
   const location = orderedLocations[currentIndex];
   const nextLocation = orderedLocations[currentIndex + 1];
   const progress = session.locations[session.currentLocationId];
-  const routeToCurrent = getRouteLegTo(walk, location.id)?.route ?? null;
-  const routeToNext = nextLocation ? (getRouteLegTo(walk, nextLocation.id)?.route ?? null) : null;
+  // The leg from where the team really is (a bypass after a skipped optional stop),
+  // the same lookup as the guide player.
+  const routeToCurrent = getRouteLegToCurrent(walk, session)?.route ?? null;
+  const routeToNext = nextLocation
+    ? ((getRouteLeg(walk, location.id, nextLocation.id) ?? getRouteLegTo(walk, nextLocation.id))?.route ?? null)
+    : null;
   // A named constant keeps TypeScript's "not null" knowledge inside the function below.
   const activeSession: WalkSession = session;
 

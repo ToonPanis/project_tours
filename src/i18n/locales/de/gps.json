@@ -12,7 +12,7 @@
   "continueWithoutGps": "Ohne Live-GPS weiter",
   "permissionTitle": "Standortzugriff nötig",
   "permissionBody": "Ohne deinen Standort können wir nicht zeigen, wo du bist; Karte und Route bleiben aber sichtbar.",
-  "permissionHelp": "Fragt dein Browser nicht erneut? Erlaube den Standort für diese Seite in den Browsereinstellungen.",
+  "permissionHelp": "Fragt dein Browser nicht erneut? Erlaube den Standort für diese Seite in den Browsereinstellungen. Prüfe auch in den Einstellungen deines Handys, ob der Standort für deinen Browser eingeschaltet ist.",
   "tryAgain": "Erneut versuchen",
   "followDirection": "Laufrichtung folgen",
   "northUp": "Norden oben",
@@ -53,5 +53,17 @@
     "title": "Bist du bei {name}?",
     "message": "Laut GPS bist du noch etwa {distance} entfernt. Trotzdem mit dieser Station weitermachen?",
     "confirm": "Ja, ich bin hier"
+  },
+  "stillSearching": "Deine Position wird noch gesucht. Draußen mit freiem Blick zum Himmel geht das schneller.",
+  "direction": "Himmelsrichtung: {direction}",
+  "compass": {
+    "n": "Norden",
+    "ne": "Nordosten",
+    "e": "Osten",
+    "se": "Südosten",
+    "s": "Süden",
+    "sw": "Südwesten",
+    "w": "Westen",
+    "nw": "Nordwesten"
   }
 }

@@ -14,7 +14,7 @@ import { useWakeLock } from "../hooks/useWakeLock";
 import { NAVIGATION_CONFIG } from "../config";
 import { formatWalkingDistance } from "../logic/maneuver-display";
 import { getNavigationView } from "../logic/navigation-view";
-import { initialTracking, isLowAccuracy, trackFix, type NavigationTracking } from "../logic/tracking";
+import { hasWeakSignal, initialTracking, trackFix, type NavigationTracking } from "../logic/tracking";
 import { DirectionPanel } from "./DirectionPanel";
 import type { MapOrientation } from "./WalkingMap";
 
@@ -99,7 +99,9 @@ export function NavigationScreen({
     [route, destinationCoordinates, onArrive],
   );
 
-  const { status } = useGeolocation({ enabled: phase === "gps", onFix: handleFix });
+  // Bumped by "Try again": restarts the GPS watch, so the browser can ask again.
+  const [gpsRestartKey, setGpsRestartKey] = useState(0);
+  const { status } = useGeolocation({ enabled: phase === "gps", onFix: handleFix, restartKey: gpsRestartKey });
   useWakeLock(phase === "gps");
 
   const externalMapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
@@ -152,12 +154,11 @@ export function NavigationScreen({
   const view = getNavigationView(fix, route, destination.name, destinationCoordinates, tracking);
   // Refused permission doesn't end navigation: the map stays, with a clear message.
   const isPermissionDenied = phase === "gps" && status === "permission-denied";
-  const gpsProblem = phase === "gps" && (status === "unavailable" || isPermissionDenied || isLowAccuracy(fix));
+  const gpsProblem = phase === "gps" && (status === "unavailable" || (status === "searching" && !tracking.fix) || isPermissionDenied || hasWeakSignal(tracking));
 
   function retryGps() {
     // Restart the GPS watch, which asks the browser again (if it still allows asking).
-    setPhase("manual");
-    setTimeout(() => setPhase("gps"), 0);
+    setGpsRestartKey((key) => key + 1);
   }
   // "I'm here" is always available, so nobody can get stuck: GPS can report good
   // accuracy while being wrong (narrow streets), or a stop's pin can be unreachable.
@@ -209,6 +210,7 @@ export function NavigationScreen({
             destination={{ name: destination.name, coordinates: destinationCoordinates }}
             routeGeometry={route?.geometry ?? null}
             userPosition={fix?.coordinates ?? null}
+            userAccuracyMeters={fix?.accuracyMeters ?? null}
             isFollowing={isFollowing}
             orientation={orientation}
             travelBearing={view.travelBearing}
@@ -259,7 +261,12 @@ export function NavigationScreen({
             {t("gps.gpsUnavailable")}
           </p>
         )}
-        {phase === "gps" && isLowAccuracy(fix) && (
+        {phase === "gps" && status === "searching" && !tracking.fix && (
+          <p role="status" className="text-sm text-yellow-300">
+            {t("gps.stillSearching")}
+          </p>
+        )}
+        {phase === "gps" && hasWeakSignal(tracking) && (
           <p role="status" className="text-sm text-yellow-300">
             <strong>{t("gps.gpsWeak")}</strong> {t("gps.gpsWeakDetail")}
           </p>

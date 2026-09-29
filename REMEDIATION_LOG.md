@@ -298,3 +298,90 @@ Status values: `VERIFIED FIXED` · `PARTIALLY FIXED` · `BLOCKED` · `NOT REPROD
 | `npm run i18n:check` | ✅ |
 | `npm run test:run` | ✅ 26 files, **755 tests** (incl. finale reveal) |
 | `npm run build` | ✅ |
+
+---
+
+## Phase 2 — GPS & navigation reliability (2026-09-29)
+
+- **Branch:** `fix/phase-2-navigation`, branched from `a78fda6`. Uncommitted, awaiting approval.
+- **Principle:** GPS is treated as noisy and unreliable. Positions stay in memory only; at most two readings are held (the one in use plus one unconfirmed jump).
+
+### Validation gate
+
+| Command | Result |
+|---|---|
+| `npm run typecheck` | ✅ |
+| `npm run lint` | ✅ 0 problems |
+| `npm run i18n:check` | ✅ all 8 languages |
+| `npm run test:run` | ✅ 28 files, **790 tests** (was 755, +35) |
+| `npm run build` | ✅ |
+
+### M-07 + L-10: One bad reading moved everything; cached readings counted twice
+- **Status:** VERIFIED FIXED (in code). Field verification is required (FIELD_TEST_CHECKLIST E1, E3, E15, E16, E18).
+- **Root cause:** every reading was used as it came in. Only arrival and off-route counted consecutive readings, and the timestamp was ignored.
+- **Fix** (`logic/tracking.ts`, pure; thresholds in `config.ts`):
+  - exact repeated readings are ignored;
+  - readings worse than 150 m are not used for position, but still show "GPS weak";
+  - a jump faster than 10 m/s is held back until a second, **different** reading confirms it, unless it is a precise reading (≤ 35 m) replacing an imprecise position (> 35 m);
+  - repeated or stepped-back timestamps with new coordinates are still used;
+  - "far from route" needs 2 readings;
+  - an accuracy circle on the map.
+  - The playtest simulation uses strictly increasing timestamps, and its teleports send two readings.
+- **Tests:** 10 new logic tests, among them:
+  - a cached duplicate doesn't count twice;
+  - a single 300 m jump is held back;
+  - a real move is accepted after confirmation;
+  - a slow long move is not a jump;
+  - far-from-route needs 2 readings;
+  - frozen or stepped-back timestamps;
+  - a cached jump can't confirm itself;
+  - alternating network/GPS (5/5 GPS readings used).
+  - The first 7 were confirmed to **fail on the old code**.
+- **Reviewer:** MAJOR 1 (a cached jump confirmed itself) and MAJOR 2 (a bad fix stuck while readings alternated) are fixed.
+- **QA:**
+  - 59 legs × 20 noisy walks over all 3 walks: every stop whose pin is within 30 m of the route end arrived 20/20.
+  - 0 of 251,637 normal walking readings were rejected.
+  - Auto-walk and teleports work.
+  - M1 and M3 are fixed. On re-check, the cell/GPS mix keeps the GPS position on 19 of 20 ticks; frozen and stepped-back timestamps keep the dot moving; a cached jump no longer confirms itself.
+  - Two readings with the same time count as one arrival confirmation (test added).
+  - Accepted trade-offs, both on the field list (E16):
+    - a precise-looking outlier can replace an already weak (> 35 m) fix at once; it is corrected after 2 good readings, and it cannot trigger arrival;
+    - a late, older reading can replace a newer one.
+
+### M-06: Camera fights the user and re-animates on every reading
+- **Status:** VERIFIED FIXED (logic). Needs a device check for battery and feel (E9, E10).
+- **Fix** (`WalkingMap.tsx`, `logic/camera.ts`):
+  - follow mode ends on any user pan, zoom, rotate or pitch;
+  - the camera moves only for ≥ 4 m, ≥ 10°, or a mode change (overview, north-up, follow-direction), and resets when there's no position;
+  - 500 ms animation, 0 ms with `prefers-reduced-motion` (also covers O-03 for the map).
+- **Tests:** `camera-and-geo.test.ts` (throttle, wrap-around, mode change, geo helpers). In jsdom the map itself is mocked.
+
+### M-20: No direction when heading straight to the destination
+- **Status:** VERIFIED FIXED (in code). Field check: E17.
+- **Fix:** "Head to X" shows "Direction: north-east" (8 languages, with hysteresis so the word doesn't flicker) and an arrow. The arrow points relative to the walking direction when the phone reports a heading while moving, otherwise on the north-up map (`logic/compass.ts`, `lib/geo.ts` `bearingInDegrees`).
+- **Tests:** compass points, heading only trusted while moving, arrow rotation, the panel showing the direction for the first stop, hysteresis.
+- **Remaining limitation (MINOR):** after the walker rotates the map by hand, the arrow without a heading still assumes north-up. The text direction stays correct.
+
+### L-06: Game player route lookup
+- **Status:** VERIFIED FIXED. `WalkPlayer` uses `getRouteLegToCurrent` and `getRouteLeg(current, next)`, the same as the guide player.
+  - Hidden Pubs has no optional stops, so its behaviour is unchanged (reviewer).
+  - QA verified the bypass lookup with a synthetic game walk.
+
+### L-11, L-12, L-13: GPS status, retry, wake lock
+- **Status:** VERIFIED FIXED
+- **Fix:**
+  - A browser TIMEOUT gives a new `"searching"` status: "Still looking for your position…". It counts as a GPS problem only while there is no fix.
+  - `permissionHelp` also mentions the phone's own location setting (8 languages).
+  - "Try again" restarts the watch through `restartKey` (no untracked timer), and the status resets in the cleanup.
+  - At most one wake lock is held.
+- **Tests:** a fake `navigator.geolocation` covers:
+  - a timeout showing "still looking";
+  - a timeout after a fix still asking before a far-away "I'm here";
+  - retry restarting the watch and clearing the old message.
+
+  A fake wake-lock API checks there is no second lock and that the lock is released.
+
+### Deferred
+- **L-08:** very short legs. FIELD VERIFICATION REQUIRED (A6, A7).
+- **L-09:** route-progress continuity and a u-turn hint. Medium effort, planned later.
+- **Simulation vs real device clock:** playtest-only.

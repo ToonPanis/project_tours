@@ -64,4 +64,6 @@ export type GpsStatus =
   | "active"
   | "low-accuracy"
   | "permission-denied"
+  /** No position yet within the browser's time limit (e.g. indoors); the watch keeps trying. */
+  | "searching"
   | "unavailable";

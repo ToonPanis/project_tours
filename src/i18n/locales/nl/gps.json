@@ -12,7 +12,7 @@
   "continueWithoutGps": "Verder zonder live gps",
   "permissionTitle": "Toegang tot locatie nodig",
   "permissionBody": "Zonder je locatie kunnen we je positie niet op de kaart tonen; de kaart en de route blijven wel zichtbaar.",
-  "permissionHelp": "Vraagt je browser het niet opnieuw? Sta locatie voor deze site toe in de instellingen van je browser.",
+  "permissionHelp": "Vraagt je browser het niet opnieuw? Sta locatie voor deze site toe in de instellingen van je browser. Controleer ook in de instellingen van je telefoon of locatie aan staat voor je browser.",
   "tryAgain": "Opnieuw proberen",
   "followDirection": "Volg looprichting",
   "northUp": "Noorden boven",
@@ -53,5 +53,17 @@
     "title": "Ben je bij {name}?",
     "message": "Volgens je gps ben je nog ongeveer {distance} verwijderd. Toch doorgaan naar deze stop?",
     "confirm": "Ja, ik ben hier"
+  },
+  "stillSearching": "Je positie wordt nog gezocht. Buiten, met zicht op de lucht, gaat dat sneller.",
+  "direction": "Richting: {direction}",
+  "compass": {
+    "n": "noord",
+    "ne": "noordoost",
+    "e": "oost",
+    "se": "zuidoost",
+    "s": "zuid",
+    "sw": "zuidwest",
+    "w": "west",
+    "nw": "noordwest"
   }
 }

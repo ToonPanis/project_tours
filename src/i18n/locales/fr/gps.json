@@ -12,7 +12,7 @@
   "continueWithoutGps": "Continuer sans GPS en direct",
   "permissionTitle": "Accès à la position nécessaire",
   "permissionBody": "Sans votre position, nous ne pouvons pas vous situer ; la carte et le parcours restent visibles.",
-  "permissionHelp": "Si votre navigateur ne vous le redemande pas, autorisez la localisation pour ce site dans ses réglages.",
+  "permissionHelp": "Si votre navigateur ne vous le redemande pas, autorisez la localisation pour ce site dans ses réglages. Vérifiez aussi que la localisation est activée pour votre navigateur dans les réglages de votre téléphone.",
   "tryAgain": "Réessayer",
   "followDirection": "Suivre la direction",
   "northUp": "Nord en haut",
@@ -53,5 +53,17 @@
     "title": "Êtes-vous à {name} ?",
     "message": "Votre GPS indique que vous êtes encore à environ {distance}. Continuer quand même avec cette étape ?",
     "confirm": "Oui, je suis là"
+  },
+  "stillSearching": "Nous cherchons encore votre position. Dehors, avec une vue dégagée sur le ciel, c'est plus rapide.",
+  "direction": "Cap : {direction}",
+  "compass": {
+    "n": "nord",
+    "ne": "nord-est",
+    "e": "est",
+    "se": "sud-est",
+    "s": "sud",
+    "sw": "sud-ouest",
+    "w": "ouest",
+    "nw": "nord-ouest"
   }
 }

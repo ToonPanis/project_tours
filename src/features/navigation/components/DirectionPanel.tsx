@@ -1,5 +1,9 @@
+"use client";
+
+import { useState } from "react";
 import { englishTranslator, type Translator } from "@/i18n/translate";
 import type { Maneuver } from "@/types/navigation";
+import { getArrowRotation, toStableCompassPoint, type CompassPoint } from "../logic/compass";
 import { formatWalkingDistance, getManeuverArrow } from "../logic/maneuver-display";
 import { NAVIGATION_CONFIG } from "../config";
 
@@ -7,7 +11,15 @@ import { NAVIGATION_CONFIG } from "../config";
 export type DirectionInstruction =
   | { kind: "maneuver"; maneuver: Maneuver; distanceMeters: number; streetName?: string }
   | { kind: "back-to-route"; distanceMeters: number }
-  | { kind: "head-to-destination"; destinationName: string; distanceMeters: number }
+  | {
+      kind: "head-to-destination";
+      destinationName: string;
+      distanceMeters: number;
+      /** Compass direction to the destination (0 = north). */
+      bearingDegrees: number;
+      /** The walker's direction of travel, when the phone reports it while moving. */
+      travelHeadingDegrees: number | null;
+    }
   | { kind: "waiting-for-gps" };
 
 interface DirectionPanelProps {
@@ -32,7 +44,16 @@ function getImmediateText(maneuver: Maneuver, t: Translator): string {
  * a glance while walking: deliberately plain, not decorative.
  */
 export function DirectionPanel({ instruction, thenManeuver, thenAfterMeters, t = englishTranslator }: DirectionPanelProps) {
+  // The compass direction shown last time: kept until the bearing is clearly elsewhere.
+  const [shownCompassPoint, setShownCompassPoint] = useState<CompassPoint | null>(null);
+  const compassPoint =
+    instruction.kind === "head-to-destination" ? toStableCompassPoint(instruction.bearingDegrees, shownCompassPoint) : null;
+  // Remember it (React's pattern for state derived from the previous render).
+  if (compassPoint !== shownCompassPoint) setShownCompassPoint(compassPoint);
+
   let arrow = "↑";
+  // Degrees to turn the arrow (only for "head to destination", where it points the way).
+  let arrowRotation: number | null = null;
   let label = "";
   let distance: string | null = null;
   let detail: string | undefined;
@@ -52,9 +73,13 @@ export function DirectionPanel({ instruction, thenManeuver, thenAfterMeters, t =
       distance = formatWalkingDistance(instruction.distanceMeters, t);
       break;
     case "head-to-destination":
-      arrow = "★";
+      // No route to follow here: an arrow pointing the way (relative to the walking
+      // direction when known, otherwise on the north-up map) plus the compass direction.
+      arrow = "↑";
+      arrowRotation = getArrowRotation(instruction.bearingDegrees, instruction.travelHeadingDegrees);
       label = t("gps.headTo", { name: instruction.destinationName });
       distance = formatWalkingDistance(instruction.distanceMeters, t);
+      if (compassPoint) detail = t("gps.direction", { direction: t(`gps.compass.${compassPoint}`) });
       break;
     case "waiting-for-gps":
       arrow = "…";
@@ -64,7 +89,11 @@ export function DirectionPanel({ instruction, thenManeuver, thenAfterMeters, t =
 
   return (
     <div className="flex items-center gap-4 bg-black px-4 py-3 text-white" aria-live="polite">
-      <span aria-hidden="true" className="w-20 shrink-0 text-center text-7xl font-bold leading-none">
+      <span
+        aria-hidden="true"
+        className="w-20 shrink-0 text-center text-7xl font-bold leading-none"
+        style={arrowRotation !== null ? { display: "inline-block", transform: `rotate(${arrowRotation}deg)` } : undefined}
+      >
         {arrow}
       </span>
       <div className="min-w-0 flex-1">

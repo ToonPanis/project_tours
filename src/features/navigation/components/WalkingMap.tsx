@@ -3,9 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { GeoJSONSource, getWorkerUrl, LngLatBounds, Map as MapLibreMap, Marker, NavigationControl, setWorkerUrl } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { distanceInMeters } from "@/lib/geo";
+import { circleAround, distanceInMeters } from "@/lib/geo";
 import type { GeoCoordinates } from "@/types/common";
 import { ANTWERP_CENTER, MAP_STYLE_URL, MAP_WORKER_URL, OVERVIEW_DISTANCE_METERS } from "../config";
+import { shouldMoveCamera, type CameraTarget } from "../logic/camera";
 
 export type MapOrientation = "follow-direction" | "north-up";
 
@@ -15,7 +16,9 @@ interface WalkingMapProps {
   /** The walking route line, if there is one. */
   routeGeometry: GeoCoordinates[] | null;
   userPosition: GeoCoordinates | null;
-  /** Keep the map centred on the player. Turned off when they pan the map. */
+  /** GPS accuracy radius of `userPosition`: drawn as a circle, so the walker sees how sure the dot is. */
+  userAccuracyMeters: number | null;
+  /** Keep the map centred on the player. Turned off when they pan, zoom or turn the map. */
   isFollowing: boolean;
   orientation: MapOrientation;
   /** Direction of travel along the route (used in follow-direction mode). */
@@ -32,6 +35,9 @@ interface WalkingMapProps {
 const MARKER_PADDING = { top: 72, bottom: 56, left: 110, right: 110 };
 
 const toLngLat = (coordinates: GeoCoordinates): [number, number] => [coordinates.longitude, coordinates.latitude];
+
+/** Camera glide per GPS update: short, so it has finished before the next reading (~1 s). */
+const CAMERA_ANIMATION_MS = 500;
 
 /**
  * Points MapLibre at the worker we serve from /public (see
@@ -55,6 +61,29 @@ function createMarkerElement(className: string, label?: string): HTMLElement {
     element.append(star, name);
   }
   return element;
+}
+
+function drawAccuracyCircle(map: MapLibreMap, position: GeoCoordinates | null, accuracyMeters: number | null) {
+  const source = map.getSource("accuracy") as GeoJSONSource | undefined;
+  if (!source) return; // style not loaded yet
+  void source.setData({
+    type: "FeatureCollection",
+    features:
+      position && accuracyMeters
+        ? [
+            {
+              type: "Feature",
+              properties: {},
+              geometry: { type: "Polygon", coordinates: [circleAround(position, accuracyMeters).map(toLngLat)] },
+            },
+          ]
+        : [],
+  });
+}
+
+/** True when the visitor asked for less motion: the camera then jumps instead of gliding. */
+function prefersReducedMotion(): boolean {
+  return typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true;
 }
 
 function drawRoute(map: MapLibreMap, geometry: GeoCoordinates[] | null) {
@@ -84,6 +113,7 @@ export default function WalkingMap({
   destination,
   routeGeometry,
   userPosition,
+  userAccuracyMeters,
   isFollowing,
   orientation,
   travelBearing,
@@ -94,8 +124,11 @@ export default function WalkingMap({
   const mapRef = useRef<MapLibreMap | null>(null);
   const userMarkerRef = useRef<Marker | null>(null);
   const onUserMovedMapRef = useRef(onUserMovedMap);
-  // The latest route, so the map can draw it as soon as its style has loaded.
+  // The latest route and position, so the map can draw them as soon as its style has loaded.
   const routeGeometryRef = useRef(routeGeometry);
+  const accuracyRef = useRef({ position: userPosition, meters: userAccuracyMeters });
+  // Where the camera was last pointed while following (null = move on the next update).
+  const lastCameraRef = useRef<CameraTarget | null>(null);
   const [hasLoadError, setHasLoadError] = useState(false);
 
   useEffect(() => {
@@ -131,10 +164,15 @@ export default function WalkingMap({
       if (!map.hasImage(id)) map.addImage(id, { width: 1, height: 1, data: new Uint8Array(4) });
     });
 
-    // Only moves made by the player's fingers stop "follow" mode.
-    map.on("dragstart", (event) => {
+    // Only moves made by the player (drag, pinch, zoom buttons, double tap, two-finger
+    // turn) stop "follow" mode; our own camera moves have no originalEvent.
+    const stopFollowingOnUserMove = (event: { originalEvent?: unknown }) => {
       if (event.originalEvent) onUserMovedMapRef.current();
-    });
+    };
+    map.on("dragstart", stopFollowingOnUserMove);
+    map.on("zoomstart", stopFollowingOnUserMove);
+    map.on("rotatestart", stopFollowingOnUserMove);
+    map.on("pitchstart", stopFollowingOnUserMove);
 
     // A single missing tile is harmless; an error before the map ever loaded
     // (style unreachable, worker missing…) means the walker sees nothing.
@@ -146,6 +184,21 @@ export default function WalkingMap({
     map.on("load", () => {
       hasLoaded = true;
       setHasLoadError(false);
+      // GPS accuracy circle, under the route line.
+      map.addSource("accuracy", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+      map.addLayer({
+        id: "accuracy-fill",
+        type: "fill",
+        source: "accuracy",
+        paint: { "fill-color": "#2f7cf6", "fill-opacity": 0.15 },
+      });
+      map.addLayer({
+        id: "accuracy-outline",
+        type: "line",
+        source: "accuracy",
+        paint: { "line-color": "#2f7cf6", "line-width": 1, "line-opacity": 0.5 },
+      });
+      drawAccuracyCircle(map, accuracyRef.current.position, accuracyRef.current.meters);
       map.addSource("route", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
       map.addLayer({
         id: "route-casing",
@@ -192,6 +245,12 @@ export default function WalkingMap({
     if (mapRef.current) drawRoute(mapRef.current, routeGeometry);
   }, [routeGeometry]);
 
+  // Accuracy circle around the player.
+  useEffect(() => {
+    accuracyRef.current = { position: userPosition, meters: userAccuracyMeters };
+    if (mapRef.current) drawAccuracyCircle(mapRef.current, userPosition, userAccuracyMeters);
+  }, [userPosition, userAccuracyMeters]);
+
   // Player marker.
   useEffect(() => {
     const map = mapRef.current;
@@ -208,27 +267,50 @@ export default function WalkingMap({
   // Camera: follow the player, rotated to the direction of travel when reliable.
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !isFollowing) return;
+    if (!map) return;
+    if (!isFollowing) {
+      // Following again later (recenter button) must move the camera straight away.
+      lastCameraRef.current = null;
+      return;
+    }
 
     const bearing = orientation === "follow-direction" && travelBearing !== null ? travelBearing : 0;
+    const duration = prefersReducedMotion() ? 0 : CAMERA_ANIMATION_MS;
 
-    if (userPosition && destinationCoordinates) {
-      // Walker and next stop always in view; the map zooms in as the walker gets closer.
+    if (userPosition) {
       // Far away (e.g. still at the hotel) the map stays north-up, which reads more easily.
-      const isFar = distanceInMeters(userPosition, destinationCoordinates) > OVERVIEW_DISTANCE_METERS;
-      map.fitBounds(boundsAround([userPosition, destinationCoordinates]), {
-        padding: MARKER_PADDING,
-        bearing: isFar ? 0 : bearing,
-        maxZoom: 18,
-        duration: 800,
-      });
-    } else if (userPosition) {
-      map.easeTo({ center: toLngLat(userPosition), bearing, zoom: Math.max(map.getZoom(), 17), duration: 800 });
-    } else if (routeGeometry && routeGeometry.length > 1) {
-      // No position yet: show the whole route.
-      map.fitBounds(boundsAround(routeGeometry), { padding: MARKER_PADDING, bearing: 0, duration: 0 });
+      const isOverview =
+        destinationCoordinates !== null &&
+        distanceInMeters(userPosition, destinationCoordinates) > OVERVIEW_DISTANCE_METERS;
+      const target: CameraTarget = {
+        position: userPosition,
+        bearing: isOverview ? 0 : bearing,
+        mode: isOverview ? "overview" : orientation,
+      };
+      // Tiny moves (GPS noise, standing still) don't re-animate the map: calmer, and saves battery.
+      if (!shouldMoveCamera(lastCameraRef.current, target)) return;
+      lastCameraRef.current = target;
+
+      if (destinationCoordinates) {
+        // Walker and next stop always in view; the map zooms in as the walker gets closer.
+        map.fitBounds(boundsAround([userPosition, destinationCoordinates]), {
+          padding: MARKER_PADDING,
+          bearing: target.bearing,
+          maxZoom: 18,
+          duration,
+        });
+      } else {
+        map.easeTo({ center: toLngLat(userPosition), bearing, zoom: Math.max(map.getZoom(), 17), duration });
+      }
     } else {
-      map.easeTo({ center: toLngLat(destinationCoordinates ?? ANTWERP_CENTER), bearing: 0, duration: 0 });
+      // No position (yet, or GPS switched off): once one arrives, the camera must move to it.
+      lastCameraRef.current = null;
+      if (routeGeometry && routeGeometry.length > 1) {
+        // Show the whole route.
+        map.fitBounds(boundsAround(routeGeometry), { padding: MARKER_PADDING, bearing: 0, duration: 0 });
+      } else {
+        map.easeTo({ center: toLngLat(destinationCoordinates ?? ANTWERP_CENTER), bearing: 0, duration: 0 });
+      }
     }
   }, [userPosition, isFollowing, orientation, travelBearing, routeGeometry, destinationCoordinates]);
 

@@ -71,3 +71,8 @@ Run on **iOS Safari and Android Chrome over HTTPS**. Record the phone model, OS 
 | E11 | Private browsing, then switch language mid-walk | Is progress kept? | M-03 | OPEN |
 | E12 | Small phone (iPhone SE size) in German and Russian | Is the "I'm here" button visible without scrolling? | M-12, H-01 | OPEN |
 | E13 | Sunlight readability of the dark game screens; one-handed use | Notes or photos | O-12 | OPEN |
+| E14 | Stand still for 1–2 min with GPS on (iOS and Android) | Does the browser report a TIMEOUT while stationary ("Still looking…" message)? | Phase 2 (L-11) | OPEN |
+| E15 | Indoors and at doorways (hotel, café, station hall) | Does the dot jump between a network position and GPS? Does it settle on the right spot within about 2 readings? | Phase 2 (M-07) | OPEN |
+| E16 | Narrow streets (Vlaeykensgang, Wolstraat) | Multipath jumps that two agreeing readings let through, and precise-looking outliers replacing a weak (36–40 m) fix: note the jump size and how long it lasts | Phase 2 (M-07) | OPEN |
+| E17 | Walk to the first stop from the station or a hotel | Is "Head to X · Direction: north-east" plus the arrow clear? With the phone's heading while walking, does the arrow point the right way? | Phase 2 (M-20) | OPEN |
+| E18 | Older Android phones | Timestamps that repeat or step back (the dot should keep moving) | Phase 2 (L-10) | OPEN |

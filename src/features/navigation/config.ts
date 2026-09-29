@@ -18,6 +18,22 @@ export const NAVIGATION_CONFIG = {
 
   /** Show "GPS signal is weak" when accuracy is worse than this. */
   LOW_ACCURACY_METERS: 35,
+  /**
+   * Readings less accurate than this (e.g. a cell-tower position indoors) are not
+   * used for the dot, the camera or the directions; they only show "GPS weak".
+   */
+  UNUSABLE_ACCURACY_METERS: 150,
+  /**
+   * Faster than this between two readings is a GPS jump, not walking. Such a reading
+   * is held back until the next reading confirms it (a real move stays put).
+   */
+  MAX_PLAUSIBLE_SPEED_METERS_PER_SECOND: 10,
+  /** Extra room (on top of both readings' accuracy) before a move counts as a jump. */
+  JUMP_TOLERANCE_METERS: 20,
+  /** Readings in a row that must be far from the route before we stop following it. */
+  FAR_FROM_ROUTE_CONFIRMATIONS: 2,
+  /** Below this speed the phone's reported heading is unreliable (standing still). */
+  MIN_SPEED_FOR_HEADING_METERS_PER_SECOND: 0.8,
 
   /** Closer than this to a maneuver, the instruction becomes "… now". */
   MANEUVER_NOW_METERS: 15,
