@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { baseOpenGraph, PROTOTYPE_ROBOTS } from "@/lib/shared-metadata";
+import { SITE_NAME } from "@/lib/site";
 import { Cormorant_Garamond, Source_Sans_3 } from "next/font/google";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
@@ -31,19 +33,15 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: {
       default: t("meta.siteTitle"),
-      template: "%s | Hidden Antwerp",
+      template: `%s | ${SITE_NAME}`,
     },
     description: t("meta.siteDescription"),
     openGraph: {
+      ...baseOpenGraph(t.locale),
       title: t("meta.siteTitle"),
       description: t("meta.siteDescription"),
-      siteName: "Hidden Antwerp",
-      locale: t.locale,
-      type: "website",
     },
-    // PROTOTYPE: keep the whole site out of search engines while it contains
-    // placeholder content next to real café names. Remove this at launch.
-    robots: { index: false, follow: false },
+    robots: PROTOTYPE_ROBOTS,
   };
 }
 

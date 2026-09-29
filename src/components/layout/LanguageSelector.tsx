@@ -63,7 +63,7 @@ export function LanguageSelector() {
         type="button"
         aria-expanded={isOpen}
         aria-controls={menuId}
-        aria-label={`${t("navigation.language")}: ${localeNames[currentLocale].nativeName}`}
+        aria-label={t("common.labelValue", { label: t("navigation.language"), value: localeNames[currentLocale].nativeName })}
         onClick={() => setIsOpen((open) => !open)}
         className="flex min-h-11 items-center gap-1.5 rounded-sm px-2 text-sm font-semibold uppercase tracking-wider text-parchment/85 transition-colors hover:text-gold focus-visible:outline-2 focus-visible:outline-gold"
       >

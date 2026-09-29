@@ -1,4 +1,4 @@
-import { englishTranslator, type Translator } from "@/i18n/translate";
+import type { Translator } from "@/i18n/translate";
 import type { LanguageCode } from "@/types/common";
 import type { Difficulty, DurationRange, Price } from "@/types/walk";
 
@@ -19,7 +19,7 @@ export function formatPrice(price: Price, locale = "en-BE"): string {
 }
 
 /** 150 → "2 h 30 min", 45 → "45 min", 120 → "2 h" */
-export function formatDuration(totalMinutes: number, t: Translator = englishTranslator): string {
+export function formatDuration(totalMinutes: number, t: Translator): string {
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
 
@@ -29,7 +29,7 @@ export function formatDuration(totalMinutes: number, t: Translator = englishTran
 }
 
 /** {120, 180} → "2–3 h", {30, 45} → "30–45 min", {90, 120} → "1 h 30 min – 2 h" */
-export function formatDurationRange({ minMinutes, maxMinutes }: DurationRange, t: Translator = englishTranslator): string {
+export function formatDurationRange({ minMinutes, maxMinutes }: DurationRange, t: Translator): string {
   if (minMinutes === maxMinutes) return formatDuration(minMinutes, t);
 
   const range = (from: number, to: number) => t("common.units.range", { from, to });
@@ -41,19 +41,19 @@ export function formatDurationRange({ minMinutes, maxMinutes }: DurationRange, t
 }
 
 /** 4500 → "4.5 km", 800 → "800 m", null → "To be confirmed" */
-export function formatDistance(meters: number | null, t: Translator = englishTranslator): string {
+export function formatDistance(meters: number | null, t: Translator): string {
   if (meters === null) return t("walks.stats.toBeConfirmed");
   if (meters < 1000) return t("common.units.meters", { value: meters });
   // Show at most one decimal, and drop ".0" (4000 → "4 km").
   return t("common.units.kilometers", { value: Number((meters / 1000).toFixed(1)) });
 }
 
-export function formatDifficulty(difficulty: Difficulty, t: Translator = englishTranslator): string {
+export function formatDifficulty(difficulty: Difficulty, t: Translator): string {
   return t(`walks.difficulty.${difficulty}`);
 }
 
 /** ["en", "nl"] → "English and Dutch" (in English), "Engels en Nederlands" (in Dutch). */
-export function formatLanguages(languages: LanguageCode[], t: Translator = englishTranslator): string {
+export function formatLanguages(languages: LanguageCode[], t: Translator): string {
   const names = new Intl.DisplayNames([t.locale], { type: "language" });
   const list = new Intl.ListFormat(t.locale, { style: "long", type: "conjunction" });
   const text = list.format(languages.map((language) => names.of(language) ?? language));

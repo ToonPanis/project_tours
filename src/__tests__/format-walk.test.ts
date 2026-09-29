@@ -1,3 +1,4 @@
+import { englishTranslator as t } from "@/i18n/translate";
 import { describe, expect, test } from "vitest";
 import {
   formatDifficulty,
@@ -23,7 +24,7 @@ describe("formatDuration", () => {
     [120, "2 h"],
     [150, "2 h 30 min"],
   ])("%i minutes → %s", (minutes, expected) => {
-    expect(formatDuration(minutes)).toBe(expected);
+    expect(formatDuration(minutes, t)).toBe(expected);
   });
 });
 
@@ -34,13 +35,13 @@ describe("formatDurationRange", () => {
     [90, 120, "1 h 30 min – 2 h"],
     [150, 150, "2 h 30 min"],
   ])("%i–%i minutes → %s", (minMinutes, maxMinutes, expected) => {
-    expect(formatDurationRange({ minMinutes, maxMinutes })).toBe(expected);
+    expect(formatDurationRange({ minMinutes, maxMinutes }, t)).toBe(expected);
   });
 });
 
 describe("formatDistance", () => {
   test("shows a placeholder while the distance is unknown", () => {
-    expect(formatDistance(null)).toBe("To be confirmed");
+    expect(formatDistance(null, t)).toBe("To be confirmed");
   });
 
   test.each([
@@ -49,18 +50,18 @@ describe("formatDistance", () => {
     [4500, "4.5 km"],
     [4567, "4.6 km"],
   ])("%i meters → %s", (meters, expected) => {
-    expect(formatDistance(meters)).toBe(expected);
+    expect(formatDistance(meters, t)).toBe(expected);
   });
 });
 
 describe("formatDifficulty", () => {
   test("returns a readable label", () => {
-    expect(formatDifficulty("challenging")).toBe("Challenging");
+    expect(formatDifficulty("challenging", t)).toBe("Challenging");
   });
 });
 
 describe("formatLanguages", () => {
   test("lists language names", () => {
-    expect(formatLanguages(["en", "nl"])).toBe("English and Dutch");
+    expect(formatLanguages(["en", "nl"], t)).toBe("English and Dutch");
   });
 });

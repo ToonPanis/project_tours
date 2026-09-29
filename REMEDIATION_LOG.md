@@ -719,3 +719,68 @@ New tests: `a11y-phase6.test.tsx` (23). Before the review fixes, 14 of its first
 - **QA / Guardian:** PASS. Data changes are only `language`/`sourceCaptionLanguage` metadata (checked line by line); no dependencies, no GPS storage, alcohol rules untouched; all marked titles are Dutch; the new texts are natural in all 8 languages; layout at 390 px checked by class.
 - **Field checks added:** E21 (390 px screenshots in de/ru/es, including the route panel's sticky header on iOS Safari and Chrome Android), E22 (VoiceOver/TalkBack through a full stop), E23 (language menu on iPhone Safari).
 - **Known, unchanged:** the game start screen (through `PlayScreen`) still focuses its title on page load, as before this phase.
+
+---
+
+## Phase 7 — Internationalization (2026-09-29)
+
+- **Branch:** `fix/phase-7-i18n`, branched from `b13b8ad`. Committed after approval.
+- **Decision (user, 2026-09-29):** O-05: keep the flags in the language menu.
+- **Not implemented:** O-02 (store neutral default player names) deferred: it changes what is saved and touches five screens for little gain; typed names are shown as typed anyway. O-05 (flags as language symbols) and SEO with a cookie-only locale (L-33) are product decisions.
+
+### Validation gate
+
+| Command | Result |
+|---|---|
+| `npx tsc --noEmit` | ✅ |
+| `npm run lint` | ✅ 0 problems |
+| `npm run i18n:check` | ✅ with the new plural-form and extra-placeholder checks |
+| `npx vitest run` | ✅ 38 files, **940 tests** (was 912, +28) |
+| `npm run build` | ✅ |
+
+New tests: `i18n-phase7.test.tsx` and `no-hardcoded-text.test.ts`; 22 of their 23 tests fail on the old code (the remaining one tests the guard itself).
+
+### M-05: English on translated screens
+- **Status:** VERIFIED FIXED
+- **Root cause:** 24 components and helpers defaulted to `t = englishTranslator`, so a forgotten `t` compiled and showed English; and `i18n:check` only reads the JSON files, so text typed into JSX went unnoticed.
+- **Fix:**
+  - `t` is required everywhere (the compiler then found the English walking time on the guide completion screen, as the audit said); tests pass `englishTranslator` themselves. The English-only constants `defaultWalkCopy` and `defaultHowItWorksSteps` are gone.
+  - Hidden Pubs header ("Clues 3 / 8", "Ledger") and route panel ("Discovered clues", "Clue n · locked") use the existing translated keys.
+  - The route button's name is a walk-level text: `WalkCopy.routeButtonLabel` (default "Route"; Hidden Pubs sets its "Ledger" per language in its content, with the same translations as before). No more `walk.clues ? "Ledger" : …`.
+  - The brand name is one constant (`SITE_NAME`, never translated); the north-up map button shows a localised "N" (ru "С", uk "Пн").
+- **Guard:** `no-hardcoded-text.test.ts` reads every component with the TypeScript compiler and fails on text between tags, in `aria-label`/`alt`/`title`/`placeholder`, or a string shown as a child (e.g. `{a ? "Ledger" : …}`). Playtest tools are exempt. It found 12 cases (8 playtest, the brand, "N"); all resolved.
+
+### L-31: MapLibre's own controls in English
+- **Status:** VERIFIED FIXED
+- **Fix:** zoom in/out, the credits toggle, map feedback, and the map's and markers' own labels are passed as MapLibre's `locale` option (`gps.mapControls`, 8 languages). MapLibre reads them when the map is created, so after a mid-walk language switch they update at the next stop.
+
+### L-32: i18n:check gaps
+- **Status:** VERIFIED FIXED
+- **Fix:** `npm run i18n:check` now also reports placeholders a translation adds (the visitor would see "{name}" literally) and plural forms: every form a language uses for counts 0–1000 (`Intl.PluralRules`; Russian/Ukrainian one/few/many), and forms that don't exist in that language. French, Spanish and Italian have a "many" form only for whole millions; it falls back to "other" and isn't required. Walk content: every translated text must have the same {placeholders} as English (`content-shape.ts`).
+- **Evidence:** a deliberately removed Russian "few" form and an added "{oops}" were both reported; the file was restored.
+
+### L-33: Link previews and robots
+- **Status:** VERIFIED FIXED (SEO strategy: PRODUCT DECISION, unchanged)
+- **Fix:** `src/lib/shared-metadata.ts`: Next.js merges metadata shallowly, so a page that sets `openGraph` used to lose the layout's site name, type and locale. Every page now spreads `baseOpenGraph(locale)` in, with an `ll_TT` locale (`nl_BE`, `fr_BE`, `en_GB`, …). The play page's `robots` replaced the layout's and dropped "nofollow"; all pages now use one `PROTOTYPE_ROBOTS`.
+
+### L-34: Language flash when the cookie is gone
+- **Status:** DOCUMENTED (accepted), in `I18N.md`.
+
+### L-35: Answer checking
+- **Status:** VERIFIED FIXED
+- **Fix:** "ß" counts as "ss" ("Faß" = "Fass"). Number answers accept thousands separators of every language ("1.582", "1,582", "1 582", "1'582") when each group after the first has exactly three digits; "3,5" stays a decimal. Documented choice: the number answers are counts and years.
+
+### O-04, O-06
+- **O-04:** the English-only, test-only `getImmediateLabel` is replaced by the translated `getImmediateText` (moved out of `DirectionPanel`), so tests check the real text. `getManeuverLabel` stays: it fills the route data's `instruction` field.
+- **O-06:** `Accept-Language` entries with `q=0` ("not this language") are never chosen.
+
+### Reviews
+- **Code reviewer:** no blockers or majors. Verified: the only number answers (9, 7) can't be misread; no accepted answer contains ß; all 6 MapLibre keys exist in 6.11.1; nothing uses the removed `game.header.ledger`; home and play pages inherit the layout's Open Graph; no English left in props or helpers. Fixed after review:
+  - the guard also checks our components' text props (`label`, `eyebrow`, `…Label`, `…Text`, `…Title`), the fixed parts of template literals and `+` concatenation (its own test proves each);
+  - `validateWalk` now requires number answers to be whole numbers (so the thousands rule can't misread a future answer); "0,500" is 0.5 (leading zero = decimal);
+  - "label: value" in two aria/alt texts now comes from a key (`common.labelValue`; French "label : value");
+  - launch note: the play page keeps `{ index: false }` when the site-wide robots rule goes;
+  - the MapLibre language-switch limitation is documented in I18N.md.
+- **QA / translation / Guardian:** PASS. Data: only the 8 `routeButtonLabel` lines; same translations as the removed key. New texts natural; "С"/"Пн" are the standard compass abbreviations. On a production build in nl/ru/de: no "Clues"/"Ledger"/"Discovered clues", `og:locale` nl_BE/ru_RU/de_DE, play page `noindex, nofollow`. Fixed after QA: the play page has its own `og:title`; team names are joined per language (`Intl.ListFormat`: "Tony and Sarah" / "Tony en Sarah").
+- **Intended visible change:** team names read "Tony and Sarah" instead of "Tony, Sarah".
+- **Known, unchanged:** `global-error.tsx` stays English (it can't read the language cookie when the whole app has crashed).

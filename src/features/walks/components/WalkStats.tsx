@@ -1,4 +1,4 @@
-import { englishTranslator, type Translator } from "@/i18n/translate";
+import type { Translator } from "@/i18n/translate";
 import type { Difficulty, DurationRange } from "@/types/walk";
 import {
   formatDifficulty,
@@ -11,7 +11,7 @@ interface WalkStatsProps {
   distanceInMeters: number | null;
   difficulty: Difficulty;
   locationCount: number;
-  t?: Translator;
+  t: Translator;
 }
 
 /** Key facts about a walk, as an accessible description list. */
@@ -20,7 +20,7 @@ export function WalkStats({
   distanceInMeters,
   difficulty,
   locationCount,
-  t = englishTranslator,
+  t,
 }: WalkStatsProps) {
   const stats = [
     { label: t("walks.stats.duration"), value: formatDurationRange(estimatedDuration, t) },

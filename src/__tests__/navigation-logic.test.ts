@@ -1,9 +1,10 @@
+import { englishTranslator as t } from "@/i18n/translate";
 import { describe, expect, test } from "vitest";
 import { hasArrived, isArrivalReading, isOffRoute, nextArrivalCount, nextOffRouteCount } from "@/features/navigation/logic/arrival";
 import {
   formatWalkingDistance,
   formatWalkingTime,
-  getImmediateLabel,
+  getImmediateText,
   getManeuverArrow,
 } from "@/features/navigation/logic/maneuver-display";
 import { getNavigationView } from "@/features/navigation/logic/navigation-view";
@@ -298,17 +299,17 @@ describe("display helpers", () => {
     [734, "730 m"],
     [1234, "1.2 km"],
   ])("%i m → %s", (meters, expected) => {
-    expect(formatWalkingDistance(meters)).toBe(expected);
+    expect(formatWalkingDistance(meters, t)).toBe(expected);
   });
 
   test("walking time is at least one minute", () => {
-    expect(formatWalkingTime(20)).toBe("1 min walk");
-    expect(formatWalkingTime(510)).toBe("9 min walk");
+    expect(formatWalkingTime(20, t)).toBe("1 min walk");
+    expect(formatWalkingTime(510, t)).toBe("9 min walk");
   });
 
   test("arrows and 'now' labels", () => {
     expect(getManeuverArrow("right")).toBe("→");
     expect(getManeuverArrow("arrive")).toBe("★");
-    expect(getImmediateLabel("right")).toBe("Turn right now");
+    expect(getImmediateText("right", t)).toBe("Turn right now");
   });
 });

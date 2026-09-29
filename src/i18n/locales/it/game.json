@@ -2,7 +2,6 @@
   "header": {
     "stopProgress": "Tappa {current} / {total}",
     "clues": "Indizi {found} / {total}",
-    "ledger": "Registro",
     "route": "Percorso",
     "progressLabel": "Avanzamento della passeggiata",
     "stopCounter": "Tappa {current} / {total}"

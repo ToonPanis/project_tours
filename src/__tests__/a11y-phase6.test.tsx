@@ -76,16 +76,16 @@ describe("M-09: spoken directions", () => {
   });
 
   test("the panel has no live region on itself; its hidden status changes only when needed", () => {
-    const { container, rerender } = render(<DirectionPanel instruction={turnLeft(90)} />);
+    const { container, rerender } = render(<DirectionPanel instruction={turnLeft(90)} t={t} />);
     expect(container.querySelector("[aria-live]")).toBeNull();
     const status = screen.getByRole("status");
     const first = status.textContent;
     expect(first).toContain("Turn left");
 
-    rerender(<DirectionPanel instruction={turnLeft(80)} />); // the visible distance changes…
+    rerender(<DirectionPanel instruction={turnLeft(80)} t={t} />); // the visible distance changes…
     expect(screen.getByRole("status").textContent).toBe(first); // …the spoken text doesn't
 
-    rerender(<DirectionPanel instruction={turnLeft(45)} />); // crossed 50 m
+    rerender(<DirectionPanel instruction={turnLeft(45)} t={t} />); // crossed 50 m
     expect(screen.getByRole("status").textContent).not.toBe(first);
     expect(screen.getByRole("status")).toBe(status); // the same element, updated (so it is announced)
   });

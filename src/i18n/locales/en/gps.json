@@ -16,6 +16,7 @@
   "tryAgain": "Try again",
   "followDirection": "Follow direction",
   "northUp": "North up",
+  "northShort": "N",
   "recenter": "Recenter",
   "notOnMap": "This location isn't on the map yet.",
   "mapUnavailable": "The map couldn't be loaded (no connection, or this browser can't show maps). The directions and the external map still work.",
@@ -68,5 +69,13 @@
     "sw": "south-west",
     "w": "west",
     "nw": "north-west"
+  },
+  "mapControls": {
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "toggleAttribution": "Show or hide map credits",
+    "mapFeedback": "Map feedback",
+    "map": "Map",
+    "marker": "Map marker"
   }
 }

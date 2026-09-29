@@ -29,6 +29,7 @@ export const hiddenPubsContentRu: HiddenPubsContent = {
       clueCollectedTitle: "Книга изменилась",
       locationsTitle: "Трактиры",
       locationsDiscoveredLabel: "трактиров найдено",
+      routeButtonLabel: "Книга",
     },
     narrative: {
       title: "Пропавшая трактирная книга",

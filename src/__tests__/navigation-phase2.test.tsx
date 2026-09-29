@@ -1,3 +1,4 @@
+import { englishTranslator as t } from "@/i18n/translate";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { act, cleanup, fireEvent, render, renderHook, screen } from "@testing-library/react";
 import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
@@ -69,7 +70,7 @@ describe("head to destination: a direction, not just a name", () => {
     if (view.instruction.kind !== "head-to-destination") return;
     expect(toCompassPoint(view.instruction.bearingDegrees)).toBe("n");
 
-    render(<DirectionPanel instruction={view.instruction} />);
+    render(<DirectionPanel instruction={view.instruction} t={t} />);
     expect(screen.getByText("Direction: north")).toBeDefined();
   });
 });

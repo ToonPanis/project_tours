@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SITE_NAME } from "@/lib/site";
 import { getTranslator } from "@/i18n/server";
 import { LanguageSelector } from "./LanguageSelector";
 
@@ -27,7 +28,8 @@ export async function SiteHeader() {
           aria-label={t("navigation.home")}
           className="flex min-h-11 shrink-0 items-center font-display text-xl font-semibold tracking-wide"
         >
-          Hidden <span className="ml-1.5 text-gold">Antwerp</span>
+          {/* "Hidden" in the text colour, "Antwerp" in gold. */}
+          {SITE_NAME.split(" ")[0]} <span className="ml-1.5 text-gold">{SITE_NAME.split(" ").slice(1).join(" ")}</span>
         </Link>
 
         <nav aria-label={t("navigation.mainNavigation")} className="min-w-0">

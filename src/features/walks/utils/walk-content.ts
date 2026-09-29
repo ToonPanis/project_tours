@@ -1,4 +1,4 @@
-import { englishTranslator, type Translator } from "@/i18n/translate";
+import type { Translator } from "@/i18n/translate";
 import type { WalkLocation } from "@/types/location";
 import type { Walk } from "@/types/walk";
 
@@ -13,7 +13,7 @@ export function hasUnverifiedContent(location: WalkLocation): boolean {
 }
 
 /** Used when a walk doesn't define its own "How it works" steps. */
-export function getDefaultHowItWorksSteps(t: Translator = englishTranslator): string[] {
+export function getDefaultHowItWorksSteps(t: Translator): string[] {
   return [
     t("walks.defaultHowItWorks.step1"),
     t("walks.defaultHowItWorks.step2"),
@@ -22,9 +22,6 @@ export function getDefaultHowItWorksSteps(t: Translator = englishTranslator): st
   ];
 }
 
-/** The default steps in English. */
-export const defaultHowItWorksSteps = getDefaultHowItWorksSteps();
-
-export function getHowItWorksSteps(walk: Walk, t: Translator = englishTranslator): string[] {
+export function getHowItWorksSteps(walk: Walk, t: Translator): string[] {
   return walk.howItWorksSteps ?? getDefaultHowItWorksSteps(t);
 }

@@ -2,7 +2,6 @@
   "header": {
     "stopProgress": "Stop {current} / {total}",
     "clues": "Aanwijzingen {found} / {total}",
-    "ledger": "Kasboek",
     "route": "Route",
     "progressLabel": "Voortgang van de wandeling",
     "stopCounter": "Stop {current} / {total}"

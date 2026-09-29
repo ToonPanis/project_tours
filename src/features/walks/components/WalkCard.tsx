@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
 import type { WalkSummary } from "@/types/walk";
-import { englishTranslator, type Translator } from "@/i18n/translate";
+import type { Translator } from "@/i18n/translate";
 import { formatDistance, formatDurationRange, formatPrice } from "../utils/format-walk";
 import { WalkCover } from "./WalkCover";
 
@@ -10,10 +10,10 @@ interface WalkCardProps {
   /** Heading level, so the card fits the page's heading outline. */
   headingLevel?: "h2" | "h3";
   /** Translator of the current language (English when omitted). */
-  t?: Translator;
+  t: Translator;
 }
 
-export function WalkCard({ walk, headingLevel: Heading = "h3", t = englishTranslator }: WalkCardProps) {
+export function WalkCard({ walk, headingLevel: Heading = "h3", t }: WalkCardProps) {
   const walkUrl = `/walks/${walk.slug}`;
 
   return (

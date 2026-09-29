@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { baseOpenGraph } from "@/lib/shared-metadata";
 import { UpcomingWalkCard } from "@/features/walks/components/UpcomingWalkCard";
 import { WalkCard } from "@/features/walks/components/WalkCard";
 import { getTranslator } from "@/i18n/server";
@@ -9,7 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: t("meta.walksTitle"),
     description: t("meta.walksDescription"),
-    openGraph: { title: t("meta.walksTitle"), description: t("meta.walksDescription") },
+    openGraph: { ...baseOpenGraph(t.locale), title: t("meta.walksTitle"), description: t("meta.walksDescription") },
   };
 }
 

@@ -31,6 +31,7 @@ export const hiddenPubsContentEs: HiddenPubsContent = {
       clueCollectedTitle: "El libro de cuentas ha cambiado",
       locationsTitle: "Tabernas",
       locationsDiscoveredLabel: "tabernas descubiertas",
+      routeButtonLabel: "Libro de cuentas",
     },
     narrative: {
       title: "El libro de cuentas perdido de la taberna",

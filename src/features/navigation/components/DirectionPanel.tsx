@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { englishTranslator, type Translator } from "@/i18n/translate";
+import type { Translator } from "@/i18n/translate";
 import type { Maneuver } from "@/types/navigation";
 import { getArrowRotation, toStableCompassPoint, type CompassPoint } from "../logic/compass";
-import { formatWalkingDistance, getManeuverArrow } from "../logic/maneuver-display";
+import { formatWalkingDistance, getImmediateText, getManeuverArrow } from "../logic/maneuver-display";
 import { getSpokenDirection, type SpokenDirection } from "../logic/spoken-direction";
 import { NAVIGATION_CONFIG } from "../config";
 
@@ -30,21 +30,14 @@ interface DirectionPanelProps {
   /** How far after the current maneuver the "THEN" maneuver comes. */
   thenAfterMeters?: number;
   /** Interface texts in the walk's language (English by default). */
-  t?: Translator;
-}
-
-/** "Turn right" → "Turn right now" when the walker is at the maneuver. */
-function getImmediateText(maneuver: Maneuver, t: Translator): string {
-  if (maneuver === "arrive") return t("gps.almostThere");
-  if (maneuver === "straight" || maneuver === "depart") return t("gps.continueStraight");
-  return t("gps.now", { label: t(`gps.maneuvers.${maneuver}`) });
+  t: Translator;
 }
 
 /**
  * The large, high-contrast arrow + short instruction. Designed to be read at
  * a glance while walking: deliberately plain, not decorative.
  */
-export function DirectionPanel({ instruction, thenManeuver, thenAfterMeters, t = englishTranslator }: DirectionPanelProps) {
+export function DirectionPanel({ instruction, thenManeuver, thenAfterMeters, t }: DirectionPanelProps) {
   // The compass direction shown last time: kept until the bearing is clearly elsewhere.
   const [shownCompassPoint, setShownCompassPoint] = useState<CompassPoint | null>(null);
   const compassPoint =

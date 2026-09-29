@@ -232,6 +232,14 @@ export function NavigationScreen({
             travelBearing={view.travelBearing}
             onUserMovedMap={() => setIsFollowing(false)}
             regionLabel={t("gps.mapRegion", { name: destination.name })}
+            controlLabels={{
+              "NavigationControl.ZoomIn": t("gps.mapControls.zoomIn"),
+              "NavigationControl.ZoomOut": t("gps.mapControls.zoomOut"),
+              "AttributionControl.ToggleAttribution": t("gps.mapControls.toggleAttribution"),
+              "AttributionControl.MapFeedback": t("gps.mapControls.mapFeedback"),
+              "Map.Title": t("gps.mapControls.map"),
+              "Marker.Title": t("gps.mapControls.marker"),
+            }}
             loadErrorText={t("gps.mapUnavailable")}
             tilesFailingText={t("gps.mapTilesFailing")}
           />
@@ -243,7 +251,7 @@ export function NavigationScreen({
                 label={orientation === "north-up" ? t("gps.followDirection") : t("gps.northUp")}
                 onClick={() => setOrientation((current) => (current === "north-up" ? "follow-direction" : "north-up"))}
               >
-                {orientation === "north-up" ? "N" : "➤"}
+                {orientation === "north-up" ? t("gps.northShort") : "➤"}
               </MapButton>
               {!isFollowing && (
                 <MapButton label={t("gps.recenter")} onClick={() => setIsFollowing(true)}>

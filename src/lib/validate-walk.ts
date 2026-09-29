@@ -22,6 +22,13 @@ export function validateWalk(walk: Walk): string[] {
         problems.push(`${stop.id}: a guide walk stop can't have a challenge or drink round (the guide player can't finish it)`);
       }
     }
+    // Typed numbers are read with thousands separators ("1.582" = 1582, see answers.ts),
+    // which only works when the right answer is a whole number.
+    for (const challenge of [stop.challenge, stop.bonusChallenge]) {
+      if (challenge?.type === "number-answer" && !Number.isInteger(challenge.correctNumber)) {
+        problems.push(`${stop.id}: a number answer must be a whole number (${challenge.correctNumber})`);
+      }
+    }
   }
 
   // Walking routes: one per consecutive pair, plus a bypass around each optional stop

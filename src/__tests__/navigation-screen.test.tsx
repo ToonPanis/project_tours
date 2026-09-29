@@ -5,9 +5,9 @@ import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
 import { NavigationScreen } from "@/features/navigation/components/NavigationScreen";
 import { getRouteLegTo } from "@/features/navigation/logic/route-legs";
 import { NAVIGATION_CONFIG } from "@/features/navigation/config";
-import { getImmediateLabel } from "@/features/navigation/logic/maneuver-display";
+import { getImmediateText } from "@/features/navigation/logic/maneuver-display";
 import { getRouteProgress, pointAlongRoute } from "@/features/navigation/logic/route-progress";
-import { getManeuverLabel } from "@/lib/routing/maneuver-labels";
+import { englishTranslator } from "@/i18n/translate";
 import { distanceInMeters } from "@/lib/geo";
 import {
   PositionSimulationProvider,
@@ -80,8 +80,8 @@ describe("NavigationScreen", () => {
     const maneuver = progress.nextStep!.maneuver;
     const expectedLabel =
       progress.distanceToNextStepMeters <= NAVIGATION_CONFIG.MANEUVER_NOW_METERS
-        ? getImmediateLabel(maneuver)
-        : getManeuverLabel(maneuver);
+        ? getImmediateText(maneuver, englishTranslator)
+        : englishTranslator(`gps.maneuvers.${maneuver}`);
     expect(screen.getByText(expectedLabel)).toBeDefined();
     expect(await screen.findByTestId("walking-map")).toBeDefined();
   });

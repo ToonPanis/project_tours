@@ -2,7 +2,8 @@
  * Every translation of a walk must have exactly the same structure as the
  * English master: the same stops, the same number of paragraphs, hints and
  * list items, and the same technical values (ids, plate numbers, section
- * kinds, glossary keys, links). Only the texts differ.
+ * kinds, glossary keys, links) and the same {placeholders} in each text (e.g.
+ * "Plate {plate}: {title}, {address}"). Only the texts differ.
  *
  * Used by src/__tests__/i18n-walk-content.test.ts.
  */
@@ -22,6 +23,13 @@ const TECHNICAL_KEYS = new Set([
   "originalLanguage",
 ]);
 
+/** The {names} in a text, sorted: "Plate {plate}: {title}" → "plate,title". */
+const placeholderList = (text: string) =>
+  [...text.matchAll(/\{(\w+)\}/g)]
+    .map((match) => match[1])
+    .sort()
+    .join(",");
+
 function compareShape(master: unknown, translation: unknown, path: string, problems: string[], optionalKeys: string[]) {
   const lastKey = path.split(".").pop() ?? "";
   if (translation === undefined) {
@@ -36,6 +44,7 @@ function compareShape(master: unknown, translation: unknown, path: string, probl
   if (typeof master === "string") {
     if (typeof translation !== "string") problems.push(`not a text ${path}`);
     else if (!translation.trim()) problems.push(`empty ${path}`);
+    else if (placeholderList(translation) !== placeholderList(master)) problems.push(`different {placeholders} ${path}`);
     return;
   }
   if (Array.isArray(master)) {

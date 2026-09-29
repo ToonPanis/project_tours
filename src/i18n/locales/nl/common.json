@@ -8,6 +8,7 @@
   "previous": "Vorige",
   "submit": "Controleren",
   "yourAnswer": "Jouw antwoord",
+  "labelValue": "{label}: {value}",
   "units": {
     "meters": "{value} m",
     "kilometers": "{value} km",

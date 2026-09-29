@@ -80,7 +80,7 @@ export function SearchTaskView({ task, t, onAllRevealed, onSkip }: SearchTaskVie
               <figure>
                 <Image
                   src={item.drawing.image.src}
-                  alt={`${t("guide.searchTask")}: ${item.question}`}
+                  alt={t("common.labelValue", { label: t("guide.searchTask"), value: item.question })}
                   width={item.drawing.image.width}
                   height={item.drawing.image.height}
                   sizes="(min-width: 32rem) 20rem, 100vw"

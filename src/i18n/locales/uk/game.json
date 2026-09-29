@@ -2,7 +2,6 @@
   "header": {
     "stopProgress": "Зупинка {current} / {total}",
     "clues": "Підказки {found} / {total}",
-    "ledger": "Книга",
     "route": "Маршрут",
     "progressLabel": "Перебіг прогулянки",
     "stopCounter": "Зупинка {current} / {total}"

@@ -184,7 +184,7 @@ describe("WalkPlayer: Hidden Pubs", () => {
     render(<WalkPlayer walk={hiddenPubsWalk} />);
 
     expect(await screen.findByRole("heading", { name: "Welcome back" })).toBeDefined();
-    expect(screen.getByText("Team: The Antwerp Explorers (Tony, Sarah)")).toBeDefined();
+    expect(screen.getByText("Team: The Antwerp Explorers (Tony and Sarah)")).toBeDefined();
     click("Continue walk");
     expect(screen.getByText("Tony's turn")).toBeDefined();
   });

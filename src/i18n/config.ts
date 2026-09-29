@@ -55,7 +55,8 @@ export function matchLocale(preferences: string | readonly string[] | null | und
             const quality = parameters.find((parameter) => parameter.trim().startsWith("q="));
             return { tag, quality: quality ? Number(quality.trim().slice(2)) : 1 };
           })
-          .filter((entry) => entry.tag && !Number.isNaN(entry.quality))
+          // "q=0" means "not this language" (HTTP spec), so it is never chosen.
+          .filter((entry) => entry.tag && !Number.isNaN(entry.quality) && entry.quality > 0)
           .sort((a, b) => b.quality - a.quality)
           .map((entry) => entry.tag)
       : preferences;

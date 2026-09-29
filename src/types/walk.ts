@@ -65,6 +65,8 @@ export interface WalkCopy {
   locationsTitle: string;
   /** Completion stat label, e.g. "taverns discovered". */
   locationsDiscoveredLabel: string;
+  /** The button that opens the route panel, e.g. "Route", or "Ledger" in Hidden Pubs. */
+  routeButtonLabel: string;
 }
 
 /**

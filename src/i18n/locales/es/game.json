@@ -2,7 +2,6 @@
   "header": {
     "stopProgress": "Parada {current} / {total}",
     "clues": "Pistas {found} / {total}",
-    "ledger": "Libro de cuentas",
     "route": "Ruta",
     "progressLabel": "Progreso del paseo",
     "stopCounter": "Parada {current} / {total}"

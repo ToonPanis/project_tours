@@ -5,7 +5,7 @@ import { ButtonLink } from "@/components/ui/ButtonLink";
 import { formatDistance } from "@/features/walks/utils/format-walk";
 import { getElapsedTime, getSessionStats } from "@/features/walk-session/logic/session-stats";
 import { useScreenFocus } from "@/hooks/useScreenFocus";
-import { englishTranslator, type Translator } from "@/i18n/translate";
+import type { Translator } from "@/i18n/translate";
 import type { WalkSession } from "@/types/session";
 import type { WalkCopy, Walk } from "@/types/walk";
 
@@ -13,18 +13,18 @@ interface GuideCompletionScreenProps {
   walk: Walk;
   session: WalkSession;
   copy: WalkCopy;
-  t?: Translator;
+  t: Translator;
   onShowRoute: () => void;
 }
 
-export function GuideCompletionScreen({ walk, session, copy, t = englishTranslator, onShowRoute }: GuideCompletionScreenProps) {
+export function GuideCompletionScreen({ walk, session, copy, t, onShowRoute }: GuideCompletionScreenProps) {
   const stats = getSessionStats(walk, session);
   const headingRef = useScreenFocus("guide-completion");
 
   const items = [
     { label: copy.locationsDiscoveredLabel, value: `${stats.solvedStops} / ${stats.totalStops}` },
     ...(walk.distanceInMeters ? [{ label: t("guide.distance"), value: `± ${formatDistance(walk.distanceInMeters, t)}` }] : []),
-    { label: t("guide.time"), value: getElapsedTime(session, new Date()) },
+    { label: t("guide.time"), value: getElapsedTime(session, new Date(), t) },
   ];
 
   return (

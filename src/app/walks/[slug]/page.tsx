@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { baseOpenGraph } from "@/lib/shared-metadata";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
@@ -32,7 +33,7 @@ export async function generateMetadata({
   return {
     title: walk.title,
     description: walk.shortDescription,
-    openGraph: { title: walk.title, description: walk.shortDescription },
+    openGraph: { ...baseOpenGraph(t.locale), title: walk.title, description: walk.shortDescription },
   };
 }
 

@@ -16,6 +16,8 @@ const fakeMap = vi.hoisted(() => {
   const handlers = new Map<string, ((event: object) => void)[]>();
   return {
     handlers,
+    /** The options the map was created with. */
+    options: {} as Record<string, unknown>,
     fire(type: string, event: object = {}) {
       for (const handler of handlers.get(type) ?? []) handler(event);
     },
@@ -24,8 +26,9 @@ const fakeMap = vi.hoisted(() => {
 
 vi.mock("maplibre-gl", () => {
   class FakeMap {
-    constructor() {
+    constructor(options: Record<string, unknown>) {
       fakeMap.handlers.clear();
+      fakeMap.options = options;
     }
     on(type: string, handler: (event: object) => void) {
       fakeMap.handlers.set(type, [...(fakeMap.handlers.get(type) ?? []), handler]);
@@ -90,6 +93,7 @@ function renderMap() {
       travelBearing={null}
       onUserMovedMap={() => {}}
       regionLabel="Map: route to Grote Markt"
+      controlLabels={{ "NavigationControl.ZoomIn": "Inzoomen" }}
       loadErrorText="map unavailable"
       tilesFailingText="part of the map is missing"
     />,
@@ -150,6 +154,11 @@ describe("WalkingMap notices", () => {
     act(() => tileLoaded("accuracy"));
     act(() => tileLoaded("route"));
     expect(screen.getByRole("alert").textContent).toBe("part of the map is missing");
+  });
+
+  test("MapLibre's own buttons get the visitor's language (L-31)", () => {
+    renderMap();
+    expect(fakeMap.options.locale).toEqual({ "NavigationControl.ZoomIn": "Inzoomen" });
   });
 
   test("a single failed tile shows nothing", () => {

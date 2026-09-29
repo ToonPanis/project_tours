@@ -49,7 +49,7 @@ export function RoutePanel({ walk, session, copy, open, onClose, children }: Rou
         {clues.length > 0 && (
           <section aria-labelledby="ledger-clues">
             <h3 id="ledger-clues" className="text-xs font-semibold uppercase tracking-[0.25em] text-parchment/70">
-              Discovered clues · {session.collectedClueIds.length} / {clues.length}
+              {t("game.ledger.discoveredClues", { found: session.collectedClueIds.length, total: clues.length })}
             </h3>
             <ol className="mt-3 space-y-2">
               {clues.map((clue, index) => {
@@ -65,7 +65,7 @@ export function RoutePanel({ walk, session, copy, open, onClose, children }: Rou
                       </span>
                     ) : (
                       <span className="uppercase italic tracking-wider text-parchment/65">
-                        Clue {index + 1} · locked
+                        {t("game.ledger.clueLocked", { number: index + 1 })}
                       </span>
                     )}
                   </li>

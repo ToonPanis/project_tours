@@ -16,6 +16,7 @@
   "tryAgain": "Opnieuw proberen",
   "followDirection": "Volg looprichting",
   "northUp": "Noorden boven",
+  "northShort": "N",
   "recenter": "Centreren",
   "notOnMap": "Deze plek staat nog niet op de kaart.",
   "mapUnavailable": "De kaart kon niet geladen worden (geen verbinding, of deze browser kan geen kaarten tonen). De richtingaanwijzingen en de externe kaart werken nog.",
@@ -68,5 +69,13 @@
     "sw": "zuidwest",
     "w": "west",
     "nw": "noordwest"
+  },
+  "mapControls": {
+    "zoomIn": "Inzoomen",
+    "zoomOut": "Uitzoomen",
+    "toggleAttribution": "Kaartbronnen tonen of verbergen",
+    "mapFeedback": "Feedback over de kaart",
+    "map": "Kaart",
+    "marker": "Kaartmarkering"
   }
 }

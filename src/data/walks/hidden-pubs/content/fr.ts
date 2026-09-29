@@ -30,6 +30,7 @@ export const hiddenPubsContentFr: HiddenPubsContent = {
       clueCollectedTitle: "Le registre a changé",
       locationsTitle: "Tavernes",
       locationsDiscoveredLabel: "tavernes découvertes",
+      routeButtonLabel: "Registre",
     },
     narrative: {
       title: "Le registre perdu de la taverne",

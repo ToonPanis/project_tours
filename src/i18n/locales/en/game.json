@@ -2,7 +2,6 @@
   "header": {
     "stopProgress": "Stop {current} / {total}",
     "clues": "Clues {found} / {total}",
-    "ledger": "Ledger",
     "route": "Route",
     "progressLabel": "Walk progress",
     "stopCounter": "Stop {current} / {total}"

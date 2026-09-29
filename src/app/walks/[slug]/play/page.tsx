@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { baseOpenGraph, PROTOTYPE_ROBOTS } from "@/lib/shared-metadata";
 import { notFound } from "next/navigation";
 import { WalkPlayer } from "@/features/walk-session/components/WalkPlayer";
 import { getTranslator } from "@/i18n/server";
@@ -13,10 +14,14 @@ export async function generateMetadata({
   const { slug } = await params;
   const t = await getTranslator();
   const walk = await getWalk(slug, t.locale);
+  const title = walk ? t("meta.playTitle", { title: walk.title }) : t("meta.walkNotFound");
   return {
-    title: walk ? t("meta.playTitle", { title: walk.title }) : t("meta.walkNotFound"),
-    // Game screens are not useful search results.
-    robots: { index: false },
+    title,
+    openGraph: { ...baseOpenGraph(t.locale), title },
+    // Game screens are not useful search results. Setting `robots` here replaces the
+    // layout's whole `robots`, so the shared rule keeps "nofollow" too.
+    // AT LAUNCH: keep `{ index: false }` here when the site-wide rule goes.
+    robots: PROTOTYPE_ROBOTS,
   };
 }
 

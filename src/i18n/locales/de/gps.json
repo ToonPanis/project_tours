@@ -16,6 +16,7 @@
   "tryAgain": "Erneut versuchen",
   "followDirection": "Laufrichtung folgen",
   "northUp": "Norden oben",
+  "northShort": "N",
   "recenter": "Zentrieren",
   "notOnMap": "Dieser Ort ist noch nicht auf der Karte.",
   "mapUnavailable": "Die Karte konnte nicht geladen werden (keine Verbindung, oder dieser Browser kann keine Karten anzeigen). Die Wegbeschreibung und die externe Karte funktionieren weiterhin.",
@@ -68,5 +69,13 @@
     "sw": "Südwesten",
     "w": "Westen",
     "nw": "Nordwesten"
+  },
+  "mapControls": {
+    "zoomIn": "Vergrößern",
+    "zoomOut": "Verkleinern",
+    "toggleAttribution": "Kartenquellen ein- oder ausblenden",
+    "mapFeedback": "Feedback zur Karte",
+    "map": "Karte",
+    "marker": "Kartenmarkierung"
   }
 }

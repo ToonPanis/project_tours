@@ -26,7 +26,7 @@ npm run build          # production build (prebuild copies the worker too)
 npm start              # serve the build (use e.g. `npx next start -p 3200` if 3000 is taken)
 npm run typecheck      # = npx tsc --noEmit
 npm run lint
-npm run test:run       # = npx vitest run, all tests once (~670); `npm test` = watch mode
+npm run test:run       # = npx vitest run, all tests once (~940); `npm test` = watch mode
 npm run i18n:check     # every language has every UI text (en = master)
 node scripts/generate-walking-routes.mjs <walk-folder>   # after changing coordinates.json
 node scripts/download-commons-images.mjs <walk-folder>   # after changing image-sources.json
@@ -129,7 +129,7 @@ Security headers for every response come from `src/lib/security-headers.ts` via 
 - Translations were made by AI and are not reviewed by native speakers (ru/uk name transliterations and some glossary terms were flagged as worth checking). Italian UI uses "tu" in a few labels, content addresses the group with "voi".
 - Not built yet: payments (prices are display only), accounts, backend/DB, server-side answer checking (answers ship to the client), analytics.
 
-**Known quirks:** flag emoji show as letters ("GB", "NL") on Windows (fine on phones). `getImmediateLabel` in `maneuver-display.ts` is English and only used by tests. Local branches `backup/pre-i18n` (snapshot before i18n) and `feature/i18n-8-languages` (already merged into `main`) still exist.
+**Known quirks:** flag emoji show as letters ("GB", "NL") on Windows (fine on phones). Local branches `backup/pre-i18n` (snapshot before i18n) and `feature/i18n-8-languages` (already merged into `main`) still exist.
 
 ## Decisions to keep (don't undo)
 
@@ -153,7 +153,7 @@ Security headers for every response come from `src/lib/security-headers.ts` via 
 6. Clear names, minimal dependencies, never hardcode secrets (`.env.local`; only `NEXT_PUBLIC_*` reaches the browser).
 7. Mobile-first (base styles, then `sm:`/`md:`/`lg:`); check 390 px width, long German words and Cyrillic.
 8. Accessibility: semantic HTML, alt text, labels, keyboard access, contrast, `lang` attributes for foreign-language text. A screen that replaces another in place focuses its `h1` via `useScreenFocus(stableId)`. Live feedback goes in a status element that is always mounted (e.g. `WrongAnswerStatus`), never in one that appears with its text. Dialogs that delete progress use `ConfirmDialog isDestructive`. Untranslated Dutch source titles get `language: "nl"` on the `Source`.
-9. New user-facing text → a key in **all 8** `locales/<lang>/*.json` (never hardcoded strings), then `npm run i18n:check`.
+9. New user-facing text → a key in **all 8** `locales/<lang>/*.json` (never hardcoded strings), then `npm run i18n:check`. `t` is always a required parameter (no English default); `no-hardcoded-text.test.ts` fails on text typed into JSX. Walk-specific names for shared UI go in the walk's `copy` (e.g. `routeButtonLabel`). Shared metadata (Open Graph base, robots) comes from `src/lib/shared-metadata.ts`, because Next.js merges metadata shallowly.
 
 ## Content rules
 

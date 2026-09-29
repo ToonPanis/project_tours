@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import type { WalkSession } from "@/types/session";
 import type { Walk } from "@/types/walk";
-import { getSessionStats } from "../logic/session-stats";
+import { formatPlayerNames, getSessionStats } from "../logic/session-stats";
 import { PlayScreen } from "./PlayScreen";
 
 interface StartScreenProps {
@@ -59,7 +59,7 @@ export function StartScreen({
   }
 
   const stats = getSessionStats(walk, savedSession);
-  const playerNames = savedSession.team.players.map((player) => player.name).join(", ");
+  const playerNames = formatPlayerNames(savedSession.team.players, t);
 
   return (
     <PlayScreen

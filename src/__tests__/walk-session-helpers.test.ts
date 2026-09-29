@@ -1,7 +1,8 @@
+import { englishTranslator as t } from "@/i18n/translate";
 import { describe, expect, test } from "vitest";
 import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
 import { the17GatesWalk } from "./fixtures/the-17-gates";
-import { defaultWalkCopy, getWalkCopy } from "@/features/walk-session/logic/walk-copy";
+import { getDefaultWalkCopy, getWalkCopy } from "@/features/walk-session/logic/walk-copy";
 import { distanceInMeters } from "@/lib/geo";
 import {
   getOrderedLocations,
@@ -33,11 +34,11 @@ describe("route visibility", () => {
 
 describe("game copy", () => {
   test("walk texts override the defaults", () => {
-    expect(getWalkCopy(hiddenPubsWalk).voteResultTitle).toBe("The tavern has spoken");
+    expect(getWalkCopy(hiddenPubsWalk, t).voteResultTitle).toBe("The tavern has spoken");
   });
 
   test("walks without their own texts use the defaults", () => {
-    expect(getWalkCopy(the17GatesWalk)).toEqual(defaultWalkCopy);
+    expect(getWalkCopy(the17GatesWalk, t)).toEqual(getDefaultWalkCopy(t));
   });
 });
 

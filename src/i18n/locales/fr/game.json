@@ -2,7 +2,6 @@
   "header": {
     "stopProgress": "Étape {current} / {total}",
     "clues": "Indices {found} / {total}",
-    "ledger": "Registre",
     "route": "Parcours",
     "progressLabel": "Progression de la balade",
     "stopCounter": "Étape {current} / {total}"

@@ -27,6 +27,11 @@ interface WalkingMapProps {
   onUserMovedMap: () => void;
   /** Screen-reader name of the map, e.g. "Map: route to Grote Markt". */
   regionLabel: string;
+  /**
+   * MapLibre's own button labels (zoom, credits…) in the visitor's language, as MapLibre
+   * `locale` keys. Read when the map is created (each leg), not on every render.
+   */
+  controlLabels: Record<string, string>;
   /** Shown over the map when it can't be loaded (no WebGL, no connection…). */
   loadErrorText: string;
   /** Shown over the map when several tiles in a row failed (grey squares), e.g. a weak signal. */
@@ -136,6 +141,7 @@ export default function WalkingMap({
   travelBearing,
   onUserMovedMap,
   regionLabel,
+  controlLabels,
   loadErrorText,
   tilesFailingText,
 }: WalkingMapProps) {
@@ -168,6 +174,7 @@ export default function WalkingMap({
         zoom: destination.coordinates ? 17 : 14,
         // The OpenFreeMap style brings its own attribution (OpenFreeMap, OpenMapTiles, OpenStreetMap).
         attributionControl: { compact: true },
+        locale: controlLabels,
       });
     } catch {
       // E.g. no WebGL on this device. Reported after this effect, so React can render the message.

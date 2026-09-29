@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { formatDistance } from "@/features/walks/utils/format-walk";
 import { getSessionStats } from "@/features/walk-session/logic/session-stats";
-import { englishTranslator, type Translator } from "@/i18n/translate";
+import type { Translator } from "@/i18n/translate";
 import type { WalkSession } from "@/types/session";
 import type { Walk } from "@/types/walk";
 
@@ -19,7 +19,7 @@ interface GuideStartScreenProps {
    * buttons wait: starting before the save is known could overwrite it.
    */
   isLoading?: boolean;
-  t?: Translator;
+  t: Translator;
   onStart: () => void;
   onContinue: () => void;
   onRestart: () => void;
@@ -35,7 +35,7 @@ export function GuideStartScreen({
   walk,
   savedSession,
   isLoading = false,
-  t = englishTranslator,
+  t,
   onStart,
   onContinue,
   onRestart,

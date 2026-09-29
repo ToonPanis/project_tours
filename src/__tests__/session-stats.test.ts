@@ -1,3 +1,4 @@
+import { englishTranslator as t } from "@/i18n/translate";
 import { describe, expect, test } from "vitest";
 import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
 import { walks } from "@/data/walks";
@@ -31,12 +32,12 @@ describe("session stats", () => {
     [5 * 60_000, "5m"],
     [(2 * 60 + 47) * 60_000, "2h 47m"],
   ])("formats %i ms as %s", (milliseconds, expected) => {
-    expect(formatElapsedTime(milliseconds)).toBe(expected);
+    expect(formatElapsedTime(milliseconds, t)).toBe(expected);
   });
 
   test("uses the completion time once the walk is finished", () => {
     const finished = { ...session, completedAt: "2026-09-23T16:47:00.000Z" };
-    expect(getElapsedTime(finished, new Date("2030-01-01"))).toBe("2h 47m");
+    expect(getElapsedTime(finished, new Date("2030-01-01"), t)).toBe("2h 47m");
   });
 });
 

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import type { WalkSession } from "@/types/session";
 import type { WalkCopy, Walk } from "@/types/walk";
-import { getElapsedTime, getSessionStats } from "../logic/session-stats";
+import { formatPlayerNames, getElapsedTime, getSessionStats } from "../logic/session-stats";
 import { ContentBlockView } from "./ContentBlockView";
 import { PlayScreen } from "./PlayScreen";
 
@@ -30,7 +30,7 @@ export function CompletionScreen({ walk, session, copy, onOpenRoute }: Completio
 
   const stats = getSessionStats(walk, session);
   const elapsedTime = getElapsedTime(session, new Date(), t);
-  const playerNames = session.team.players.map((player) => player.name).join(", ");
+  const playerNames = formatPlayerNames(session.team.players, t);
 
   const teamLabel = session.team.name ? `${session.team.name} (${playerNames})` : playerNames;
   const shareText = t("game.completion.shareText", {

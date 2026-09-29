@@ -8,6 +8,7 @@
   "previous": "Previous",
   "submit": "Submit",
   "yourAnswer": "Your answer",
+  "labelValue": "{label}: {value}",
   "units": {
     "meters": "{value} m",
     "kilometers": "{value} km",

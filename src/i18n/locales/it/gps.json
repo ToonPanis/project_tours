@@ -16,6 +16,7 @@
   "tryAgain": "Riprova",
   "followDirection": "Segui la direzione",
   "northUp": "Nord in alto",
+  "northShort": "N",
   "recenter": "Centra",
   "notOnMap": "Questo luogo non è ancora sulla mappa.",
   "mapUnavailable": "Impossibile caricare la mappa (nessuna connessione, oppure questo browser non può mostrare mappe). Le indicazioni e la mappa esterna funzionano comunque.",
@@ -68,5 +69,13 @@
     "sw": "sud-ovest",
     "w": "ovest",
     "nw": "nord-ovest"
+  },
+  "mapControls": {
+    "zoomIn": "Ingrandisci",
+    "zoomOut": "Riduci",
+    "toggleAttribution": "Mostra o nascondi i crediti della mappa",
+    "mapFeedback": "Segnala un problema della mappa",
+    "map": "Mappa",
+    "marker": "Indicatore sulla mappa"
   }
 }

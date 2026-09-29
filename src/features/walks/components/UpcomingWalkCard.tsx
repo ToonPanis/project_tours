@@ -1,14 +1,14 @@
-import { englishTranslator, type Translator } from "@/i18n/translate";
+import type { Translator } from "@/i18n/translate";
 import { Badge } from "@/components/ui/Badge";
 import type { UpcomingWalk } from "@/types/walk";
 
 interface UpcomingWalkCardProps {
   walk: UpcomingWalk;
-  t?: Translator;
+  t: Translator;
 }
 
 /** A muted, non-clickable card for walks that are not playable yet. */
-export function UpcomingWalkCard({ walk, t = englishTranslator }: UpcomingWalkCardProps) {
+export function UpcomingWalkCard({ walk, t }: UpcomingWalkCardProps) {
   return (
     <article className="flex w-full flex-col gap-2 rounded-sm border border-dashed border-sepia/35 bg-parchment-dark/40 p-5">
       <div>
