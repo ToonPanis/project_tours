@@ -7,16 +7,22 @@
  * Reads   src/data/walks/<walk>/image-sources.json   (what to download)
  * Writes  public/images/<folder>/…                   (the image files, 1280 px wide)
  *         src/data/walks/<walk>/images.json           (license + attribution per image)
+ *
+ * If an image that was fine before is now REFUSED (its license on Commons changed),
+ * its previous metadata and file are kept and the script ends with exit code 1:
+ * the image stays visible until someone checks it by hand and removes or replaces it.
  */
 import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { fetchWithRetry, isInsideDirectory, readWalkFolderArg, toHttps, USER_AGENT_CONTACT } from "./lib/script-utils.mjs";
 
-const walk = process.argv[2];
-if (!walk) throw new Error("Usage: node scripts/download-commons-images.mjs <walk-folder>");
+const walk = readWalkFolderArg(process.argv[2], "node scripts/download-commons-images.mjs <walk-folder>");
 
 const DATA_DIR = new URL(`../src/data/walks/${walk}/`, import.meta.url);
 const PUBLIC_DIR = new URL("../public/", import.meta.url);
+const IMAGES_DIR = new URL("images/", PUBLIC_DIR);
 const API = "https://commons.wikimedia.org/w/api.php";
-const HEADERS = { "User-Agent": "HiddenAntwerp-image-downloader/0.1 (student prototype)" };
+// Wikimedia's User-Agent policy asks for a way to contact the author.
+const HEADERS = { "User-Agent": `HiddenAntwerp-image-downloader/0.1 (${USER_AGENT_CONTACT})` };
 
 /** Licenses we accept. Anything else is refused and must be checked by hand. */
 const ACCEPTED_LICENSE = /^(public domain|pd\b|pd-|cc0|cc by(-sa)? \d)/i;
@@ -33,44 +39,59 @@ async function getImageInfo(fileTitle) {
     iiurlwidth: "1280",
     format: "json",
   });
-  for (let attempt = 0; attempt < 5; attempt++) {
-    const response = await fetch(`${API}?${params}`, { headers: HEADERS });
-    if (response.status === 429) {
-      await wait(15_000 * (attempt + 1));
-      continue;
-    }
-    const data = await response.json();
-    const page = Object.values(data.query.pages)[0];
-    if (!page.imageinfo) throw new Error(`Not found on Commons: ${fileTitle}`);
-    return page.imageinfo[0];
-  }
-  throw new Error(`Rate limited too often: ${fileTitle}`);
+  // Retries rate limits (429), server errors and timeouts; other errors stop the script.
+  const response = await fetchWithRetry(`${API}?${params}`, { headers: HEADERS }, { retries: 4 });
+  const data = await response.json();
+  const page = data?.query?.pages ? Object.values(data.query.pages)[0] : undefined;
+  if (!page?.imageinfo) throw new Error(`Not found on Commons: ${fileTitle}`);
+  return page.imageinfo[0];
 }
 
 const { images: sources } = JSON.parse(await readFile(new URL("image-sources.json", DATA_DIR), "utf8"));
+// The metadata from the previous run: kept for an image whose license check fails now,
+// so a changed license on Commons is reported instead of silently dropping an image.
+const previousById = new Map();
+try {
+  const previous = JSON.parse(await readFile(new URL("images.json", DATA_DIR), "utf8"));
+  for (const image of previous.images ?? []) previousById.set(image.id, image);
+} catch {
+  // First run: nothing to keep.
+}
 const results = [];
+const refused = [];
 
 for (const source of sources) {
+  // Only write inside public/images/ (a path like "../../x" in image-sources.json is refused).
+  const target = new URL(source.localPath.replace(/^\//, ""), PUBLIC_DIR);
+  if (!isInsideDirectory(target, IMAGES_DIR)) {
+    throw new Error(`localPath must be inside public/images/: ${source.localPath}`);
+  }
+
   const info = await getImageInfo(source.commonsTitle);
   const meta = info.extmetadata ?? {};
   const license = stripHtml(meta.LicenseShortName?.value);
 
   if (!ACCEPTED_LICENSE.test(license)) {
-    console.warn(`✗ REFUSED (license "${license}"): ${source.commonsTitle}`);
+    refused.push(`${source.id} (license "${license}")`);
+    const previous = previousById.get(source.id);
+    if (previous) {
+      results.push(previous);
+      console.warn(`✗ REFUSED (license "${license}"): ${source.commonsTitle}. Kept the previous metadata: CHECK BY HAND.`);
+    } else {
+      console.warn(`✗ REFUSED (license "${license}"): ${source.commonsTitle}`);
+    }
     continue;
   }
 
-  const response = await fetch(info.thumburl ?? info.url, { headers: HEADERS });
-  if (!response.ok) throw new Error(`Download failed (${response.status}): ${source.commonsTitle}`);
-  const target = new URL(source.localPath.replace(/^\//, ""), PUBLIC_DIR);
+  const response = await fetchWithRetry(info.thumburl ?? info.url, { headers: HEADERS });
   await mkdir(new URL(".", target), { recursive: true });
   await writeFile(target, Buffer.from(await response.arrayBuffer()));
 
   results.push({
     id: source.id,
     localPath: source.localPath,
-    imageUrl: info.url,
-    sourceUrl: info.descriptionurl,
+    imageUrl: toHttps(info.url),
+    sourceUrl: toHttps(info.descriptionurl),
     source: "Wikimedia Commons",
     title: source.commonsTitle.replace(/^File:/, ""),
     photographerOrArtist: stripHtml(meta.Artist?.value) || "Unknown",
@@ -78,7 +99,7 @@ for (const source of sources) {
     width: info.thumbwidth ?? info.width,
     height: info.thumbheight ?? info.height,
     license,
-    licenseUrl: meta.LicenseUrl?.value ?? null,
+    licenseUrl: toHttps(meta.LicenseUrl?.value ?? null),
     credit: stripHtml(meta.Credit?.value) || null,
   });
   console.log(`✓ ${source.id}  (${license})`);
@@ -89,4 +110,9 @@ await writeFile(
   new URL("images.json", DATA_DIR),
   `${JSON.stringify({ _comment: "GENERATED by scripts/download-commons-images.mjs. Do not edit by hand.", generatedAt: new Date().toISOString(), images: results }, null, 2)}\n`,
 );
-console.log(`Saved metadata for ${results.length} images.`);
+console.log(`Saved metadata for ${results.length} images${refused.length > 0 ? ` (${refused.length} refused, see below)` : ""}.`);
+if (refused.length > 0) {
+  // Exit code 1, so a refused license can't go unnoticed (e.g. in a script chain).
+  console.error(`\n${refused.length} image(s) refused, check by hand: ${refused.join("; ")}`);
+  process.exitCode = 1;
+}

@@ -111,7 +111,8 @@ Pattern: **technical data exists once** (ids, coordinates, addresses, images, an
 
 ## Environment & external services
 
-No secrets are needed. `.env.example` (committed, no values) documents the only variables: `NEXT_PUBLIC_MAP_STYLE_URL` (optional tile style) and `NEXT_PUBLIC_PLAYTEST_TOOLS=true` (playtest tools in production). `.env*` except `.env.example` is git-ignored. External services: OpenFreeMap tiles (runtime, keyless), OSRM at routing.openstreetmap.de and the Wikimedia Commons API (only from the scripts), Google Fonts (build time). Git remote: `github.com/ToonPanis/project_tours`, branch `main`.
+No secrets are needed. `.env.example` (committed, no values) documents the only variables: `NEXT_PUBLIC_MAP_STYLE_URL` (optional tile style), `NEXT_PUBLIC_PLAYTEST_TOOLS=true` (playtest tools in production; the build prints a warning) and `DEV_ALLOWED_ORIGINS` (dev only: your computer's exact LAN IP, e.g. `192.168.1.23`, **needed to open the dev server from a phone**; no wildcards).
+Security headers for every response come from `src/lib/security-headers.ts` via `next.config.ts` (nosniff, Referrer-Policy, Permissions-Policy `geolocation=(self)`, `X-Frame-Options: DENY`, no `X-Powered-By`). The Content Security Policy is **Report-Only**: check the browser console on real phones with a production build, then switch the key to `Content-Security-Policy`. A custom map style on other hosts needs those hosts added to the CSP. `.env*` except `.env.example` is git-ignored. External services: OpenFreeMap tiles (runtime, keyless), OSRM at routing.openstreetmap.de and the Wikimedia Commons API (only from the scripts), Google Fonts (build time). Git remote: `github.com/ToonPanis/project_tours`, branch `main`.
 
 ## Status
 

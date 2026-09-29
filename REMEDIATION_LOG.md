@@ -385,3 +385,66 @@ Status values: `VERIFIED FIXED` · `PARTIALLY FIXED` · `BLOCKED` · `NOT REPROD
 - **L-08:** very short legs. FIELD VERIFICATION REQUIRED (A6, A7).
 - **L-09:** route-progress continuity and a u-turn hint. Medium effort, planned later.
 - **Simulation vs real device clock:** playtest-only.
+
+---
+
+## Phase 3 — Security & privacy hardening (2026-09-29)
+
+- **Branch:** `fix/phase-3-security`, branched from `a0dabaa`. Uncommitted, awaiting approval.
+- **Principle:** conservative. The CSP is report-only, and nothing new is tracked, stored or sent.
+
+### Validation gate
+
+| Command | Result |
+|---|---|
+| `npm run typecheck` | ✅ |
+| `npm run lint` | ✅ 0 problems |
+| `npm run i18n:check` | ✅ |
+| `npm run test:run` | ✅ 29 files, **813 tests** (was 790, +23) |
+| `npm run build` | ✅ |
+| Production server check | ✅ Headers present on HTML, `/maplibre/*.mjs` (still `application/javascript`), images, `_next/*` and 404. No `X-Powered-By`. The map style and tiles come only from `tiles.openfreemap.org`, and all `<img>` are same-origin. |
+
+### L-01: Security headers
+- **Status:** VERIFIED FIXED (the CSP is report-only by design; enforcing it needs a phone check).
+- **Fix** (`src/lib/security-headers.ts`, `next.config.ts` `headers()`):
+  - `X-Content-Type-Options: nosniff`;
+  - `Referrer-Policy: strict-origin-when-cross-origin`;
+  - `Permissions-Policy: geolocation=(self), camera=(), microphone=(), payment=()`;
+  - `X-Frame-Options: DENY`;
+  - `poweredByHeader: false`;
+  - **`Content-Security-Policy-Report-Only`**, which allows the self-served worker, `blob:` workers and images, and the map host (derived from `MAP_STYLE_URL`). A relative or invalid style URL never breaks the build.
+  - No `upgrade-insecure-requests` or `report-to` yet (reasons in the code). HSTS comes from the host.
+- **To enforce later:** run a production build on iOS Safari and Android Chrome and check the console for "[Report Only]" violations, then rename the header key to `Content-Security-Policy`.
+
+### L-02: Dev-server origins
+- **Status:** VERIFIED FIXED
+- **Fix:** instead of wildcards, the exact host names come from `DEV_ALLOWED_ORIGINS`. Scheme and port are stripped, IPv6 addresses are bracketed, and wildcards are refused. Documented in `.env.example`, CLAUDE.md and README.
+- **Workflow change for the developer:** to open the dev server from a phone, set `DEV_ALLOWED_ORIGINS=<your LAN IP>` in `.env.local`.
+
+### L-04: Playtest tools in production
+- **Status:** VERIFIED FIXED
+- **Fix:**
+  - `isPlaytestEnabled(env)` is a tested pure function; the literal `process.env` reads are kept, so Next still inlines the variable.
+  - The build prints a warning when `NEXT_PUBLIC_PLAYTEST_TOOLS=true` in production.
+  - "Clear saved walks" (formerly "Clear localStorage") removes only `hidden-antwerp:playtest:*`, never the language choice, and is safe when storage is blocked.
+
+### L-05: Privacy notice
+- **Status:** PARTIALLY FIXED. `PRIVACY_NOTICE_DRAFT.md` is written from the code, with code references.
+  - PRODUCT/LEGAL DECISION REQUIRED: legal review, hosting provider, contact address, translations, publication.
+- **Reviewer:** MAJOR fixed. The language cookie *is* sent to the website, and the draft now says so.
+
+### L-39 / SEC-07 / O-07: Data scripts
+- **Status:** VERIFIED FIXED
+- **Fix** (`scripts/lib/script-utils.mjs` plus both scripts):
+  - the walk-folder argument is validated;
+  - image files can only be written inside `public/images/`;
+  - timeouts, and retries for 429, 5xx and network errors (Retry-After honoured, 15 s steps after a rate limit, unread bodies released);
+  - a clear error for missing coordinates, raised before any request;
+  - a refused license keeps the previous metadata and exits with code 1;
+  - a User-Agent with contact info;
+  - https for known hosts (links with an explicit port are left alone).
+  - `images.json`: two CC0 `licenseUrl` links changed to https. The attribution (`credit`) is untouched.
+- **QA:** both scripts were run in a scratch copy with a stubbed fetch: a null coordinate stops before any request; a 503 is retried; a first run works; a refused license gives exit code 1. Every path-traversal trick is refused.
+
+### Not in scope
+- **L-03** (answers are in the client payload; server-side answer checking): PRODUCT OWNER DECISION REQUIRED, tied to payments or prizes.

@@ -25,6 +25,8 @@ npm run dev        # http://localhost:3000
 | `npm run typecheck` | Type-check the project (`tsc --noEmit`) |
 | `npm run i18n:check` | Check that every language has every UI text |
 
+Testing on a phone on the same Wi-Fi: put your computer's LAN IP in `.env.local` as `DEV_ALLOWED_ORIGINS=192.168.1.23` (see `.env.example`), restart `npm run dev`, and open `http://<that-ip>:3000` on the phone. (GPS needs https on a phone; see CLAUDE.md.)
+
 Node: see `.nvmrc` (CI uses it). CI (`.github/workflows/ci.yml`) runs typecheck, lint, i18n:check, tests and build on every push to `main` and every pull request.
 
 ## Project structure
