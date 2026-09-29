@@ -70,6 +70,7 @@ export function DrinkVoting({ drinkRound, team, progress, dispatch, onVotingClos
       <PlayScreen
         eyebrow={t("game.voting.voteSaved")}
         title={t("game.voting.passPhone", { name: currentPlayer.name })}
+        screenId={`vote-pass-${currentPlayer.id}`}
         actions={
           <Button onClick={() => setIsPassingPhone(false)} fullWidth>
             {t("game.voting.iAm", { name: currentPlayer.name })}
@@ -87,6 +88,7 @@ export function DrinkVoting({ drinkRound, team, progress, dispatch, onVotingClos
     <PlayScreen
       eyebrow={isSolo ? t("game.voting.drinkVote") : t("game.voting.playerTurn", { name: currentPlayer.name })}
       title={t("game.voting.yourChoice")}
+      screenId={`vote-${currentPlayer.id}`}
       actions={
         <>
           <Button onClick={confirmVote} disabled={!selectedOptionId} fullWidth>

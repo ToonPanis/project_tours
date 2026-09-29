@@ -60,6 +60,7 @@ export function SolvedScreen(props: SolvedScreenProps) {
         <PlayScreen
           eyebrow={t("game.solved.correct")}
           title={copy.correctAnswer}
+          screenId={`solved-correct-${location.id}`}
           actions={
             <Button onClick={goToNextStep} fullWidth>
               {location.historicalReveal ? t("game.solved.discoverWhy") : t("common.continue")}
@@ -89,6 +90,7 @@ export function SolvedScreen(props: SolvedScreenProps) {
         <PlayScreen
           eyebrow={location.name}
           title={t("game.solved.whyItMatters")}
+          screenId={`solved-reveal-${location.id}`}
           actions={
             <Button onClick={goToNextStep} fullWidth>
               {t("common.continue")}
@@ -107,6 +109,7 @@ export function SolvedScreen(props: SolvedScreenProps) {
         <PlayScreen
           eyebrow={copy.clueCollectedTitle}
           title={t("game.solved.clueDiscovered")}
+          screenId={`solved-clue-${location.id}`}
           actions={
             <Button onClick={goToNextStep} fullWidth>
               {t("common.continue")}
@@ -142,6 +145,7 @@ function NextStep({ location, nextLocation, routeToNext, hasFinale, copy, onCont
       <PlayScreen
         eyebrow={location.name}
         title={hasFinale ? t("game.solved.finalPageAwaits") : t("game.solved.endOfRoute")}
+        screenId={`solved-end-${location.id}`}
         actions={
           <Button onClick={onContinue} fullWidth>
             {hasFinale ? t("game.solved.openFinalPage") : t("game.solved.closeCase")}
@@ -159,6 +163,7 @@ function NextStep({ location, nextLocation, routeToNext, hasFinale, copy, onCont
     <PlayScreen
       eyebrow={copy.nextLocationTitle}
       title={nextLocation.name}
+      screenId={`solved-next-${location.id}`}
       actions={
         <>
           <Button onClick={onContinue} fullWidth>
@@ -211,7 +216,7 @@ function BonusStep({ title, question, wrongAttempts, wrongMessage, onSubmit, onS
   }
 
   return (
-    <PlayScreen eyebrow={t("game.solved.optionalBonus")} title={title}>
+    <PlayScreen eyebrow={t("game.solved.optionalBonus")} title={title} screenId="solved-bonus">
       <p className="font-display text-2xl leading-snug">{question}</p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <label className="sr-only" htmlFor="bonus-answer">

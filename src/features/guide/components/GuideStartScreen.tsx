@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { formatWalkingDistance } from "@/features/navigation/logic/maneuver-display";
+import { formatDistance } from "@/features/walks/utils/format-walk";
 import { getSessionStats } from "@/features/walk-session/logic/session-stats";
 import { englishTranslator, type Translator } from "@/i18n/translate";
 import type { WalkSession } from "@/types/session";
@@ -31,7 +31,7 @@ export function GuideStartScreen({ walk, savedSession, t = englishTranslator, on
 
   const stats = [
     { icon: "⏱", label: t.plural("guide.hours", getApproximateHours(walk.estimatedDuration.minMinutes, walk.estimatedDuration.maxMinutes)) },
-    ...(walk.distanceInMeters ? [{ icon: "🚶", label: `± ${formatWalkingDistance(walk.distanceInMeters, t)}` }] : []),
+    ...(walk.distanceInMeters ? [{ icon: "🚶", label: `± ${formatDistance(walk.distanceInMeters, t)}` }] : []),
     { icon: "📍", label: t.plural("guide.stops", walk.locations.filter((location) => !location.isBonus).length) },
     ...(intro ? [{ icon: "🏛", label: intro.categoryLabel }] : []),
   ];

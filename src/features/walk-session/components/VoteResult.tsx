@@ -33,7 +33,7 @@ export function VoteResult({ drinkRound, progress, copy, playTieAnimation, onCon
 
   if (!isRevealed) {
     return (
-      <PlayScreen eyebrow={t("game.result.votingClosed")} title={copy.tieTitle}>
+      <PlayScreen eyebrow={t("game.result.votingClosed")} title={copy.tieTitle} screenId="vote-tie">
         <p className="animate-pulse font-display text-2xl italic text-gold" role="status">
           {copy.tieSubtitle}
         </p>
@@ -49,6 +49,7 @@ export function VoteResult({ drinkRound, progress, copy, playTieAnimation, onCon
     <PlayScreen
       eyebrow={t.plural("game.result.votesCounted", progress.votes.length)}
       title={copy.voteResultTitle}
+      screenId="vote-result"
       actions={
         <Button onClick={onContinue} fullWidth>
           {t("common.continue")}

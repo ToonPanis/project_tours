@@ -16,20 +16,17 @@ import { formatPrice } from "@/features/walks/utils/format-walk";
 import { getHowItWorksSteps } from "@/features/walks/utils/walk-content";
 import { getWalkCopy } from "@/features/walk-session/logic/walk-copy";
 import { getTranslator } from "@/i18n/server";
-import { walkRepository } from "@/lib/repositories";
+import { getWalk } from "@/lib/repositories";
 
-// Pre-render a page for every known walk at build time.
-export async function generateStaticParams() {
-  const walks = await walkRepository.getAllWalks();
-  return walks.map((walk) => ({ slug: walk.slug }));
-}
+// No generateStaticParams: these pages read the language cookie, so Next.js renders
+// them per request (in the visitor's language) instead of at build time.
 
 export async function generateMetadata({
   params,
 }: PageProps<"/walks/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const t = await getTranslator();
-  const walk = await walkRepository.getWalkBySlug(slug, t.locale);
+  const walk = await getWalk(slug, t.locale);
   if (!walk) return { title: t("meta.walkNotFound") };
 
   return {
@@ -43,7 +40,7 @@ export default async function WalkDetailPage({ params }: PageProps<"/walks/[slug
   // In this Next.js version, `params` is a Promise and must be awaited.
   const { slug } = await params;
   const t = await getTranslator();
-  const walk = await walkRepository.getWalkBySlug(slug, t.locale);
+  const walk = await getWalk(slug, t.locale);
 
   // Renders the nearest not-found.tsx (./not-found.tsx).
   if (!walk) notFound();

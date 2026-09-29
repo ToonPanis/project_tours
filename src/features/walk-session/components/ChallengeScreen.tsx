@@ -54,7 +54,7 @@ export function ChallengeScreen({
   }
 
   return (
-    <PlayScreen eyebrow={t("game.challenge.eyebrow")} title={challenge.title}>
+    <PlayScreen eyebrow={t("game.challenge.eyebrow")} title={challenge.title} screenId={`challenge-${challenge.id}`}>
       {challenge.researchStatus && (
         <p className="self-start rounded-full border border-dashed border-parchment/40 px-3 py-1 text-xs uppercase tracking-wider text-parchment/70">
           {challenge.researchStatus === "on-site-verification-required"

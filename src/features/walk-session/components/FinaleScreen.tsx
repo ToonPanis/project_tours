@@ -57,6 +57,7 @@ export function FinaleScreen({
       <PlayScreen
         eyebrow={eyebrow}
         title={finale.title}
+        screenId="finale-intro"
         actions={
           <Button onClick={() => setHasStarted(true)} fullWidth>
             {t("game.finale.openFinalPage")}
@@ -79,6 +80,7 @@ export function FinaleScreen({
     <FinaleQuestion
       // A new key resets the answer field for each question.
       key={question.id}
+      questionId={question.id}
       number={questionIndex + 1}
       total={finale.questions.length}
       question={question.question}
@@ -93,6 +95,7 @@ export function FinaleScreen({
 }
 
 interface FinaleQuestionProps {
+  questionId: string;
   number: number;
   total: number;
   question: string;
@@ -105,6 +108,7 @@ interface FinaleQuestionProps {
 }
 
 function FinaleQuestion({
+  questionId,
   number,
   total,
   question,
@@ -126,7 +130,7 @@ function FinaleQuestion({
   }
 
   return (
-    <PlayScreen eyebrow={t("game.finale.questionOf", { number, total })} title={question}>
+    <PlayScreen eyebrow={t("game.finale.questionOf", { number, total })} title={question} screenId={`finale-${questionId}`}>
       {!isAnswerShown && (
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <label className="sr-only" htmlFor="finale-answer">

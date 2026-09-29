@@ -18,6 +18,7 @@ export function StoryScreen({ location, onContinue }: StoryScreenProps) {
     <PlayScreen
       eyebrow={location.name}
       title={t("game.story.title")}
+      screenId={`story-${location.id}`}
       actions={
         <Button onClick={onContinue} fullWidth>
           {location.challenge ? t("game.story.toChallenge") : t("common.continue")}

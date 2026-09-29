@@ -68,6 +68,7 @@ export function CompletionScreen({ walk, session, copy, onOpenRoute }: Completio
       <PlayScreen
         eyebrow={walk.narrative?.title ?? walk.title}
         title={t("game.completion.lastPage")}
+        screenId="completion-last-page"
         actions={
           <Button onClick={() => setHasReadStory(true)} fullWidth>
             {t("game.completion.closeLedger")}
@@ -87,6 +88,7 @@ export function CompletionScreen({ walk, session, copy, onOpenRoute }: Completio
     <PlayScreen
       eyebrow={walk.narrative ? `${walk.title} · ${walk.narrative.title}` : walk.title}
       title={copy.completionTitle}
+      screenId="completion"
       actions={
         <>
           <Button onClick={onOpenRoute} fullWidth>

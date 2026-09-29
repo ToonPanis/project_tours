@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/Button";
 import { ButtonLink } from "@/components/ui/ButtonLink";
-import { formatWalkingDistance } from "@/features/navigation/logic/maneuver-display";
+import { formatDistance } from "@/features/walks/utils/format-walk";
 import { getElapsedTime, getSessionStats } from "@/features/walk-session/logic/session-stats";
 import { englishTranslator, type Translator } from "@/i18n/translate";
 import type { WalkSession } from "@/types/session";
@@ -19,7 +19,7 @@ export function GuideCompletionScreen({ walk, session, copy, t = englishTranslat
 
   const items = [
     { label: copy.locationsDiscoveredLabel, value: `${stats.solvedStops} / ${stats.totalStops}` },
-    ...(walk.distanceInMeters ? [{ label: t("guide.distance"), value: `± ${formatWalkingDistance(walk.distanceInMeters, t)}` }] : []),
+    ...(walk.distanceInMeters ? [{ label: t("guide.distance"), value: `± ${formatDistance(walk.distanceInMeters, t)}` }] : []),
     { label: t("guide.time"), value: getElapsedTime(session, new Date()) },
   ];
 

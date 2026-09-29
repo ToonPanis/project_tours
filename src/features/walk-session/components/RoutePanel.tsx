@@ -18,7 +18,7 @@ interface RoutePanelProps {
   children?: ReactNode;
 }
 
-/** The team's notebook: discovered clues and the route so far. */
+/** The route panel: the stops so far, plus the discovered clues when the walk has them (the Ledger in Hidden Pubs). */
 export function RoutePanel({ walk, session, copy, open, onClose, children }: RoutePanelProps) {
   const t = useT();
   const title = walk.narrative?.title ?? t("game.ledger.yourRoute", { title: walk.title });

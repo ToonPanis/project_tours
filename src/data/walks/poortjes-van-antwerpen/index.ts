@@ -1,4 +1,4 @@
-import { normalizeOsrmRoute, type SavedOsrmRoute } from "@/lib/routing/osrm";
+import { findPosition, loadRouteLegs } from "../shared";
 import type { CollectionItem, GuideCard, GuideImage, SearchTask } from "@/types/guide";
 import type { WalkLocation } from "@/types/location";
 import type { RouteLeg } from "@/types/navigation";
@@ -149,7 +149,6 @@ function buildSearchTask(task: SearchTaskText, stopId: string, collectionItems: 
 function buildLocations(content: PoortjesContent, collectionItems: CollectionItem[]): WalkLocation[] {
   return stopDefinitions.map((stop, index) => {
     const text = content.stops[stop.id];
-    const position = coordinatesFile.locations.find((location) => location.id === stop.id);
     if (!text) throw new Error(`Poortjes van Antwerpen: missing text for "${stop.id}"`);
 
     const itemsHere = collectionItems.filter((item) => item.stopId === stop.id);
@@ -163,8 +162,7 @@ function buildLocations(content: PoortjesContent, collectionItems: CollectionIte
       type: stop.type,
       isBonus: stop.isBonus,
       address: stop.address,
-      coordinates: position ? { latitude: position.latitude, longitude: position.longitude } : null,
-      coordinatesStatus: position?.status === "verified" ? "verified" : "to-verify",
+      ...findPosition(coordinatesFile, stop.id),
       description: text.subtitle,
       content: [],
       unlockCondition: index === 0 ? { type: "none" } : { type: "proximity", radiusInMeters: 40 },
@@ -211,11 +209,7 @@ function getMainRouteDistance(locations: WalkLocation[], legs: RouteLeg[]): numb
 }
 
 function buildWalk(content: PoortjesContent, locale: Locale): Walk {
-  const routeLegs: RouteLeg[] = routesFile.legs.map((leg) => ({
-    fromLocationId: leg.fromLocationId,
-    toLocationId: leg.toLocationId,
-    route: normalizeOsrmRoute(leg.osrm as SavedOsrmRoute),
-  }));
+  const routeLegs: RouteLeg[] = loadRouteLegs(routesFile);
   const collectionItems = buildCollectionItems(content);
   const locations = buildLocations(content, collectionItems);
 
