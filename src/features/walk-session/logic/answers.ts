@@ -42,7 +42,8 @@ function matchesAny(input: string, acceptedAnswers: string[]): boolean {
 export function checkAnswer(challenge: Challenge, answer: ChallengeAnswer): boolean {
   switch (challenge.type) {
     case "multiple-choice":
-      return typeof answer === "string" && Number(answer) === challenge.correctOptionIndex;
+      // An empty answer must not count as option 0 (Number("") is 0).
+      return typeof answer === "string" && answer.trim() !== "" && Number(answer) === challenge.correctOptionIndex;
 
     case "text-answer":
     case "code":

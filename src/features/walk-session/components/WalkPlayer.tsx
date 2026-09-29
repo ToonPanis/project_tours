@@ -241,6 +241,7 @@ function WalkPlayerContent({ walk }: WalkPlayerProps) {
             )}
             onSubmit={(answer) => dispatch({ type: "SUBMIT_ANSWER", answer })}
             onRevealHint={() => dispatch({ type: "REVEAL_HINT" })}
+            onRevealAnswer={() => dispatch({ type: "REVEAL_ANSWER" })}
           />
         ) : null;
 

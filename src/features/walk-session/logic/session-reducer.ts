@@ -2,6 +2,7 @@ import type { WalkLocation } from "@/types/location";
 import type { LocationProgress, SessionAction, WalkSession } from "@/types/session";
 import type { Walk } from "@/types/walk";
 import { checkAnswer } from "./answers";
+import { canRevealAnswer } from "./reveal-answer";
 import { getOrderedLocations } from "./route";
 import { findLeadingOptionIds, tallyVotes } from "./voting";
 
@@ -129,6 +130,20 @@ export function applySessionAction(
       const hintsAvailable = Math.min(progress.wrongAttempts, location.challenge.hints.length);
       if (progress.hintsRevealed >= hintsAvailable) return session;
       return updateProgress({ hintsRevealed: progress.hintsRevealed + 1 });
+    }
+
+    case "REVEAL_ANSWER": {
+      // Only after enough wrong attempts (see reveal-answer.ts). The stop counts as
+      // solved and gives its clue, so the final puzzle stays solvable.
+      if (!location.challenge || !canRevealAnswer(location.challenge, progress)) return session;
+      const solved = solveLocation(walk, session, location);
+      return {
+        ...solved,
+        locations: {
+          ...solved.locations,
+          [location.id]: { ...solved.locations[location.id], answerRevealed: true },
+        },
+      };
     }
 
     case "SUBMIT_BONUS_ANSWER": {

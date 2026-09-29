@@ -7,12 +7,8 @@ import type { Team } from "@/types/team";
 import type { Walk } from "@/types/walk";
 import { createWalkSession } from "../logic/create-session";
 import { applySessionAction } from "../logic/session-reducer";
-import {
-  localWalkSessionStore,
-  parseSavedSession,
-  STORAGE_VERSION,
-  type WalkSessionStore,
-} from "../storage/session-storage";
+import { reconcileSessionWithWalk } from "../logic/reconcile-session";
+import { localWalkSessionStore, type WalkSessionStore } from "../storage/session-storage";
 
 export interface WalkSessionControls {
   /** False until the saved game (if any) has been read from storage. */
@@ -46,11 +42,11 @@ export function useWalkSession(
   useEffect(() => {
     const loadedFrom = loadedFromRef.current;
     if (loadedFrom?.slug === walk.slug && loadedFrom.store === store) {
-      // Same walk, new data (e.g. another language): keep the game in memory, unless it
-      // no longer fits the walk (a deploy changed its stops). Then fall back to the saved
-      // copy, which parseSavedSession checks the same way (usually: a fresh start).
+      // Same walk, new data (e.g. another language, or a content update): keep the game
+      // in memory, adapted to the walk's current stops. If it can't be adapted (the
+      // team's current stop was removed), the game starts fresh (M-04 decision).
       setSession((current) =>
-        current === null || fitsWalk(walk, current) ? current : store.load(walk),
+        current === null ? null : reconcileSessionWithWalk(walk, current),
       );
       return;
     }
@@ -97,9 +93,4 @@ export function useWalkSession(
     startNewSession,
     resetSession,
   };
-}
-
-/** True when an in-memory session still matches the walk's current stops (same check as a saved game). */
-function fitsWalk(walk: Walk, session: WalkSession): boolean {
-  return parseSavedSession(walk, { version: STORAGE_VERSION, session }) !== null;
 }

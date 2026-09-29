@@ -85,7 +85,10 @@
     "yourClues": "I vostri indizi",
     "notPlayable": "Questo tipo di sfida non è ancora disponibile.",
     "hint": "Indizio {number}: ",
-    "needHint": "Ti serve un indizio?"
+    "needHint": "Ti serve un indizio?",
+    "revealOffer": "Siete bloccati? Potete vedere la risposta e continuare la passeggiata.",
+    "revealAnswer": "Mostra la risposta",
+    "answerIs": "La risposta: {answer}"
   },
   "solved": {
     "correct": "Esatto",

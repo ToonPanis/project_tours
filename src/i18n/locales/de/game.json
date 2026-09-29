@@ -85,7 +85,10 @@
     "yourClues": "Eure Hinweise",
     "notPlayable": "Diese Art von Aufgabe kann noch nicht gespielt werden.",
     "hint": "Tipp {number}: ",
-    "needHint": "Brauchst du einen Tipp?"
+    "needHint": "Brauchst du einen Tipp?",
+    "revealOffer": "Kommt ihr nicht weiter? Ihr könnt euch die Lösung ansehen und den Rundgang fortsetzen.",
+    "revealAnswer": "Lösung anzeigen",
+    "answerIs": "Die Lösung: {answer}"
   },
   "solved": {
     "correct": "Richtig",

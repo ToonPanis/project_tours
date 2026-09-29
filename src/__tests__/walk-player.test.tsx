@@ -5,6 +5,7 @@ import { WalkPlayer } from "@/features/walk-session/components/WalkPlayer";
 import { createWalkSession } from "@/features/walk-session/logic/create-session";
 import { applySessionAction } from "@/features/walk-session/logic/session-reducer";
 import { getJumpToStopActions } from "@/features/walk-session/playtest/get-correct-answer";
+import { getAnswerText } from "@/features/walk-session/logic/reveal-answer";
 import { localWalkSessionStore, storageKey } from "@/features/walk-session/storage/session-storage";
 import type { SessionAction } from "@/types/session";
 
@@ -135,6 +136,42 @@ describe("WalkPlayer: Hidden Pubs", () => {
     expect(screen.getByText("Your next destination")).toBeDefined();
     expect(screen.getByText("Stop 2 / 8")).toBeDefined();
     expect(screen.getByText("Clues 1 / 8")).toBeDefined();
+  });
+
+  test("after 3 wrong answers the team can see the answer and continue (H-02)", async () => {
+    // Stop 5 (De Kat) has a number challenge whose answer is still a placeholder:
+    // exactly the case where a team could otherwise get stuck.
+    const deKat = hiddenPubsWalk.locations.find((location) => location.id === "pubs-de-kat")!;
+    saveSessionAfter([
+      ...getJumpToStopActions(hiddenPubsWalk, 5, "2026-09-23T15:00:00.000Z"),
+      { type: "ARRIVE" },
+      { type: "SKIP_DRINK_ROUND" },
+      { type: "SHOW_STORY" },
+      { type: "START_CHALLENGE" },
+    ]);
+    await continueSavedWalk();
+
+    const input = screen.getByPlaceholderText("Your answer");
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      expect(screen.queryByRole("button", { name: "Show the answer" })).toBeNull();
+      fireEvent.change(input, { target: { value: "-1" } });
+      click("Submit");
+    }
+
+    click("Show the answer");
+    // The answer box: the answer and the (translated) explanation. The form is gone.
+    expect(screen.getByText(`The answer: ${getAnswerText(deKat.challenge!)}`)).toBeDefined();
+    expect(screen.getByText(deKat.challenge!.explanation!)).toBeDefined();
+    expect(screen.queryByPlaceholderText("Your answer")).toBeNull();
+    click("Continue");
+
+    // No "Correct" screen (that wouldn't be true); straight on to the history, the clue is collected.
+    expect(screen.queryByRole("heading", { name: "The ink begins to move…" })).toBeNull();
+    expect(deKat.historicalReveal).toBeDefined();
+    expect(screen.getByText("Why it matters")).toBeDefined();
+    const saved = localWalkSessionStore.load(hiddenPubsWalk)!;
+    expect(saved.locations["pubs-de-kat"].answerRevealed).toBe(true);
+    expect(saved.collectedClueIds).toHaveLength(5);
   });
 
   test("progress survives a page reload", async () => {

@@ -85,7 +85,10 @@
     "yourClues": "Vos indices",
     "notPlayable": "Ce type de défi n'est pas encore jouable.",
     "hint": "Indice {number} : ",
-    "needHint": "Besoin d'un indice ?"
+    "needHint": "Besoin d'un indice ?",
+    "revealOffer": "Vous bloquez ? Vous pouvez voir la réponse et continuer la balade.",
+    "revealAnswer": "Voir la réponse",
+    "answerIs": "La réponse : {answer}"
   },
   "solved": {
     "correct": "Bonne réponse",

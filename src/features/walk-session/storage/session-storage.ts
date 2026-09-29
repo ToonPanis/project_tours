@@ -1,5 +1,6 @@
 import type { FinaleProgress, LocationProgress, LocationStatus, WalkSession } from "@/types/session";
 import type { Walk } from "@/types/walk";
+import { reconcileSessionWithWalk } from "../logic/reconcile-session";
 
 /**
  * Where a walk session is saved. Today: the browser's localStorage.
@@ -11,8 +12,14 @@ export interface WalkSessionStore {
   clear(walkSlug: string): void;
 }
 
-/** Bump this when the WalkSession shape changes; older saves are then ignored. */
-export const STORAGE_VERSION = 2;
+/**
+ * Bump this when the WalkSession shape changes, and add a step to `migrateToCurrent`
+ * so saves from the previous version keep working (a group mid-walk keeps its game).
+ * Versions without a migration step are ignored (fresh start).
+ *
+ * 3: LocationProgress.answerRevealed (show the answer after a few wrong attempts).
+ */
+export const STORAGE_VERSION = 3;
 
 interface SavedSession {
   version: number;
@@ -58,6 +65,7 @@ function isLocationProgress(value: unknown): boolean {
     typeof value.wasTie === "boolean" &&
     isCount(value.wrongAttempts) &&
     isCount(value.hintsRevealed) &&
+    typeof value.answerRevealed === "boolean" &&
     BONUS_STATUSES.includes(value.bonusStatus as LocationProgress["bonusStatus"]) &&
     isCount(value.bonusWrongAttempts)
   );
@@ -78,36 +86,65 @@ function isPlayer(value: unknown): boolean {
 }
 
 /**
- * Checks that saved data still fits the current walk. A save from an older
- * version, one that refers to stops that no longer exist, or one with damaged
- * values is rejected, so changing the walk data (or a corrupted save) can never
- * crash a saved game: the player simply starts fresh.
+ * Brings a saved session from an older storage version up to the current shape.
+ * Returns null for versions that can't be migrated.
+ */
+function migrateToCurrent(version: unknown, session: Record<string, unknown>): Record<string, unknown> | null {
+  if (version === STORAGE_VERSION) return session;
+  if (version === 2) {
+    // 2 → 3: every stop gets `answerRevealed: false` (nobody could reveal answers before).
+    if (!isObject(session.locations)) return null;
+    const locations = Object.fromEntries(
+      Object.entries(session.locations).map(([id, progress]) => [
+        id,
+        isObject(progress) ? { answerRevealed: false, ...progress } : progress,
+      ]),
+    );
+    return { ...session, locations };
+  }
+  return null;
+}
+
+/**
+ * Reads a saved game for this walk: migrates older versions, rejects damaged
+ * data, then adapts it to the walk's current stops (game rule, see
+ * logic/reconcile-session.ts). A corrupted save can never crash the game:
+ * the player simply starts fresh.
  */
 export function parseSavedSession(walk: Walk, raw: unknown): WalkSession | null {
-  if (!isObject(raw) || raw.version !== STORAGE_VERSION || !isObject(raw.session)) return null;
+  if (!isObject(raw) || !isObject(raw.session)) return null;
+  const session = migrateToCurrent(raw.version, raw.session);
+  return session && isWellFormedSession(walk, session) ? reconcileSessionWithWalk(walk, session) : null;
+}
 
-  const session = raw.session as Partial<WalkSession>;
+/**
+ * True when saved data has the shape the game screens rely on (a damaged value
+ * could crash them). Stops that the save doesn't know yet are allowed to be
+ * missing: reconcileSessionWithWalk adds them.
+ */
+function isWellFormedSession(walk: Walk, candidate: Record<string, unknown>): candidate is Record<string, unknown> & WalkSession {
+  const session = candidate as Partial<WalkSession>;
   const walkLocationIds = walk.locations.map((location) => location.id);
 
-  const isValid =
+  return (
     session.walkSlug === walk.slug &&
     typeof session.startedAt === "string" &&
-    typeof session.currentLocationId === "string" &&
-    walkLocationIds.includes(session.currentLocationId) &&
     typeof session.id === "string" &&
     (session.completedAt === undefined || typeof session.completedAt === "string") &&
+    typeof session.currentLocationId === "string" &&
+    walkLocationIds.includes(session.currentLocationId) &&
     isObject(session.locations) &&
-    walkLocationIds.every((id) => isLocationProgress(session.locations?.[id])) &&
+    // The stop the team is at must have real progress; other stops may be missing (new stops).
+    isLocationProgress(session.locations[session.currentLocationId]) &&
+    walkLocationIds.every((id) => session.locations?.[id] === undefined || isLocationProgress(session.locations[id])) &&
     isStringArray(session.collectedClueIds) &&
-    // A walk with a final puzzle needs its progress; a walk without one has none.
-    (walk.finale ? isFinaleProgress(session.finale) : session.finale === null) &&
+    (session.finale === null || session.finale === undefined || isFinaleProgress(session.finale)) &&
     isObject(session.team) &&
     typeof session.team.name === "string" &&
     Array.isArray(session.team.players) &&
     session.team.players.length > 0 &&
-    session.team.players.every(isPlayer);
-
-  return isValid ? (session as WalkSession) : null;
+    session.team.players.every(isPlayer)
+  );
 }
 
 /**

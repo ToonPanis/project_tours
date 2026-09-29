@@ -5,6 +5,7 @@ import { createWalkSession } from "@/features/walk-session/logic/create-session"
 import { getOrderedLocations } from "@/features/walk-session/logic/route";
 import { getCorrectAnswer, getJumpToStopActions } from "@/features/walk-session/playtest/get-correct-answer";
 import { applySessionAction } from "@/features/walk-session/logic/session-reducer";
+import { REVEAL_ANSWER_AFTER_WRONG_ATTEMPTS } from "@/features/walk-session/logic/reveal-answer";
 import type { SessionAction, WalkSession } from "@/types/session";
 import type { Team } from "@/types/team";
 import type { Walk } from "@/types/walk";
@@ -161,6 +162,52 @@ describe("challenge and hints", () => {
       expect(session.collectedClueIds).toContain("pubs-clue-time");
     },
   );
+
+  // H-02: after 3 wrong answers the team may see the answer, so nobody gets stuck.
+  test("the answer can't be revealed before 3 wrong attempts", () => {
+    const session = play(hiddenPubsWalk, atStop2Challenge(), [
+      { type: "SUBMIT_ANSWER", answer: "wrong" },
+      { type: "SUBMIT_ANSWER", answer: "wrong" },
+      { type: "REVEAL_ANSWER" },
+    ]);
+    expect(currentProgress(session).status).toBe("challenge");
+    expect(currentProgress(session).answerRevealed).toBe(false);
+  });
+
+  test(`after ${REVEAL_ANSWER_AFTER_WRONG_ATTEMPTS} wrong attempts, revealing solves the stop and still gives its clue`, () => {
+    const wrongAnswers: SessionAction[] = Array.from({ length: REVEAL_ANSWER_AFTER_WRONG_ATTEMPTS }, () => ({
+      type: "SUBMIT_ANSWER",
+      answer: "wrong",
+    }));
+    const session = play(hiddenPubsWalk, atStop2Challenge(), [...wrongAnswers, { type: "REVEAL_ANSWER" }]);
+    expect(currentProgress(session).status).toBe("solved");
+    expect(currentProgress(session).answerRevealed).toBe(true);
+    // The clue is what the final puzzle needs: without it the finale would become the dead end.
+    expect(session.collectedClueIds).toContain("pubs-clue-time");
+
+    // The walk goes on as usual.
+    const next = play(hiddenPubsWalk, session, [{ type: "CONTINUE_TO_NEXT_LOCATION", at: "2026-09-23T15:00:00.000Z" }]);
+    expect(next.currentLocationId).toBe("pubs-paters-vaetje");
+  });
+
+  test("an empty multiple-choice answer never counts as option A", () => {
+    // Rococo (stop 1): multiple choice whose correct option is the first one (index 0).
+    const rococo = hiddenPubsWalk.locations[0].challenge!;
+    expect(rococo.type === "multiple-choice" && rococo.correctOptionIndex).toBe(0);
+    const session = play(hiddenPubsWalk, startSession(hiddenPubsWalk), [
+      { type: "ARRIVE" },
+      { type: "SKIP_DRINK_ROUND" },
+      { type: "SHOW_STORY" },
+      { type: "START_CHALLENGE" },
+      { type: "SUBMIT_ANSWER", answer: "" },
+    ]);
+    expect(currentProgress(session).status).toBe("challenge");
+  });
+
+  test("revealing is ignored outside the challenge step (e.g. a stale double tap)", () => {
+    const solved = play(hiddenPubsWalk, atStop2Challenge(), [{ type: "SUBMIT_ANSWER", answer: "11:55" }]);
+    expect(play(hiddenPubsWalk, solved, [{ type: "REVEAL_ANSWER" }])).toBe(solved);
+  });
 
   test("the next location only unlocks after continuing from a solved stop", () => {
     const session = atStop2Challenge();

@@ -41,7 +41,9 @@ export function SolvedScreen(props: SolvedScreenProps) {
   const { location, progress, earnedClues, copy } = props;
 
   const steps: Step[] = [
-    "correct",
+    // After "show the answer" the team already saw the answer and explanation,
+    // and "Correct" would not be true: go straight on.
+    ...(progress.answerRevealed ? [] : (["correct"] as const)),
     ...(location.bonusChallenge && progress.bonusStatus === "unanswered" ? (["bonus"] as const) : []),
     ...(location.historicalReveal ? (["reveal"] as const) : []),
     ...(earnedClues.length > 0 ? (["clue"] as const) : []),

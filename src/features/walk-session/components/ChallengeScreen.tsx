@@ -1,13 +1,14 @@
 "use client";
 
 import { useT } from "@/i18n/client";
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import type { Challenge } from "@/types/challenge";
 import type { Clue } from "@/types/clue";
 import type { ChallengeAnswer, LocationProgress } from "@/types/session";
 import type { GameCopy } from "@/types/walk";
 import { optionLetter } from "../logic/option-letter";
+import { canRevealAnswer, getRevealContent } from "../logic/reveal-answer";
 import { PlayScreen } from "./PlayScreen";
 
 interface ChallengeScreenProps {
@@ -18,6 +19,8 @@ interface ChallengeScreenProps {
   requiredClues: Clue[];
   onSubmit: (answer: ChallengeAnswer) => void;
   onRevealHint: () => void;
+  /** After a few wrong attempts: the team saw the answer and continues (the stop counts as solved). */
+  onRevealAnswer: () => void;
 }
 
 const inputClasses =
@@ -30,9 +33,20 @@ export function ChallengeScreen({
   requiredClues,
   onSubmit,
   onRevealHint,
+  onRevealAnswer,
 }: ChallengeScreenProps) {
   const t = useT();
   const [answer, setAnswer] = useState("");
+  // Step 1 shows the answer on screen; step 2 ("Continue") tells the game.
+  const [isAnswerShown, setIsAnswerShown] = useState(false);
+  const answerBoxRef = useRef<HTMLDivElement>(null);
+  const mayRevealAnswer = canRevealAnswer(challenge, progress);
+  const revealed = getRevealContent(challenge);
+
+  // Move focus to the revealed answer, so screen-reader users hear it right away.
+  useEffect(() => {
+    if (isAnswerShown) answerBoxRef.current?.focus();
+  }, [isAnswerShown]);
 
   const hasWrongAnswer = progress.wrongAttempts > 0;
   const hintsAvailable = Math.min(progress.wrongAttempts, challenge.hints.length);
@@ -77,8 +91,8 @@ export function ChallengeScreen({
         </div>
       )}
 
-      {/* Answer input: one layout per challenge type. */}
-      {challenge.type === "multiple-choice" && (
+      {/* Answer input: one layout per challenge type. Hidden once the answer is shown. */}
+      {challenge.type === "multiple-choice" && !isAnswerShown && (
         <div className="flex flex-col gap-3">
           {challenge.options.map((option, index) => (
             <button
@@ -94,7 +108,8 @@ export function ChallengeScreen({
         </div>
       )}
 
-      {(challenge.type === "text-answer" || challenge.type === "code" || challenge.type === "number-answer") && (
+      {(challenge.type === "text-answer" || challenge.type === "code" || challenge.type === "number-answer") &&
+        !isAnswerShown && (
         <form onSubmit={submitTypedAnswer} className="flex flex-col gap-3">
           <label className="sr-only" htmlFor="challenge-answer">
             {t("common.yourAnswer")}
@@ -149,10 +164,45 @@ export function ChallengeScreen({
         </ol>
       )}
 
-      {canRevealHint && (
+      {canRevealHint && !isAnswerShown && (
         <Button variant="outline" onClick={onRevealHint} fullWidth>
           {t("game.challenge.needHint")}
         </Button>
+      )}
+
+      {/* Nobody gets stuck: after a few wrong attempts the team may see the answer. */}
+      {mayRevealAnswer && !isAnswerShown && (
+        <div className="flex flex-col gap-2 border-t border-parchment/20 pt-4">
+          {/* role="status": screen readers announce the offer when it appears. */}
+          <p role="status" className="text-sm text-parchment/80">
+            {t("game.challenge.revealOffer")}
+          </p>
+          <Button variant="outline" onClick={() => setIsAnswerShown(true)} fullWidth>
+            {t("game.challenge.revealAnswer")}
+          </Button>
+        </div>
+      )}
+      {mayRevealAnswer && isAnswerShown && (
+        <div className="flex flex-col gap-3 rounded-sm border border-gold/60 p-4">
+          {/* Focus lands on the answer text itself, so screen readers read it out. */}
+          <div
+            ref={answerBoxRef}
+            tabIndex={-1}
+            className="flex flex-col gap-2 break-words focus-visible:outline-2 focus-visible:outline-gold"
+          >
+            {revealed.answer !== null && (
+              <p className="font-display text-2xl text-parchment">
+                {t("game.challenge.answerIs", { answer: revealed.answer })}
+              </p>
+            )}
+            {revealed.explanation && (
+              <p className="font-display text-xl leading-snug text-parchment/90">{revealed.explanation}</p>
+            )}
+          </div>
+          <Button onClick={onRevealAnswer} fullWidth>
+            {t("common.continue")}
+          </Button>
+        </div>
       )}
     </PlayScreen>
   );

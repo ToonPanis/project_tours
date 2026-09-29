@@ -79,6 +79,17 @@ describe("useWalkSession: switching language keeps the game (M-03)", () => {
     expect(result.current.session).toBeNull();
   });
 
+  test("a content update that adds a stop keeps the game in memory (M-04: merge)", () => {
+    const { result, rerender } = renderSession(hiddenPubsWalk, unavailableStore);
+    const firstStopId = startAndArrive(result);
+
+    const newStop = { ...hiddenPubsWalk.locations[1], id: "pubs-new-stop", order: 99 };
+    rerender({ walk: { ...hiddenPubsWalk, locations: [...hiddenPubsWalk.locations, newStop] } });
+
+    expect(result.current.session!.locations[firstStopId].status).toBe("arrived");
+    expect(result.current.session!.locations["pubs-new-stop"].status).toBe("locked");
+  });
+
   test("never hands out another walk's game, not even for one render", () => {
     const seen: (string | null)[] = [];
     const { result, rerender } = renderHook(

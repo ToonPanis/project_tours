@@ -216,4 +216,72 @@ Status values: `VERIFIED FIXED` · `PARTIALLY FIXED` · `BLOCKED` · `NOT REPROD
 - **Remaining limitations:** a content change mid-walk still resets that walk's progress, pending the decision.
 
 ### H-02: Game challenges can dead-end
-- **Status:** `BLOCKED — PRODUCT OWNER DECISION REQUIRED` (see the Phase 1 report). The on-site parts are FIELD VERIFICATION REQUIRED (FIELD_TEST_CHECKLIST B1–B4, C1–C4).
+- **Status:** VERIFIED FIXED in code (decision: **option A, N = 3**).
+  - The on-site parts remain FIELD VERIFICATION REQUIRED: the placeholder answers and the café outdoor fallbacks (FIELD_TEST_CHECKLIST B1–B4, C1–C4).
+- **Root cause:** solving was the only way forward. Hints never reveal the answer, and the "show answer" button existed only in the playtest tools.
+- **Fix:**
+  - `logic/reveal-answer.ts`: `REVEAL_ANSWER_AFTER_WRONG_ATTEMPTS = 3`, `canRevealAnswer`, `getRevealContent`, `getAnswerText`.
+  - A new `REVEAL_ANSWER` action: the reducer solves the stop, still **awards its clue** (so the finale stays solvable), and sets `LocationProgress.answerRevealed`.
+  - `ChallengeScreen`, after 3 wrong answers:
+    - it shows an offer (announced to screen readers) and "Show the answer";
+    - the answer box shows the answer line for multiple choice and numbers, and the **translated explanation**, because typed-answer lists are shared across languages;
+    - focus moves to the answer;
+    - the form and the hint button are hidden;
+    - "Continue" goes on.
+  - `SolvedScreen` skips its "Correct" step after a reveal.
+  - Nothing mentions reveals on the completion screen.
+  - Texts in 8 languages (`game.challenge.revealOffer/revealAnswer/answerIs`).
+- **Also fixed (QA, existed before):** an empty multiple-choice answer counted as option A.
+- **Tests:**
+  - `reveal-answer.test.ts`:
+    - answer text per challenge type;
+    - translated content;
+    - every typed challenge × 8 languages has an explanation;
+    - reveal rules.
+  - Reducer:
+    - no reveal before 3 attempts;
+    - a reveal solves the stop and awards the clue;
+    - a stale reveal is ignored;
+    - an empty multiple-choice answer.
+  - Player: De Kat, 3 wrong → show → the answer and explanation, form hidden → Continue → history, not "Correct"; saved `answerRevealed`.
+- **Reviewer:** approved with changes. MAJOR "Correct after a reveal" and "answer not translated" are both fixed.
+- **QA:**
+  - Revealing **every** challenge still collects all 8 clues and completes the finale.
+  - A reveal is ignored during the bonus question, the finale, after completion, and on double taps.
+  - The translation MAJOR was found independently and is now fixed.
+- **i18n/a11y reviewer:** the translation MAJOR is fixed; screen-reader announcement, focus and the Dutch wording are done.
+- **Remaining limitations:**
+  - The finale questions have no reveal of their own. Each finale answer is printed on a collected clue, so it is reachable, but the owner may want the same rule there later.
+
+### M-04 (merge part)
+- **Status:** VERIFIED FIXED (decision: **merge**).
+- **Fix:**
+  - `STORAGE_VERSION` is now 3, with `migrateToCurrent`: version 2 saves gain `answerRevealed: false`. **Groups mid-walk keep their game.**
+  - Storage keeps the migration and field validation (`isWellFormedSession`) and then calls the game rule in `logic/reconcile-session.ts`:
+    - new stops are added as locked;
+    - removed stops, and the clues they gave, are dropped;
+    - the finale is added or removed to match the walk (a completed game gets none);
+    - reset only if the current stop was removed;
+    - it returns the same object when nothing changed.
+  - `useWalkSession` runs the same reconcile on in-memory state.
+  - `createFinaleProgress()` is shared.
+- **Tests:**
+  - migration: a v2 save loads; v1 gives a fresh start;
+  - merge: a new stop; a removed stop and its clue; a removed current stop; a finale gained; a completed game gets no finale; the same object when unchanged; the hook keeps the game in memory after a stop is added;
+  - a stop inserted before the current one: the walk still completes.
+- **Reviewer (architecture):** moving the merge from storage into logic is done.
+- **QA:**
+  - A real v2 save resumes at the same stop and screen.
+  - Every merge variant plays on to completion.
+  - Guide walks are unaffected (deep-equal).
+- **Accepted limitation (owner decision "merge"):** the walk only moves forward, so a stop inserted *before* the group's current stop is not visited on that play-through. The completion stats then show one stop fewer than the total.
+
+### Phase 1 final validation gate
+
+| Command | Result |
+|---|---|
+| `npm run typecheck` | ✅ |
+| `npm run lint` | ✅ 0 problems |
+| `npm run i18n:check` | ✅ |
+| `npm run test:run` | ✅ 26 files, **743 tests** |
+| `npm run build` | ✅ |

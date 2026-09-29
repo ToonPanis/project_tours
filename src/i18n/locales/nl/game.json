@@ -85,7 +85,10 @@
     "yourClues": "Jullie aanwijzingen",
     "notPlayable": "Dit type uitdaging kan nog niet gespeeld worden.",
     "hint": "Hint {number}: ",
-    "needHint": "Een hint nodig?"
+    "needHint": "Een hint nodig?",
+    "revealOffer": "Zitten jullie vast? Jullie kunnen het antwoord bekijken en verder wandelen.",
+    "revealAnswer": "Toon het antwoord",
+    "answerIs": "Het antwoord: {answer}"
   },
   "solved": {
     "correct": "Juist",

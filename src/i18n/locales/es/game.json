@@ -85,7 +85,10 @@
     "yourClues": "Vuestras pistas",
     "notPlayable": "Este tipo de reto todavía no se puede jugar.",
     "hint": "Pista {number}: ",
-    "needHint": "¿Necesitas una pista?"
+    "needHint": "¿Necesitas una pista?",
+    "revealOffer": "¿Os habéis atascado? Podéis ver la respuesta y seguir con el paseo.",
+    "revealAnswer": "Ver la respuesta",
+    "answerIs": "La respuesta: {answer}"
   },
   "solved": {
     "correct": "Correcto",
