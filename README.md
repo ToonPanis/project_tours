@@ -22,7 +22,7 @@ npm run dev        # http://localhost:3000
 | `npm run lint` | Run ESLint |
 | `npm test` | Run the tests in watch mode |
 | `npm run test:run` | Run all tests once |
-| `npm run typecheck` | Type-check the project (`tsc --noEmit`) |
+| `npm run typecheck` | Type-check the project (`next typegen` for the route types, then `tsc --noEmit`) |
 | `npm run i18n:check` | Check that every language has every UI text |
 
 Testing on a phone on the same Wi-Fi: put your computer's LAN IP in `.env.local` as `DEV_ALLOWED_ORIGINS=192.168.1.23` (see `.env.example`), restart `npm run dev`, and open `http://<that-ip>:3000` on the phone. (GPS needs https on a phone; see CLAUDE.md.)

@@ -25,7 +25,7 @@ I'm a programming student. I'm comfortable with TypeScript, JavaScript, React, N
 npm run dev            # dev server :3000 (predev copies the MapLibre worker)
 npm run build          # production build (prebuild copies the worker too)
 npm start              # serve the build (use e.g. `npx next start -p 3200` if 3000 is taken)
-npm run typecheck      # = npx tsc --noEmit
+npm run typecheck      # = next typegen (PageProps/LayoutProps types) + tsc --noEmit
 npm run lint
 npm run test:run       # = npx vitest run, all unit/component tests once (~1,200, 30–70 s); `npm test` = watch mode
 npm run test:coverage  # the same, plus coverage of the logic folders (fails under the thresholds)
