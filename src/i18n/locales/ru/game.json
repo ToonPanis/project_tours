@@ -92,7 +92,9 @@
     "needHint": "Нужна подсказка?",
     "revealOffer": "Не получается? Можно посмотреть ответ и продолжить прогулку.",
     "revealAnswer": "Показать ответ",
-    "answerIs": "Ответ: {answer}"
+    "answerIs": "Ответ: {answer}",
+    "wrongAttempts": "Неверных ответов: {count}",
+    "wrongOption": "неверный ответ"
   },
   "solved": {
     "correct": "Верно",

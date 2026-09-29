@@ -25,6 +25,8 @@ interface WalkingMapProps {
   /** Direction of travel along the route (used in follow-direction mode). */
   travelBearing: number | null;
   onUserMovedMap: () => void;
+  /** Screen-reader name of the map, e.g. "Map: route to Grote Markt". */
+  regionLabel: string;
   /** Shown over the map when it can't be loaded (no WebGL, no connection…). */
   loadErrorText: string;
   /** Shown over the map when several tiles in a row failed (grey squares), e.g. a weak signal. */
@@ -133,6 +135,7 @@ export default function WalkingMap({
   orientation,
   travelBearing,
   onUserMovedMap,
+  regionLabel,
   loadErrorText,
   tilesFailingText,
 }: WalkingMapProps) {
@@ -338,7 +341,7 @@ export default function WalkingMap({
   return (
     <div className="relative h-full w-full">
       {/* h-full, not absolute: MapLibre's CSS makes its container position: relative. */}
-      <div ref={containerRef} className="h-full w-full" aria-label={destination.name} role="region" />
+      <div ref={containerRef} className="h-full w-full" aria-label={regionLabel} role="region" />
       {/* right-16 keeps the round map buttons (top right) visible and tappable. */}
       {mapHealth !== "ok" && (
         <p role="alert" className="absolute left-3 right-16 top-3 z-10 rounded-sm bg-ink/90 p-3 text-sm text-parchment shadow-lg">

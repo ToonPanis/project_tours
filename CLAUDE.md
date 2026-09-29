@@ -44,6 +44,7 @@ src/features/walk-session/    the player core: WalkPlayer (routes to game or gui
 src/features/guide/           GuideWalkPlayer + stop page, chapter cards, card decks, search tasks, collection, glossary
 src/features/navigation/      NavigationScreen, WalkingMap (MapLibre), DirectionPanel, useGeolocation, useWakeLock,
                               logic/ (arrival, tracking, route-progress, route-legs), simulation/ (fake GPS), config.ts
+src/hooks/                    shared client hooks (useScreenFocus: new screen → scroll to top + focus its h1)
 src/i18n/                     translation layer (see "Languages")
 src/lib/                      repositories/ (walkRepository, cached getWalk), routing/ (OSRM normalising, maneuver labels),
                               geo.ts, walk-locations.ts (route order), validate-walk.ts, security-headers.ts
@@ -151,7 +152,7 @@ Security headers for every response come from `src/lib/security-headers.ts` via 
 5. Small reusable components. UI in `src/components/` or `src/features/*/components/`, data in `src/data/` / `src/lib/`, shared types in `src/types/`, business logic in plain TS functions (not in components).
 6. Clear names, minimal dependencies, never hardcode secrets (`.env.local`; only `NEXT_PUBLIC_*` reaches the browser).
 7. Mobile-first (base styles, then `sm:`/`md:`/`lg:`); check 390 px width, long German words and Cyrillic.
-8. Accessibility: semantic HTML, alt text, labels, keyboard access, contrast, `lang` attributes for foreign-language text.
+8. Accessibility: semantic HTML, alt text, labels, keyboard access, contrast, `lang` attributes for foreign-language text. A screen that replaces another in place focuses its `h1` via `useScreenFocus(stableId)`. Live feedback goes in a status element that is always mounted (e.g. `WrongAnswerStatus`), never in one that appears with its text. Dialogs that delete progress use `ConfirmDialog isDestructive`. Untranslated Dutch source titles get `language: "nl"` on the `Source`.
 9. New user-facing text → a key in **all 8** `locales/<lang>/*.json` (never hardcoded strings), then `npm run i18n:check`.
 
 ## Content rules

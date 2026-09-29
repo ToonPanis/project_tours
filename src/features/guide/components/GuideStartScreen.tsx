@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { formatDistance } from "@/features/walks/utils/format-walk";
@@ -41,6 +41,19 @@ export function GuideStartScreen({
   onRestart,
 }: GuideStartScreenProps) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  // The entry screen: after a page load, focus follows the browser's normal order
+  // (skip link, header…). Only after "start again", whose buttons disappear, the
+  // title takes the focus.
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const focusTitleAfterCloseRef = useRef(false);
+
+  // Runs after the dialog's own effect has closed it (while a modal is open, the page
+  // behind it can't take focus).
+  useEffect(() => {
+    if (isConfirmOpen || !focusTitleAfterCloseRef.current) return;
+    focusTitleAfterCloseRef.current = false;
+    headingRef.current?.focus();
+  }, [isConfirmOpen]);
   const intro = walk.guideIntro;
 
   const stats = [
@@ -67,7 +80,13 @@ export function GuideStartScreen({
 
       <div className="relative flex flex-col gap-5 px-5 pb-8 pt-40">
         <div>
-          <h1 className="font-display text-5xl font-semibold uppercase leading-none tracking-wide">{walk.title}</h1>
+          <h1
+            ref={headingRef}
+            tabIndex={-1}
+            className="font-display text-5xl font-semibold uppercase leading-none tracking-wide outline-none"
+          >
+            {walk.title}
+          </h1>
           <p className="mt-2 font-display text-2xl italic text-gold">{walk.tagline}</p>
         </div>
 
@@ -111,8 +130,10 @@ export function GuideStartScreen({
         title={t("guide.startAgainTitle")}
         message={t("guide.startAgainMessage")}
         confirmLabel={t("guide.startAgainConfirm")}
+        isDestructive
         onConfirm={() => {
           setIsConfirmOpen(false);
+          focusTitleAfterCloseRef.current = true;
           onRestart();
         }}
         onCancel={() => setIsConfirmOpen(false)}

@@ -88,7 +88,9 @@
     "needHint": "Ti serve un indizio?",
     "revealOffer": "Siete bloccati? Potete vedere la risposta e continuare la passeggiata.",
     "revealAnswer": "Mostra la risposta",
-    "answerIs": "La risposta: {answer}"
+    "answerIs": "La risposta: {answer}",
+    "wrongAttempts": "Risposte sbagliate: {count}",
+    "wrongOption": "risposta sbagliata"
   },
   "solved": {
     "correct": "Esatto",

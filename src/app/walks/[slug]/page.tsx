@@ -61,10 +61,10 @@ export default async function WalkDetailPage({ params }: PageProps<"/walks/[slug
           <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
         </div>
         <div className="relative mx-auto -mt-24 max-w-3xl px-4 pb-6 sm:px-6">
-          <Link href="/walks" className="text-sm text-gold underline-offset-4 hover:underline">
+          <Link href="/walks" className="inline-flex min-h-11 items-center text-sm text-gold underline-offset-4 hover:underline">
             {t("walks.detail.allWalks")}
           </Link>
-          <h1 className="mt-2 font-display text-4xl font-semibold leading-tight text-parchment sm:text-5xl">
+          <h1 className="font-display text-4xl font-semibold leading-tight text-parchment sm:text-5xl">
             {walk.title}
           </h1>
           <p className="mt-1 text-lg italic text-gold">{walk.tagline}</p>

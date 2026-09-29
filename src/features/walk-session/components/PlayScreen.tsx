@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import type { ReactNode } from "react";
+import { useScreenFocus } from "@/hooks/useScreenFocus";
 
 interface PlayScreenProps {
   /** Small label above the title, e.g. "Your next destination". */
@@ -22,14 +23,8 @@ interface PlayScreenProps {
  * main action at the bottom where a thumb can reach it.
  */
 export function PlayScreen({ eyebrow, title, screenId, children, actions }: PlayScreenProps) {
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const screenKey = screenId ?? title;
-
   // Each new screen starts at the top, and screen readers announce its title.
-  useEffect(() => {
-    window.scrollTo?.({ top: 0 });
-    headingRef.current?.focus({ preventScroll: true });
-  }, [screenKey]);
+  const headingRef = useScreenFocus(screenId ?? title);
 
   return (
     <section className="flex min-h-[calc(100dvh-10rem)] flex-col gap-6 px-4 pb-6 pt-8 sm:px-6">

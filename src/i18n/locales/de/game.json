@@ -88,7 +88,9 @@
     "needHint": "Brauchst du einen Tipp?",
     "revealOffer": "Kommt ihr nicht weiter? Ihr könnt euch die Lösung ansehen und den Rundgang fortsetzen.",
     "revealAnswer": "Lösung anzeigen",
-    "answerIs": "Die Lösung: {answer}"
+    "answerIs": "Die Lösung: {answer}",
+    "wrongAttempts": "Falsche Antworten: {count}",
+    "wrongOption": "falsche Antwort"
   },
   "solved": {
     "correct": "Richtig",

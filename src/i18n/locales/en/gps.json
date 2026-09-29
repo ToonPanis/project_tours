@@ -20,6 +20,8 @@
   "notOnMap": "This location isn't on the map yet.",
   "mapUnavailable": "The map couldn't be loaded (no connection, or this browser can't show maps). The directions and the external map still work.",
   "mapTilesFailing": "Part of the map can't be loaded right now (weak connection?). The directions below still work.",
+  "mapRegion": "Map: route to {name}",
+  "mapLoading": "Loading map…",
   "gpsUnavailable": "GPS isn't available here. Location needs a secure (https) page and location services turned on.",
   "gpsWeak": "GPS signal is weak.",
   "gpsWeakDetail": "Your position may be less accurate.",

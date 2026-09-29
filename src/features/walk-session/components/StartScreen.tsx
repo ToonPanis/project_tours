@@ -93,6 +93,7 @@ export function StartScreen({
         title={t("game.start.restartTitle")}
         message={t("game.start.restartMessage")}
         confirmLabel={t("game.start.restartConfirm")}
+        isDestructive
         onConfirm={() => {
           setIsConfirmOpen(false);
           onRestart();

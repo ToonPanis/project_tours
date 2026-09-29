@@ -88,7 +88,9 @@
     "needHint": "Need a hint?",
     "revealOffer": "Stuck? You can see the answer and carry on with the walk.",
     "revealAnswer": "Show the answer",
-    "answerIs": "The answer: {answer}"
+    "answerIs": "The answer: {answer}",
+    "wrongAttempts": "Wrong answers: {count}",
+    "wrongOption": "wrong answer"
   },
   "solved": {
     "correct": "Correct",

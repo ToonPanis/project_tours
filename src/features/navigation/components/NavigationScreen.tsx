@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useScreenFocus } from "@/hooks/useScreenFocus";
 import { useT } from "@/i18n/client";
 import { distanceInMeters } from "@/lib/geo";
 import type { WalkLocation } from "@/types/location";
@@ -19,11 +20,16 @@ import { DirectionPanel } from "./DirectionPanel";
 import type { MapOrientation } from "./WalkingMap";
 
 // The map library is large and browser-only: load it only when this screen opens.
-// (The loading text is a neutral "…" because it can't know the walk's language.)
 const WalkingMap = dynamic(() => import("./WalkingMap"), {
   ssr: false,
-  loading: () => <div className="flex h-full items-center justify-center text-parchment/60">…</div>,
+  loading: () => <MapLoading />,
 });
+
+/** Shown while the map code downloads. (A component, so it can read the visitor's language.) */
+function MapLoading() {
+  const t = useT();
+  return <div className="flex h-full items-center justify-center text-parchment/70">{t("gps.mapLoading")}</div>;
+}
 
 type Phase = "intro" | "gps" | "manual";
 
@@ -77,6 +83,9 @@ export function NavigationScreen({
   // Playtest tools: a simulated position switches navigation to live mode.
   const { isActive: isSimulating } = usePositionSimulation();
   const phase: Phase = isSimulating && destinationCoordinates ? "gps" : chosenPhase;
+  // The explainer and the map each focus their title when they open (the button
+  // that was pressed disappears). GPS ↔ manual stays the same screen: no jump.
+  const headingRef = useScreenFocus(`${destination.id}:${phase === "intro" ? "intro" : "map"}`);
   const [tracking, setTracking] = useState<NavigationTracking>(initialTracking);
   const trackingRef = useRef(tracking);
   const [isFollowing, setIsFollowing] = useState(true);
@@ -113,7 +122,9 @@ export function NavigationScreen({
     return (
       <section className="flex flex-col gap-5 px-4 pb-6 pt-8">
         <p className="text-xs font-semibold uppercase tracking-[0.25em] text-gold">{t("gps.yourNextDestination")}</p>
-        <h1 className="font-display text-4xl font-semibold text-parchment">{destination.name}</h1>
+        <h1 ref={headingRef} tabIndex={-1} className="font-display text-4xl font-semibold text-parchment outline-none">
+          {destination.name}
+        </h1>
         <p className="text-parchment/80">{destination.address}</p>
         {route && (
           <p className="text-lg text-parchment">
@@ -182,10 +193,15 @@ export function NavigationScreen({
     <section className="flex min-h-[calc(100dvh-9.5rem)] flex-col">
       {/* Top: destination + remaining distance */}
       <div className="flex items-baseline justify-between gap-3 bg-ink px-4 py-2">
-        <p className="min-w-0 truncate font-display text-xl font-semibold text-parchment">
+        <h1
+          ref={headingRef}
+          tabIndex={-1}
+          className="min-w-0 truncate font-display text-xl font-semibold text-parchment outline-none"
+        >
+          <span className="sr-only">{t("gps.yourNextDestination")}: </span>
           <span aria-hidden="true" className="text-gold">★ </span>
           {destination.name}
-        </p>
+        </h1>
         {view.remainingMeters !== null && (
           <p className="shrink-0 text-lg font-semibold tabular-nums text-parchment">
             {formatWalkingDistance(view.remainingMeters, t)}
@@ -215,6 +231,7 @@ export function NavigationScreen({
             orientation={orientation}
             travelBearing={view.travelBearing}
             onUserMovedMap={() => setIsFollowing(false)}
+            regionLabel={t("gps.mapRegion", { name: destination.name })}
             loadErrorText={t("gps.mapUnavailable")}
             tilesFailingText={t("gps.mapTilesFailing")}
           />

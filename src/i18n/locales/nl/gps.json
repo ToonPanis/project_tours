@@ -20,6 +20,8 @@
   "notOnMap": "Deze plek staat nog niet op de kaart.",
   "mapUnavailable": "De kaart kon niet geladen worden (geen verbinding, of deze browser kan geen kaarten tonen). De richtingaanwijzingen en de externe kaart werken nog.",
   "mapTilesFailing": "Een deel van de kaart kan nu niet geladen worden (zwakke verbinding?). De richtingaanwijzingen hieronder werken nog.",
+  "mapRegion": "Kaart: route naar {name}",
+  "mapLoading": "Kaart laden…",
   "gpsUnavailable": "Gps is hier niet beschikbaar. Locatie vraagt een beveiligde (https) pagina en ingeschakelde locatievoorzieningen.",
   "gpsWeak": "Zwak gps-signaal.",
   "gpsWeakDetail": "Je positie kan minder nauwkeurig zijn.",

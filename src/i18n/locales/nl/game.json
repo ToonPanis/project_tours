@@ -88,7 +88,9 @@
     "needHint": "Een hint nodig?",
     "revealOffer": "Zitten jullie vast? Jullie kunnen het antwoord bekijken en verder wandelen.",
     "revealAnswer": "Toon het antwoord",
-    "answerIs": "Het antwoord: {answer}"
+    "answerIs": "Het antwoord: {answer}",
+    "wrongAttempts": "Foute antwoorden: {count}",
+    "wrongOption": "fout antwoord"
   },
   "solved": {
     "correct": "Juist",

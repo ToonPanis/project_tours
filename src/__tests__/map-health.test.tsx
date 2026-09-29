@@ -89,6 +89,7 @@ function renderMap() {
       orientation="north-up"
       travelBearing={null}
       onUserMovedMap={() => {}}
+      regionLabel="Map: route to Grote Markt"
       loadErrorText="map unavailable"
       tilesFailingText="part of the map is missing"
     />,

@@ -66,6 +66,7 @@ export default function PlayError({ error }: { error: Error & { digest?: string 
         title={t("errors.playError.startOverTitle")}
         message={t("errors.playError.startOverMessage")}
         confirmLabel={t("errors.playError.startOverConfirm")}
+        isDestructive
         onConfirm={() => {
           localWalkSessionStore.clear(slug);
           reloadPage();

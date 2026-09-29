@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { useScreenFocus } from "@/hooks/useScreenFocus";
 import { formatWalkingDistance, formatWalkingTime } from "@/features/navigation/logic/maneuver-display";
 import type { DetourCost } from "@/features/navigation/logic/route-legs";
 import type { Translator } from "@/i18n/translate";
@@ -62,7 +63,8 @@ export function GuideStopPage({
   onSkipDetour,
   onFinish,
 }: GuideStopPageProps) {
-  const headingRef = useRef<HTMLHeadingElement>(null);
+  // A new stop starts at the top, and screen readers announce its name.
+  const headingRef = useScreenFocus(location.id);
   const task = guide.searchTask;
   // The story waits for the task when it would give the answer away.
   const [isStoryVisible, setIsStoryVisible] = useState(!task?.hideStoryUntilDone);
@@ -76,12 +78,6 @@ export function GuideStopPage({
   const pauseBoxes = (guide.infoBoxes ?? []).filter((box) => box.kind === "pause");
   const practicalBoxes = (guide.infoBoxes ?? []).filter((box) => box.kind !== "pause");
   const readingMinutes = getReadingMinutes(guide);
-
-  // A new stop starts at the top, and screen readers announce its name.
-  useEffect(() => {
-    window.scrollTo?.({ top: 0 });
-    headingRef.current?.focus({ preventScroll: true });
-  }, [location.id]);
 
   return (
     <article className="bg-parchment text-ink">
@@ -251,7 +247,7 @@ export function GuideStopPage({
           </summary>
           <ul className="mt-1 list-inside list-disc space-y-1">
             {guide.sources.map((source) => (
-              <li key={source.title}>
+              <li key={source.title} lang={source.language}>
                 {source.url ? (
                   <a href={source.url} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">
                     {source.title}

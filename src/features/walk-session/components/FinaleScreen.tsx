@@ -8,6 +8,7 @@ import type { ChallengeAnswer, FinaleProgress } from "@/types/session";
 import type { WalkCopy, WalkFinale } from "@/types/walk";
 import { canRevealFinaleAnswer, getRevealContent } from "../logic/reveal-answer";
 import { PlayScreen } from "./PlayScreen";
+import { WrongAnswerStatus } from "./WrongAnswerStatus";
 import { RevealAnswer } from "./RevealAnswer";
 
 const ROMAN_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
@@ -123,10 +124,14 @@ function FinaleQuestion({
   const [answer, setAnswer] = useState("");
   const [showClues, setShowClues] = useState(false);
   const [isAnswerShown, setIsAnswerShown] = useState(false);
+  // The last answer sent: the field is marked invalid while it still holds it.
+  const [submittedAnswer, setSubmittedAnswer] = useState<string | null>(null);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (answer.trim() !== "") onSubmit(answer);
+    if (answer.trim() === "") return;
+    setSubmittedAnswer(answer);
+    onSubmit(answer);
   }
 
   return (
@@ -145,6 +150,8 @@ function FinaleQuestion({
             autoCorrect="off"
             autoCapitalize="off"
             spellCheck={false}
+            aria-invalid={wrongAttempts > 0 && answer === submittedAnswer}
+            aria-describedby="finale-feedback"
             className="min-h-14 w-full rounded-sm border border-parchment/30 bg-ink/40 px-4 text-xl text-parchment focus:border-gold focus:outline-none"
           />
           <Button type="submit" disabled={answer.trim() === ""} fullWidth>
@@ -153,11 +160,7 @@ function FinaleQuestion({
         </form>
       )}
 
-      {wrongAttempts > 0 && !isAnswerShown && (
-        <p role="status" className="font-display text-xl italic text-gold">
-          {wrongMessage}
-        </p>
-      )}
+      {!isAnswerShown && <WrongAnswerStatus id="finale-feedback" wrongAttempts={wrongAttempts} message={wrongMessage} />}
 
       {!isAnswerShown && (
         <>

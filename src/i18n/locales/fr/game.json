@@ -88,7 +88,9 @@
     "needHint": "Besoin d'un indice ?",
     "revealOffer": "Vous bloquez ? Vous pouvez voir la réponse et continuer la balade.",
     "revealAnswer": "Voir la réponse",
-    "answerIs": "La réponse : {answer}"
+    "answerIs": "La réponse : {answer}",
+    "wrongAttempts": "Mauvaises réponses : {count}",
+    "wrongOption": "mauvaise réponse"
   },
   "solved": {
     "correct": "Bonne réponse",

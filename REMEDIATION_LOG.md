@@ -642,3 +642,80 @@ Status values: `VERIFIED FIXED` · `PARTIALLY FIXED` · `BLOCKED` · `NOT REPROD
 - **Code reviewer:** no blockers. One major finding, fixed: our own GeoJSON sources (the accuracy circle is redrawn on every GPS reading) fired "tile loaded" events and cleared the notice while the street map was still grey, so the alert would flicker and be re-announced. The fix ignores those sources, with a regression test. Also fixed: the long cache applies in production only; comments on deploy skew and the Cyrillic font trade-off. Verified in MapLibre's code: failed tiles carry `tile`, 404 tiles are never reported, aborted tiles are filtered. Hydration, walk switching and language switching checked: no way to start before the save is known.
 - **QA / Guardian:** PASS on all tasks. No data, images, credits, research markers, dependencies or tile provider changed; no GPS stored. The 8 translations are consistent with the neighbouring map texts. The play pages in en/de/ru show the translated start screen with a disabled loading button in that language. The worker returns 200 + immutable + security headers; the old URL 404s; pages and images keep their headers. The new notice fits at 390 px in German and Cyrillic.
 - **Field checks added:** E19 (block tiles in DevTools → notice appears and clears), E20 (slow connection → start screen first, loading button can't be tapped).
+
+---
+
+## Phase 6 — UX & accessibility (2026-09-29)
+
+- **Branch:** `fix/phase-6-ux-a11y`, branched from `52b1647`. Committed after approval.
+- **Decisions (user, 2026-09-29):** L-29 (reopen a finished guide stop) deferred to a later phase; O-12 (design suggestions) skipped.
+
+### Validation gate
+
+| Command | Result |
+|---|---|
+| `npx tsc --noEmit` | ✅ |
+| `npm run lint` | ✅ 0 problems |
+| `npm run i18n:check` | ✅ (4 new keys, 8 languages) |
+| `npx vitest run` | ✅ 36 files, **912 tests** (was 889, +23) |
+| `npm run build` | ✅ |
+
+New tests: `a11y-phase6.test.tsx` (23). Before the review fixes, 14 of its first 19 tests failed on the old code; the other 5 are pure-logic checks and guards for unchanged behaviour.
+
+### M-09: Directions re-announced on every GPS reading
+- **Status:** VERIFIED FIXED
+- **Fix:** the panel no longer has `aria-live`. After a language switch the current direction is read once in the new language. A hidden, always-present `role="status"` holds what a screen reader should hear. It changes only on a new step (turn, back to route, new compass direction) or when the walker comes within 100, 50 or 20 m and at "now" (`logic/spoken-direction.ts`, pure). Within one step a band never moves further away, so GPS noise at 50 m isn't read twice.
+- **Tests:** band sequence, noise at a band edge, a new turn, and the panel keeping the same status element with unchanged text across readings.
+
+### M-10: Focus not moved to new screens
+- **Status:** VERIFIED FIXED
+- **Fix:** `src/hooks/useScreenFocus.ts` (scroll to top + focus the title), now shared by `PlayScreen` and `GuideStopPage` (replacing two copies), and added to the chapter card, completion screen and navigation screen. The guide start screen is an entry screen: on page load focus follows the browser's order (skip link, header); only after "start again" (its buttons disappear) the title takes focus, once the dialog has closed. The live map screen's destination name is now its `h1`, with a hidden "Your next destination:" prefix. Revealing a search-task solution moves focus to the solution.
+- **Tests:** chapter card, completion screen, navigation (explainer → map), search task.
+
+### M-11: Wrong answers not announced, no fresh feedback
+- **Status:** VERIFIED FIXED
+- **Fix:** `WrongAnswerStatus`: an always-present status with the walk's message and "Wrong answers: {count}", so every attempt changes the text (announced, and visible that the tap registered). Used by the challenge, finale and bonus questions. The answer field gets `aria-invalid` while it still holds the answer that was wrong, and `aria-describedby`. A wrong multiple-choice option is struck through with ✗ and a hidden "wrong answer"; tapping it again is ignored (`aria-disabled`) instead of counting another wrong answer.
+- **Tests:** status present before the first attempt and updated per attempt; `aria-invalid` on and off; the wrong option marked, the others not.
+
+### M-13 + L-23: Route panel
+- **Status:** VERIFIED FIXED
+- **Fix:** a sticky header with a 44 px ✕ close button (translated label) above the list; the bottom Close stays. Locked entries and stop numbers use `parchment/65` + italics: at least 5.0:1 in all three themes (was 2.83:1 in the tavern theme).
+- **Not changed here:** the hard-coded English "Discovered clues" / "Clue n · locked" is M-05 (Phase 7).
+
+### L-24: Dutch text not marked
+- **Status:** VERIFIED FIXED
+- **Fix:** optional `language` on `Source` and `sourceCaptionLanguage` on `CollectionItem`, rendered as `lang`. Smekens captions are `nl`; Dutch-titled sources (heritage inventory, Dutch Wikipedia, Dutch press releases and pages) in Poortjes and Classics are marked `language: "nl"`. Metadata only: no title, URL or fact changed. Mixed or English titles are not marked.
+
+### L-25: Restart dialog focused the destructive button
+- **Status:** VERIFIED FIXED
+- **Fix:** `ConfirmDialog` `isDestructive`: red confirm button (new `danger` variant) and focus on Cancel. Used by the three "start again" dialogs; the "Are you here?" question is unchanged.
+
+### L-26: Small touch targets
+- **Status:** VERIFIED FIXED (CSS)
+- **Fix:** MapLibre zoom buttons 44 px (a two-class selector: MapLibre's own stylesheet loads later and would win a tie); the "All walks" back link `min-h-11`; image credit links get vertical padding (inline links in a sentence; their line doesn't change).
+
+### L-27: Map label and loader
+- **Status:** VERIFIED FIXED
+- **Fix:** the map region is named "Map: route to {name}"; the map loader shows a translated "Loading map…" instead of "…".
+
+### L-28: Language menu ARIA
+- **Status:** VERIFIED FIXED
+- **Fix:** no `aria-haspopup` (it's a disclosure, not an ARIA menu). It closes when keyboard focus moves outside it, but not when focus goes nowhere (iOS Safari doesn't focus tapped buttons; closing then would swallow the tap).
+
+### L-30: Long words
+- **Status:** VERIFIED FIXED (visual check at 390 px still open: E21)
+- **Fix:** headings and buttons break a word only when it doesn't fit on a line (`overflow-wrap: break-word` in `@layer base`, so classes like `truncate` still win). No global hyphenation (it would also split normal words, with English rules for Dutch names); only the direction label has `hyphens-auto`. Spanish direction labels shortened, keeping the imperative ("Gira cerrado a la izquierda"; longest 31 → 27 characters), in line with French (28) and Italian (29).
+
+### Reviews
+- **Code / accessibility reviewer:** no blockers. Fixed after review:
+  - (major) the 44 px zoom-button rule lost to MapLibre's own CSS (same selector, loaded later): now more specific, with a test;
+  - the guide start screen took focus on every page load (skipping the skip link): now only after "start again";
+  - the spoken direction stayed in the old language after a switch;
+  - global hyphenation also split normal words: narrowed to `overflow-wrap`;
+  - the strike-through also crossed the option letter and ✗: now only the option text;
+  - re-tapping a crossed-out option counted as another wrong answer;
+  - Spanish "Cerrado a la izquierda" could read as "closed": now "Gira cerrado a la izquierda".
+  - Verified OK: one `h1` per screen, the sr-only prefix inside `truncate`, the status elements reset per stop/question, `aria-invalid` logic, the language menu on Android/desktop/iOS, the dialog focus order in real browsers (child effect with `showModal` first, then Cancel).
+- **QA / Guardian:** PASS. Data changes are only `language`/`sourceCaptionLanguage` metadata (checked line by line); no dependencies, no GPS storage, alcohol rules untouched; all marked titles are Dutch; the new texts are natural in all 8 languages; layout at 390 px checked by class.
+- **Field checks added:** E21 (390 px screenshots in de/ru/es, including the route panel's sticky header on iOS Safari and Chrome Android), E22 (VoiceOver/TalkBack through a full stop), E23 (language menu on iPhone Safari).
+- **Known, unchanged:** the game start screen (through `PlayScreen`) still focuses its title on page load, as before this phase.

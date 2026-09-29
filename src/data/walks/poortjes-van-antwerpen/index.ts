@@ -74,6 +74,7 @@ function buildCollectionItem(entry: CollectionEntry, content: PoortjesContent): 
     stopId: entry.stopId,
     // The book's own words: always the Dutch original.
     sourceCaption: entry.caption,
+    sourceCaptionLanguage: "nl",
     note: text.note,
     verification: entry.verification,
   };

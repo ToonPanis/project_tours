@@ -34,11 +34,11 @@ export function HistoricalRevealView({ reveal }: HistoricalRevealViewProps) {
             <span key={source.title}>
               {index > 0 && ", "}
               {source.url ? (
-                <a href={source.url} target="_blank" rel="noopener noreferrer" className="underline">
+                <a href={source.url} target="_blank" rel="noopener noreferrer" lang={source.language} className="underline">
                   {source.title}
                 </a>
               ) : (
-                source.title
+                <span lang={source.language}>{source.title}</span>
               )}
             </span>
           ))}

@@ -5,6 +5,7 @@ import { englishTranslator, type Translator } from "@/i18n/translate";
 import type { Maneuver } from "@/types/navigation";
 import { getArrowRotation, toStableCompassPoint, type CompassPoint } from "../logic/compass";
 import { formatWalkingDistance, getManeuverArrow } from "../logic/maneuver-display";
+import { getSpokenDirection, type SpokenDirection } from "../logic/spoken-direction";
 import { NAVIGATION_CONFIG } from "../config";
 
 /** What the direction panel shows; decided by NavigationScreen. */
@@ -51,6 +52,14 @@ export function DirectionPanel({ instruction, thenManeuver, thenAfterMeters, t =
   // Remember it (React's pattern for state derived from the previous render).
   if (compassPoint !== shownCompassPoint) setShownCompassPoint(compassPoint);
 
+  // What screen readers hear: only a new step or a closer distance (logic/spoken-direction.ts),
+  // not every GPS reading. `announcement` is the text read at that moment.
+  // After a language switch everything is new: read the current direction once more.
+  const [spoken, setSpoken] = useState<{ direction: SpokenDirection; locale: string } | null>(null);
+  const [announcement, setAnnouncement] = useState("");
+  const previousSpoken = spoken?.locale === t.locale ? spoken.direction : null;
+  const nextSpoken = getSpokenDirection(instruction, compassPoint, previousSpoken);
+
   let arrow = "↑";
   // Degrees to turn the arrow (only for "head to destination", where it points the way).
   let arrowRotation: number | null = null;
@@ -87,8 +96,18 @@ export function DirectionPanel({ instruction, thenManeuver, thenAfterMeters, t =
       break;
   }
 
+  if (nextSpoken !== previousSpoken) {
+    setSpoken({ direction: nextSpoken, locale: t.locale });
+    setAnnouncement([label, distance, detail].filter(Boolean).join(", "));
+  }
+
   return (
-    <div className="flex items-center gap-4 bg-black px-4 py-3 text-white" aria-live="polite">
+    // No aria-live here: the whole panel changes on every GPS reading. The hidden
+    // status below stays mounted (so updates are announced) and changes only when needed.
+    <div className="flex items-center gap-4 bg-black px-4 py-3 text-white">
+      <p role="status" className="sr-only">
+        {announcement}
+      </p>
       <span
         aria-hidden="true"
         className="w-20 shrink-0 text-center text-7xl font-bold leading-none"
@@ -97,7 +116,7 @@ export function DirectionPanel({ instruction, thenManeuver, thenAfterMeters, t =
         {arrow}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-2xl font-bold uppercase leading-tight tracking-wide">{label}</p>
+        <p className="text-2xl font-bold uppercase leading-tight tracking-wide break-words hyphens-auto">{label}</p>
         {distance && <p className="text-3xl font-bold tabular-nums text-yellow-300">{distance}</p>}
         {detail && <p className="truncate text-base text-white/80">{detail}</p>}
         {thenManeuver && instruction.kind === "maneuver" && thenManeuver !== "arrive" && (

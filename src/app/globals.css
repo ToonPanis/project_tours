@@ -25,6 +25,21 @@ body {
   color: var(--color-ink);
 }
 
+/*
+ * Long words ("Spätrenaissanceportal", "Eisenbahnkathedrale", Cyrillic compounds) must
+ * never run off a 390 px screen: headings and buttons break a word only when it doesn't
+ * fit on a line by itself (no hyphenation of normal words). In the base layer, so a
+ * class on an element (e.g. `truncate`) still wins.
+ */
+@layer base {
+  h1,
+  h2,
+  h3,
+  button {
+    overflow-wrap: break-word;
+  }
+}
+
 /* Subtle aged-paper look, built with gradients so no image download is needed. */
 @utility bg-parchment-texture {
   background-color: var(--color-parchment);
@@ -134,4 +149,14 @@ body {
 .walking-map-destination span {
   color: #d9a54e;
   font-size: 1.1rem;
+}
+
+/*
+ * MapLibre's zoom buttons are 29 px by default: too small for a thumb while walking.
+ * Two classes: MapLibre's own stylesheet (loaded later, with the map) uses one, so
+ * the same selector would lose.
+ */
+.maplibregl-ctrl.maplibregl-ctrl-group button {
+  width: 44px;
+  height: 44px;
 }
