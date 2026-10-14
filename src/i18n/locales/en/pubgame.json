@@ -109,7 +109,15 @@
     "playerLinkFor": "Personal link for {name}",
     "playerLinkHelp": "Send this link to {name} only: whoever opens it plays as {name}. Handy for late arrivals and new phones.",
     "shareLink": "Share link",
-    "linkCopied": "Link copied"
+    "linkCopied": "Link copied",
+    "reviewTitle": "Photos and videos to review",
+    "reviewHelp": "Points only count once you approve. Reject anything that doesn't match the task.",
+    "reviewFor": "{team} · {task}",
+    "tookPart": "Took part: {names}",
+    "approve": "Approve",
+    "reject": "Reject",
+    "rejectReason": "Reason for rejecting (optional)",
+    "mediaLabel": "Evidence from {team} for {task}"
   },
   "finished": {
     "title": "The game is over",
@@ -133,7 +141,10 @@
     "gameFinished": "This game is over.",
     "outdated": "Someone in your team was quicker. The screen has been updated.",
     "unknownLink": "This link doesn't work (any more). Ask the host for a new one.",
-    "chooseTeam": "Please choose a team."
+    "chooseTeam": "Please choose a team.",
+    "invalidMedia": "This file type isn't supported. Use a normal photo or video from your phone.",
+    "tooLarge": "This file is too big. A shorter video works better.",
+    "uploadFailed": "Sending didn't work. Check the connection and try again."
   },
   "claim": {
     "title": "Opening your game…",
@@ -274,7 +285,6 @@
     "continue": "Continue"
   },
   "tasks": {
-    "uploadSoon": "Sending photos and videos is coming in the next update. For now you can skip this task.",
     "skip": "Skip this task",
     "done": "Done",
     "points": {
@@ -299,5 +309,23 @@
   "teamFinished": {
     "title": "Your team has finished!",
     "text": "Well played! The final results appear as soon as every team has finished, or when the host ends the game."
+  },
+  "evidence": {
+    "takePhoto": "Take or choose a photo",
+    "takeVideo": "Record or choose a video",
+    "previewPhoto": "Your photo, before sending",
+    "previewVideo": "Your video, before sending",
+    "whoTookPart": "Who took part?",
+    "send": "Send to the host",
+    "sending": "Sending… {percent}%",
+    "pending": "Sent! Waiting for the host's approval.",
+    "approved": {
+      "one": "Approved: +{count} point",
+      "other": "Approved: +{count} points"
+    },
+    "rejected": "Not approved by the host.",
+    "rejectedReason": "Not approved by the host: {reason}",
+    "sendAgain": "You can send a new one.",
+    "consent": "Only photograph or film people who said yes."
   }
 }

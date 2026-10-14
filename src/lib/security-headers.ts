@@ -57,8 +57,12 @@ export function buildContentSecurityPolicy({ isDevelopment, mapStyleUrl }: Secur
     `img-src 'self' blob: data:${map}`,
     // Fonts are self-hosted by next/font.
     "font-src 'self'",
-    // The map data. (Development also needs the hot-reload websocket.)
-    `connect-src 'self'${map}${isDevelopment ? " ws: wss:" : ""}`,
+    // The map data, and Hidden Pubs photo/video uploads, which go from the phone straight
+    // to Vercel Blob (vercel.com/api/blob, then the store's own host). (Development also
+    // needs the hot-reload websocket.)
+    `connect-src 'self'${map} https://vercel.com https://*.blob.vercel-storage.com${isDevelopment ? " ws: wss:" : ""}`,
+    // Hidden Pubs evidence videos: served by our own route, previewed from blob: before sending.
+    "media-src 'self' blob:",
     // MapLibre's web worker is served from /maplibre/ and may create blob: workers.
     "worker-src 'self' blob:",
     "child-src 'self' blob:",

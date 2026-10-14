@@ -15,6 +15,7 @@ import {
   performAction,
   type GameContext,
 } from "@/features/pub-game/server/game-service";
+import { MemoryMediaStore } from "@/features/pub-game/server/media-store";
 import { MemoryGameStore } from "@/features/pub-game/server/memory-store";
 
 // ─── A test server: memory store, predictable ids and time ──────────────────
@@ -25,6 +26,7 @@ function testContext(now = () => START): GameContext {
   let counter = 0;
   return {
     store: new MemoryGameStore(now),
+    media: new MemoryMediaStore(now),
     getGameData: (slug) =>
       slug === "hidden-pubs"
         ? { definition: pubGameDefinition, answerKey: pubGameAnswerKey, reveals: pubGameReveals }

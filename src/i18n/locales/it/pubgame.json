@@ -109,7 +109,15 @@
     "playerLinkFor": "Link personale per {name}",
     "playerLinkHelp": "Manda questo link solo a {name}: chi lo apre gioca come {name}. Utile per chi arriva tardi o cambia telefono.",
     "shareLink": "Condividi il link",
-    "linkCopied": "Link copiato"
+    "linkCopied": "Link copiato",
+    "reviewTitle": "Foto e video da valutare",
+    "reviewHelp": "I punti contano solo quando li approvi. Rifiuta ciò che non corrisponde alla missione.",
+    "reviewFor": "{team} · {task}",
+    "tookPart": "Hanno partecipato: {names}",
+    "approve": "Approva",
+    "reject": "Rifiuta",
+    "rejectReason": "Motivo del rifiuto (facoltativo)",
+    "mediaLabel": "Prova di {team} per {task}"
   },
   "finished": {
     "title": "La partita è finita",
@@ -133,7 +141,10 @@
     "gameFinished": "Questa partita è finita.",
     "outdated": "Qualcuno della tua squadra è stato più veloce. La schermata è stata aggiornata.",
     "unknownLink": "Questo link non funziona (più). Chiedi all'host un link nuovo.",
-    "chooseTeam": "Scegli una squadra."
+    "chooseTeam": "Scegli una squadra.",
+    "invalidMedia": "Questo tipo di file non è supportato. Usa una normale foto o un video del telefono.",
+    "tooLarge": "Questo file è troppo grande. Un video più corto funziona meglio.",
+    "uploadFailed": "L'invio non è riuscito. Controlla la connessione e riprova."
   },
   "claim": {
     "title": "Apertura della tua partita…",
@@ -274,7 +285,6 @@
     "continue": "Continua"
   },
   "tasks": {
-    "uploadSoon": "L'invio di foto e video arriva nel prossimo aggiornamento. Per ora puoi saltare questa missione.",
     "skip": "Salta questa missione",
     "done": "Fatto",
     "points": {
@@ -299,5 +309,23 @@
   "teamFinished": {
     "title": "La tua squadra ha finito!",
     "text": "Ben giocato! La classifica finale appare quando tutte le squadre hanno finito, o quando l'host termina la partita."
+  },
+  "evidence": {
+    "takePhoto": "Scatta o scegli una foto",
+    "takeVideo": "Registra o scegli un video",
+    "previewPhoto": "La tua foto, prima dell'invio",
+    "previewVideo": "Il tuo video, prima dell'invio",
+    "whoTookPart": "Chi ha partecipato?",
+    "send": "Invia all'host",
+    "sending": "Invio… {percent}%",
+    "pending": "Inviato! In attesa dell'approvazione dell'host.",
+    "approved": {
+      "one": "Approvato: +{count} punto",
+      "other": "Approvato: +{count} punti"
+    },
+    "rejected": "Non approvato dall'host.",
+    "rejectedReason": "Non approvato dall'host: {reason}",
+    "sendAgain": "Puoi inviarne una nuova.",
+    "consent": "Fotografa o riprendi solo le persone che hanno detto di sì."
   }
 }

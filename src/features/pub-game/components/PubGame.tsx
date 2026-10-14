@@ -13,6 +13,7 @@ import { LobbyScreen } from "./LobbyScreen";
 import type { PubGameTexts } from "@/data/walks/hidden-pubs/game/content/types";
 import { playablePubGameDefinition } from "@/data/walks/hidden-pubs/game/definition";
 import { PubGameTextsProvider } from "../client/texts-context";
+import type { UploadMode } from "../client/upload";
 import { BonusStep } from "./BonusStep";
 import { CardStep } from "./CardStep";
 import { FunFactStep } from "./FunFactStep";
@@ -31,6 +32,8 @@ interface PubGameProps {
   initialVersion: number;
   /** Questions, options, hints and tasks in the player's language (chosen by the server page). */
   texts: PubGameTexts;
+  /** How photos and videos are uploaded here ("blob" in production). */
+  uploadMode?: UploadMode;
 }
 
 /** True when the café has playable questions or a pubtask photo task (else the team skips the pubtask). */
@@ -57,7 +60,7 @@ function readIntroSeen(code: string): boolean {
  * One phone's Hidden Pubs game. Picks the screen from the live game state:
  * lobby → Beery's rules → the team's current café step → the end.
  */
-export function PubGame({ code, invite, initialView, initialVersion, texts }: PubGameProps) {
+export function PubGame({ code, invite, initialView, initialVersion, texts, uploadMode = "direct" }: PubGameProps) {
   const t = useT();
   const game = usePubGame(code, initialView, initialVersion);
   const { view, connection } = game;
@@ -126,7 +129,7 @@ export function PubGame({ code, invite, initialView, initialVersion, texts }: Pu
   const showEffects = view.phase === "playing" && introSeen === true && !showRules;
 
   return (
-    <PubGameTextsProvider texts={texts}>
+    <PubGameTextsProvider texts={texts} uploadMode={uploadMode}>
       <nav aria-label={t("pubgame.menu.label")} className="flex items-center justify-between gap-3 px-4 pt-4 text-sm sm:px-6">
         <span className="font-mono tracking-[0.2em] text-parchment/60">{code}</span>
         <span className="flex gap-4">

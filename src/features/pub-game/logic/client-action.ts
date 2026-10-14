@@ -24,6 +24,7 @@ export type ClientAction =
   | { type: "REPORT_DRINK"; playerId: string }
   | { type: "ANSWER"; questionId: string; optionId: string }
   | { type: "SKIP_TASK"; taskId: string }
+  | { type: "SUBMIT_EVIDENCE"; taskId: string; mediaId: string; participantIds: string[] }
   | { type: "REVIEW_EVIDENCE"; submissionId: string; approve: boolean; reason?: string }
   | { type: "CONTINUE" };
 
@@ -84,6 +85,13 @@ export function parseClientAction(body: unknown): ClientAction | null {
         : null;
     case "SKIP_TASK":
       return isId(input.taskId) ? { type: "SKIP_TASK", taskId: input.taskId } : null;
+    case "SUBMIT_EVIDENCE": {
+      const participants = input.participantIds;
+      const validParticipants = Array.isArray(participants) && participants.length <= 20 && participants.every(isId);
+      return isId(input.taskId) && typeof input.mediaId === "string" && input.mediaId.length <= 200 && validParticipants
+        ? { type: "SUBMIT_EVIDENCE", taskId: input.taskId, mediaId: input.mediaId, participantIds: participants as string[] }
+        : null;
+    }
     case "REVIEW_EVIDENCE": {
       if (!isId(input.submissionId) || typeof input.approve !== "boolean") return null;
       if (input.reason !== undefined && !isText(input.reason, MAX_RULE_LENGTH)) return null;
@@ -139,6 +147,8 @@ export function toGameAction(
     }
     case "WRITE_RULE":
       return { ...clientAction, ruleId: server.newId() };
+    case "SUBMIT_EVIDENCE":
+      return { ...clientAction, submissionId: server.newId(), at: server.now };
     default:
       return clientAction;
   }

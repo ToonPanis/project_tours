@@ -92,6 +92,9 @@ const ERROR_KEYS: Record<string, MessageKey> = {
   "task-done": "pubgame.errors.outdated",
   "unknown-link": "pubgame.errors.unknownLink",
   "no-team": "pubgame.errors.chooseTeam",
+  "invalid-media": "pubgame.errors.invalidMedia",
+  "too-large": "pubgame.errors.tooLarge",
+  "upload-failed": "pubgame.errors.uploadFailed",
   offline: "pubgame.connection.offline",
 };
 

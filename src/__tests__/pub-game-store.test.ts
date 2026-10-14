@@ -6,6 +6,7 @@ import { pubGameDefinition } from "@/data/walks/hidden-pubs/game/definition";
 import { createPubGame } from "@/features/pub-game/logic/create-game";
 import type { CommitInput, GameStore, StoredGame } from "@/features/pub-game/server/game-store";
 import { createGame, getGameUpdate, joinGame, performAction } from "@/features/pub-game/server/game-service";
+import { MemoryMediaStore } from "@/features/pub-game/server/media-store";
 import { MemoryGameStore } from "@/features/pub-game/server/memory-store";
 import { createSql, PostgresGameStore } from "@/features/pub-game/server/postgres-store";
 
@@ -159,6 +160,7 @@ describe.each(factories)("$name store", ({ create, cleanup }) => {
     let counter = 0;
     const ctx = {
       store,
+      media: new MemoryMediaStore(),
       getGameData: () => ({ definition: pubGameDefinition, answerKey: pubGameAnswerKey }),
       random: Math.random,
       newId: () => `${runId}-id-${++counter}`,

@@ -109,7 +109,15 @@
     "playerLinkFor": "Lien personnel pour {name}",
     "playerLinkHelp": "Envoie ce lien uniquement à {name} : celui ou celle qui l'ouvre joue en tant que {name}. Pratique pour les retardataires et les nouveaux téléphones.",
     "shareLink": "Partager le lien",
-    "linkCopied": "Lien copié"
+    "linkCopied": "Lien copié",
+    "reviewTitle": "Photos et vidéos à valider",
+    "reviewHelp": "Les points ne comptent qu'une fois validés par toi. Refuse ce qui ne correspond pas à la mission.",
+    "reviewFor": "{team} · {task}",
+    "tookPart": "Ont participé : {names}",
+    "approve": "Valider",
+    "reject": "Refuser",
+    "rejectReason": "Raison du refus (facultatif)",
+    "mediaLabel": "Preuve de {team} pour {task}"
   },
   "finished": {
     "title": "La partie est terminée",
@@ -133,7 +141,10 @@
     "gameFinished": "Cette partie est terminée.",
     "outdated": "Quelqu'un de ton équipe a été plus rapide. L'écran a été mis à jour.",
     "unknownLink": "Ce lien ne fonctionne pas (ou plus). Demande un nouveau lien à l'hôte.",
-    "chooseTeam": "Choisis une équipe."
+    "chooseTeam": "Choisis une équipe.",
+    "invalidMedia": "Ce type de fichier n'est pas pris en charge. Utilise une photo ou une vidéo normale de ton téléphone.",
+    "tooLarge": "Ce fichier est trop lourd. Une vidéo plus courte marche mieux.",
+    "uploadFailed": "L'envoi n'a pas marché. Vérifie la connexion et réessaie."
   },
   "claim": {
     "title": "Ouverture de ta partie…",
@@ -274,7 +285,6 @@
     "continue": "Continuer"
   },
   "tasks": {
-    "uploadSoon": "L'envoi de photos et de vidéos arrive dans la prochaine mise à jour. Pour l'instant, tu peux passer cette mission.",
     "skip": "Passer cette mission",
     "done": "Fait",
     "points": {
@@ -299,5 +309,23 @@
   "teamFinished": {
     "title": "Ton équipe a terminé !",
     "text": "Bien joué ! Le classement final s'affiche dès que toutes les équipes ont terminé, ou quand l'hôte termine la partie."
+  },
+  "evidence": {
+    "takePhoto": "Prendre ou choisir une photo",
+    "takeVideo": "Filmer ou choisir une vidéo",
+    "previewPhoto": "Ta photo, avant l'envoi",
+    "previewVideo": "Ta vidéo, avant l'envoi",
+    "whoTookPart": "Qui a participé ?",
+    "send": "Envoyer à l'hôte",
+    "sending": "Envoi… {percent} %",
+    "pending": "Envoyé ! En attente de la validation de l'hôte.",
+    "approved": {
+      "one": "Validé : +{count} point",
+      "other": "Validé : +{count} points"
+    },
+    "rejected": "Refusé par l'hôte.",
+    "rejectedReason": "Refusé par l'hôte : {reason}",
+    "sendAgain": "Tu peux en envoyer une nouvelle.",
+    "consent": "Ne photographie ou ne filme que les personnes qui ont dit oui."
   }
 }

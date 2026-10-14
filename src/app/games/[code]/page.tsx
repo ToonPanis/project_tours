@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { JoinGameForm } from "@/features/pub-game/components/JoinGameForm";
 import { PubGame } from "@/features/pub-game/components/PubGame";
 import { getPubGameTexts } from "@/data/walks/hidden-pubs/game/content";
+import { uploadModeForPages } from "@/features/pub-game/server/context";
 import { inviteFor, loadGamePage } from "@/features/pub-game/server/page-data";
 import { getLocale } from "@/i18n/server";
 
@@ -25,6 +26,7 @@ export default async function GamePage({ params }: PageProps<"/games/[code]">) {
       initialVersion={page.player.version}
       // The texts in the visitor's language; a language switch re-renders the page with new ones.
       texts={getPubGameTexts(await getLocale())}
+      uploadMode={uploadModeForPages()}
     />
   );
 }

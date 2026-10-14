@@ -7,9 +7,12 @@ import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { PlayScreen } from "@/features/walk-session/components/PlayScreen";
 import { useT } from "@/i18n/client";
 import { createPlayerLinkRequest } from "../client/api";
+import type { PubGameTexts } from "@/data/walks/hidden-pubs/game/content/types";
+import { PubGameTextsProvider } from "../client/texts-context";
 import { usePubGame } from "../client/usePubGame";
 import type { PlayerView } from "../logic/player-view";
 import { allTeams } from "../logic/view-helpers";
+import { EvidenceReview } from "./EvidenceReview";
 import { FormError } from "./FormError";
 import { TextField } from "./TextField";
 
@@ -17,6 +20,8 @@ interface HostDashboardProps {
   code: string;
   initialView: PlayerView;
   initialVersion: number;
+  /** Task titles for the evidence review, in the host's language. */
+  texts: PubGameTexts;
 }
 
 /**
@@ -24,9 +29,18 @@ interface HostDashboardProps {
  * (the review screen itself comes in stage 8), adding a late player, ending the game.
  * Shows only cafés completed, never where a team is (no positions are ever sent).
  */
-export function HostDashboard({ code, initialView, initialVersion }: HostDashboardProps) {
+export function HostDashboard({ texts, ...props }: HostDashboardProps) {
+  return (
+    <PubGameTextsProvider texts={texts}>
+      <Dashboard {...props} />
+    </PubGameTextsProvider>
+  );
+}
+
+function Dashboard({ code, initialView, initialVersion }: Omit<HostDashboardProps, "texts">) {
   const t = useT();
-  const { view, act, busy } = usePubGame(code, initialView, initialVersion);
+  const game = usePubGame(code, initialView, initialVersion);
+  const { view, act, busy } = game;
   const teams = allTeams(view);
   const pending = view.evidence.filter((item) => item.status === "pending").length;
   const totalCafes = view.team.route.length;
@@ -105,6 +119,8 @@ export function HostDashboard({ code, initialView, initialVersion }: HostDashboa
       <p role="status" className="rounded-sm border border-gold/40 bg-ink/30 p-4">
         {pending > 0 ? t.plural("pubgame.host.pendingEvidence", pending) : t("pubgame.host.noPendingEvidence")}
       </p>
+
+      <EvidenceReview game={game} />
 
       <section className="flex flex-col gap-3">
         <h2 className="font-display text-2xl font-semibold text-parchment">{t("pubgame.host.teams")}</h2>

@@ -18,6 +18,12 @@ export function checkPostRequest(request: NextRequest): NextResponse | null {
   return null;
 }
 
+/** Same-origin check alone (for file uploads, which aren't JSON). */
+export function checkSameOrigin(request: NextRequest): NextResponse | null {
+  const origin = request.headers.get("origin");
+  return origin && origin !== request.nextUrl.origin ? errorResponse(403, "wrong-origin") : null;
+}
+
 /** The request body as JSON, or null when it's too big or not JSON. */
 export async function readJson(request: NextRequest): Promise<unknown | null> {
   const text = await request.text();

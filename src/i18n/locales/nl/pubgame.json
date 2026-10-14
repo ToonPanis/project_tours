@@ -109,7 +109,15 @@
     "playerLinkFor": "Persoonlijke link voor {name}",
     "playerLinkHelp": "Stuur deze link alleen naar {name}: wie hem opent, speelt als {name}. Handig voor laatkomers en een nieuwe gsm.",
     "shareLink": "Link delen",
-    "linkCopied": "Link gekopieerd"
+    "linkCopied": "Link gekopieerd",
+    "reviewTitle": "Foto's en video's om te beoordelen",
+    "reviewHelp": "Punten tellen pas als jij goedkeurt. Keur af wat niet bij de opdracht past.",
+    "reviewFor": "{team} · {task}",
+    "tookPart": "Deden mee: {names}",
+    "approve": "Goedkeuren",
+    "reject": "Afkeuren",
+    "rejectReason": "Reden van afkeuren (niet verplicht)",
+    "mediaLabel": "Bewijs van {team} voor {task}"
   },
   "finished": {
     "title": "Het spel is voorbij",
@@ -133,7 +141,10 @@
     "gameFinished": "Dit spel is voorbij.",
     "outdated": "Iemand in je team was sneller. Het scherm is bijgewerkt.",
     "unknownLink": "Deze link werkt niet (meer). Vraag de host om een nieuwe.",
-    "chooseTeam": "Kies een team."
+    "chooseTeam": "Kies een team.",
+    "invalidMedia": "Dit soort bestand werkt niet. Gebruik een gewone foto of video van je gsm.",
+    "tooLarge": "Dit bestand is te groot. Een kortere video werkt beter.",
+    "uploadFailed": "Versturen lukte niet. Controleer de verbinding en probeer opnieuw."
   },
   "claim": {
     "title": "Je spel wordt geopend…",
@@ -274,7 +285,6 @@
     "continue": "Verder"
   },
   "tasks": {
-    "uploadSoon": "Foto's en video's versturen komt in de volgende update. Voorlopig kun je deze opdracht overslaan.",
     "skip": "Deze opdracht overslaan",
     "done": "Gedaan",
     "points": {
@@ -299,5 +309,23 @@
   "teamFinished": {
     "title": "Jullie team is klaar!",
     "text": "Goed gespeeld! De eindstand verschijnt zodra elk team klaar is, of als de host het spel beëindigt."
+  },
+  "evidence": {
+    "takePhoto": "Neem of kies een foto",
+    "takeVideo": "Neem of kies een video",
+    "previewPhoto": "Je foto, voor het versturen",
+    "previewVideo": "Je video, voor het versturen",
+    "whoTookPart": "Wie deed er mee?",
+    "send": "Naar de host sturen",
+    "sending": "Bezig met versturen… {percent}%",
+    "pending": "Verstuurd! Wacht op de goedkeuring van de host.",
+    "approved": {
+      "one": "Goedgekeurd: +{count} punt",
+      "other": "Goedgekeurd: +{count} punten"
+    },
+    "rejected": "Niet goedgekeurd door de host.",
+    "rejectedReason": "Niet goedgekeurd door de host: {reason}",
+    "sendAgain": "Je mag een nieuwe sturen.",
+    "consent": "Fotografeer of film alleen mensen die ja zeiden."
   }
 }

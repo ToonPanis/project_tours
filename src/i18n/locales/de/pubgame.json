@@ -109,7 +109,15 @@
     "playerLinkFor": "Persönlicher Link für {name}",
     "playerLinkHelp": "Schick diesen Link nur an {name}: Wer ihn öffnet, spielt als {name}. Praktisch für Nachzügler und neue Handys.",
     "shareLink": "Link teilen",
-    "linkCopied": "Link kopiert"
+    "linkCopied": "Link kopiert",
+    "reviewTitle": "Fotos und Videos zur Prüfung",
+    "reviewHelp": "Punkte zählen erst, wenn du bestätigst. Lehne ab, was nicht zur Aufgabe passt.",
+    "reviewFor": "{team} · {task}",
+    "tookPart": "Haben mitgemacht: {names}",
+    "approve": "Bestätigen",
+    "reject": "Ablehnen",
+    "rejectReason": "Grund für die Ablehnung (optional)",
+    "mediaLabel": "Beweis von {team} für {task}"
   },
   "finished": {
     "title": "Das Spiel ist vorbei",
@@ -133,7 +141,10 @@
     "gameFinished": "Dieses Spiel ist vorbei.",
     "outdated": "Jemand aus deinem Team war schneller. Der Bildschirm wurde aktualisiert.",
     "unknownLink": "Dieser Link funktioniert nicht (mehr). Bitte den Host um einen neuen.",
-    "chooseTeam": "Bitte wähle ein Team."
+    "chooseTeam": "Bitte wähle ein Team.",
+    "invalidMedia": "Diese Dateiart wird nicht unterstützt. Nimm ein normales Foto oder Video vom Handy.",
+    "tooLarge": "Diese Datei ist zu groß. Ein kürzeres Video klappt besser.",
+    "uploadFailed": "Senden hat nicht geklappt. Prüfe die Verbindung und versuch es noch einmal."
   },
   "claim": {
     "title": "Dein Spiel wird geöffnet…",
@@ -274,7 +285,6 @@
     "continue": "Weiter"
   },
   "tasks": {
-    "uploadSoon": "Fotos und Videos senden kommt mit dem nächsten Update. Vorerst kannst du diese Aufgabe überspringen.",
     "skip": "Diese Aufgabe überspringen",
     "done": "Erledigt",
     "points": {
@@ -299,5 +309,23 @@
   "teamFinished": {
     "title": "Euer Team ist fertig!",
     "text": "Gut gespielt! Das Endergebnis erscheint, sobald alle Teams fertig sind oder der Host das Spiel beendet."
+  },
+  "evidence": {
+    "takePhoto": "Foto aufnehmen oder auswählen",
+    "takeVideo": "Video aufnehmen oder auswählen",
+    "previewPhoto": "Dein Foto, vor dem Senden",
+    "previewVideo": "Dein Video, vor dem Senden",
+    "whoTookPart": "Wer hat mitgemacht?",
+    "send": "An den Host senden",
+    "sending": "Wird gesendet… {percent} %",
+    "pending": "Gesendet! Wartet auf die Bestätigung des Hosts.",
+    "approved": {
+      "one": "Bestätigt: +{count} Punkt",
+      "other": "Bestätigt: +{count} Punkte"
+    },
+    "rejected": "Vom Host nicht bestätigt.",
+    "rejectedReason": "Vom Host nicht bestätigt: {reason}",
+    "sendAgain": "Du kannst ein neues senden.",
+    "consent": "Fotografiere oder filme nur Menschen, die zugestimmt haben."
   }
 }

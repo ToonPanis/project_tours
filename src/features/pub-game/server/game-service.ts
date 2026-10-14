@@ -8,7 +8,17 @@ import type { PubGameReveals } from "@/data/walks/hidden-pubs/game/content/types
 import type { ActionResult, CafeReveal, GameUpdate, Lobby } from "../logic/api-types";
 import { toPlayerView } from "../logic/player-view";
 import { canSeeEvent } from "../logic/visible-events";
+import {
+  ALLOWED_TYPES,
+  extensionFor,
+  isAllowedType,
+  isMediaIdOfGame,
+  maxBytesFor,
+  mediaPrefix,
+  type EvidenceKind,
+} from "../media";
 import type { GameStore, StoredGame } from "./game-store";
+import type { MediaFile, MediaStore } from "./media-store";
 
 export type { GameUpdate, Lobby };
 import { GAME_LIFETIME_DAYS, hashToken, isGameCode, newGameCode, newPlayerToken } from "./identity";
@@ -30,6 +40,8 @@ export interface GameData {
 /** Everything the service needs from outside. Tests pass fakes (fixed time, fixed random numbers). */
 export interface GameContext {
   store: GameStore;
+  /** Evidence photos and videos (Vercel Blob in production, memory in development). */
+  media: MediaStore;
   getGameData: (walkSlug: string) => GameData | null;
   random: () => number;
   newId: () => string;
@@ -95,7 +107,10 @@ export async function createGame(ctx: GameContext, walkSlug: string, body: unkno
   }
 
   const createdAt = ctx.now();
-  const expiresAt = new Date(createdAt.getTime() + GAME_LIFETIME_DAYS * 24 * 60 * 60 * 1000);
+  const lifetime = GAME_LIFETIME_DAYS * 24 * 60 * 60 * 1000;
+  const expiresAt = new Date(createdAt.getTime() + lifetime);
+  // Privacy (D29): photos and videos older than a game's lifetime go, like the games themselves.
+  await ctx.media.deleteOlderThan(new Date(createdAt.getTime() - lifetime)).catch(() => 0);
   // A new code until one is free (with 31^6 ≈ 900 million codes, almost always the first).
   for (let attempt = 0; attempt < 10; attempt++) {
     const code = newGameCode();
@@ -263,6 +278,17 @@ export async function performAction(
   const clientAction = parseClientAction(body.action);
   if (!clientAction) return fail(400, "invalid-action");
 
+  // Evidence: the file must exist, belong to this game and be the right kind (photo/video).
+  if (clientAction.type === "SUBMIT_EVIDENCE") {
+    const game = await loadGame(ctx, code);
+    if (!game) return fail(404, "unknown-game");
+    const kind = taskKind(gameDataOf(ctx, game), clientAction.taskId);
+    if (!kind) return fail(409, "unknown-task");
+    if (!isMediaIdOfGame(clientAction.mediaId, code)) return fail(400, "invalid-media");
+    const info = await ctx.media.info(clientAction.mediaId);
+    if (!info || !isAllowedType(kind, info.contentType)) return fail(400, "invalid-media");
+  }
+
   const result = await commitWithRetry(ctx, code, playerId, body.actionId, (state, definition) =>
     toGameAction(clientAction, definition, state, playerId, {
       random: ctx.random,
@@ -326,6 +352,115 @@ export async function getReveal(
   const reachedFunFact =
     cafeIndex < team.cafeIndex || team.finishedAt !== null || team.step === "fun-fact" || state.phase === "finished";
   return ok({ explanations, funFact: reachedFunFact ? (reveals?.funFact ?? null) : null });
+}
+
+// ─── Evidence photos and videos ─────────────────────────────────────────────
+
+/** Whether a task needs a photo or a video, or null for an unknown task. */
+function taskKind(data: GameData, taskId: string): EvidenceKind | null {
+  for (const cafe of data.definition.cafes) {
+    const task = cafe.tasks.find((candidate) => candidate.id === taskId);
+    if (task) return task.evidence;
+  }
+  return null;
+}
+
+/** The player of the cookie, and what their file must be for this task. */
+async function uploader(
+  ctx: GameContext,
+  code: string,
+  token: string | null,
+  taskId: unknown,
+): Promise<ServiceResult<{ playerId: string; kind: EvidenceKind }>> {
+  const game = await loadGame(ctx, code);
+  if (!game) return fail(404, "unknown-game");
+  const playerId = await findPlayer(ctx, code, token);
+  if (!playerId) return fail(401, "not-joined");
+  if (game.state.phase !== "playing") return fail(409, "game-not-started");
+  const kind = typeof taskId === "string" ? taskKind(gameDataOf(ctx, game), taskId) : null;
+  if (!kind) return fail(400, "unknown-task");
+  return ok({ playerId, kind });
+}
+
+/**
+ * Development (no Blob store): the phone sends the file itself to /media.
+ * Returns the media id to submit with SUBMIT_EVIDENCE.
+ */
+export async function saveDirectUpload(
+  ctx: GameContext,
+  code: string,
+  token: string | null,
+  taskId: string | null,
+  contentType: string,
+  bytes: Uint8Array,
+): Promise<ServiceResult<{ mediaId: string }>> {
+  if (ctx.media.uploadMode !== "direct") return fail(400, "use-blob-upload");
+  const who = await uploader(ctx, code, token, taskId);
+  if (!who.ok) return who;
+  if (!isAllowedType(who.data.kind, contentType)) return fail(415, "invalid-media");
+  if (bytes.byteLength === 0 || bytes.byteLength > maxBytesFor(who.data.kind)) return fail(413, "too-large");
+
+  const mediaId = `${mediaPrefix(code)}${ctx.newId()}.${extensionFor(contentType)}`;
+  await ctx.media.save(mediaId, contentType.split(";")[0].trim().toLowerCase(), bytes);
+  return ok({ mediaId });
+}
+
+/**
+ * Production: before a phone uploads straight to Vercel Blob, our route
+ * (handleUpload) asks this: a player of this game, a real task, a path inside
+ * this game's folder? The short-lived upload token then only allows that kind
+ * of file, up to its size limit.
+ */
+export async function authorizeBlobUpload(
+  ctx: GameContext,
+  code: string,
+  token: string | null,
+  pathname: string,
+  clientPayload: string | null,
+): Promise<
+  ServiceResult<{ allowedContentTypes: string[]; maximumSizeInBytes: number; addRandomSuffix: boolean; validUntil: number }>
+> {
+  let taskId: unknown = null;
+  try {
+    taskId = (JSON.parse(clientPayload ?? "{}") as { taskId?: unknown }).taskId;
+  } catch {
+    return fail(400, "invalid-request");
+  }
+  const who = await uploader(ctx, code, token, taskId);
+  if (!who.ok) return who;
+  if (!pathname.startsWith(mediaPrefix(code)) || pathname.includes("..")) return fail(400, "invalid-media");
+  return ok({
+    allowedContentTypes: ALLOWED_TYPES[who.data.kind],
+    maximumSizeInBytes: maxBytesFor(who.data.kind),
+    // Blob adds a random part to the name: nobody can guess another file's path.
+    addRandomSuffix: true,
+    validUntil: ctx.now().getTime() + 10 * 60 * 1000,
+  });
+}
+
+/**
+ * GET a photo or video: only files that belong to a submission of this game,
+ * and only for the people who may see that submission: its own team, the host,
+ * or everyone once the game is over (the same rule as the player view).
+ */
+export async function openMedia(
+  ctx: GameContext,
+  code: string,
+  token: string | null,
+  mediaId: string,
+): Promise<ServiceResult<MediaFile>> {
+  const game = await loadGame(ctx, code);
+  if (!game) return fail(404, "unknown-game");
+  const playerId = await findPlayer(ctx, code, token);
+  if (!playerId) return fail(401, "not-joined");
+  const player = game.state.players.find((candidate) => candidate.id === playerId);
+  const submission = game.state.evidence.find((item) => item.mediaId === mediaId);
+  if (!player || !submission || !isMediaIdOfGame(mediaId, code)) return fail(404, "unknown-media");
+  const maySee = player.isHost || player.teamId === submission.teamId || game.state.phase === "finished";
+  if (!maySee) return fail(403, "not-allowed");
+
+  const file = await ctx.media.open(mediaId);
+  return file ? ok(file) : fail(404, "unknown-media");
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────

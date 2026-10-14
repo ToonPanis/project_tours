@@ -204,7 +204,8 @@ describe("the game screen", () => {
     expect(window.localStorage.getItem(`hidden-antwerp:pub-intro:${CODE}`)).toBe("seen");
 
     // Then the walking navigation (loaded lazily): the café and its address.
-    expect(await screen.findByRole("heading", { name: "Rococo" })).toBeTruthy();
+    // The navigation is loaded lazily (a separate chunk): give it time when all tests run in parallel.
+    expect(await screen.findByRole("heading", { name: "Rococo" }, { timeout: 5000 })).toBeTruthy();
     expect(screen.getByText(pubGameCafes["pubs-rococo"].address!)).toBeTruthy();
   });
 
@@ -216,7 +217,7 @@ describe("the game screen", () => {
     render(<PubGame texts={pubGameTexts.en} code={CODE} invite={null} initialView={viewOf(playing, "b")} initialVersion={2} />);
 
     fireEvent.click(screen.getByRole("button", { name: t("pubgame.beery.letsGo") }));
-    fireEvent.click(await screen.findByRole("button", { name: t("gps.continueWithoutGps") }));
+    fireEvent.click(await screen.findByRole("button", { name: t("gps.continueWithoutGps") }, { timeout: 5000 }));
     // The route list stays private: no "show route" button in Hidden Pubs.
     expect(screen.queryByRole("button", { name: t("gps.showRoute") })).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: t("gps.arrived") }));
@@ -301,7 +302,7 @@ describe("host dashboard", () => {
       { body: { path: `/games/${CODE}/claim#secret-token` } },
       { body: { version: 3, view: viewOf(ended, "h"), events: [] } },
     );
-    render(<HostDashboard code={CODE} initialView={viewOf(state, "h")} initialVersion={2} />);
+    render(<HostDashboard texts={pubGameTexts.en} code={CODE} initialView={viewOf(state, "h")} initialVersion={2} />);
 
     expect(screen.getByText(t("pubgame.host.noPendingEvidence"))).toBeTruthy();
     expect(screen.getAllByText(t("pubgame.host.progress", { done: 0, total: 12 }))).toHaveLength(2);

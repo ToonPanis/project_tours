@@ -50,7 +50,10 @@ describe("security headers", () => {
     // A relative style is served by this site ('self'); an invalid one simply adds no host.
     expect(() => buildContentSecurityPolicy({ ...production, mapStyleUrl: "/style.json" })).not.toThrow();
     expect(() => buildContentSecurityPolicy({ ...production, mapStyleUrl: "not a url" })).not.toThrow();
-    expect(buildContentSecurityPolicy({ ...production, mapStyleUrl: "not a url" })).toContain("connect-src 'self';");
+    // No map host is added: only the fixed Vercel Blob hosts follow 'self'.
+    expect(buildContentSecurityPolicy({ ...production, mapStyleUrl: "not a url" })).toContain(
+      "connect-src 'self' https://vercel.com https://*.blob.vercel-storage.com;",
+    );
     expect(mapStyleOrigin("https://tiles.openfreemap.org/styles/liberty")).toBe("https://tiles.openfreemap.org");
   });
 
@@ -187,4 +190,10 @@ describe("data script helpers", () => {
       fetchWithRetry("https://x", {}, { retries: 2, fetchImpl: alwaysBusy, wait: async () => {} }),
     ).rejects.toThrow(/Gave up after 3 attempts/);
   });
+});
+
+test("Hidden Pubs evidence: uploads may go to Vercel Blob; videos play from our own route or a blob: preview", () => {
+  const csp = buildContentSecurityPolicy({ isDevelopment: false, mapStyleUrl: "https://tiles.openfreemap.org/styles/liberty" });
+  expect(csp).toMatch(/connect-src [^;]*https:\/\/vercel\.com [^;]*https:\/\/\*\.blob\.vercel-storage\.com/);
+  expect(csp).toContain("media-src 'self' blob:");
 });
