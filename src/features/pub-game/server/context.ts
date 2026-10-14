@@ -17,7 +17,28 @@ function getGameData(walkSlug: string): GameData | null {
 // Kept on `globalThis`: Next.js reloads changed modules in development, and
 // without this every reload would open new database connections (or, for the
 // memory store, forget every game).
-const globalForGames = globalThis as typeof globalThis & { pubGameStore?: GameStore; pubGameMedia?: MediaStore };
+const globalForGames = globalThis as typeof globalThis & {
+  pubGameStore?: GameStore;
+  pubGameMedia?: MediaStore;
+  pubGameMemoryWarned?: boolean;
+};
+
+/**
+ * TESTS ONLY: the browser tests run a production build without a database or
+ * Blob store (CI has no secrets). PUB_GAME_MEMORY_STORES=true lets that build
+ * keep games and files in memory. Never set it on Vercel: every server
+ * instance would have its own memory, so phones would end up in different
+ * "games", and everything is lost on every deploy.
+ */
+function memoryStoresAllowed(): boolean {
+  if (process.env.NODE_ENV !== "production") return true;
+  if (process.env.PUB_GAME_MEMORY_STORES !== "true") return false;
+  if (!globalForGames.pubGameMemoryWarned) {
+    globalForGames.pubGameMemoryWarned = true;
+    console.warn("⚠ PUB_GAME_MEMORY_STORES=true: Hidden Pubs keeps games and photos in memory. For tests only.");
+  }
+  return true;
+}
 
 /**
  * - DATABASE_URL set (production, or development with a Neon database): Postgres.
@@ -31,10 +52,10 @@ function getStore(): GameStore {
   const url = process.env.DATABASE_URL;
   if (url) {
     globalForGames.pubGameStore = new PostgresGameStore(createSql(url));
-  } else if (process.env.NODE_ENV === "production") {
-    throw new Error("Hidden Pubs multiplayer needs DATABASE_URL in production (see .env.example).");
-  } else {
+  } else if (memoryStoresAllowed()) {
     globalForGames.pubGameStore = new MemoryGameStore();
+  } else {
+    throw new Error("Hidden Pubs multiplayer needs DATABASE_URL in production (see .env.example).");
   }
   return globalForGames.pubGameStore;
 }
@@ -47,10 +68,10 @@ function getMediaStore(): MediaStore {
   if (globalForGames.pubGameMedia) return globalForGames.pubGameMedia;
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     globalForGames.pubGameMedia = new BlobMediaStore();
-  } else if (process.env.NODE_ENV === "production") {
-    throw new Error("Hidden Pubs evidence uploads need BLOB_READ_WRITE_TOKEN in production (see .env.example).");
-  } else {
+  } else if (memoryStoresAllowed()) {
     globalForGames.pubGameMedia = new MemoryMediaStore();
+  } else {
+    throw new Error("Hidden Pubs evidence uploads need BLOB_READ_WRITE_TOKEN in production (see .env.example).");
   }
   return globalForGames.pubGameMedia;
 }

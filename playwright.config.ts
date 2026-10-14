@@ -41,6 +41,9 @@ export default defineConfig({
   webServer: {
     command: `npx next start -p ${PORT}`,
     url: `http://localhost:${PORT}`,
+    // Hidden Pubs games and photos in memory: the tests need no database or Blob store
+    // (see memoryStoresAllowed in src/features/pub-game/server/context.ts). Tests only.
+    env: { PUB_GAME_MEMORY_STORES: "true" },
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,
     // NEXT_PUBLIC_* values are fixed at BUILD time, so they can't be switched off here. A build

@@ -14,7 +14,7 @@ Legend: ✅ complete · ⚠️ needs a decision or a check · ❌ missing
 **D6 answered (2026-10-14):** De Varkenspoot and Boer van Tienen are two separate places; they must be visited one after the other, with no other café in between (as the route rules already do).
 **D22 answered (2026-10-14):** Lucie is the girl of the Lucie beer (Seef brewery), on a metal advertising sign in Café Barries: the task is a photo with the sign (100 points after the host's approval).
 **Café Barries' address (2026-10-14):** Reyndersstraat 21, 2000 Antwerpen.
-**D23 answered (2026-10-14):** Barok = the ceiling; Quinten Matsijs Q1 = painter, Q2 = the barrel game (tonspel); Boer van Tienen = the second-oldest café. All 16 questions are playable.
+**D23 answered (2026-10-14):** Barok = the ceiling; Quinten Matsijs Q1 = painter, Q2 = the barrel game (tonspel); Boer van Tienen = the second-oldest café. All 15 questions are playable.
 
 ### A. Architecture and safety
 

@@ -55,3 +55,36 @@ Rule from CLAUDE.md: tests take content from the data and texts from the transla
 ## 4. Before saying "done"
 
 `npm run typecheck`, `npm run lint`, `npm run i18n:check`, `npm run test:coverage`, `npm run build`, `npm run test:e2e`, plus one real multi-phone run on the LAN (dev server, `DEV_ALLOWED_ORIGINS`). Failures are reported as they are.
+
+---
+
+## 5. Status (stage 11, 2026-10-15)
+
+Automated: `npm run test:run` (unit, component, API; Vitest) and `npm run test:e2e` (browser, production build with `PUB_GAME_MEMORY_STORES=true`, see `playwright.config.ts`). Browser tests: `e2e/pub-game.spec.ts`.
+
+| # | What | Status |
+|---|---|---|
+| 1 | Single player / single team | ✅ unit + **e2e: one player plays all 12 cafés of a random route to the results** |
+| 2 | Several teams in one game | ✅ unit + e2e (3 phones, 2 teams, one in Russian) |
+| 3 | Up to 10 players per team | ✅ unit/API (10 × 10 joins, 11th refused, 2 decks from 5 players); no 10-phone browser run |
+| 4 | Random routes | ✅ 10,000 routes (unit) + the e2e full route checks start, finish, 8 → 9 |
+| 5 | All 12 cafés | ✅ data tests (every café, every language) + e2e full route |
+| 6 | All 13 ranks | ✅ unit (rules) + component (each card's name, text, choice) |
+| 7 | Two decks | ✅ unit |
+| 8 | Buddy notifications | ✅ unit + API (deterministic 8 → buddy → other team's popup) + component |
+| 9 | Jack rules | ✅ unit + component |
+| 10 | Queen / King / Ace | ✅ unit + component (effects bar) |
+| 11 | Right and wrong attempts | ✅ unit + component (hint, strike-through, 80/60, shown answer) |
+| 12 | Scoring | ✅ unit + API (same tap twice = once) + e2e (1,500 points for 15 first-try answers) |
+| 13 | Photo/video upload | ✅ API + component + browser run (stage 8). ⏳ **Real Vercel Blob not yet tested** (no token) |
+| 14 | Host approval | ✅ API + component + browser run (stage 8) |
+| 15 | GPS navigation | ✅ existing GPS e2e (shared navigation) + component; ⏳ field test |
+| 16 | Refresh / reconnection | ✅ cookie rejoin, personal links (e2e), retry with the same action id (unit/API); ⏳ field test on bad café wifi |
+| 17 | Multiplayer sync | ✅ API (simultaneous actions) + e2e (lobby, cards, scores and results update on other phones) |
+| 18 | Final leaderboard | ✅ unit + component + e2e |
+| 19 | All 8 languages | ✅ `i18n:check` + content structure tests; e2e with an English and a Russian phone; ⏳ native-speaker review |
+| 20 | Mobile | ✅ e2e: no sideways scroll at 390 px (en, ru); ⏳ real phones, sunlight, one hand |
+
+Safety and privacy (section 2): ✅ alcohol-free + skip everywhere, no drink counts on any screen, 18+ check, no GPS position sent (navigation unchanged), answers/explanations/fun facts absent from what the phone downloads (e2e + build scan), media of another game or team refused (API).
+
+**Still open:** the Postgres store against a real database (`npm run test:db`, needs `TEST_DATABASE_URL`), uploads to a real Blob store, the field test in Antwerp, and the native-speaker review.
