@@ -1,6 +1,6 @@
 # Hidden Pubs 2.0: rebuild plan
 
-Status: **approved on 2026-10-14** (all recommendations D1–D34 accepted). Stages 1 (game logic) and 2 (server with in-memory store) done; missing café answers still to come from the owner.
+Status: **approved on 2026-10-14** (all recommendations D1–D34 accepted). Stages 1 (game logic), 2 (server) and 3 (Postgres store, waiting for a database to test against) done; missing café answers still to come from the owner.
 Source of truth for the game: `HIDDEN_PUBS_CONCEPT.txt` (your document, copied unchanged from `Downloads/Geplakte tekst.txt`).
 Companion documents: `HIDDEN_PUBS_GAME_RULES.md` (the rules as the app will run them), `HIDDEN_PUBS_DATA_AUDIT.md` (per café: what is there, what is missing, what is wrong), `HIDDEN_PUBS_TEST_PLAN.md`.
 
@@ -95,19 +95,21 @@ This is the **major architectural change**: the project gets a server side for t
 
 **Correct answers never reach the browser before they're revealed**: they live in `answers.server.ts` (marked `import "server-only"`). `player-view.ts` builds the per-player view and leaves out answers, other teams' routes and other teams' pending evidence.
 
-### 3.2 Database tables (first version)
+### 3.2 Database tables (`db/migrations/001_pub_games.sql`)
 
 ```
-games        id, code (6 chars, no look-alike letters), walk_slug, status (lobby/playing/finished),
-             settings jsonb, state jsonb, version int, created_at, expires_at
-teams        id, game_id, name, sort_order
-players      id, game_id, team_id, name, token_hash, is_host, joined_at
-game_actions game_id, action_id (unique per game), player_id, type, payload jsonb, version_after, created_at
-media        id, game_id, team_id, player_id, task_id, kind (photo/video), blob_path, status
-             (pending/approved/rejected), reviewed_by, created_at
+pub_games         code (6 chars, no look-alike letters), walk_slug, state jsonb (teams, players, decks, answers,
+                  evidence…: the whole PubGameState), version, created_at, expires_at (+ 7 days)
+pub_game_actions  game_code, action_id (PRIMARY KEY together: the same tap is never applied twice),
+                  player_id, action jsonb, version it produced, created_at
+pub_game_events   game_code, version, position, event jsonb (for "events since version X")
+pub_game_players  game_code, token_hash (SHA-256 of the cookie secret), player_id
 ```
+All tables delete their rows together with the game (`ON DELETE CASCADE`). Expired games are removed when a new game is created. Stage 8 adds a `pub_game_media` table for photos/videos.
 
-Why game state as one `jsonb` document plus an action log instead of a table per card, rule and buddy: the rules are complex and change together, and the pure game logic is far easier to test on one plain object (as `session-reducer.ts` already does). The action log gives an audit trail for disputes, and the first-version data is small (≤ 100 players).
+Why game state as one `jsonb` document plus an action log instead of a table per team, player, card, rule and buddy: the rules are complex and change together, and the pure game logic is far easier to test on one plain object (as `session-reducer.ts` already does). The action log gives an audit trail for disputes, and the data is small (≤ 100 players).
+
+**One store interface, two stores:** `GameStore` (`server/game-store.ts`) with `MemoryGameStore` (development without a database, tests) and `PostgresGameStore`. `pub-game-store.test.ts` runs the same tests on both (Postgres only with `TEST_DATABASE_URL`).
 
 ### 3.3 Alternative: Supabase
 One service for Postgres, real-time push, storage and auth. Less code to write, but the real-time model and row-level security are new concepts, and more of the game rules would live outside your codebase. Recommendation: **3.1**.

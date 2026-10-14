@@ -15,7 +15,9 @@
     "test:run": "vitest run",
     "typecheck": "next typegen && tsc --noEmit",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "db:migrate": "node --env-file=.env.local scripts/db-migrate.mjs",
+    "test:db": "node --env-file=.env.local node_modules/vitest/vitest.mjs run src/__tests__/pub-game-store.test.ts"
   },
   "engines": {
     "node": ">=20.9.0"
@@ -23,6 +25,7 @@
   "dependencies": {
     "maplibre-gl": "^6.11.1",
     "next": "16.3.6",
+    "postgres": "^3.4.9",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },

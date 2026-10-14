@@ -4,23 +4,35 @@ import type { GameContext, GameData } from "./game-service";
 import type { GameStore } from "./game-store";
 import { newId, secureRandom } from "./identity";
 import { MemoryGameStore } from "./memory-store";
+import { createSql, PostgresGameStore } from "./postgres-store";
 
 /** Which walks are multiplayer pub games, and their (server-only) data. */
 function getGameData(walkSlug: string): GameData | null {
   return walkSlug === "hidden-pubs" ? { definition: pubGameDefinition, answerKey: pubGameAnswerKey } : null;
 }
 
-// In development, Next.js reloads changed modules; keeping the store on
-// `globalThis` means games survive that reload (not a server restart).
+// Kept on `globalThis`: Next.js reloads changed modules in development, and
+// without this every reload would open new database connections (or, for the
+// memory store, forget every game).
 const globalForGames = globalThis as typeof globalThis & { pubGameStore?: GameStore };
 
+/**
+ * - DATABASE_URL set (production, or development with a Neon database): Postgres.
+ * - Not set, in development: games in memory (lost when the dev server stops).
+ * - Not set, in production: an error. On Vercel every server instance has its
+ *   own memory, so phones would end up in different "games".
+ */
 function getStore(): GameStore {
-  if (process.env.NODE_ENV === "production") {
-    // On Vercel every server instance has its own memory: phones would land in
-    // different "games". The Postgres store comes in stage 3.
-    throw new Error("Hidden Pubs multiplayer needs a database in production (DATABASE_URL, stage 3).");
+  if (globalForGames.pubGameStore) return globalForGames.pubGameStore;
+
+  const url = process.env.DATABASE_URL;
+  if (url) {
+    globalForGames.pubGameStore = new PostgresGameStore(createSql(url));
+  } else if (process.env.NODE_ENV === "production") {
+    throw new Error("Hidden Pubs multiplayer needs DATABASE_URL in production (see .env.example).");
+  } else {
+    globalForGames.pubGameStore = new MemoryGameStore();
   }
-  globalForGames.pubGameStore ??= new MemoryGameStore();
   return globalForGames.pubGameStore;
 }
 
