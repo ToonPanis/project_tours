@@ -22,6 +22,10 @@ export interface Score {
   total: number;
   /** Correct answers on the first attempt: the tie-breaker (D27). */
   firstAttemptCorrect: number;
+  /** Correct answers in total (any attempt): a fun statistic for the results. */
+  correctAnswers: number;
+  /** Photo/video tasks the host approved: a fun statistic for the results. */
+  approvedTasks: number;
 }
 
 /**
@@ -44,15 +48,20 @@ export function computeScores(definition: PubGameDefinition, state: PubGameState
     ).length;
 
     let bonusPoints = 0;
+    let approvedTasks = 0;
     for (const submission of state.evidence) {
       const task = tasks.get(submission.taskId);
       if (!task || submission.status !== "approved") continue;
 
       if (state.scoringMode === "player") {
         // Single team: every player who took part gets the task's points (D25).
-        if (submission.participantIds.includes(scorerId)) bonusPoints += task.points;
+        if (submission.participantIds.includes(scorerId)) {
+          bonusPoints += task.points;
+          approvedTasks++;
+        }
       } else if (submission.teamId === scorerId) {
         bonusPoints += task.scoring === "per-player" ? task.points * submission.participantIds.length : task.points;
+        approvedTasks++;
       }
     }
 
@@ -62,6 +71,8 @@ export function computeScores(definition: PubGameDefinition, state: PubGameState
       bonusPoints,
       total: questionPoints + bonusPoints,
       firstAttemptCorrect,
+      correctAnswers: progress.filter((question) => question.status === "correct").length,
+      approvedTasks,
     };
   });
 }

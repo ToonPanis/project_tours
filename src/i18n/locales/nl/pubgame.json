@@ -83,7 +83,8 @@
     "label": "Spelmenu",
     "rules": "Regels",
     "host": "Hostoverzicht",
-    "game": "Terug naar het spel"
+    "game": "Terug naar het spel",
+    "scores": "Stand"
   },
   "host": {
     "eyebrow": "Spel {code} · Host",
@@ -118,10 +119,6 @@
     "reject": "Afkeuren",
     "rejectReason": "Reden van afkeuren (niet verplicht)",
     "mediaLabel": "Bewijs van {team} voor {task}"
-  },
-  "finished": {
-    "title": "Het spel is voorbij",
-    "text": "Bedankt om Hidden Pubs te spelen! De eindstand volgt op dit scherm."
   },
   "connection": {
     "offline": "Geen verbinding. We proberen opnieuw…",
@@ -327,5 +324,35 @@
     "rejectedReason": "Niet goedgekeurd door de host: {reason}",
     "sendAgain": "Je mag een nieuwe sturen.",
     "consent": "Fotografeer of film alleen mensen die ja zeiden."
+  },
+  "leaderboard": {
+    "title": "Stand",
+    "label": "Stand: rangschikking van alle teams",
+    "points": {
+      "one": "{count} punt",
+      "other": "{count} punten"
+    },
+    "details": "{done} van {total} cafés · bonus {bonus}",
+    "detailsPlayer": "bonus {bonus}",
+    "own": "jij",
+    "close": "Sluiten"
+  },
+  "results": {
+    "eyebrow": "Hidden Pubs · Het einde",
+    "winner": "{name} wint!",
+    "sharedWin": "Gedeelde eerste plaats: {names}!",
+    "tradition": "Santé op de kampioenen! Traditie: iedereen trakteert de winnaar op een drankje naar keuze. Alcoholvrij telt, en niemand moet.",
+    "pending": {
+      "one": "{count} foto of video wacht nog op de host: de stand kan nog veranderen.",
+      "other": "{count} foto's of video's wachten nog op de host: de stand kan nog veranderen."
+    },
+    "statsTitle": "Hoogtepunten van de avond",
+    "firstTry": "Het vaakst meteen juist: {name} ({count}×)",
+    "mostCorrect": "De meeste juiste antwoorden: {name} ({count})",
+    "mostBonus": "De meeste bonusopdrachten: {name} ({count})",
+    "share": "Deel de uitslag",
+    "shareTitle": "Uitslag Hidden Pubs",
+    "shareLine": "{position}. {name}: {points} punten",
+    "copied": "Uitslag gekopieerd"
   }
 }

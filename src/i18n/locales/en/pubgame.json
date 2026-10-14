@@ -83,7 +83,8 @@
     "label": "Game menu",
     "rules": "Rules",
     "host": "Host dashboard",
-    "game": "Back to the game"
+    "game": "Back to the game",
+    "scores": "Scores"
   },
   "host": {
     "eyebrow": "Game {code} · Host",
@@ -118,10 +119,6 @@
     "reject": "Reject",
     "rejectReason": "Reason for rejecting (optional)",
     "mediaLabel": "Evidence from {team} for {task}"
-  },
-  "finished": {
-    "title": "The game is over",
-    "text": "Thanks for playing Hidden Pubs! The final scores follow on this screen."
   },
   "connection": {
     "offline": "No connection. Trying again…",
@@ -327,5 +324,35 @@
     "rejectedReason": "Not approved by the host: {reason}",
     "sendAgain": "You can send a new one.",
     "consent": "Only photograph or film people who said yes."
+  },
+  "leaderboard": {
+    "title": "Scores",
+    "label": "Scores: ranking of all teams",
+    "points": {
+      "one": "{count} point",
+      "other": "{count} points"
+    },
+    "details": "{done} of {total} cafés · bonus {bonus}",
+    "detailsPlayer": "bonus {bonus}",
+    "own": "you",
+    "close": "Close"
+  },
+  "results": {
+    "eyebrow": "Hidden Pubs · The end",
+    "winner": "{name} wins!",
+    "sharedWin": "Shared first place: {names}!",
+    "tradition": "Proost to the champions! Tradition: everyone treats the winner to a drink of their choice. Alcohol-free counts, and nobody has to.",
+    "pending": {
+      "one": "{count} photo or video is still waiting for the host: the scores can still change.",
+      "other": "{count} photos or videos are still waiting for the host: the scores can still change."
+    },
+    "statsTitle": "Highlights of the night",
+    "firstTry": "Right first time most often: {name} ({count}×)",
+    "mostCorrect": "Most right answers: {name} ({count})",
+    "mostBonus": "Most bonus tasks: {name} ({count})",
+    "share": "Share the results",
+    "shareTitle": "Hidden Pubs results",
+    "shareLine": "{position}. {name}: {points} points",
+    "copied": "Results copied"
   }
 }

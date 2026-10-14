@@ -83,7 +83,8 @@
     "label": "Menu della partita",
     "rules": "Regole",
     "host": "Pannello dell'host",
-    "game": "Torna alla partita"
+    "game": "Torna alla partita",
+    "scores": "Punteggi"
   },
   "host": {
     "eyebrow": "Partita {code} · Host",
@@ -118,10 +119,6 @@
     "reject": "Rifiuta",
     "rejectReason": "Motivo del rifiuto (facoltativo)",
     "mediaLabel": "Prova di {team} per {task}"
-  },
-  "finished": {
-    "title": "La partita è finita",
-    "text": "Grazie per aver giocato a Hidden Pubs! La classifica finale apparirà su questa schermata."
   },
   "connection": {
     "offline": "Nessuna connessione. Nuovo tentativo…",
@@ -327,5 +324,35 @@
     "rejectedReason": "Non approvato dall'host: {reason}",
     "sendAgain": "Puoi inviarne una nuova.",
     "consent": "Fotografa o riprendi solo le persone che hanno detto di sì."
+  },
+  "leaderboard": {
+    "title": "Punteggi",
+    "label": "Punteggi: classifica di tutte le squadre",
+    "points": {
+      "one": "{count} punto",
+      "other": "{count} punti"
+    },
+    "details": "{done} locali su {total} · bonus {bonus}",
+    "detailsPlayer": "bonus {bonus}",
+    "own": "tu",
+    "close": "Chiudi"
+  },
+  "results": {
+    "eyebrow": "Hidden Pubs · La fine",
+    "winner": "Vince {name}!",
+    "sharedWin": "Primo posto condiviso: {names}!",
+    "tradition": "Salute ai campioni! Tradizione: tutti offrono al vincitore una bevanda a sua scelta. Anche analcolica vale, e nessuno è obbligato.",
+    "pending": {
+      "one": "{count} foto o video aspetta ancora l'host: i punteggi possono ancora cambiare.",
+      "other": "{count} foto o video aspettano ancora l'host: i punteggi possono ancora cambiare."
+    },
+    "statsTitle": "I momenti migliori della serata",
+    "firstTry": "Più spesso giusto al primo colpo: {name} ({count}×)",
+    "mostCorrect": "Più risposte giuste: {name} ({count})",
+    "mostBonus": "Più missioni bonus: {name} ({count})",
+    "share": "Condividi i risultati",
+    "shareTitle": "Risultati di Hidden Pubs",
+    "shareLine": "{position}. {name}: {points} punti",
+    "copied": "Risultati copiati"
   }
 }

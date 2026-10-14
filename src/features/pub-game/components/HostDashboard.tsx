@@ -14,6 +14,7 @@ import type { PlayerView } from "../logic/player-view";
 import { allTeams } from "../logic/view-helpers";
 import { EvidenceReview } from "./EvidenceReview";
 import { FormError } from "./FormError";
+import { Leaderboard } from "./Leaderboard";
 import { TextField } from "./TextField";
 
 interface HostDashboardProps {
@@ -121,6 +122,11 @@ function Dashboard({ code, initialView, initialVersion }: Omit<HostDashboardProp
       </p>
 
       <EvidenceReview game={game} />
+
+      <section className="flex flex-col gap-3">
+        <h2 className="font-display text-2xl font-semibold text-parchment">{t("pubgame.leaderboard.title")}</h2>
+        <Leaderboard view={view} />
+      </section>
 
       <section className="flex flex-col gap-3">
         <h2 className="font-display text-2xl font-semibold text-parchment">{t("pubgame.host.teams")}</h2>

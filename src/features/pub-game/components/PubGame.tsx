@@ -2,12 +2,10 @@
 
 import Link from "next/link";
 import { useState, useSyncExternalStore } from "react";
-import { PlayScreen } from "@/features/walk-session/components/PlayScreen";
 import { useT } from "@/i18n/client";
 import { usePubGame } from "../client/usePubGame";
 import type { PlayerView } from "../logic/player-view";
 import type { QrCode } from "../logic/qr";
-import { Beery } from "./Beery";
 import { BeeryIntro } from "./BeeryIntro";
 import { LobbyScreen } from "./LobbyScreen";
 import type { PubGameTexts } from "@/data/walks/hidden-pubs/game/content/types";
@@ -18,6 +16,8 @@ import { BonusStep } from "./BonusStep";
 import { CardStep } from "./CardStep";
 import { FunFactStep } from "./FunFactStep";
 import { PubtaskStep } from "./PubtaskStep";
+import { ResultsScreen } from "./ResultsScreen";
+import { ScoresButton } from "./ScoresButton";
 import { TeamFinishedScreen } from "./TeamFinishedScreen";
 import { DrinkStep } from "./DrinkStep";
 import { EffectsBar } from "./EffectsBar";
@@ -93,13 +93,7 @@ export function PubGame({ code, invite, initialView, initialVersion, texts, uplo
   if (view.phase === "lobby") {
     screen = <LobbyScreen code={code} invite={invite} game={game} />;
   } else if (view.phase === "finished") {
-    screen = (
-      <PlayScreen title={t("pubgame.finished.title")} screenId="pub-game-finished">
-        <Beery>
-          <p>{t("pubgame.finished.text")}</p>
-        </Beery>
-      </PlayScreen>
-    );
+    screen = <ResultsScreen view={view} />;
   } else if (introSeen === null) {
     screen = null;
   } else if (!introSeen || showRules) {
@@ -134,9 +128,12 @@ export function PubGame({ code, invite, initialView, initialVersion, texts, uplo
         <span className="font-mono tracking-[0.2em] text-parchment/60">{code}</span>
         <span className="flex gap-4">
           {view.phase === "playing" && (
-            <button type="button" onClick={() => setShowRules(true)} className="min-h-11 text-gold underline-offset-4 hover:underline">
-              {t("pubgame.menu.rules")}
-            </button>
+            <>
+              <ScoresButton view={view} />
+              <button type="button" onClick={() => setShowRules(true)} className="min-h-11 text-gold underline-offset-4 hover:underline">
+                {t("pubgame.menu.rules")}
+              </button>
+            </>
           )}
           {view.me.isHost && (
             <Link href={`/games/${code}/host`} className="flex min-h-11 items-center text-gold underline-offset-4 hover:underline">

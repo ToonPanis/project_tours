@@ -83,7 +83,8 @@
     "label": "Menú de la partida",
     "rules": "Reglas",
     "host": "Panel del anfitrión",
-    "game": "Volver a la partida"
+    "game": "Volver a la partida",
+    "scores": "Puntuación"
   },
   "host": {
     "eyebrow": "Partida {code} · Anfitrión",
@@ -118,10 +119,6 @@
     "reject": "Rechazar",
     "rejectReason": "Motivo del rechazo (opcional)",
     "mediaLabel": "Prueba de {team} para {task}"
-  },
-  "finished": {
-    "title": "La partida ha terminado",
-    "text": "¡Gracias por jugar a Hidden Pubs! La clasificación final aparecerá en esta pantalla."
   },
   "connection": {
     "offline": "Sin conexión. Reintentando…",
@@ -327,5 +324,35 @@
     "rejectedReason": "El anfitrión no lo ha aprobado: {reason}",
     "sendAgain": "Puedes enviar otra.",
     "consent": "Fotografía o graba solo a personas que hayan dicho que sí."
+  },
+  "leaderboard": {
+    "title": "Puntuación",
+    "label": "Puntuación: clasificación de todos los equipos",
+    "points": {
+      "one": "{count} punto",
+      "other": "{count} puntos"
+    },
+    "details": "{done} de {total} cafés · extra {bonus}",
+    "detailsPlayer": "extra {bonus}",
+    "own": "tú",
+    "close": "Cerrar"
+  },
+  "results": {
+    "eyebrow": "Hidden Pubs · El final",
+    "winner": "¡{name} gana!",
+    "sharedWin": "Primer puesto compartido: ¡{names}!",
+    "tradition": "¡Salud por los campeones! Tradición: todos invitan al ganador a una bebida de su elección. Sin alcohol también cuenta, y nadie está obligado.",
+    "pending": {
+      "one": "{count} foto o vídeo aún espera al anfitrión: la puntuación todavía puede cambiar.",
+      "other": "{count} fotos o vídeos aún esperan al anfitrión: la puntuación todavía puede cambiar."
+    },
+    "statsTitle": "Lo mejor de la noche",
+    "firstTry": "Más veces a la primera: {name} ({count}×)",
+    "mostCorrect": "Más respuestas correctas: {name} ({count})",
+    "mostBonus": "Más misiones extra: {name} ({count})",
+    "share": "Compartir los resultados",
+    "shareTitle": "Resultados de Hidden Pubs",
+    "shareLine": "{position}. {name}: {points} puntos",
+    "copied": "Resultados copiados"
   }
 }

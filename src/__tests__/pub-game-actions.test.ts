@@ -676,7 +676,15 @@ describe("a whole game", () => {
     const state = playAllCafes(startedGame([["solo"]]), "t1", ["solo"]);
     expect(state.phase).toBe("finished");
     expect(computeScores(testDefinition, state)).toEqual([
-      { scorerId: "solo", questionPoints: 1200, bonusPoints: 0, total: 1200, firstAttemptCorrect: 12 },
+      {
+        scorerId: "solo",
+        questionPoints: 1200,
+        bonusPoints: 0,
+        total: 1200,
+        firstAttemptCorrect: 12,
+        correctAnswers: 12,
+        approvedTasks: 0,
+      },
     ]);
   });
 
