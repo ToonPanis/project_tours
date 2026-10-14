@@ -1,8 +1,7 @@
 import { createId } from "@/lib/create-id";
 import type { MessageKey } from "@/i18n/translate";
 import type { ClientAction } from "../logic/client-action";
-import type { PlayerView } from "../logic/player-view";
-import type { GameUpdate } from "../logic/api-types";
+import type { ActionResult, GameUpdate } from "../logic/api-types";
 
 /**
  * The browser side of /api/games. Plain fetch, no library.
@@ -61,8 +60,8 @@ export const claimPlayerLinkRequest = (code: string, token: string) =>
  * Sends one action. `actionId` identifies this tap: when the connection drops
  * and the phone sends it again, the server applies it only once.
  */
-export const sendAction = (code: string, action: ClientAction, actionId: string) =>
-  post<{ version: number; view: PlayerView }>(`/api/games/${code}/actions`, { actionId, action });
+export const sendAction = (code: string, action: ClientAction, actionId: string, knownVersion: number) =>
+  post<ActionResult>(`/api/games/${code}/actions`, { actionId, action, knownVersion });
 
 /** A new id per tap ([a-z0-9-], 8+ characters, as the server expects). */
 export function newActionId(): string {

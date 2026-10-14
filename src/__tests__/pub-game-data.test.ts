@@ -5,6 +5,7 @@ import { pubGameAnswerKey } from "@/data/walks/hidden-pubs/game/answers.server";
 import { pubGameCafes } from "@/data/walks/hidden-pubs/game/cafes";
 import coordinatesFile from "@/data/walks/hidden-pubs/game/coordinates.json";
 import { pubGameDefinition } from "@/data/walks/hidden-pubs/game/definition";
+import { pubGameDrinks } from "@/data/walks/hidden-pubs/game/drinks";
 import { cafeDestination, walkBetween } from "@/data/walks/hidden-pubs/game/navigation";
 import routesFile from "@/data/walks/hidden-pubs/game/routes.json";
 import { requiredLegs } from "@/features/pub-game/logic/route";
@@ -69,6 +70,18 @@ describe("Hidden Pubs 2.0 café data", () => {
       ["pubs-den-engel-clog", 300, "per-team", "video", "bonus"],
     ]);
   });
+});
+
+test("drinks: the concept's three drinks per café; Billie's has the 1–10 beer wheel", () => {
+  for (const cafe of cafes) {
+    const drinks = pubGameDrinks[cafe.id];
+    expect(drinks, cafe.id).toBeDefined();
+    if (cafe.id === "pubs-billies") expect(drinks).toEqual({ kind: "wheel", numbers: 10 });
+    else expect(drinks.kind === "menu" && drinks.drinks.length, cafe.id).toBe(3);
+  }
+  // No shots on any menu (the alcohol-free option and "no drink" are added by the screen for every café).
+  const all = Object.values(pubGameDrinks).flatMap((drinks) => (drinks.kind === "menu" ? drinks.drinks : []));
+  expect(all.filter((name) => /shot|jenever|vodka/i.test(name))).toEqual([]);
 });
 
 describe("Hidden Pubs 2.0 positions and walking routes", () => {

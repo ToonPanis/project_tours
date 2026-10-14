@@ -79,10 +79,6 @@
     "eyebrow": "Café {current} van {total}",
     "text": "De volgende stop van je team."
   },
-  "arrived": {
-    "title": "Welkom in {cafe}!",
-    "text": "Gelukt! Zoek een plekje, de caféronde begint hier."
-  },
   "menu": {
     "label": "Spelmenu",
     "rules": "Regels",
@@ -142,5 +138,120 @@
   "claim": {
     "title": "Je spel wordt geopend…",
     "invalid": "Deze link werkt niet (meer). Vraag de host om een nieuwe."
+  },
+  "drinks": {
+    "title": "Kies je drankje",
+    "intro": "Iedereen kiest zijn eigen drankje en bestelt het aan de toog.",
+    "alcoholFree": "Alcoholvrij / frisdrank",
+    "skip": "Deze ronde geen drankje",
+    "yourChoice": "Jouw drankje: {drink}. Bestel het aan de toog.",
+    "noDrink": "Deze ronde geen drankje voor jou. Helemaal oké!",
+    "respect": "Drink op je eigen tempo. Niemand moet alcohol drinken.",
+    "ready": "We hebben onze drankjes: start Drunken Bastard",
+    "eyebrow": "Café {current} van {total} · {cafe}",
+    "welcome": "Welkom in {cafe}!"
+  },
+  "wheel": {
+    "title": "Draai aan het bierrad",
+    "intro": "Billie's heeft een genummerde bierlijst: draai aan het rad en bestel het bier met jouw nummer.",
+    "label": "Bierrad met de nummers 1 tot 10",
+    "spin": "Draai aan het rad",
+    "spinning": "Het rad draait…",
+    "result": "Jouw nummer: {number}",
+    "order": "Vraag aan de toog bier nummer {number}."
+  },
+  "cards": {
+    "eyebrow": "Café {current} van {total} · Drunken Bastard",
+    "title": "Drunken Bastard",
+    "yourTurn": "Jij bent aan de beurt! Kies één van 10 omgedraaide kaarten.",
+    "draw": "Toon mijn 10 kaarten",
+    "pick": "Tik op een kaart",
+    "waitingFor": "{name} trekt een kaart…",
+    "drawFor": "Trek voor {name}",
+    "faceDown": "Kaart {number} van {total}, omgedraaid",
+    "drew": "{name} trok",
+    "cardLabel": "{rank} van {suit}",
+    "ranks": {
+      "J": "Boer",
+      "Q": "Dame",
+      "K": "Koning",
+      "A": "Aas"
+    },
+    "suits": {
+      "hearts": "harten",
+      "diamonds": "ruiten",
+      "clubs": "klaveren",
+      "spades": "schoppen"
+    },
+    "cardsLeft": {
+      "one": "Nog {count} kaart in het spel",
+      "other": "Nog {count} kaarten in het spel"
+    },
+    "sipNote": "Een slok is altijd een slok van je eigen drankje. Alcoholvrij telt ook.",
+    "effects": {
+      "2": "Deel een slok uit: kies wie drinkt.",
+      "3": "Je neemt zelf een slok.",
+      "4": "Iedereen raakt zo snel mogelijk de vloer aan. De laatste drinkt een slok.",
+      "5": "Elke vrouw die meespeelt neemt een slok.",
+      "6": "Elke man die meespeelt neemt een slok.",
+      "7": "Iedereen wijst zo snel mogelijk naar boven. De laatste drinkt een slok.",
+      "8": "Kies een drinking buddy, ook uit een ander team. Vanaf nu drinkt de ander mee als een van jullie moet drinken.",
+      "9": "Zeg een woord. Om de beurt zegt iedereen een woord dat erop rijmt. Wie er geen meer weet of een woord herhaalt, drinkt een slok.",
+      "10": "Kies een categorie. Om de beurt noemt iedereen iets uit die categorie. Wie niets meer weet of iets herhaalt, drinkt een slok.",
+      "J": "Verzin een regel die iedereen volgt voor de rest van het spel. Hoogstens 4 regels: een 5de vervangt de oudste.",
+      "Q": "Je bent Question Bitch tot iemand anders een dame trekt: wie antwoordt op een vraag van jou, drinkt een slok.",
+      "K": "Je bent Thumb King tot iemand anders een koning trekt: leg op eender welk moment je duim op tafel. Iedereen doet je na, en de laatste drinkt een slok.",
+      "A": "Je bent de Beunaas tot iemand anders een aas trekt: je drinkt dubbel, en je drinking buddy ook."
+    },
+    "chooseTarget": "Wie krijgt de slok?",
+    "chooseBuddy": "Kies je drinking buddy",
+    "writeRule": "Je nieuwe regel",
+    "rulePlaceholder": "bv. drink enkel met je linkerhand",
+    "ruleSubmit": "Regel toevoegen",
+    "reportLoser": "Wie was de laatste of verloor? (niet verplicht)",
+    "nobody": "Overslaan",
+    "waitingForChoice": "{name} kiest…",
+    "done": "Iedereen heeft een kaart getrokken! Nu volgt de pubtask.",
+    "chooseFor": "Kies voor {name}",
+    "toPubtask": "Naar de pubtask"
+  },
+  "effects": {
+    "label": "Kaartkrachten, buddies en regels",
+    "questionBitch": "Question Bitch",
+    "thumbKing": "Thumb King",
+    "beunaas": "Beunaas",
+    "nobody": "nog niemand",
+    "buddies": "Drinking buddies",
+    "noBuddies": "Nog geen drinking buddies.",
+    "rules": "Regels",
+    "rulesCount": {
+      "one": "{count} regel",
+      "other": "{count} regels"
+    },
+    "noRules": "Nog geen regels.",
+    "ruleBy": "van {name}",
+    "open": "Krachten & regels",
+    "title": "Krachten, buddies en regels",
+    "close": "Sluiten",
+    "reportDrink": "Wie moet drinken?",
+    "reportDrinkHelp": "Betrapt door de Question Bitch, de Thumb King of een regel? Tik op de naam: buddies drinken mee en iedereen krijgt een pop-up.",
+    "reported": "Gedaan: iedereen is verwittigd.",
+    "yourBuddy": "Jouw buddy: {name}",
+    "noBuddy": "Nog geen buddy"
+  },
+  "popups": {
+    "buddiesTitle": "Nieuwe drinking buddies!",
+    "buddiesText": "{first} en {second} drinken vanaf nu samen: als de ene drinkt, drinkt de andere mee.",
+    "buddiesEnded": "Het duo {first} & {second} is voorbij.",
+    "drinkTitle": "Santé!",
+    "sip": {
+      "one": "{name}: {count} slok",
+      "other": "{name}: {count} slokken"
+    },
+    "sipAlong": {
+      "one": "{name} drinkt mee met buddy {buddy}: {count} slok",
+      "other": "{name} drinkt mee met buddy {buddy}: {count} slokken"
+    },
+    "ok": "OK"
   }
 }

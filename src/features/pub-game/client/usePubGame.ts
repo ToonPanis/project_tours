@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { PubGameEvent } from "@/types/pub-game";
 import type { ClientAction } from "../logic/client-action";
+import type { VersionedEvent } from "../logic/api-types";
 import type { PlayerView } from "../logic/player-view";
 import { fetchGameUpdate, newActionId, sendAction } from "./api";
 
@@ -39,12 +40,22 @@ export function usePubGame(code: string, initialView: PlayerView, initialVersion
   const [connection, setConnection] = useState<ConnectionStatus>("online");
   const [busy, setBusy] = useState(false);
   const versionRef = useRef(initialVersion);
+  /** The newest event version already queued: every event becomes a popup at most once. */
+  const eventVersionRef = useRef(initialVersion);
   const pollingRef = useRef(false);
 
   const applyView = useCallback((version: number, nextView: PlayerView) => {
     if (version < versionRef.current) return;
     versionRef.current = version;
     setView(nextView);
+  }, []);
+
+  /** Queues the events not seen yet (a poll and an action can both bring the same ones). */
+  const addEvents = useCallback((incoming: VersionedEvent[]) => {
+    const fresh = incoming.filter((item) => item.version > eventVersionRef.current);
+    if (fresh.length === 0) return;
+    eventVersionRef.current = Math.max(...fresh.map((item) => item.version));
+    setEvents((current) => [...current, ...fresh.map((item) => item.event)]);
   }, []);
 
   const poll = useCallback(async () => {
@@ -60,13 +71,12 @@ export function usePubGame(code: string, initialView: PlayerView, initialVersion
       }
       setConnection("online");
       if (!result.data.changed || result.data.version <= since) return;
-      const newEvents = result.data.events;
       applyView(result.data.version, result.data.view);
-      if (newEvents.length > 0) setEvents((current) => [...current, ...newEvents]);
+      addEvents(result.data.events);
     } finally {
       pollingRef.current = false;
     }
-  }, [code, applyView]);
+  }, [code, applyView, addEvents]);
 
   useEffect(() => {
     const tick = () => {
@@ -85,9 +95,10 @@ export function usePubGame(code: string, initialView: PlayerView, initialVersion
       setBusy(true);
       const actionId = newActionId();
       try {
-        let result = await sendAction(code, action, actionId);
+        const knownVersion = versionRef.current;
+        let result = await sendAction(code, action, actionId, knownVersion);
         // Lost connection: try once more with the SAME id (applied at most once).
-        if (!result.ok && result.status === 0) result = await sendAction(code, action, actionId);
+        if (!result.ok && result.status === 0) result = await sendAction(code, action, actionId, knownVersion);
         if (!result.ok) {
           if (result.status === 0) setConnection("offline");
           // Someone else was quicker: fetch the newest state so the screen matches.
@@ -96,12 +107,14 @@ export function usePubGame(code: string, initialView: PlayerView, initialVersion
         }
         setConnection("online");
         applyView(result.data.version, result.data.view);
+        // Popups for what this tap caused (a new buddy, a buddy who drinks along…).
+        addEvents(result.data.events);
         return null;
       } finally {
         setBusy(false);
       }
     },
-    [code, applyView, poll],
+    [code, applyView, addEvents, poll],
   );
 
   const dismissEvents = useCallback((count: number) => setEvents((current) => current.slice(count)), []);

@@ -10,7 +10,11 @@ import type { QrCode } from "../logic/qr";
 import { Beery } from "./Beery";
 import { BeeryIntro } from "./BeeryIntro";
 import { LobbyScreen } from "./LobbyScreen";
-import { ArrivedScreen } from "./ArrivedScreen";
+import { CardsDoneScreen } from "./CardsDoneScreen";
+import { CardStep } from "./CardStep";
+import { DrinkStep } from "./DrinkStep";
+import { EffectsBar } from "./EffectsBar";
+import { EventPopup } from "./EventPopup";
 import { NextCafeScreen } from "./NextCafeScreen";
 
 interface PubGameProps {
@@ -51,6 +55,10 @@ export function PubGame({ code, invite, initialView, initialVersion }: PubGamePr
   const [showRules, setShowRules] = useState(false);
   // Location allowed once in this game: the next cafés skip the explainer.
   const [gpsEnabled, setGpsEnabled] = useState(false);
+  // The last card of a round this phone has seen ("On to the pubtask").
+  const [seenLastCard, setSeenLastCard] = useState<string | null>(null);
+  // Café + card: after a reshuffle the same card can come up again at a later café.
+  const lastCard = view.team.currentCard ? `${view.team.cafeIndex}:${view.team.currentCard.cardId}` : null;
 
   function finishIntro() {
     try {
@@ -79,10 +87,19 @@ export function PubGame({ code, invite, initialView, initialVersion }: PubGamePr
     screen = <BeeryIntro onDone={finishIntro} />;
   } else if (view.team.step === "travelling") {
     screen = <NextCafeScreen game={game} gpsEnabled={gpsEnabled} onGpsEnabled={() => setGpsEnabled(true)} />;
+  } else if (view.team.step === "drinks") {
+    // Keyed by café: the drink choice starts empty at every café.
+    screen = <DrinkStep key={view.team.cafeIndex} game={game} />;
+  } else if (view.team.step === "cards") {
+    screen = <CardStep key={view.team.cafeIndex} game={game} />;
+  } else if (view.team.step === "pubtask" && lastCard && seenLastCard !== lastCard) {
+    // The round just ended: show its last card until this player moves on.
+    screen = <CardStep key={view.team.cafeIndex} game={game} onRoundSeen={() => setSeenLastCard(lastCard)} />;
   } else {
-    // Stages 6–7 add the drink, card, pubtask, bonus and fun-fact screens per `view.team.step`.
-    screen = <ArrivedScreen view={view} />;
+    // Stage 7 adds the pubtask, bonus task and fun fact here.
+    screen = <CardsDoneScreen view={view} />;
   }
+  const showEffects = view.phase === "playing" && introSeen === true && !showRules;
 
   return (
     <>
@@ -107,7 +124,9 @@ export function PubGame({ code, invite, initialView, initialVersion }: PubGamePr
         {connection === "offline" ? t("pubgame.connection.offline") : connection === "gone" ? t("pubgame.connection.gone") : ""}
       </p>
 
+      {showEffects && <EffectsBar game={game} />}
       {screen}
+      {view.phase !== "lobby" && <EventPopup game={game} />}
     </>
   );
 }

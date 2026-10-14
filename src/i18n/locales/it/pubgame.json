@@ -79,10 +79,6 @@
     "eyebrow": "Locale {current} di {total}",
     "text": "La prossima tappa della tua squadra."
   },
-  "arrived": {
-    "title": "Benvenuti al {cafe}!",
-    "text": "Ce l'avete fatta! Trovate un posto: il turno del locale inizia qui."
-  },
   "menu": {
     "label": "Menu della partita",
     "rules": "Regole",
@@ -142,5 +138,120 @@
   "claim": {
     "title": "Apertura della tua partita…",
     "invalid": "Questo link non funziona (più). Chiedi all'host un link nuovo."
+  },
+  "drinks": {
+    "title": "Scegli la tua bevanda",
+    "intro": "Ognuno sceglie la propria bevanda e la ordina al bancone.",
+    "alcoholFree": "Analcolica / bibita",
+    "skip": "Niente bevanda questo giro",
+    "yourChoice": "La tua bevanda: {drink}. Ordinala al bancone.",
+    "noDrink": "Niente bevanda per te questo giro. Va benissimo!",
+    "respect": "Bevi con calma. Nessuno è obbligato a bere alcol.",
+    "ready": "Abbiamo le bevande: via con Drunken Bastard",
+    "eyebrow": "Locale {current} di {total} · {cafe}",
+    "welcome": "Benvenuti al {cafe}!"
+  },
+  "wheel": {
+    "title": "Gira la ruota delle birre",
+    "intro": "Billie's ha una lista di birre numerate: gira la ruota e ordina la birra con il tuo numero.",
+    "label": "Ruota delle birre con i numeri da 1 a 10",
+    "spin": "Gira la ruota",
+    "spinning": "La ruota gira…",
+    "result": "Il tuo numero: {number}",
+    "order": "Chiedi al bancone la birra numero {number}."
+  },
+  "cards": {
+    "eyebrow": "Locale {current} di {total} · Drunken Bastard",
+    "title": "Drunken Bastard",
+    "yourTurn": "Tocca a te! Scegli una tra 10 carte coperte.",
+    "draw": "Mostra le mie 10 carte",
+    "pick": "Tocca una carta",
+    "waitingFor": "{name} sta pescando una carta…",
+    "drawFor": "Pesca per {name}",
+    "faceDown": "Carta {number} di {total}, coperta",
+    "drew": "{name} ha pescato",
+    "cardLabel": "{rank} di {suit}",
+    "ranks": {
+      "J": "Fante",
+      "Q": "Donna",
+      "K": "Re",
+      "A": "Asso"
+    },
+    "suits": {
+      "hearts": "cuori",
+      "diamonds": "quadri",
+      "clubs": "fiori",
+      "spades": "picche"
+    },
+    "cardsLeft": {
+      "one": "Resta {count} carta nel mazzo",
+      "other": "Restano {count} carte nel mazzo"
+    },
+    "sipNote": "Un sorso è sempre un sorso della tua bevanda. Anche analcolico vale.",
+    "effects": {
+      "2": "Distribuisci un sorso: scegli chi beve.",
+      "3": "Bevi tu un sorso.",
+      "4": "Tutti toccano il pavimento il più in fretta possibile. L'ultimo beve un sorso.",
+      "5": "Ogni donna che gioca beve un sorso.",
+      "6": "Ogni uomo che gioca beve un sorso.",
+      "7": "Tutti indicano verso l'alto il più in fretta possibile. L'ultimo beve un sorso.",
+      "8": "Scegli un drinking buddy, anche di un'altra squadra. D'ora in poi, quando uno di voi beve, beve anche l'altro.",
+      "9": "Di' una parola. A turno, ognuno dice una parola che fa rima. Chi non ne trova più o ripete una parola beve un sorso.",
+      "10": "Scegli una categoria. A turno, ognuno nomina qualcosa di quella categoria. Chi non sa più cosa dire o ripete beve un sorso.",
+      "J": "Inventa una regola che tutti seguono fino alla fine della partita. Al massimo 4 regole: una 5ª sostituisce la più vecchia.",
+      "Q": "Sei la Question Bitch finché qualcun altro non pesca una donna: chi risponde a una tua domanda beve un sorso.",
+      "K": "Sei il Thumb King finché qualcun altro non pesca un re: metti il pollice sul tavolo quando vuoi. Tutti ti imitano, e l'ultimo beve un sorso.",
+      "A": "Sei il Beunaas finché qualcun altro non pesca un asso: bevi doppio, e anche il tuo drinking buddy."
+    },
+    "chooseTarget": "Chi riceve il sorso?",
+    "chooseBuddy": "Scegli il tuo drinking buddy",
+    "writeRule": "La tua nuova regola",
+    "rulePlaceholder": "es. bere solo con la mano sinistra",
+    "ruleSubmit": "Aggiungi la regola",
+    "reportLoser": "Chi è stato l'ultimo o ha perso? (facoltativo)",
+    "nobody": "Salta",
+    "waitingForChoice": "{name} sta scegliendo…",
+    "done": "Tutti hanno pescato una carta! Ora tocca alla pubtask.",
+    "chooseFor": "Scegli per {name}",
+    "toPubtask": "Via alla pubtask"
+  },
+  "effects": {
+    "label": "Poteri, buddies e regole",
+    "questionBitch": "Question Bitch",
+    "thumbKing": "Thumb King",
+    "beunaas": "Beunaas",
+    "nobody": "ancora nessuno",
+    "buddies": "Drinking buddies",
+    "noBuddies": "Ancora nessun drinking buddy.",
+    "rules": "Regole",
+    "rulesCount": {
+      "one": "{count} regola",
+      "other": "{count} regole"
+    },
+    "noRules": "Ancora nessuna regola.",
+    "ruleBy": "di {name}",
+    "open": "Poteri e regole",
+    "title": "Poteri, buddies e regole",
+    "close": "Chiudi",
+    "reportDrink": "Chi deve bere?",
+    "reportDrinkHelp": "Beccato dalla Question Bitch, dal Thumb King o da una regola? Tocca il nome: i buddies bevono insieme e tutti ricevono un avviso.",
+    "reported": "Fatto: tutti sono stati avvisati.",
+    "yourBuddy": "Il tuo buddy: {name}",
+    "noBuddy": "Ancora nessun buddy"
+  },
+  "popups": {
+    "buddiesTitle": "Nuovi drinking buddies!",
+    "buddiesText": "{first} e {second} da ora bevono insieme: quando uno beve, beve anche l'altro.",
+    "buddiesEnded": "La coppia {first} & {second} non c'è più.",
+    "drinkTitle": "Salute!",
+    "sip": {
+      "one": "{name}: {count} sorso",
+      "other": "{name}: {count} sorsi"
+    },
+    "sipAlong": {
+      "one": "{name} beve con il suo buddy {buddy}: {count} sorso",
+      "other": "{name} beve con il suo buddy {buddy}: {count} sorsi"
+    },
+    "ok": "OK"
   }
 }

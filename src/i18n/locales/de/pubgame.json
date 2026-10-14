@@ -79,10 +79,6 @@
     "eyebrow": "Kneipe {current} von {total}",
     "text": "Der nächste Halt deines Teams."
   },
-  "arrived": {
-    "title": "Willkommen im {cafe}!",
-    "text": "Geschafft! Sucht euch einen Platz, die Kneipenrunde beginnt hier."
-  },
   "menu": {
     "label": "Spielmenü",
     "rules": "Regeln",
@@ -142,5 +138,120 @@
   "claim": {
     "title": "Dein Spiel wird geöffnet…",
     "invalid": "Dieser Link funktioniert nicht (mehr). Bitte den Host um einen neuen."
+  },
+  "drinks": {
+    "title": "Wähle dein Getränk",
+    "intro": "Alle wählen ihr eigenes Getränk und bestellen es an der Theke.",
+    "alcoholFree": "Alkoholfrei / Softdrink",
+    "skip": "Diese Runde kein Getränk",
+    "yourChoice": "Dein Getränk: {drink}. Bestell es an der Theke.",
+    "noDrink": "Diese Runde kein Getränk für dich. Völlig in Ordnung!",
+    "respect": "Trink in deinem eigenen Tempo. Niemand muss Alkohol trinken.",
+    "ready": "Wir haben unsere Getränke: Drunken Bastard starten",
+    "eyebrow": "Kneipe {current} von {total} · {cafe}",
+    "welcome": "Willkommen im {cafe}!"
+  },
+  "wheel": {
+    "title": "Dreh am Bierrad",
+    "intro": "Billie's hat eine nummerierte Bierkarte: Dreh am Rad und bestell das Bier mit deiner Nummer.",
+    "label": "Bierrad mit den Zahlen 1 bis 10",
+    "spin": "Am Rad drehen",
+    "spinning": "Das Rad dreht sich…",
+    "result": "Deine Nummer: {number}",
+    "order": "Bestell an der Theke Bier Nummer {number}."
+  },
+  "cards": {
+    "eyebrow": "Kneipe {current} von {total} · Drunken Bastard",
+    "title": "Drunken Bastard",
+    "yourTurn": "Du bist dran! Wähle eine von 10 verdeckten Karten.",
+    "draw": "Meine 10 Karten zeigen",
+    "pick": "Tippe auf eine Karte",
+    "waitingFor": "{name} zieht eine Karte…",
+    "drawFor": "Für {name} ziehen",
+    "faceDown": "Karte {number} von {total}, verdeckt",
+    "drew": "{name} hat gezogen",
+    "cardLabel": "{suit} {rank}",
+    "ranks": {
+      "J": "Bube",
+      "Q": "Dame",
+      "K": "König",
+      "A": "Ass"
+    },
+    "suits": {
+      "hearts": "Herz",
+      "diamonds": "Karo",
+      "clubs": "Kreuz",
+      "spades": "Pik"
+    },
+    "cardsLeft": {
+      "one": "Noch {count} Karte im Stapel",
+      "other": "Noch {count} Karten im Stapel"
+    },
+    "sipNote": "Ein Schluck ist immer ein Schluck vom eigenen Getränk. Alkoholfrei zählt auch.",
+    "effects": {
+      "2": "Verteile einen Schluck: Wähle, wer trinkt.",
+      "3": "Du trinkst selbst einen Schluck.",
+      "4": "Alle berühren so schnell wie möglich den Boden. Der Letzte trinkt einen Schluck.",
+      "5": "Jede Frau, die mitspielt, trinkt einen Schluck.",
+      "6": "Jeder Mann, der mitspielt, trinkt einen Schluck.",
+      "7": "Alle zeigen so schnell wie möglich nach oben. Der Letzte trinkt einen Schluck.",
+      "8": "Wähle einen Drinking Buddy, auch aus einem anderen Team. Ab jetzt trinkt der andere mit, wenn einer von euch trinken muss.",
+      "9": "Sag ein Wort. Reihum sagt jeder ein Wort, das sich darauf reimt. Wer keins mehr weiß oder ein Wort wiederholt, trinkt einen Schluck.",
+      "10": "Wähle eine Kategorie. Reihum nennt jeder etwas daraus. Wer nichts mehr weiß oder etwas wiederholt, trinkt einen Schluck.",
+      "J": "Erfinde eine Regel, die alle für den Rest des Spiels befolgen. Höchstens 4 Regeln: Eine 5. ersetzt die älteste.",
+      "Q": "Du bist die Question Bitch, bis jemand anderes eine Dame zieht: Wer auf eine Frage von dir antwortet, trinkt einen Schluck.",
+      "K": "Du bist der Thumb King, bis jemand anderes einen König zieht: Leg jederzeit deinen Daumen auf den Tisch. Alle machen es nach, und der Letzte trinkt einen Schluck.",
+      "A": "Du bist der Beunaas, bis jemand anderes ein Ass zieht: Du trinkst doppelt, und dein Drinking Buddy auch."
+    },
+    "chooseTarget": "Wer bekommt den Schluck?",
+    "chooseBuddy": "Wähle deinen Drinking Buddy",
+    "writeRule": "Deine neue Regel",
+    "rulePlaceholder": "z. B. nur mit der linken Hand trinken",
+    "ruleSubmit": "Regel hinzufügen",
+    "reportLoser": "Wer war der Letzte oder hat verloren? (optional)",
+    "nobody": "Überspringen",
+    "waitingForChoice": "{name} wählt…",
+    "done": "Alle haben eine Karte gezogen! Jetzt kommt die Pubtask.",
+    "chooseFor": "Für {name} wählen",
+    "toPubtask": "Weiter zur Pubtask"
+  },
+  "effects": {
+    "label": "Kartenkräfte, Buddies und Regeln",
+    "questionBitch": "Question Bitch",
+    "thumbKing": "Thumb King",
+    "beunaas": "Beunaas",
+    "nobody": "noch niemand",
+    "buddies": "Drinking Buddies",
+    "noBuddies": "Noch keine Drinking Buddies.",
+    "rules": "Regeln",
+    "rulesCount": {
+      "one": "{count} Regel",
+      "other": "{count} Regeln"
+    },
+    "noRules": "Noch keine Regeln.",
+    "ruleBy": "von {name}",
+    "open": "Kräfte & Regeln",
+    "title": "Kräfte, Buddies und Regeln",
+    "close": "Schließen",
+    "reportDrink": "Wer muss trinken?",
+    "reportDrinkHelp": "Von der Question Bitch, dem Thumb King oder einer Regel erwischt? Tippe auf den Namen: Buddies trinken mit und alle bekommen ein Pop-up.",
+    "reported": "Erledigt: Alle wissen Bescheid.",
+    "yourBuddy": "Dein Buddy: {name}",
+    "noBuddy": "Noch kein Buddy"
+  },
+  "popups": {
+    "buddiesTitle": "Neue Drinking Buddies!",
+    "buddiesText": "{first} und {second} trinken ab jetzt zusammen: Wenn einer trinkt, trinkt der andere mit.",
+    "buddiesEnded": "Das Duo {first} & {second} ist Geschichte.",
+    "drinkTitle": "Prost!",
+    "sip": {
+      "one": "{name}: {count} Schluck",
+      "other": "{name}: {count} Schlucke"
+    },
+    "sipAlong": {
+      "one": "{name} trinkt mit Buddy {buddy} mit: {count} Schluck",
+      "other": "{name} trinkt mit Buddy {buddy} mit: {count} Schlucke"
+    },
+    "ok": "OK"
   }
 }

@@ -3,8 +3,8 @@ import { MAX_PLAYERS_PER_TEAM, MAX_TEAMS } from "../config";
 import { applyPubGameAction, teamPlayers } from "../logic/apply-action";
 import { isValidActionId, parseClientAction, toGameAction } from "../logic/client-action";
 import { createPubGame } from "../logic/create-game";
-import type { GameUpdate, Lobby } from "../logic/api-types";
-import { toPlayerView, type PlayerView } from "../logic/player-view";
+import type { ActionResult, GameUpdate, Lobby } from "../logic/api-types";
+import { toPlayerView } from "../logic/player-view";
 import { canSeeEvent } from "../logic/visible-events";
 import type { GameStore, StoredGame } from "./game-store";
 
@@ -231,7 +231,7 @@ export async function getGameUpdate(
 
   const data = gameDataOf(ctx, game);
   const stored = since === null ? [] : await ctx.store.eventsSince(code, since, MAX_EVENTS_PER_POLL);
-  const events = stored.map((item) => item.event).filter((event) => canSeeEvent(game.state, playerId, event));
+  const events = stored.filter((item) => canSeeEvent(game.state, playerId, item.event));
 
   return ok({
     changed: true,
@@ -251,7 +251,7 @@ export async function performAction(
   code: string,
   token: string | null,
   body: unknown,
-): Promise<ServiceResult<{ version: number; view: PlayerView }>> {
+): Promise<ServiceResult<ActionResult>> {
   const playerId = await findPlayer(ctx, code, token);
   if (!playerId) return (await loadGame(ctx, code)) ? fail(401, "not-joined") : fail(404, "unknown-game");
 
@@ -270,7 +270,17 @@ export async function performAction(
 
   const game = await loadGame(ctx, code);
   if (!game) return fail(404, "unknown-game");
-  return ok({ version: game.version, view: toPlayerView(gameDataOf(ctx, game).definition, game.state, playerId) });
+  // Every event since the version the phone had (`knownVersion`): this action's and anything
+  // other phones did meanwhile. The phone jumps to the newest version, so its next poll
+  // won't ask for those again. Phones show each event once (by its version).
+  const known = typeof body.knownVersion === "number" && Number.isInteger(body.knownVersion) ? body.knownVersion : null;
+  const since = Math.max(0, Math.min(known ?? result.data.version - 1, result.data.version - 1));
+  const stored = await ctx.store.eventsSince(code, since, MAX_EVENTS_PER_POLL);
+  return ok({
+    version: game.version,
+    view: toPlayerView(gameDataOf(ctx, game).definition, game.state, playerId),
+    events: stored.filter((item) => canSeeEvent(game.state, playerId, item.event)),
+  });
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────

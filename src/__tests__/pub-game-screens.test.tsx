@@ -181,7 +181,7 @@ describe("the game screen", () => {
   test("start → Beery's rules → Beery announces the first café", async () => {
     const lobby = lobbyState(true);
     const playing = started(lobby);
-    const fetchMock = fakeFetch({ body: { version: 2, view: viewOf(playing, "h") } });
+    const fetchMock = fakeFetch({ body: { version: 2, view: viewOf(playing, "h"), events: [] } });
     render(<PubGame code={CODE} invite={INVITE} initialView={viewOf(lobby, "h")} initialVersion={1} />);
 
     fireEvent.click(screen.getByRole("button", { name: t("pubgame.lobby.start") }));
@@ -207,11 +207,11 @@ describe("the game screen", () => {
     expect(screen.getByText(pubGameCafes["pubs-rococo"].address!)).toBeTruthy();
   });
 
-  test("navigation → \"I'm here\" → the whole team has arrived", async () => {
+  test("navigation → \"I'm here\" → the whole team is at the café (drink choice)", async () => {
     const playing = started(lobbyState(true));
     const arrived = apply(playing, "b", { type: "ARRIVE" });
     window.localStorage.setItem(`hidden-antwerp:pub-intro:${CODE}`, "seen");
-    const fetchMock = fakeFetch({ body: { version: 3, view: viewOf(arrived, "b") } });
+    const fetchMock = fakeFetch({ body: { version: 3, view: viewOf(arrived, "b"), events: [] } });
     render(<PubGame code={CODE} invite={null} initialView={viewOf(playing, "b")} initialVersion={2} />);
 
     fireEvent.click(screen.getByRole("button", { name: t("pubgame.beery.letsGo") }));
@@ -221,7 +221,7 @@ describe("the game screen", () => {
     fireEvent.click(screen.getByRole("button", { name: t("gps.arrived") }));
 
     const firstCafe = cafeName(pubGameDefinition.route[0].cafeIds[0]);
-    expect(await screen.findByRole("heading", { name: t("pubgame.arrived.title", { cafe: firstCafe }) })).toBeTruthy();
+    expect(await screen.findByRole("heading", { name: t("pubgame.drinks.welcome", { cafe: firstCafe }) })).toBeTruthy();
     expect(bodyOf(fetchMock, 0)).toMatchObject({ action: { type: "ARRIVE" } });
   });
 
@@ -249,7 +249,7 @@ describe("polling", () => {
     try {
       const fetchMock = fakeFetch(
         { body: { changed: false, version: 0 } },
-        { body: { changed: true, version: 1, view: viewOf(lobbyState(true), "h"), events: [{ type: "player-joined", playerId: "b" }] } },
+        { body: { changed: true, version: 1, view: viewOf(lobbyState(true), "h"), events: [{ version: 1, event: { type: "player-joined", playerId: "b" } }] } },
       );
       render(<PubGame code={CODE} invite={INVITE} initialView={viewOf(lobbyState(false), "h")} initialVersion={0} />);
       expect(screen.queryByText("Bea")).toBeNull();
@@ -298,7 +298,7 @@ describe("host dashboard", () => {
     const ended = apply(state, "h", { type: "END_GAME", at: "2026-10-14T20:00:00.000Z" });
     const fetchMock = fakeFetch(
       { body: { path: `/games/${CODE}/claim#secret-token` } },
-      { body: { version: 3, view: viewOf(ended, "h") } },
+      { body: { version: 3, view: viewOf(ended, "h"), events: [] } },
     );
     render(<HostDashboard code={CODE} initialView={viewOf(state, "h")} initialVersion={2} />);
 

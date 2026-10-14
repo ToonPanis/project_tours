@@ -190,7 +190,7 @@ describe.each(factories)("$name store", ({ create, cleanup }) => {
 
     const update = await getGameUpdate(ctx, code, token, 0);
     if (!update.ok || !update.data.changed) throw new Error("expected changes");
-    expect(update.data.events.map((event) => event.type)).toContain("card-drawn");
+    expect(update.data.events.map((item) => item.event.type)).toContain("card-drawn");
 
     // The service's cleanup can't happen here (real-looking code), so remove it ourselves.
     if (store instanceof PostgresGameStore) {

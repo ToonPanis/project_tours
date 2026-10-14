@@ -20,3 +20,13 @@ export function allTeams(view: PlayerView): TeamSummary[] {
   const order = (id: string) => Number(id.replace(/\D/g, "")) || 0;
   return [own, ...view.otherTeams].sort((a, b) => order(a.id) - order(b.id));
 }
+
+/** A player's name from the view (the id when unknown: never crashes a screen). */
+export function playerName(view: PlayerView, playerId: string | null | undefined): string {
+  return view.players.find((player) => player.id === playerId)?.name ?? playerId ?? "";
+}
+
+/** The players of the viewer's own team, in joining order. */
+export function teammates(view: PlayerView) {
+  return view.players.filter((player) => player.teamId === view.team.id);
+}

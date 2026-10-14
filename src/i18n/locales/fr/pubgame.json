@@ -79,10 +79,6 @@
     "eyebrow": "Café {current} sur {total}",
     "text": "La prochaine étape de ton équipe."
   },
-  "arrived": {
-    "title": "Bienvenue au {cafe} !",
-    "text": "Vous y êtes ! Trouvez une place, la manche du café commence ici."
-  },
   "menu": {
     "label": "Menu de la partie",
     "rules": "Règles",
@@ -142,5 +138,120 @@
   "claim": {
     "title": "Ouverture de ta partie…",
     "invalid": "Ce lien ne fonctionne pas (ou plus). Demande un nouveau lien à l'hôte."
+  },
+  "drinks": {
+    "title": "Choisis ta boisson",
+    "intro": "Chacun choisit sa boisson et la commande au comptoir.",
+    "alcoholFree": "Sans alcool / soft",
+    "skip": "Pas de boisson cette fois",
+    "yourChoice": "Ta boisson : {drink}. Commande-la au comptoir.",
+    "noDrink": "Pas de boisson pour toi cette fois. Aucun souci !",
+    "respect": "Bois à ton rythme. Personne n'est obligé de boire de l'alcool.",
+    "ready": "On a nos boissons : lancer le Drunken Bastard",
+    "eyebrow": "Café {current} sur {total} · {cafe}",
+    "welcome": "Bienvenue au {cafe} !"
+  },
+  "wheel": {
+    "title": "Fais tourner la roue des bières",
+    "intro": "Billie's a une carte des bières numérotée : fais tourner la roue et commande la bière qui porte ton numéro.",
+    "label": "Roue des bières avec les numéros 1 à 10",
+    "spin": "Faire tourner la roue",
+    "spinning": "La roue tourne…",
+    "result": "Ton numéro : {number}",
+    "order": "Demande au comptoir la bière numéro {number}."
+  },
+  "cards": {
+    "eyebrow": "Café {current} sur {total} · Drunken Bastard",
+    "title": "Drunken Bastard",
+    "yourTurn": "À toi ! Choisis une carte parmi 10 cartes retournées.",
+    "draw": "Voir mes 10 cartes",
+    "pick": "Touche une carte",
+    "waitingFor": "{name} tire une carte…",
+    "drawFor": "Tirer pour {name}",
+    "faceDown": "Carte {number} sur {total}, retournée",
+    "drew": "{name} a tiré",
+    "cardLabel": "{rank} de {suit}",
+    "ranks": {
+      "J": "Valet",
+      "Q": "Dame",
+      "K": "Roi",
+      "A": "As"
+    },
+    "suits": {
+      "hearts": "cœur",
+      "diamonds": "carreau",
+      "clubs": "trèfle",
+      "spades": "pique"
+    },
+    "cardsLeft": {
+      "one": "Encore {count} carte dans le paquet",
+      "other": "Encore {count} cartes dans le paquet"
+    },
+    "sipNote": "Une gorgée, c'est toujours une gorgée de ta propre boisson. Sans alcool, ça compte aussi.",
+    "effects": {
+      "2": "Distribue une gorgée : choisis qui boit.",
+      "3": "Tu bois une gorgée toi-même.",
+      "4": "Tout le monde touche le sol le plus vite possible. Le dernier boit une gorgée.",
+      "5": "Chaque femme qui joue boit une gorgée.",
+      "6": "Chaque homme qui joue boit une gorgée.",
+      "7": "Tout le monde pointe le doigt vers le ciel le plus vite possible. Le dernier boit une gorgée.",
+      "8": "Choisis un drinking buddy, même dans une autre équipe. Désormais, quand l'un de vous boit, l'autre boit aussi.",
+      "9": "Dis un mot. À tour de rôle, chacun dit un mot qui rime. Celui qui n'en trouve plus ou répète un mot boit une gorgée.",
+      "10": "Choisis une catégorie. À tour de rôle, chacun cite quelque chose de cette catégorie. Celui qui sèche ou répète boit une gorgée.",
+      "J": "Invente une règle que tout le monde suit jusqu'à la fin de la partie. 4 règles maximum : une 5e remplace la plus ancienne.",
+      "Q": "Tu es la Question Bitch jusqu'à ce que quelqu'un d'autre tire une dame : quiconque répond à une de tes questions boit une gorgée.",
+      "K": "Tu es le Thumb King jusqu'à ce que quelqu'un d'autre tire un roi : pose ton pouce sur la table quand tu veux. Tout le monde t'imite, et le dernier boit une gorgée.",
+      "A": "Tu es le Beunaas jusqu'à ce que quelqu'un d'autre tire un as : tu bois double, et ton drinking buddy aussi."
+    },
+    "chooseTarget": "Qui reçoit la gorgée ?",
+    "chooseBuddy": "Choisis ton drinking buddy",
+    "writeRule": "Ta nouvelle règle",
+    "rulePlaceholder": "ex. ne boire que de la main gauche",
+    "ruleSubmit": "Ajouter la règle",
+    "reportLoser": "Qui était le dernier ou a perdu ? (facultatif)",
+    "nobody": "Passer",
+    "waitingForChoice": "{name} choisit…",
+    "done": "Tout le monde a tiré une carte ! Place à la pubtask.",
+    "chooseFor": "Choisir pour {name}",
+    "toPubtask": "Place à la pubtask"
+  },
+  "effects": {
+    "label": "Pouvoirs, buddies et règles",
+    "questionBitch": "Question Bitch",
+    "thumbKing": "Thumb King",
+    "beunaas": "Beunaas",
+    "nobody": "personne pour l'instant",
+    "buddies": "Drinking buddies",
+    "noBuddies": "Pas encore de drinking buddies.",
+    "rules": "Règles",
+    "rulesCount": {
+      "one": "{count} règle",
+      "other": "{count} règles"
+    },
+    "noRules": "Pas encore de règles.",
+    "ruleBy": "de {name}",
+    "open": "Pouvoirs & règles",
+    "title": "Pouvoirs, buddies et règles",
+    "close": "Fermer",
+    "reportDrink": "Qui doit boire ?",
+    "reportDrinkHelp": "Pris par la Question Bitch, le Thumb King ou une règle ? Touche le prénom : les buddies boivent aussi et tout le monde reçoit une notification.",
+    "reported": "C'est fait : tout le monde est prévenu.",
+    "yourBuddy": "Ton buddy : {name}",
+    "noBuddy": "Pas encore de buddy"
+  },
+  "popups": {
+    "buddiesTitle": "Nouveaux drinking buddies !",
+    "buddiesText": "{first} et {second} boivent ensemble désormais : quand l'un boit, l'autre boit aussi.",
+    "buddiesEnded": "Le duo {first} & {second}, c'est fini.",
+    "drinkTitle": "Santé !",
+    "sip": {
+      "one": "{name} : {count} gorgée",
+      "other": "{name} : {count} gorgées"
+    },
+    "sipAlong": {
+      "one": "{name} boit avec son buddy {buddy} : {count} gorgée",
+      "other": "{name} boit avec son buddy {buddy} : {count} gorgées"
+    },
+    "ok": "OK"
   }
 }

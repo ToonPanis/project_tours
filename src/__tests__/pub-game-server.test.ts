@@ -269,18 +269,63 @@ describe("playing through the service", () => {
     const beaUpdate = unwrap(await getGameUpdate(ctx, code, beaToken, version));
     if (!beaUpdate.changed) throw new Error("expected changes");
     // Bea (other team) never sees the host's card.
-    expect(beaUpdate.events.some((event) => event.type === "card-drawn")).toBe(false);
+    expect(beaUpdate.events.some((item) => item.event.type === "card-drawn")).toBe(false);
     const hostUpdate = unwrap(await getGameUpdate(ctx, code, hostToken, version));
     if (!hostUpdate.changed) throw new Error("expected changes");
-    expect(hostUpdate.events).toContainEqual(expect.objectContaining({ type: "card-drawn", cardId: card.cardId }));
+    expect(hostUpdate.events.map((item) => item.event)).toContainEqual(expect.objectContaining({ type: "card-drawn", cardId: card.cardId }));
 
     // A buddy link is news for everyone.
     if (card.followUp === "choose-buddy") {
       unwrap(await tap(ctx, code, hostToken, { type: "CHOOSE_BUDDY", buddyId: beaId }));
       const latest = unwrap(await getGameUpdate(ctx, code, beaToken, beaUpdate.version));
       if (!latest.changed) throw new Error("expected changes");
-      expect(latest.events.map((event) => event.type)).toContain("buddies-linked");
+      expect(latest.events.map((item) => item.event.type)).toContain("buddies-linked");
     }
+  });
+
+  test("a tap returns the events it caused; the buddy in the other team gets them by polling", async () => {
+    // random() = 0: the server offers the first 10 cards in deck order, so index 6 is the 8 of hearts.
+    const ctx = { ...testContext(), random: () => 0 };
+    const { code, hostToken, beaToken, beaId } = await gameWithTwoTeams(ctx);
+    unwrap(await tap(ctx, code, hostToken, { type: "START_GAME" }));
+    unwrap(await tap(ctx, code, hostToken, { type: "ARRIVE" }));
+    unwrap(await tap(ctx, code, hostToken, { type: "DRINKS_DONE" }));
+    const beaVersion = unwrap(await getGameUpdate(ctx, code, beaToken, null)).version;
+    unwrap(await tap(ctx, code, hostToken, { type: "DRAW_CARDS" }));
+    const picked = unwrap(await tap(ctx, code, hostToken, { type: "PICK_CARD", index: 6 }));
+    expect(picked.view.team.currentCard).toMatchObject({ cardId: "1-hearts-8", followUp: "choose-buddy" });
+    expect(picked.events.map((item) => item.event.type)).toContain("card-drawn");
+
+    const linked = unwrap(
+      await performAction(ctx, code, hostToken, {
+        actionId: "choose-buddy-1",
+        action: { type: "CHOOSE_BUDDY", buddyId: beaId },
+        knownVersion: picked.version,
+      }),
+    );
+    expect(linked.events).toEqual([
+      { version: picked.version + 1, event: { type: "buddies-linked", playerIds: [linked.view.me.id, beaId], endedPairs: [] } },
+    ]);
+
+    // Bea, in the other team, sees the new buddies (not the host's card) on her next poll.
+    const beaUpdate = unwrap(await getGameUpdate(ctx, code, beaToken, beaVersion));
+    if (!beaUpdate.changed) throw new Error("expected changes");
+    expect(beaUpdate.events.map((item) => item.event.type)).toEqual(["buddies-linked"]);
+
+    // When the host drinks (a loser report), Bea drinks along: she gets the popup too.
+    unwrap(await tap(ctx, code, hostToken, { type: "REPORT_DRINK", playerId: linked.view.me.id }));
+    const afterDrink = unwrap(await getGameUpdate(ctx, code, beaToken, beaUpdate.version));
+    if (!afterDrink.changed) throw new Error("expected changes");
+    expect(afterDrink.events.map((item) => item.event)).toEqual([
+      {
+        type: "drink",
+        teamId: "t1",
+        sips: [
+          { playerId: linked.view.me.id, sips: 1, because: "card" },
+          { playerId: beaId, sips: 1, because: "buddy" },
+        ],
+      },
+    ]);
   });
 
   test("games disappear after 7 days (D29)", async () => {

@@ -14,7 +14,20 @@ export interface Lobby {
   teams: { id: string; name: string; playerCount: number }[];
 }
 
+/** An event with the game version its action created: phones use it to show each popup once. */
+export interface VersionedEvent {
+  version: number;
+  event: PubGameEvent;
+}
+
 /** GET /state: "nothing new", or the player's new view and events. */
 export type GameUpdate =
   | { changed: false; version: number }
-  | { changed: true; version: number; view: PlayerView; events: PubGameEvent[] };
+  | { changed: true; version: number; view: PlayerView; events: VersionedEvent[] };
+
+/** POST /actions: the new view, and the events since the version the phone already had. */
+export interface ActionResult {
+  version: number;
+  view: PlayerView;
+  events: VersionedEvent[];
+}

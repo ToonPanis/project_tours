@@ -79,10 +79,6 @@
     "eyebrow": "Café {current} of {total}",
     "text": "Your team's next stop."
   },
-  "arrived": {
-    "title": "Welcome to {cafe}!",
-    "text": "You made it! Find a spot, and the café round starts here."
-  },
   "menu": {
     "label": "Game menu",
     "rules": "Rules",
@@ -142,5 +138,120 @@
   "claim": {
     "title": "Opening your game…",
     "invalid": "This link doesn't work (any more). Ask the host for a new one."
+  },
+  "drinks": {
+    "title": "Choose your drink",
+    "intro": "Everyone picks their own drink and orders it at the bar.",
+    "alcoholFree": "Alcohol-free / soft drink",
+    "skip": "No drink this round",
+    "yourChoice": "Your drink: {drink}. Order it at the bar.",
+    "noDrink": "No drink for you this round. That's fine!",
+    "respect": "Drink at your own pace. Nobody has to drink alcohol.",
+    "ready": "We've got our drinks: start Drunken Bastard",
+    "eyebrow": "Café {current} of {total} · {cafe}",
+    "welcome": "Welcome to {cafe}!"
+  },
+  "wheel": {
+    "title": "Spin the beer wheel",
+    "intro": "Billie's has a numbered beer list: spin the wheel and order the beer with your number.",
+    "label": "Beer wheel with the numbers 1 to 10",
+    "spin": "Spin the wheel",
+    "spinning": "Spinning…",
+    "result": "Your number: {number}",
+    "order": "Ask the bar for beer number {number}."
+  },
+  "cards": {
+    "eyebrow": "Café {current} of {total} · Drunken Bastard",
+    "title": "Drunken Bastard",
+    "yourTurn": "Your turn! Pick one of 10 face-down cards.",
+    "draw": "Show my 10 cards",
+    "pick": "Tap a card",
+    "waitingFor": "{name} is drawing a card…",
+    "drawFor": "Draw for {name}",
+    "faceDown": "Card {number} of {total}, face down",
+    "drew": "{name} drew",
+    "cardLabel": "{rank} of {suit}",
+    "ranks": {
+      "J": "Jack",
+      "Q": "Queen",
+      "K": "King",
+      "A": "Ace"
+    },
+    "suits": {
+      "hearts": "hearts",
+      "diamonds": "diamonds",
+      "clubs": "clubs",
+      "spades": "spades"
+    },
+    "cardsLeft": {
+      "one": "{count} card left in the deck",
+      "other": "{count} cards left in the deck"
+    },
+    "sipNote": "A sip is always a sip of your own drink. Alcohol-free counts.",
+    "effects": {
+      "2": "Hand out a sip: choose who drinks.",
+      "3": "You take a sip yourself.",
+      "4": "Everyone touches the floor as fast as possible. The last one drinks a sip.",
+      "5": "Every woman playing takes a sip.",
+      "6": "Every man playing takes a sip.",
+      "7": "Everyone points up as fast as possible. The last one drinks a sip.",
+      "8": "Choose a drinking buddy, also from another team. From now on, when one of you drinks, the other drinks along.",
+      "9": "Say a word. Going round, everyone says a word that rhymes with it. Whoever can't, or repeats a word, drinks a sip.",
+      "10": "Choose a category. Going round, everyone names something in it. Whoever can't, or repeats one, drinks a sip.",
+      "J": "Invent a rule that everyone follows for the rest of the game. At most 4 rules: a 5th replaces the oldest.",
+      "Q": "You're the Question Bitch until someone else draws a queen: anyone who answers a question from you drinks a sip.",
+      "K": "You're the Thumb King until someone else draws a king: put your thumb on the table at any moment. Everyone copies you, and the last one drinks a sip.",
+      "A": "You're the Beunaas until someone else draws an ace: you drink double, and so does your drinking buddy."
+    },
+    "chooseTarget": "Who gets the sip?",
+    "chooseBuddy": "Pick your drinking buddy",
+    "writeRule": "Your new rule",
+    "rulePlaceholder": "e.g. drink only with your left hand",
+    "ruleSubmit": "Add the rule",
+    "reportLoser": "Who was last or lost? (optional)",
+    "nobody": "Skip",
+    "waitingForChoice": "{name} is choosing…",
+    "done": "Everyone has drawn a card! The pubtask comes next.",
+    "chooseFor": "Choose for {name}",
+    "toPubtask": "On to the pubtask"
+  },
+  "effects": {
+    "label": "Card powers, buddies and rules",
+    "questionBitch": "Question Bitch",
+    "thumbKing": "Thumb King",
+    "beunaas": "Beunaas",
+    "nobody": "nobody yet",
+    "buddies": "Drinking buddies",
+    "noBuddies": "No drinking buddies yet.",
+    "rules": "Rules",
+    "rulesCount": {
+      "one": "{count} rule",
+      "other": "{count} rules"
+    },
+    "noRules": "No rules yet.",
+    "ruleBy": "by {name}",
+    "open": "Powers & rules",
+    "title": "Powers, buddies and rules",
+    "close": "Close",
+    "reportDrink": "Who has to drink?",
+    "reportDrinkHelp": "Caught by the Question Bitch, the Thumb King or a rule? Tap the name: buddies drink along and everyone gets a popup.",
+    "reported": "Done: everyone has been told.",
+    "yourBuddy": "Your buddy: {name}",
+    "noBuddy": "No buddy yet"
+  },
+  "popups": {
+    "buddiesTitle": "New drinking buddies!",
+    "buddiesText": "{first} and {second} drink together from now on: when one drinks, the other drinks along.",
+    "buddiesEnded": "The pair {first} & {second} is no more.",
+    "drinkTitle": "Cheers!",
+    "sip": {
+      "one": "{name}: {count} sip",
+      "other": "{name}: {count} sips"
+    },
+    "sipAlong": {
+      "one": "{name} drinks along with buddy {buddy}: {count} sip",
+      "other": "{name} drinks along with buddy {buddy}: {count} sips"
+    },
+    "ok": "OK"
   }
 }
