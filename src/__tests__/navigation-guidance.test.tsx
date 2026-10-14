@@ -1,7 +1,7 @@
 import { englishTranslator as t } from "@/i18n/translate";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { act, cleanup, fireEvent, render, renderHook, screen } from "@testing-library/react";
-import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
+import { oldHiddenPubsWalk } from "./fixtures/old-hidden-pubs";
 import { DirectionPanel } from "@/features/navigation/components/DirectionPanel";
 import { NavigationScreen } from "@/features/navigation/components/NavigationScreen";
 import { NAVIGATION_CONFIG } from "@/features/navigation/config";
@@ -18,7 +18,7 @@ vi.mock("@/features/navigation/components/WalkingMap", () => ({
 
 afterEach(cleanup);
 
-const rococo = hiddenPubsWalk.locations[0];
+const rococo = oldHiddenPubsWalk.locations[0];
 const fix = (changes: Partial<GpsFix> = {}): GpsFix => ({
   coordinates: { latitude: 51.2211, longitude: 4.3997 },
   accuracyMeters: 5,

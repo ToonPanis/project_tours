@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
-import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
+import { oldHiddenPubsWalk } from "./fixtures/old-hidden-pubs";
 import { WalkPlayer } from "@/features/walk-session/components/WalkPlayer";
 import { getVerificationLabel } from "@/features/walk-session/components/ContentBlockView";
 import { createWalkSession } from "@/features/walk-session/logic/create-session";
@@ -30,7 +30,7 @@ afterEach(cleanup);
 
 // Every expected text comes from the walk data or the English UI texts, so
 // researchers can correct the content without breaking these tests.
-const walk = hiddenPubsWalk;
+const walk = oldHiddenPubsWalk;
 const t = englishTranslator;
 const copy = getWalkCopy(walk, t);
 const stops = getOrderedLocations(walk);

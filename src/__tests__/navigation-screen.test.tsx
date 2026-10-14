@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { useEffect } from "react";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
+import { oldHiddenPubsWalk } from "./fixtures/old-hidden-pubs";
 import { NavigationScreen } from "@/features/navigation/components/NavigationScreen";
 import { getRouteLegTo } from "@/features/navigation/logic/route-legs";
 import { NAVIGATION_CONFIG } from "@/features/navigation/config";
@@ -23,8 +23,8 @@ vi.mock("@/features/navigation/components/WalkingMap", () => ({
 beforeEach(() => window.localStorage.clear());
 afterEach(cleanup);
 
-const deMuze = hiddenPubsWalk.locations.find((location) => location.id === "pubs-de-muze")!;
-const routeToDeMuze = getRouteLegTo(hiddenPubsWalk, "pubs-de-muze")!.route;
+const deMuze = oldHiddenPubsWalk.locations.find((location) => location.id === "pubs-de-muze")!;
+const routeToDeMuze = getRouteLegTo(oldHiddenPubsWalk, "pubs-de-muze")!.route;
 
 /** Gives the test a handle on the simulated GPS. */
 const simulationHandle: { emit: (coordinates: GeoCoordinates, accuracyMeters?: number) => void } = {

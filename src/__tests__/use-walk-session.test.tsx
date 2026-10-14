@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { act, cleanup, renderHook } from "@testing-library/react";
 import { classicsOfAntwerpWalk } from "@/data/walks/classics-of-antwerp";
-import { getHiddenPubsWalk, hiddenPubsWalk } from "@/data/walks/hidden-pubs";
+import { getOldHiddenPubsWalk, oldHiddenPubsWalk } from "./fixtures/old-hidden-pubs";
 import { useWalkSession } from "@/features/walk-session/state/useWalkSession";
 import { localWalkSessionStore, type WalkSessionStore } from "@/features/walk-session/storage/session-storage";
 import type { Team } from "@/types/team";
@@ -32,12 +32,12 @@ function startAndArrive(result: { current: ReturnType<typeof useWalkSession> }) 
 
 describe("useWalkSession: switching language keeps the game (M-03)", () => {
   test("keeps the game in memory when storage is unavailable", () => {
-    const { result, rerender } = renderSession(hiddenPubsWalk, unavailableStore);
+    const { result, rerender } = renderSession(oldHiddenPubsWalk, unavailableStore);
     const firstStopId = startAndArrive(result);
     const sessionId = result.current.session!.id;
 
     // A language switch re-renders the page with the same walk in another language.
-    rerender({ walk: getHiddenPubsWalk("nl") });
+    rerender({ walk: getOldHiddenPubsWalk("nl") });
 
     expect(result.current.session).not.toBeNull();
     expect(result.current.session!.id).toBe(sessionId);
@@ -45,10 +45,10 @@ describe("useWalkSession: switching language keeps the game (M-03)", () => {
   });
 
   test("keeps the game with working storage too", () => {
-    const { result, rerender } = renderSession(hiddenPubsWalk, localWalkSessionStore);
+    const { result, rerender } = renderSession(oldHiddenPubsWalk, localWalkSessionStore);
     const firstStopId = startAndArrive(result);
 
-    rerender({ walk: getHiddenPubsWalk("uk") });
+    rerender({ walk: getOldHiddenPubsWalk("uk") });
 
     expect(result.current.session!.locations[firstStopId].status).toBe("arrived");
   });
@@ -56,20 +56,20 @@ describe("useWalkSession: switching language keeps the game (M-03)", () => {
   test("does not read storage again for the same walk in another language", () => {
     const load = vi.fn(() => null);
     const spyStore: WalkSessionStore = { load, save: () => {}, clear: () => {} };
-    const { rerender } = renderSession(hiddenPubsWalk, spyStore);
-    rerender({ walk: getHiddenPubsWalk("fr") });
-    rerender({ walk: getHiddenPubsWalk("de") });
+    const { rerender } = renderSession(oldHiddenPubsWalk, spyStore);
+    rerender({ walk: getOldHiddenPubsWalk("fr") });
+    rerender({ walk: getOldHiddenPubsWalk("de") });
     expect(load).toHaveBeenCalledTimes(1);
   });
 
   test("a kept game that no longer fits the walk's stops (content changed) is not kept", () => {
-    const { result, rerender } = renderSession(hiddenPubsWalk, unavailableStore);
+    const { result, rerender } = renderSession(oldHiddenPubsWalk, unavailableStore);
     startAndArrive(result);
 
     // The same walk after a deploy that renamed its first stop.
     const changedWalk: Walk = {
-      ...hiddenPubsWalk,
-      locations: hiddenPubsWalk.locations.map((location, index) =>
+      ...oldHiddenPubsWalk,
+      locations: oldHiddenPubsWalk.locations.map((location, index) =>
         index === 0 ? { ...location, id: "renamed-stop" } : location,
       ),
     };
@@ -80,11 +80,11 @@ describe("useWalkSession: switching language keeps the game (M-03)", () => {
   });
 
   test("a content update that adds a stop keeps the game in memory (M-04: merge)", () => {
-    const { result, rerender } = renderSession(hiddenPubsWalk, unavailableStore);
+    const { result, rerender } = renderSession(oldHiddenPubsWalk, unavailableStore);
     const firstStopId = startAndArrive(result);
 
-    const newStop = { ...hiddenPubsWalk.locations[1], id: "pubs-new-stop", order: 99 };
-    rerender({ walk: { ...hiddenPubsWalk, locations: [...hiddenPubsWalk.locations, newStop] } });
+    const newStop = { ...oldHiddenPubsWalk.locations[1], id: "pubs-new-stop", order: 99 };
+    rerender({ walk: { ...oldHiddenPubsWalk, locations: [...oldHiddenPubsWalk.locations, newStop] } });
 
     expect(result.current.session!.locations[firstStopId].status).toBe("arrived");
     expect(result.current.session!.locations["pubs-new-stop"].status).toBe("locked");
@@ -98,17 +98,17 @@ describe("useWalkSession: switching language keeps the game (M-03)", () => {
         seen.push(controls.session ? controls.session.walkSlug : null);
         return controls;
       },
-      { initialProps: { walk: hiddenPubsWalk } },
+      { initialProps: { walk: oldHiddenPubsWalk } },
     );
     startAndArrive(result);
     seen.length = 0;
 
     rerender({ walk: classicsOfAntwerpWalk });
-    expect(seen).not.toContain(hiddenPubsWalk.slug);
+    expect(seen).not.toContain(oldHiddenPubsWalk.slug);
   });
 
   test("a different walk still loads that walk's own saved game", () => {
-    const { result, rerender } = renderSession(hiddenPubsWalk, localWalkSessionStore);
+    const { result, rerender } = renderSession(oldHiddenPubsWalk, localWalkSessionStore);
     startAndArrive(result);
 
     rerender({ walk: classicsOfAntwerpWalk });

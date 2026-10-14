@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { baseOpenGraph, PROTOTYPE_ROBOTS } from "@/lib/shared-metadata";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { WalkPlayer } from "@/features/walk-session/components/WalkPlayer";
 import { getTranslator } from "@/i18n/server";
 import { getWalk } from "@/lib/repositories";
@@ -36,6 +36,8 @@ export default async function PlayWalkPage({ params }: PageProps<"/walks/[slug]/
   // language re-renders this page; the saved progress (by stop id) stays.
   const walk = await getWalk(slug, t.locale);
   if (!walk) notFound();
+  // A multiplayer pub game isn't played on this page: the organiser creates a game first.
+  if (walk.experience === "pub-game") redirect(`/games/new?walk=${walk.slug}`);
 
   return (
     <div data-walk-theme={walk.theme} className="bg-night-map min-h-full">

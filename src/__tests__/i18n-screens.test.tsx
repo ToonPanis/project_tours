@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import { getClassicsWalk } from "@/data/walks/classics-of-antwerp";
-import { getHiddenPubsWalk } from "@/data/walks/hidden-pubs";
+import { getOldHiddenPubsWalk } from "./fixtures/old-hidden-pubs";
 import { GuideCompletionScreen } from "@/features/guide/components/GuideCompletionScreen";
 import { PlayHeader } from "@/features/walk-session/components/PlayHeader";
 import { RoutePanel } from "@/features/walk-session/components/RoutePanel";
@@ -32,7 +32,7 @@ const team = { id: "t", name: "", players: [{ id: "p", name: "Tony" }] };
 // ── M-05: no English on translated screens ────────────────────────────────
 
 describe("M-05: Hidden Pubs header and route panel in Dutch", () => {
-  const walk = getHiddenPubsWalk("nl");
+  const walk = getOldHiddenPubsWalk("nl");
   const session = createWalkSession({ walk, team, sessionId: "s", startedAt: "2026-09-29T10:00:00.000Z" });
 
   test("the header shows the clue count and the Ledger button in Dutch", () => {

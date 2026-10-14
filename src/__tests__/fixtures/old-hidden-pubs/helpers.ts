@@ -5,7 +5,7 @@ import type { StoryBlock } from "@/types/content";
 import type { DrinkCategory, DrinkOption } from "@/types/drink";
 import type { LocationType, UnlockCondition, WalkLocation } from "@/types/location";
 import type { VerificationStatus } from "@/types/reveal";
-import { findPosition } from "../shared";
+import { findPosition } from "@/data/walks/shared";
 import coordinatesFile from "./coordinates.json";
 import type { ChallengeText, HiddenPubsStopText, StoryText } from "./content/types";
 

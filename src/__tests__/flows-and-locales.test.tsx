@@ -2,7 +2,7 @@ import { describe, expect, test, vi } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { useEffect } from "react";
 import { getWalks } from "@/data/walks";
-import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
+import { oldHiddenPubsWalk } from "./fixtures/old-hidden-pubs";
 import { NavigationScreen } from "@/features/navigation/components/NavigationScreen";
 import { NAVIGATION_CONFIG } from "@/features/navigation/config";
 import { getRouteLegTo } from "@/features/navigation/logic/route-legs";
@@ -106,7 +106,7 @@ describe("every challenge type", () => {
       <ChallengeScreen
         challenge={challenge}
         progress={createLocationProgress("challenge")}
-        copy={getWalkCopy(hiddenPubsWalk, t)}
+        copy={getWalkCopy(oldHiddenPubsWalk, t)}
         requiredClues={[]}
         onSubmit={() => {}}
         onRevealHint={() => {}}
@@ -120,10 +120,10 @@ describe("every challenge type", () => {
 // ── A tied drink vote ─────────────────────────────────────────────────────
 
 describe("a tied drink vote", () => {
-  const stop = hiddenPubsWalk.locations.find((location) => location.drinkRound)!;
+  const stop = oldHiddenPubsWalk.locations.find((location) => location.drinkRound)!;
   const round = stop.drinkRound!;
   const [first, second] = round.options;
-  const copy = getWalkCopy(hiddenPubsWalk, t);
+  const copy = getWalkCopy(oldHiddenPubsWalk, t);
   const tiedProgress = {
     ...createLocationProgress("drink-selected"),
     votes: [
@@ -156,8 +156,8 @@ describe("a tied drink vote", () => {
 // ── Off the route ─────────────────────────────────────────────────────────
 
 describe("off the route", () => {
-  const deMuze = hiddenPubsWalk.locations.find((location) => location.id === "pubs-de-muze")!;
-  const route = getRouteLegTo(hiddenPubsWalk, "pubs-de-muze")!.route!;
+  const deMuze = oldHiddenPubsWalk.locations.find((location) => location.id === "pubs-de-muze")!;
+  const route = getRouteLegTo(oldHiddenPubsWalk, "pubs-de-muze")!.route!;
   const handle: { emit: (coordinates: GeoCoordinates) => void } = { emit: () => {} };
   function Handle() {
     const { emit } = usePositionSimulation();

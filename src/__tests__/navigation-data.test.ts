@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { walks } from "@/data/walks";
-import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
+import { oldHiddenPubsWalk } from "./fixtures/old-hidden-pubs";
 import { the17GatesWalk } from "./fixtures/the-17-gates";
 import { NAVIGATION_CONFIG } from "@/features/navigation/config";
 import { getOrderedLocations } from "@/lib/walk-locations";
@@ -77,7 +77,7 @@ describe("Route ends vs. arrival radius (all walks)", () => {
 });
 
 describe("Hidden Pubs navigation data", () => {
-  const locations = getOrderedLocations(hiddenPubsWalk);
+  const locations = getOrderedLocations(oldHiddenPubsWalk);
 
   test("every café has (draft) coordinates, marked for verification until checked", () => {
     for (const location of locations) {
@@ -96,7 +96,7 @@ describe("Hidden Pubs navigation data", () => {
   });
 
   test("there is a walking route for every leg (café 1→2 … 7→8)", () => {
-    const legs = hiddenPubsWalk.routeLegs ?? [];
+    const legs = oldHiddenPubsWalk.routeLegs ?? [];
     expect(legs).toHaveLength(locations.length - 1);
     locations.slice(1).forEach((location, index) => {
       const leg = legs.find((candidate) => candidate.toLocationId === location.id);
@@ -105,7 +105,7 @@ describe("Hidden Pubs navigation data", () => {
   });
 
   test("each route starts near its start café and ends near its destination", () => {
-    for (const leg of hiddenPubsWalk.routeLegs ?? []) {
+    for (const leg of oldHiddenPubsWalk.routeLegs ?? []) {
       const from = locations.find((location) => location.id === leg.fromLocationId)!.coordinates!;
       const to = locations.find((location) => location.id === leg.toLocationId)!.coordinates!;
       expect(distanceInMeters(leg.route.geometry[0], from)).toBeLessThan(60);

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
-import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
+import { oldHiddenPubsWalk } from "./fixtures/old-hidden-pubs";
 import { poortjesWalk } from "@/data/walks/poortjes-van-antwerpen";
 import { classicsOfAntwerpWalk } from "@/data/walks/classics-of-antwerp";
 import { LanguageSelector } from "@/components/layout/LanguageSelector";
@@ -39,7 +39,7 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 
-const copy = getWalkCopy(hiddenPubsWalk, t);
+const copy = getWalkCopy(oldHiddenPubsWalk, t);
 
 // ── M-09: directions are not re-read on every GPS reading ─────────────────
 
@@ -120,12 +120,12 @@ describe("M-10: focus on new screens", () => {
   });
 
   test("navigation focuses the destination: first the explainer, then the live map title", async () => {
-    const deMuze = hiddenPubsWalk.locations.find((location) => location.id === "pubs-de-muze")!;
+    const deMuze = oldHiddenPubsWalk.locations.find((location) => location.id === "pubs-de-muze")!;
     render(
       <PositionSimulationProvider>
         <NavigationScreen
           destination={deMuze}
-          route={getRouteLegTo(hiddenPubsWalk, "pubs-de-muze")!.route}
+          route={getRouteLegTo(oldHiddenPubsWalk, "pubs-de-muze")!.route}
           gpsAlreadyEnabled={false}
           onGpsEnabled={() => {}}
           onArrive={() => {}}
@@ -274,12 +274,12 @@ describe("M-13 / L-23: route panel", () => {
 
   test("locked entries use a readable text colour (at least /65, not /40)", () => {
     const session = createWalkSession({
-      walk: hiddenPubsWalk,
+      walk: oldHiddenPubsWalk,
       team: { id: "t", name: "", players: [{ id: "p", name: "Tony" }] },
       sessionId: "s",
       startedAt: "2026-09-29T10:00:00.000Z",
     });
-    render(<RoutePanel walk={hiddenPubsWalk} session={session} copy={copy} open onClose={() => {}} />);
+    render(<RoutePanel walk={oldHiddenPubsWalk} session={session} copy={copy} open onClose={() => {}} />);
     const dialog = screen.getByRole("dialog", { hidden: true });
     expect(dialog.innerHTML).not.toMatch(/text-parchment\/(40|50)\b/);
   });

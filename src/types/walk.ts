@@ -18,7 +18,12 @@ export type WalkTheme = "classic" | "tavern" | "archive";
  * "game": an interactive walk (challenges, clues, votes…).
  * "guide": a narrated city guide with no game elements.
  */
-export type WalkExperience = "game" | "guide";
+/**
+ * "guide": narrated stops (GuideWalkPlayer). "game": the one-phone team game
+ * (WalkPlayer; only the old Hidden Pubs test fixture uses it now).
+ * "pub-game": the multiplayer pub game at /games/… (Hidden Pubs 2.0).
+ */
+export type WalkExperience = "game" | "guide" | "pub-game";
 
 /** Money is stored in cents to avoid floating-point rounding (and matches Stripe). */
 export interface Price {

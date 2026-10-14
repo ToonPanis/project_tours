@@ -69,7 +69,7 @@ function findStaleLegs(walk: Walk): string[] {
 describe("stop counts", () => {
   const expected: Record<string, { main: number; optional: number }> = {
     "poortjes-van-antwerpen": { main: 33, optional: 2 },
-    "hidden-pubs": { main: 8, optional: 0 },
+    "hidden-pubs": { main: 12, optional: 0 },
     "classics-of-antwerp": { main: 18, optional: 0 },
   };
 
@@ -205,12 +205,9 @@ describe("image sizes match the real files (L-42)", () => {
  * These challenges ship without hints today. Remove an id once it has hints;
  * a NEW challenge without hints fails the test.
  */
-const CHALLENGES_WITHOUT_HINTS_ALLOWED = [
-  "pubs-bonus-quinten-matsijs",
-  "pubs-finale-animal",
-  "pubs-finale-game",
-  "pubs-finale-time",
-];
+// No live walk has old-style challenges since Hidden Pubs became the multiplayer game
+// (its questions and hints are checked in pub-game-content.test.ts).
+const CHALLENGES_WITHOUT_HINTS_ALLOWED: string[] = [];
 
 function allChallenges(walk: Walk): Challenge[] {
   return [

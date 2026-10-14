@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { act, fireEvent, render, renderHook, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { LanguageSelector } from "@/components/layout/LanguageSelector";
-import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
+import { oldHiddenPubsWalk } from "./fixtures/old-hidden-pubs";
 import { WalkPlayer } from "@/features/walk-session/components/WalkPlayer";
 import { createWalkSession } from "@/features/walk-session/logic/create-session";
 import { applySessionAction } from "@/features/walk-session/logic/session-reducer";
@@ -171,7 +171,7 @@ describe("PRIVACY: a whole walk to a café keeps no position", () => {
   beforeEach(() => installFakeGeolocation());
 
   test("readings on the way and at arrival never reach storage (only progress is saved)", async () => {
-    const walk = hiddenPubsWalk;
+    const walk = oldHiddenPubsWalk;
     const destination = getOrderedLocations(walk)[1];
     const start = createWalkSession({
       walk,

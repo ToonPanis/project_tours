@@ -1,6 +1,6 @@
 import { englishTranslator as t } from "@/i18n/translate";
 import { describe, expect, test } from "vitest";
-import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
+import { oldHiddenPubsWalk } from "./fixtures/old-hidden-pubs";
 import { the17GatesWalk } from "./fixtures/the-17-gates";
 import { getDefaultWalkCopy, getWalkCopy } from "@/features/walk-session/logic/walk-copy";
 import { distanceInMeters } from "@/lib/geo";
@@ -18,8 +18,8 @@ describe("route visibility", () => {
   });
 
   test("before the start, Hidden Pubs only reveals its first café", () => {
-    const revealed = getOrderedLocations(hiddenPubsWalk)
-      .filter((location) => isRevealedBeforeStart(hiddenPubsWalk, location))
+    const revealed = getOrderedLocations(oldHiddenPubsWalk)
+      .filter((location) => isRevealedBeforeStart(oldHiddenPubsWalk, location))
       .map((location) => location.name);
     expect(revealed).toEqual(["Rococo Antwerp"]);
   });
@@ -34,7 +34,7 @@ describe("route visibility", () => {
 
 describe("game copy", () => {
   test("walk texts override the defaults", () => {
-    expect(getWalkCopy(hiddenPubsWalk, t).voteResultTitle).toBe("The tavern has spoken");
+    expect(getWalkCopy(oldHiddenPubsWalk, t).voteResultTitle).toBe("The tavern has spoken");
   });
 
   test("walks without their own texts use the defaults", () => {

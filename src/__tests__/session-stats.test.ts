@@ -1,6 +1,6 @@
 import { englishTranslator as t } from "@/i18n/translate";
 import { describe, expect, test } from "vitest";
-import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
+import { oldHiddenPubsWalk } from "./fixtures/old-hidden-pubs";
 import { walks } from "@/data/walks";
 import { checkAnswer } from "@/features/walk-session/logic/answers";
 import { createWalkSession } from "@/features/walk-session/logic/create-session";
@@ -9,14 +9,14 @@ import { getCorrectAnswer } from "@/features/walk-session/playtest/get-correct-a
 
 describe("session stats", () => {
   const session = createWalkSession({
-    walk: hiddenPubsWalk,
+    walk: oldHiddenPubsWalk,
     team: { id: "t", name: "", players: [{ id: "p1", name: "Tony" }] },
     sessionId: "s1",
     startedAt: "2026-09-23T14:00:00.000Z",
   });
 
   test("a new Hidden Pubs session is at stop 1 of 8 with 0 of 8 clues", () => {
-    expect(getSessionStats(hiddenPubsWalk, session)).toEqual({
+    expect(getSessionStats(oldHiddenPubsWalk, session)).toEqual({
       currentStopNumber: 1,
       totalStops: 8,
       solvedStops: 0,
@@ -42,8 +42,9 @@ describe("session stats", () => {
 });
 
 describe("playtest 'solve' helper", () => {
-  // Also a data check: every stored answer really solves its challenge.
-  for (const walk of walks) {
+  // Also a data check: every stored answer really solves its challenge (the old
+  // one-phone game engine's walks: today only the old Hidden Pubs fixture).
+  for (const walk of [...walks, oldHiddenPubsWalk]) {
     const challenges = [
       ...walk.locations.flatMap((location) => [location.challenge, location.bonusChallenge]),
       ...(walk.finale?.questions ?? []),

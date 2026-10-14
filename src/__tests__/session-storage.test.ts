@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
+import { oldHiddenPubsWalk } from "./fixtures/old-hidden-pubs";
 import { the17GatesWalk } from "./fixtures/the-17-gates";
 import { createWalkSession } from "@/features/walk-session/logic/create-session";
 import {
@@ -15,7 +15,7 @@ import type { WalkSession } from "@/types/session";
 import type { Walk } from "@/types/walk";
 
 const session = createWalkSession({
-  walk: hiddenPubsWalk,
+  walk: oldHiddenPubsWalk,
   team: { id: "t", name: "", players: [{ id: "p1", name: "Tony" }] },
   sessionId: "s1",
   startedAt: "2026-09-23T14:00:00.000Z",
@@ -26,28 +26,28 @@ beforeEach(() => window.localStorage.clear());
 describe("localWalkSessionStore", () => {
   test("saves and loads a session", () => {
     localWalkSessionStore.save(session);
-    expect(localWalkSessionStore.load(hiddenPubsWalk)).toEqual(session);
+    expect(localWalkSessionStore.load(oldHiddenPubsWalk)).toEqual(session);
   });
 
   test("returns null when nothing is saved", () => {
-    expect(localWalkSessionStore.load(hiddenPubsWalk)).toBeNull();
+    expect(localWalkSessionStore.load(oldHiddenPubsWalk)).toBeNull();
   });
 
   test("clear removes the save", () => {
     localWalkSessionStore.save(session);
-    localWalkSessionStore.clear(hiddenPubsWalk.slug);
-    expect(localWalkSessionStore.load(hiddenPubsWalk)).toBeNull();
+    localWalkSessionStore.clear(oldHiddenPubsWalk.slug);
+    expect(localWalkSessionStore.load(oldHiddenPubsWalk)).toBeNull();
   });
 
   test("ignores broken JSON instead of crashing", () => {
-    window.localStorage.setItem(storageKey(hiddenPubsWalk.slug), "{not json");
-    expect(localWalkSessionStore.load(hiddenPubsWalk)).toBeNull();
+    window.localStorage.setItem(storageKey(oldHiddenPubsWalk.slug), "{not json");
+    expect(localWalkSessionStore.load(oldHiddenPubsWalk)).toBeNull();
   });
 });
 
 describe("parseSavedSession", () => {
   test("rejects saves from another storage version", () => {
-    expect(parseSavedSession(hiddenPubsWalk, { version: STORAGE_VERSION + 1, session })).toBeNull();
+    expect(parseSavedSession(oldHiddenPubsWalk, { version: STORAGE_VERSION + 1, session })).toBeNull();
   });
 
   test("rejects a save for a different walk", () => {
@@ -56,11 +56,11 @@ describe("parseSavedSession", () => {
 
   test("rejects a save that points to a stop that no longer exists", () => {
     const outdated = { ...session, currentLocationId: "removed-stop" };
-    expect(parseSavedSession(hiddenPubsWalk, { version: STORAGE_VERSION, session: outdated })).toBeNull();
+    expect(parseSavedSession(oldHiddenPubsWalk, { version: STORAGE_VERSION, session: outdated })).toBeNull();
   });
 
   test("accepts a valid save", () => {
-    expect(parseSavedSession(hiddenPubsWalk, { version: STORAGE_VERSION, session })).toEqual(session);
+    expect(parseSavedSession(oldHiddenPubsWalk, { version: STORAGE_VERSION, session })).toEqual(session);
   });
 });
 
@@ -73,7 +73,7 @@ describe("parseSavedSession: damaged values inside a save", () => {
   const midGame: WalkSession = {
     ...session,
     completedAt: "2026-09-23T17:00:00.000Z",
-    collectedClueIds: [hiddenPubsWalk.clues![0].id],
+    collectedClueIds: [oldHiddenPubsWalk.clues![0].id],
     locations: {
       ...session.locations,
       [firstStopId]: {
@@ -90,7 +90,7 @@ describe("parseSavedSession: damaged values inside a save", () => {
     },
     finale: { status: "active", solvedQuestionIds: ["q1"], wrongAttemptsByQuestion: { q2: 2 } },
   };
-  const parse = (value: unknown) => parseSavedSession(hiddenPubsWalk, { version: STORAGE_VERSION, session: value });
+  const parse = (value: unknown) => parseSavedSession(oldHiddenPubsWalk, { version: STORAGE_VERSION, session: value });
   /** The mid-game save with one stop's progress changed. */
   const withFirstStop = (changes: Record<string, unknown>) => ({
     ...midGame,
@@ -130,14 +130,14 @@ describe("parseSavedSession: older save versions (migration)", () => {
     const v2Session = JSON.parse(JSON.stringify(session)) as { locations: Record<string, Record<string, unknown>> };
     for (const progress of Object.values(v2Session.locations)) delete progress.answerRevealed;
 
-    const loaded = parseSavedSession(hiddenPubsWalk, { version: 2, session: v2Session });
+    const loaded = parseSavedSession(oldHiddenPubsWalk, { version: 2, session: v2Session });
     expect(loaded).not.toBeNull();
     expect(Object.values(loaded!.locations).every((progress) => progress.answerRevealed === false)).toBe(true);
     expect(loaded!.currentLocationId).toBe(session.currentLocationId);
   });
 
   test("a version 1 save (no migration exists) is ignored: fresh start", () => {
-    expect(parseSavedSession(hiddenPubsWalk, { version: 1, session })).toBeNull();
+    expect(parseSavedSession(oldHiddenPubsWalk, { version: 1, session })).toBeNull();
   });
 });
 
@@ -152,8 +152,8 @@ describe("parseSavedSession: the walk's stops changed since the game started", (
   };
 
   test("a new stop is added as not yet visited; the game continues where it was", () => {
-    const newStop = { ...hiddenPubsWalk.locations[1], id: "pubs-new-stop", order: 99 };
-    const walkWithNewStop: Walk = { ...hiddenPubsWalk, locations: [...hiddenPubsWalk.locations, newStop] };
+    const newStop = { ...oldHiddenPubsWalk.locations[1], id: "pubs-new-stop", order: 99 };
+    const walkWithNewStop: Walk = { ...oldHiddenPubsWalk, locations: [...oldHiddenPubsWalk.locations, newStop] };
 
     const loaded = parse(walkWithNewStop, arrived)!;
     expect(loaded.currentLocationId).toBe(firstStopId);
@@ -162,13 +162,13 @@ describe("parseSavedSession: the walk's stops changed since the game started", (
   });
 
   test("a removed stop (not the current one) is dropped, and so is the clue it gave", () => {
-    const removedId = hiddenPubsWalk.locations[1].id;
-    const removedClueIds = (hiddenPubsWalk.clues ?? []).filter((clue) => clue.sourceLocationId === removedId).map((clue) => clue.id);
+    const removedId = oldHiddenPubsWalk.locations[1].id;
+    const removedClueIds = (oldHiddenPubsWalk.clues ?? []).filter((clue) => clue.sourceLocationId === removedId).map((clue) => clue.id);
     expect(removedClueIds.length).toBeGreaterThan(0);
     const walkWithoutStop: Walk = {
-      ...hiddenPubsWalk,
-      locations: hiddenPubsWalk.locations.filter((location) => location.id !== removedId),
-      clues: (hiddenPubsWalk.clues ?? []).filter((clue) => clue.sourceLocationId !== removedId),
+      ...oldHiddenPubsWalk,
+      locations: oldHiddenPubsWalk.locations.filter((location) => location.id !== removedId),
+      clues: (oldHiddenPubsWalk.clues ?? []).filter((clue) => clue.sourceLocationId !== removedId),
     };
     const withClue: WalkSession = { ...arrived, collectedClueIds: [...removedClueIds] };
 
@@ -180,31 +180,31 @@ describe("parseSavedSession: the walk's stops changed since the game started", (
 
   test("if the stop the team is at was removed, the game starts fresh", () => {
     const walkWithoutCurrent: Walk = {
-      ...hiddenPubsWalk,
-      locations: hiddenPubsWalk.locations.filter((location) => location.id !== firstStopId),
+      ...oldHiddenPubsWalk,
+      locations: oldHiddenPubsWalk.locations.filter((location) => location.id !== firstStopId),
     };
     expect(parse(walkWithoutCurrent, arrived)).toBeNull();
   });
 
   test("a walk that gained a final puzzle gets one, locked until the last stop", () => {
-    const loaded = parse(hiddenPubsWalk, { ...arrived, finale: null })!;
+    const loaded = parse(oldHiddenPubsWalk, { ...arrived, finale: null })!;
     expect(loaded.finale).toEqual({ status: "locked", solvedQuestionIds: [], wrongAttemptsByQuestion: {} });
   });
 
   test("a stop inserted BEFORE the current one is not visited, and the walk still completes", () => {
     // Accepted limitation: the walk only moves forward, the group already passed that spot.
-    const stopTwo = session.locations[hiddenPubsWalk.locations[1].id];
+    const stopTwo = session.locations[oldHiddenPubsWalk.locations[1].id];
     const atStopTwo: WalkSession = {
       ...session,
-      currentLocationId: hiddenPubsWalk.locations[1].id,
+      currentLocationId: oldHiddenPubsWalk.locations[1].id,
       locations: {
         ...session.locations,
         [firstStopId]: { ...session.locations[firstStopId], status: "solved" },
-        [hiddenPubsWalk.locations[1].id]: { ...stopTwo, status: "travelling" },
+        [oldHiddenPubsWalk.locations[1].id]: { ...stopTwo, status: "travelling" },
       },
     };
-    const inserted = { ...hiddenPubsWalk.locations[0], id: "pubs-inserted", order: hiddenPubsWalk.locations[0].order + 0.5 };
-    const changedWalk: Walk = { ...hiddenPubsWalk, locations: [...hiddenPubsWalk.locations, inserted] };
+    const inserted = { ...oldHiddenPubsWalk.locations[0], id: "pubs-inserted", order: oldHiddenPubsWalk.locations[0].order + 0.5 };
+    const changedWalk: Walk = { ...oldHiddenPubsWalk, locations: [...oldHiddenPubsWalk.locations, inserted] };
 
     let state = parse(changedWalk, atStopTwo)!;
     for (let step = 0; step < 200 && !state.completedAt; step++) {
@@ -219,10 +219,10 @@ describe("parseSavedSession: the walk's stops changed since the game started", (
 
   test("a completed game doesn't get a new final puzzle", () => {
     const completed: WalkSession = { ...arrived, finale: null, completedAt: "2026-09-23T18:00:00.000Z" };
-    expect(parse(hiddenPubsWalk, completed)!.finale).toBeNull();
+    expect(parse(oldHiddenPubsWalk, completed)!.finale).toBeNull();
   });
 
   test("nothing to adapt: the very same object comes back (no extra re-render)", () => {
-    expect(reconcileSessionWithWalk(hiddenPubsWalk, arrived)).toBe(arrived);
+    expect(reconcileSessionWithWalk(oldHiddenPubsWalk, arrived)).toBe(arrived);
   });
 });

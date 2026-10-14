@@ -128,9 +128,9 @@ describe("Guide walk player: Classics of Antwerp", () => {
 });
 
 describe("existing walks are unaffected", () => {
-  test("Hidden Pubs still starts with its team setup", async () => {
-    const { hiddenPubsWalk } = await import("@/data/walks/hidden-pubs");
-    render(<WalkPlayer walk={hiddenPubsWalk} />);
+  test("a one-phone game walk (the old Hidden Pubs fixture) still starts with its team setup", async () => {
+    const { oldHiddenPubsWalk } = await import("./fixtures/old-hidden-pubs");
+    render(<WalkPlayer walk={oldHiddenPubsWalk} />);
     click((await screen.findByRole("button", { name: t("game.start.newAdventure") })).textContent ?? "");
     expect(screen.getByRole("heading", { name: t("game.team.howMany") })).toBeDefined();
   });

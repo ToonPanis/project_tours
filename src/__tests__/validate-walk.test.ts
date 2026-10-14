@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { classicsOfAntwerpWalk } from "@/data/walks/classics-of-antwerp";
-import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
+import { oldHiddenPubsWalk } from "./fixtures/old-hidden-pubs";
 import { poortjesWalk } from "@/data/walks/poortjes-van-antwerpen";
 import { validateWalk } from "@/lib/validate-walk";
 import type { Walk } from "@/types/walk";
@@ -9,7 +9,7 @@ import type { Walk } from "@/types/walk";
 // in a test, not on the street. Each case breaks one rule of a real walk.
 describe("validateWalk catches structural mistakes", () => {
   test("the real walks are valid", () => {
-    for (const walk of [poortjesWalk, hiddenPubsWalk, classicsOfAntwerpWalk]) expect(validateWalk(walk)).toEqual([]);
+    for (const walk of [poortjesWalk, oldHiddenPubsWalk, classicsOfAntwerpWalk]) expect(validateWalk(walk)).toEqual([]);
   });
 
   test("a guide stop without its stop page", () => {
@@ -24,7 +24,7 @@ describe("validateWalk catches structural mistakes", () => {
     const broken: Walk = {
       ...classicsOfAntwerpWalk,
       locations: classicsOfAntwerpWalk.locations.map((stop, index) =>
-        index === 1 ? { ...stop, challenge: hiddenPubsWalk.locations[0].challenge } : stop,
+        index === 1 ? { ...stop, challenge: oldHiddenPubsWalk.locations[0].challenge } : stop,
       ),
     };
     expect(validateWalk(broken).join()).toMatch(/can't have a challenge/);
@@ -32,8 +32,8 @@ describe("validateWalk catches structural mistakes", () => {
 
   test("a number answer that isn't a whole number (typed numbers are read with thousands separators)", () => {
     const broken: Walk = {
-      ...hiddenPubsWalk,
-      locations: hiddenPubsWalk.locations.map((stop, index) =>
+      ...oldHiddenPubsWalk,
+      locations: oldHiddenPubsWalk.locations.map((stop, index) =>
         index === 0
           ? { ...stop, challenge: { id: "c", type: "number-answer", title: "", question: "", hints: [], correctNumber: 1.5 } }
           : stop,
@@ -44,8 +44,8 @@ describe("validateWalk catches structural mistakes", () => {
 
   test("a challenge type the player can't play yet (a team would be stuck)", () => {
     const broken: Walk = {
-      ...hiddenPubsWalk,
-      locations: hiddenPubsWalk.locations.map((stop, index) =>
+      ...oldHiddenPubsWalk,
+      locations: oldHiddenPubsWalk.locations.map((stop, index) =>
         index === 0
           ? { ...stop, challenge: { id: "c", type: "sequence", title: "", question: "", hints: [], items: ["a", "b"], correctOrder: [1, 0] } }
           : stop,
@@ -55,7 +55,7 @@ describe("validateWalk catches structural mistakes", () => {
   });
 
   test("a missing walking route between two stops", () => {
-    const broken: Walk = { ...hiddenPubsWalk, routeLegs: hiddenPubsWalk.routeLegs!.slice(1) };
+    const broken: Walk = { ...oldHiddenPubsWalk, routeLegs: oldHiddenPubsWalk.routeLegs!.slice(1) };
     expect(validateWalk(broken).join()).toMatch(/no walking route pubs-rococo → pubs-den-engel/);
   });
 
@@ -73,8 +73,8 @@ describe("validateWalk catches structural mistakes", () => {
 
   test("a clue or chapter pointing at a stop that doesn't exist", () => {
     const brokenClue: Walk = {
-      ...hiddenPubsWalk,
-      clues: [...hiddenPubsWalk.clues!, { ...hiddenPubsWalk.clues![0], id: "x", sourceLocationId: "nowhere" }],
+      ...oldHiddenPubsWalk,
+      clues: [...oldHiddenPubsWalk.clues!, { ...oldHiddenPubsWalk.clues![0], id: "x", sourceLocationId: "nowhere" }],
     };
     expect(validateWalk(brokenClue).join()).toMatch(/clue x comes from unknown stop/);
 

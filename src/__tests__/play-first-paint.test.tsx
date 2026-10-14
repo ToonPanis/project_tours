@@ -4,7 +4,7 @@ import { hydrateRoot } from "react-dom/client";
 import { renderToString } from "react-dom/server";
 import { screen } from "@testing-library/react";
 import { classicsOfAntwerpWalk } from "@/data/walks/classics-of-antwerp";
-import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
+import { oldHiddenPubsWalk } from "./fixtures/old-hidden-pubs";
 import { WalkPlayer } from "@/features/walk-session/components/WalkPlayer";
 import { createWalkSession } from "@/features/walk-session/logic/create-session";
 import { localWalkSessionStore } from "@/features/walk-session/storage/session-storage";
@@ -57,8 +57,8 @@ describe("play page first paint (server HTML)", () => {
   });
 
   test("a game walk's start screen is in the server HTML, with its button waiting for the save", () => {
-    const html = renderToString(<WalkPlayer walk={hiddenPubsWalk} />);
-    expect(html).toContain(hiddenPubsWalk.narrative?.title ?? hiddenPubsWalk.title);
+    const html = renderToString(<WalkPlayer walk={oldHiddenPubsWalk} />);
+    expect(html).toContain(oldHiddenPubsWalk.narrative?.title ?? oldHiddenPubsWalk.title);
     expect(html).toMatch(DISABLED_LOADING_BUTTON);
     expect(html).not.toContain(`>${t("game.start.newAdventure")}</button>`);
   });
@@ -74,13 +74,13 @@ describe("play page hydration", () => {
   test("with a save: hydrates cleanly, then offers to continue (never a start that overwrites it)", async () => {
     localWalkSessionStore.save(
       createWalkSession({
-        walk: hiddenPubsWalk,
+        walk: oldHiddenPubsWalk,
         team: { id: "t", name: "", players: [{ id: "p1", name: "Tony" }] },
         sessionId: "s",
         startedAt: "2026-09-23T14:00:00.000Z",
       }),
     );
-    expect(await hydrateServerHtml(hiddenPubsWalk)).toEqual([]);
+    expect(await hydrateServerHtml(oldHiddenPubsWalk)).toEqual([]);
     expect((screen.getByRole("button", { name: t("game.start.continueWalk") }) as HTMLButtonElement).disabled).toBe(false);
     expect(screen.queryByRole("button", { name: t("game.start.newAdventure") })).toBeNull();
   });
