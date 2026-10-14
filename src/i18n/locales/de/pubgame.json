@@ -253,5 +253,51 @@
       "other": "{name} trinkt mit Buddy {buddy} mit: {count} Schlucke"
     },
     "ok": "OK"
+  },
+  "pubtask": {
+    "eyebrow": "Kneipe {current} von {total} · Pubtask",
+    "title": "Pubtask",
+    "teamAnswers": "Eine Antwort pro Team: Wer zuerst tippt, antwortet für alle.",
+    "playerAnswers": "Alle antworten auf ihrem eigenen Handy und punkten für sich.",
+    "questionOf": "Frage {current} von {total}",
+    "worth": "Versuch {attempt}: {points} Punkte wert",
+    "correct": "Richtig! +{points} Punkte",
+    "wrong": {
+      "one": "Knapp daneben: {count} falsche Antwort.",
+      "other": "Knapp daneben: {count} falsche Antworten."
+    },
+    "hint": "Beerys Tipp: {hint}",
+    "revealed": "Die Antwort war: {answer}. Diesmal keine Punkte.",
+    "wrongOption": "falsch",
+    "rightOption": "richtig",
+    "score": "Punktestand bisher: {points} Punkte",
+    "continue": "Weiter"
+  },
+  "tasks": {
+    "uploadSoon": "Fotos und Videos senden kommt mit dem nächsten Update. Vorerst kannst du diese Aufgabe überspringen.",
+    "skip": "Diese Aufgabe überspringen",
+    "done": "Erledigt",
+    "points": {
+      "one": "{count} Punkt",
+      "other": "{count} Punkte"
+    },
+    "perPlayer": "{points} Punkte pro Spieler, der mitmacht",
+    "respect": "Frag zuerst Personal und Gäste und steh nie im Weg."
+  },
+  "bonus": {
+    "eyebrow": "Kneipe {current} von {total} · Bonus",
+    "title": "Bonusaufgabe",
+    "skip": "Kein Bonus: weiter"
+  },
+  "funFact": {
+    "eyebrow": "Kneipe {current} von {total} · Fun Fact",
+    "loading": "Beery schlägt nach…",
+    "cafeStory": "Die Geschichte, die die Kneipe erzählt",
+    "next": "Zur nächsten Kneipe",
+    "finish": "Spiel abschließen"
+  },
+  "teamFinished": {
+    "title": "Euer Team ist fertig!",
+    "text": "Gut gespielt! Das Endergebnis erscheint, sobald alle Teams fertig sind oder der Host das Spiel beendet."
   }
 }

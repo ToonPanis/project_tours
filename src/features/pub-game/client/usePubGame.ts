@@ -13,6 +13,8 @@ export const POLL_INTERVAL_MS = 2_000;
 export type ConnectionStatus = "online" | "offline" | "gone";
 
 export interface PubGameHandle {
+  /** The game code, e.g. "K7M2QX". */
+  code: string;
   view: PlayerView;
   /** New events (for popups), oldest first. Remove them with `dismissEvents`. */
   events: PubGameEvent[];
@@ -119,5 +121,5 @@ export function usePubGame(code: string, initialView: PlayerView, initialVersion
 
   const dismissEvents = useCallback((count: number) => setEvents((current) => current.slice(count)), []);
 
-  return { view, events, dismissEvents, connection, act, busy };
+  return { code, view, events, dismissEvents, connection, act, busy };
 }

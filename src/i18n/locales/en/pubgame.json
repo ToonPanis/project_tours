@@ -253,5 +253,51 @@
       "other": "{name} drinks along with buddy {buddy}: {count} sips"
     },
     "ok": "OK"
+  },
+  "pubtask": {
+    "eyebrow": "Café {current} of {total} · Pubtask",
+    "title": "Pubtask",
+    "teamAnswers": "One answer per team: whoever taps first answers for everyone.",
+    "playerAnswers": "Everyone answers on their own phone and scores for themselves.",
+    "questionOf": "Question {current} of {total}",
+    "worth": "Attempt {attempt}: worth {points} points",
+    "correct": "Correct! +{points} points",
+    "wrong": {
+      "one": "Not quite: {count} wrong answer.",
+      "other": "Not quite: {count} wrong answers."
+    },
+    "hint": "Beery's hint: {hint}",
+    "revealed": "The answer was: {answer}. No points this time.",
+    "wrongOption": "wrong",
+    "rightOption": "right",
+    "score": "Score so far: {points} points",
+    "continue": "Continue"
+  },
+  "tasks": {
+    "uploadSoon": "Sending photos and videos is coming in the next update. For now you can skip this task.",
+    "skip": "Skip this task",
+    "done": "Done",
+    "points": {
+      "one": "{count} point",
+      "other": "{count} points"
+    },
+    "perPlayer": "{points} points per player who takes part",
+    "respect": "Ask staff and guests first, and never get in their way."
+  },
+  "bonus": {
+    "eyebrow": "Café {current} of {total} · Bonus",
+    "title": "Bonus task",
+    "skip": "No bonus: continue"
+  },
+  "funFact": {
+    "eyebrow": "Café {current} of {total} · Fun fact",
+    "loading": "Beery is looking it up…",
+    "cafeStory": "The café's own story",
+    "next": "On to the next café",
+    "finish": "Finish the game"
+  },
+  "teamFinished": {
+    "title": "Your team has finished!",
+    "text": "Well played! The final results appear as soon as every team has finished, or when the host ends the game."
   }
 }

@@ -3,7 +3,9 @@ import { MAX_PLAYERS_PER_TEAM, MAX_TEAMS } from "../config";
 import { applyPubGameAction, teamPlayers } from "../logic/apply-action";
 import { isValidActionId, parseClientAction, toGameAction } from "../logic/client-action";
 import { createPubGame } from "../logic/create-game";
-import type { ActionResult, GameUpdate, Lobby } from "../logic/api-types";
+import type { Locale } from "@/i18n/config";
+import type { PubGameReveals } from "@/data/walks/hidden-pubs/game/content/types";
+import type { ActionResult, CafeReveal, GameUpdate, Lobby } from "../logic/api-types";
 import { toPlayerView } from "../logic/player-view";
 import { canSeeEvent } from "../logic/visible-events";
 import type { GameStore, StoredGame } from "./game-store";
@@ -21,6 +23,8 @@ import { GAME_LIFETIME_DAYS, hashToken, isGameCode, newGameCode, newPlayerToken 
 export interface GameData {
   definition: PubGameDefinition;
   answerKey: AnswerKey;
+  /** Explanations and fun facts per language (server only; they give answers away). */
+  reveals?: Partial<Record<Locale, PubGameReveals>>;
 }
 
 /** Everything the service needs from outside. Tests pass fakes (fixed time, fixed random numbers). */
@@ -281,6 +285,47 @@ export async function performAction(
     view: toPlayerView(gameDataOf(ctx, game).definition, game.state, playerId),
     events: stored.filter((item) => canSeeEvent(game.state, playerId, item.event)),
   });
+}
+
+/**
+ * GET /reveal?cafe=…: the explanations of the questions this player (or team)
+ * has finished at that café, and the café's fun fact once the team got there.
+ * Nothing for a café the team hasn't reached: no peeking at answers.
+ */
+export async function getReveal(
+  ctx: GameContext,
+  code: string,
+  token: string | null,
+  cafeId: string,
+  locale: Locale,
+): Promise<ServiceResult<CafeReveal>> {
+  const game = await loadGame(ctx, code);
+  if (!game) return fail(404, "unknown-game");
+  const playerId = await findPlayer(ctx, code, token);
+  if (!playerId) return fail(401, "not-joined");
+
+  const { state } = game;
+  const player = state.players.find((candidate) => candidate.id === playerId);
+  const team = state.teams.find((candidate) => candidate.id === player?.teamId);
+  const data = gameDataOf(ctx, game);
+  const cafe = data.definition.cafes.find((candidate) => candidate.id === cafeId);
+  const cafeIndex = team ? team.route.indexOf(cafeId) : -1;
+  if (!team || !cafe || cafeIndex === -1 || cafeIndex > team.cafeIndex) return fail(403, "not-yet");
+
+  const reveals = (data.reveals?.[locale] ?? data.reveals?.en)?.cafes[cafeId];
+  const scorerId = state.scoringMode === "player" ? playerId : team.id;
+  const finished = (questionId: string) => {
+    const status = state.answers[scorerId]?.[questionId]?.status;
+    return status === "correct" || status === "revealed";
+  };
+  const explanations = Object.fromEntries(
+    cafe.questions
+      .filter((question) => finished(question.id) && reveals?.explanations[question.id])
+      .map((question) => [question.id, reveals!.explanations[question.id]]),
+  );
+  const reachedFunFact =
+    cafeIndex < team.cafeIndex || team.finishedAt !== null || team.step === "fun-fact" || state.phase === "finished";
+  return ok({ explanations, funFact: reachedFunFact ? (reveals?.funFact ?? null) : null });
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────

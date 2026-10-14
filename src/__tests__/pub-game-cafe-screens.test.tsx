@@ -1,3 +1,4 @@
+import { pubGameTexts } from "@/data/walks/hidden-pubs/game/content";
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { pubGameDefinition } from "@/data/walks/hidden-pubs/game/definition";
@@ -67,7 +68,7 @@ function drawn(state: PubGameState, rank: Rank): PubGameState {
 }
 
 function show(state: PubGameState, playerId: string, version = 10) {
-  return render(<PubGame code={CODE} invite={null} initialView={toPlayerView(pubGameDefinition, state, playerId)} initialVersion={version} />);
+  return render(<PubGame texts={pubGameTexts.en} code={CODE} invite={null} initialView={toPlayerView(pubGameDefinition, state, playerId)} initialVersion={version} />);
 }
 
 /** A fake fetch answering the queued JSON responses in order (then "nothing new"). */

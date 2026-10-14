@@ -253,5 +253,51 @@
       "other": "{name} boit avec son buddy {buddy} : {count} gorgées"
     },
     "ok": "OK"
+  },
+  "pubtask": {
+    "eyebrow": "Café {current} sur {total} · Pubtask",
+    "title": "Pubtask",
+    "teamAnswers": "Une réponse par équipe : le premier qui touche répond pour tout le monde.",
+    "playerAnswers": "Chacun répond sur son propre téléphone et marque pour lui-même.",
+    "questionOf": "Question {current} sur {total}",
+    "worth": "Essai {attempt} : vaut {points} points",
+    "correct": "Bravo ! +{points} points",
+    "wrong": {
+      "one": "Pas tout à fait : {count} mauvaise réponse.",
+      "other": "Pas tout à fait : {count} mauvaises réponses."
+    },
+    "hint": "L'indice de Beery : {hint}",
+    "revealed": "La réponse était : {answer}. Pas de points cette fois.",
+    "wrongOption": "faux",
+    "rightOption": "juste",
+    "score": "Score jusqu'ici : {points} points",
+    "continue": "Continuer"
+  },
+  "tasks": {
+    "uploadSoon": "L'envoi de photos et de vidéos arrive dans la prochaine mise à jour. Pour l'instant, tu peux passer cette mission.",
+    "skip": "Passer cette mission",
+    "done": "Fait",
+    "points": {
+      "one": "{count} point",
+      "other": "{count} points"
+    },
+    "perPlayer": "{points} points par joueur qui participe",
+    "respect": "Demande d'abord au personnel et aux clients, et ne gêne jamais."
+  },
+  "bonus": {
+    "eyebrow": "Café {current} sur {total} · Bonus",
+    "title": "Mission bonus",
+    "skip": "Pas de bonus : continuer"
+  },
+  "funFact": {
+    "eyebrow": "Café {current} sur {total} · Anecdote",
+    "loading": "Beery cherche…",
+    "cafeStory": "L'histoire racontée par le café",
+    "next": "Au café suivant",
+    "finish": "Terminer la partie"
+  },
+  "teamFinished": {
+    "title": "Ton équipe a terminé !",
+    "text": "Bien joué ! Le classement final s'affiche dès que toutes les équipes ont terminé, ou quand l'hôte termine la partie."
   }
 }

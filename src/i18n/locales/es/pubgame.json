@@ -253,5 +253,51 @@
       "other": "{name} bebe con su buddy {buddy}: {count} sorbos"
     },
     "ok": "OK"
+  },
+  "pubtask": {
+    "eyebrow": "Café {current} de {total} · Pubtask",
+    "title": "Pubtask",
+    "teamAnswers": "Una respuesta por equipo: quien toque primero responde por todos.",
+    "playerAnswers": "Cada uno responde en su propio móvil y puntúa para sí.",
+    "questionOf": "Pregunta {current} de {total}",
+    "worth": "Intento {attempt}: vale {points} puntos",
+    "correct": "¡Correcto! +{points} puntos",
+    "wrong": {
+      "one": "Casi: {count} respuesta incorrecta.",
+      "other": "Casi: {count} respuestas incorrectas."
+    },
+    "hint": "La pista de Beery: {hint}",
+    "revealed": "La respuesta era: {answer}. Esta vez sin puntos.",
+    "wrongOption": "incorrecta",
+    "rightOption": "correcta",
+    "score": "Puntuación hasta ahora: {points} puntos",
+    "continue": "Continuar"
+  },
+  "tasks": {
+    "uploadSoon": "El envío de fotos y vídeos llega en la próxima actualización. De momento puedes saltarte esta misión.",
+    "skip": "Saltar esta misión",
+    "done": "Hecho",
+    "points": {
+      "one": "{count} punto",
+      "other": "{count} puntos"
+    },
+    "perPlayer": "{points} puntos por jugador que participe",
+    "respect": "Pregunta antes al personal y a los clientes, y no estorbes nunca."
+  },
+  "bonus": {
+    "eyebrow": "Café {current} de {total} · Extra",
+    "title": "Misión extra",
+    "skip": "Sin extra: continuar"
+  },
+  "funFact": {
+    "eyebrow": "Café {current} de {total} · Curiosidad",
+    "loading": "Beery lo está buscando…",
+    "cafeStory": "La historia que cuenta el café",
+    "next": "Al siguiente café",
+    "finish": "Terminar la partida"
+  },
+  "teamFinished": {
+    "title": "¡Tu equipo ha terminado!",
+    "text": "¡Bien jugado! La clasificación final aparece cuando todos los equipos terminen, o cuando el anfitrión termine la partida."
   }
 }

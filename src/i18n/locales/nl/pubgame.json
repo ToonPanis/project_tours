@@ -253,5 +253,51 @@
       "other": "{name} drinkt mee met buddy {buddy}: {count} slokken"
     },
     "ok": "OK"
+  },
+  "pubtask": {
+    "eyebrow": "Café {current} van {total} · Pubtask",
+    "title": "Pubtask",
+    "teamAnswers": "Eén antwoord per team: wie als eerste tikt, antwoordt voor iedereen.",
+    "playerAnswers": "Iedereen antwoordt op zijn eigen gsm en scoort voor zichzelf.",
+    "questionOf": "Vraag {current} van {total}",
+    "worth": "Poging {attempt}: goed voor {points} punten",
+    "correct": "Juist! +{points} punten",
+    "wrong": {
+      "one": "Net niet: {count} fout antwoord.",
+      "other": "Net niet: {count} foute antwoorden."
+    },
+    "hint": "Beery's hint: {hint}",
+    "revealed": "Het antwoord was: {answer}. Deze keer geen punten.",
+    "wrongOption": "fout",
+    "rightOption": "juist",
+    "score": "Score tot nu toe: {points} punten",
+    "continue": "Verder"
+  },
+  "tasks": {
+    "uploadSoon": "Foto's en video's versturen komt in de volgende update. Voorlopig kun je deze opdracht overslaan.",
+    "skip": "Deze opdracht overslaan",
+    "done": "Gedaan",
+    "points": {
+      "one": "{count} punt",
+      "other": "{count} punten"
+    },
+    "perPlayer": "{points} punten per speler die meedoet",
+    "respect": "Vraag het eerst aan personeel en gasten, en loop nooit in de weg."
+  },
+  "bonus": {
+    "eyebrow": "Café {current} van {total} · Bonus",
+    "title": "Bonusopdracht",
+    "skip": "Geen bonus: verder"
+  },
+  "funFact": {
+    "eyebrow": "Café {current} van {total} · Funfact",
+    "loading": "Beery zoekt het op…",
+    "cafeStory": "Het eigen verhaal van het café",
+    "next": "Naar het volgende café",
+    "finish": "Het spel afronden"
+  },
+  "teamFinished": {
+    "title": "Jullie team is klaar!",
+    "text": "Goed gespeeld! De eindstand verschijnt zodra elk team klaar is, of als de host het spel beëindigt."
   }
 }

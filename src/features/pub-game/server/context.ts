@@ -1,5 +1,6 @@
 import { pubGameAnswerKey } from "@/data/walks/hidden-pubs/game/answers.server";
-import { pubGameDefinition } from "@/data/walks/hidden-pubs/game/definition";
+import { playablePubGameDefinition } from "@/data/walks/hidden-pubs/game/definition";
+import { pubGameReveals } from "@/data/walks/hidden-pubs/game/reveals/index.server";
 import type { GameContext, GameData } from "./game-service";
 import type { GameStore } from "./game-store";
 import { newId, secureRandom } from "./identity";
@@ -8,7 +9,8 @@ import { createSql, PostgresGameStore } from "./postgres-store";
 
 /** Which walks are multiplayer pub games, and their (server-only) data. */
 function getGameData(walkSlug: string): GameData | null {
-  return walkSlug === "hidden-pubs" ? { definition: pubGameDefinition, answerKey: pubGameAnswerKey } : null;
+  // Questions still waiting for the owner's answer are left out (playablePubGameDefinition).
+  return walkSlug === "hidden-pubs" ? { definition: playablePubGameDefinition, answerKey: pubGameAnswerKey, reveals: pubGameReveals } : null;
 }
 
 // Kept on `globalThis`: Next.js reloads changed modules in development, and

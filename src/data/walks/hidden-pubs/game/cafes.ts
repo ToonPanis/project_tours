@@ -6,7 +6,7 @@
  */
 export interface PubGameCafeInfo {
   name: string;
-  /** Null until known (Café Barries: not in OpenStreetMap, owner to supply). */
+  /** Null until known (all twelve are known since 2026-10-14). */
   address: string | null;
 }
 
@@ -16,7 +16,7 @@ export const pubGameCafes: Record<string, PubGameCafeInfo> = {
   "pubs-quinten-matsijs": { name: "Quinten Matsijs", address: "Moriaanstraat 17, 2000 Antwerpen" },
   "pubs-de-kat": { name: "De Kat", address: "Wolstraat 22, 2000 Antwerpen" },
   "pubs-billies": { name: "Billie's Bier Kafétaria", address: "Kammenstraat 12, 2000 Antwerpen" },
-  "pubs-barries": { name: "Café Barries", address: null },
+  "pubs-barries": { name: "Café Barries", address: "Reyndersstraat 21, 2000 Antwerpen" },
   "pubs-paters-vaetje": { name: "Paters Vaetje", address: "Blauwmoezelstraat 1, 2000 Antwerpen" },
   "pubs-de-varkenspoot": { name: "De Varkenspoot", address: "Graanmarkt 3, 2000 Antwerpen" },
   "pubs-boer-van-tienen": { name: "In den Boer van Tienen", address: "Mechelseplein 6, 2000 Antwerpen" },

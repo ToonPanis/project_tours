@@ -23,6 +23,11 @@ export interface RouteGroup {
 export interface PubQuestion {
   id: string;
   optionIds: string[];
+  /**
+   * Waiting for the owner's correct answer (HIDDEN_PUBS_DATA_AUDIT.md, D23):
+   * left out of the game until then (see `playableDefinition`).
+   */
+  pending?: boolean;
 }
 
 /**

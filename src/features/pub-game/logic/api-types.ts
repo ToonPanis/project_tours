@@ -1,4 +1,5 @@
 import type { PubGameEvent, PubGameState } from "@/types/pub-game";
+import type { FunFact } from "@/data/walks/hidden-pubs/game/content/types";
 import type { PlayerView } from "./player-view";
 
 /**
@@ -30,4 +31,12 @@ export interface ActionResult {
   version: number;
   view: PlayerView;
   events: VersionedEvent[];
+}
+
+/** GET /reveal?cafe=…: what a finished question or café may now show. */
+export interface CafeReveal {
+  /** Only for questions this player (or team) has finished. */
+  explanations: Record<string, string>;
+  /** Only once the team reached the café's fun fact (or has moved on). */
+  funFact: FunFact | null;
 }

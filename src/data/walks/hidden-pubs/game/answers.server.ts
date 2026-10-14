@@ -6,12 +6,15 @@ import type { AnswerKey } from "@/types/pub-game";
  * Only files in src/features/pub-game/server/ may import this file (checked by
  * pub-game-server.test.ts), so the answers are never bundled for the browser.
  *
- * Missing until the owner supplies them (HIDDEN_PUBS_DATA_AUDIT.md, D23):
- * pubs-barok-baroque, pubs-quinten-matsijs-profession, pubs-quinten-matsijs-game,
- * pubs-boer-van-tienen-special.
+ * From HIDDEN_PUBS_CONCEPT.txt; the four answers the concept left open (D23)
+ * were given by the owner on 2026-10-14.
  */
 export const pubGameAnswerKey: AnswerKey = {
   "pubs-rococo-gates": "33",
+  "pubs-barok-baroque": "ceiling",
+  "pubs-quinten-matsijs-profession": "painter",
+  "pubs-quinten-matsijs-game": "barrel-game",
+  "pubs-boer-van-tienen-special": "second-oldest",
   "pubs-de-kat-cats": "3",
   "pubs-billies-dogs": "179",
   "pubs-barries-savings-box": "customer-savings",

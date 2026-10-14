@@ -4,7 +4,7 @@ import { describe, expect, test } from "vitest";
 import { pubGameAnswerKey } from "@/data/walks/hidden-pubs/game/answers.server";
 import { pubGameCafes } from "@/data/walks/hidden-pubs/game/cafes";
 import coordinatesFile from "@/data/walks/hidden-pubs/game/coordinates.json";
-import { pubGameDefinition } from "@/data/walks/hidden-pubs/game/definition";
+import { playableDefinition, pubGameDefinition } from "@/data/walks/hidden-pubs/game/definition";
 import { pubGameDrinks } from "@/data/walks/hidden-pubs/game/drinks";
 import { cafeDestination, walkBetween } from "@/data/walks/hidden-pubs/game/navigation";
 import routesFile from "@/data/walks/hidden-pubs/game/routes.json";
@@ -49,15 +49,23 @@ describe("Hidden Pubs 2.0 café data", () => {
     }
   });
 
-  test("only the answers still to come from the owner are missing (D23)", () => {
-    // When the owner sends an answer, add it to answers.server.ts and remove it here.
-    const missing = questions.map((question) => question.id).filter((id) => !(id in pubGameAnswerKey));
-    expect(missing).toEqual([
-      "pubs-barok-baroque",
-      "pubs-quinten-matsijs-profession",
-      "pubs-quinten-matsijs-game",
-      "pubs-boer-van-tienen-special",
-    ]);
+  test("every question has an answer, unless it is marked pending (waiting for the owner)", () => {
+    for (const question of questions) {
+      expect(question.id in pubGameAnswerKey, question.id).toBe(!question.pending);
+    }
+    // All answers are in since 2026-10-14 (D23).
+    expect(questions.filter((question) => question.pending)).toEqual([]);
+  });
+
+  test("a pending question is left out of the playable game", () => {
+    const withPending: typeof pubGameDefinition = {
+      ...pubGameDefinition,
+      cafes: pubGameDefinition.cafes.map((cafe, index) =>
+        index === 0 ? { ...cafe, questions: cafe.questions.map((question) => ({ ...question, pending: true })) } : cafe,
+      ),
+    };
+    expect(playableDefinition(withPending).cafes[0].questions).toEqual([]);
+    expect(playableDefinition(withPending).cafes[1]).toEqual(pubGameDefinition.cafes[1]);
   });
 
   test("evidence tasks: points from the concept; only approved evidence scores", () => {
@@ -87,11 +95,10 @@ test("drinks: the concept's three drinks per café; Billie's has the 1–10 beer
 describe("Hidden Pubs 2.0 positions and walking routes", () => {
   const positioned = new Set(coordinatesFile.locations.map((location) => location.id));
 
-  test("every café has a name; only Café Barries still lacks an address and a position", () => {
+  test("every café has a name, an address and a position", () => {
     for (const cafe of cafes) expect(pubGameCafes[cafe.id]?.name, cafe.id).toBeTruthy();
-    // When the owner sends Barries' address: add it to cafes.ts + coordinates.json, regenerate routes, update here.
-    expect(cafes.filter((cafe) => !pubGameCafes[cafe.id].address).map((cafe) => cafe.id)).toEqual(["pubs-barries"]);
-    expect(cafes.filter((cafe) => !positioned.has(cafe.id)).map((cafe) => cafe.id)).toEqual(["pubs-barries"]);
+    expect(cafes.filter((cafe) => !pubGameCafes[cafe.id].address).map((cafe) => cafe.id)).toEqual([]);
+    expect(cafes.filter((cafe) => !positioned.has(cafe.id)).map((cafe) => cafe.id)).toEqual([]);
     for (const location of coordinatesFile.locations) {
       expect(location.status).toBe("to-verify");
       // Antwerp city centre.
@@ -102,16 +109,17 @@ describe("Hidden Pubs 2.0 positions and walking routes", () => {
     }
   });
 
-  test("routes.json has exactly the legs a random route can need (between cafés with a position)", () => {
+  test("routes.json has exactly the 49 legs a random route can need", () => {
     const expected = requiredLegs(pubGameDefinition.route)
       .filter(([from, to]) => positioned.has(from) && positioned.has(to))
       .map(([from, to]) => `${from}→${to}`)
       .sort();
     const generated = routesFile.legs.map((leg) => `${leg.fromLocationId}→${leg.toLocationId}`).sort();
     expect(generated).toEqual(expected);
+    expect(generated).toHaveLength(49);
   });
 
-  test("navigation: every leg is a real walk; a café without a position has no map route", () => {
+  test("navigation: every leg is a real walk", () => {
     for (const [from, to] of requiredLegs(pubGameDefinition.route)) {
       const walk = walkBetween(from, to);
       if (positioned.has(from) && positioned.has(to)) {
@@ -123,7 +131,8 @@ describe("Hidden Pubs 2.0 positions and walking routes", () => {
       }
     }
     expect(walkBetween(undefined, "pubs-rococo")).toBeNull();
-    expect(cafeDestination("pubs-barries", 6).coordinates).toBeNull();
+    expect(cafeDestination("pubs-barries", 6)).toMatchObject({ address: "Reyndersstraat 21, 2000 Antwerpen" });
+    expect(cafeDestination("pubs-barries", 6).coordinates).not.toBeNull();
     expect(cafeDestination("pubs-den-engel", 12)).toMatchObject({ name: "Den Engel", order: 12 });
   });
 });
@@ -138,12 +147,14 @@ describe("the answers stay on the server", () => {
     });
   }
 
-  test("only src/features/pub-game/server/ imports answers.server", () => {
+  test("only src/features/pub-game/server/ imports the answers and the reveal texts", () => {
     const root = join(process.cwd(), "src");
+    const secret = /from\s+["'][^"']*(answers\.server|reveals\/index\.server|game\/reveals\/[a-z]{2})["']/;
     const importers = sourceFiles(root)
-      .filter((file) => /from\s+["'][^"']*answers\.server["']/.test(readFileSync(file, "utf8")))
+      .filter((file) => secret.test(readFileSync(file, "utf8")))
       .map((file) => relative(root, file).replaceAll("\\", "/"))
-      .filter((file) => file !== "data/walks/hidden-pubs/game/answers.server.ts");
+      // The reveal index imports its own language files.
+      .filter((file) => file !== "data/walks/hidden-pubs/game/reveals/index.server.ts");
     expect(importers.length).toBeGreaterThan(0);
     expect(importers.filter((file) => !file.startsWith("features/pub-game/server/"))).toEqual([]);
   });

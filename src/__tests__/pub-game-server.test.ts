@@ -3,12 +3,14 @@ import { pubGameAnswerKey } from "@/data/walks/hidden-pubs/game/answers.server";
 import { pubGameDefinition } from "@/data/walks/hidden-pubs/game/definition";
 import { parseClientAction } from "@/features/pub-game/logic/client-action";
 import type { PlayerView } from "@/features/pub-game/logic/player-view";
+import { pubGameReveals } from "@/data/walks/hidden-pubs/game/reveals/index.server";
 import {
   claimPlayerLink,
   createGame,
   createPlayerLink,
   getGameUpdate,
   getLobby,
+  getReveal,
   joinGame,
   performAction,
   type GameContext,
@@ -24,7 +26,9 @@ function testContext(now = () => START): GameContext {
   return {
     store: new MemoryGameStore(now),
     getGameData: (slug) =>
-      slug === "hidden-pubs" ? { definition: pubGameDefinition, answerKey: pubGameAnswerKey } : null,
+      slug === "hidden-pubs"
+        ? { definition: pubGameDefinition, answerKey: pubGameAnswerKey, reveals: pubGameReveals }
+        : null,
     random: Math.random,
     newId: () => `id-${++counter}`,
     now,
@@ -354,6 +358,44 @@ async function reachPubtask(ctx: GameContext, code: string, token: string) {
   // "choose-target" can't happen: the host is alone in the team.
   expect((await view(ctx, code, token)).team.step).toBe("pubtask");
 }
+
+// ─── Explanations and fun facts ─────────────────────────────────────────────
+
+describe("reveals (explanations and fun facts give answers away)", () => {
+  test("an explanation only after the question is finished; the fun fact only at its step", async () => {
+    const { ctx, code, hostToken, beaToken } = await gameWithTwoTeams();
+    await reachPubtask(ctx, code, hostToken);
+    const rococo = pubGameDefinition.cafes[0];
+    const question = rococo.questions[0];
+    const reveal = async (locale: "en" | "nl" = "en") => unwrap(await getReveal(ctx, code, hostToken, rococo.id, locale));
+
+    expect(await reveal()).toEqual({ explanations: {}, funFact: null });
+    const wrong = question.optionIds.find((id) => id !== pubGameAnswerKey[question.id])!;
+    unwrap(await tap(ctx, code, hostToken, { type: "ANSWER", questionId: question.id, optionId: wrong }));
+    expect(await reveal()).toEqual({ explanations: {}, funFact: null });
+
+    unwrap(await tap(ctx, code, hostToken, { type: "ANSWER", questionId: question.id, optionId: pubGameAnswerKey[question.id] }));
+    // Rococo has no bonus task: the team is at the fun fact now.
+    expect(await reveal()).toEqual({
+      explanations: { [question.id]: pubGameReveals.en.cafes[rococo.id].explanations[question.id] },
+      funFact: pubGameReveals.en.cafes[rococo.id].funFact,
+    });
+    expect((await reveal("nl")).funFact?.title).toBe(pubGameReveals.nl.cafes[rococo.id].funFact.title);
+
+    // Bea's team hasn't answered anything at Rococo yet: no explanation for her.
+    unwrap(await tap(ctx, code, beaToken, { type: "ARRIVE" }));
+    expect(unwrap(await getReveal(ctx, code, beaToken, rococo.id, "en")).explanations).toEqual({});
+  });
+
+  test("nothing about a café the team hasn't reached; nothing without a cookie", async () => {
+    const { ctx, code, hostToken } = await gameWithTwoTeams();
+    unwrap(await tap(ctx, code, hostToken, { type: "START_GAME" }));
+    const last = pubGameDefinition.cafes[pubGameDefinition.cafes.length - 1].id;
+    expect(await getReveal(ctx, code, hostToken, last, "en")).toMatchObject({ status: 403, error: "not-yet" });
+    expect(await getReveal(ctx, code, hostToken, "made-up", "en")).toMatchObject({ status: 403 });
+    expect(await getReveal(ctx, code, null, pubGameDefinition.cafes[0].id, "en")).toMatchObject({ status: 401 });
+  });
+});
 
 // ─── What a phone may send ──────────────────────────────────────────────────
 

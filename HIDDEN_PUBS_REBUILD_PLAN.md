@@ -1,6 +1,6 @@
 # Hidden Pubs 2.0: rebuild plan
 
-Status: **approved on 2026-10-14** (all recommendations D1–D34 accepted). Stages 1 (game logic), 2 (server) and 3 (Postgres store, waiting for a database to test against) done; missing café answers still to come from the owner.
+Status: **approved on 2026-10-14** (all recommendations D1–D34 accepted). Stages 1–7 done (stage 3 still to be tested against a real database); stage 8 (photo/video evidence) next.
 Source of truth for the game: `HIDDEN_PUBS_CONCEPT.txt` (your document, copied unchanged from `Downloads/Geplakte tekst.txt`).
 Companion documents: `HIDDEN_PUBS_GAME_RULES.md` (the rules as the app will run them), `HIDDEN_PUBS_DATA_AUDIT.md` (per café: what is there, what is missing, what is wrong), `HIDDEN_PUBS_TEST_PLAN.md`.
 

@@ -10,8 +10,14 @@ import type { QrCode } from "../logic/qr";
 import { Beery } from "./Beery";
 import { BeeryIntro } from "./BeeryIntro";
 import { LobbyScreen } from "./LobbyScreen";
-import { CardsDoneScreen } from "./CardsDoneScreen";
+import type { PubGameTexts } from "@/data/walks/hidden-pubs/game/content/types";
+import { playablePubGameDefinition } from "@/data/walks/hidden-pubs/game/definition";
+import { PubGameTextsProvider } from "../client/texts-context";
+import { BonusStep } from "./BonusStep";
 import { CardStep } from "./CardStep";
+import { FunFactStep } from "./FunFactStep";
+import { PubtaskStep } from "./PubtaskStep";
+import { TeamFinishedScreen } from "./TeamFinishedScreen";
 import { DrinkStep } from "./DrinkStep";
 import { EffectsBar } from "./EffectsBar";
 import { EventPopup } from "./EventPopup";
@@ -23,6 +29,14 @@ interface PubGameProps {
   invite: { joinUrl: string; qrCode: QrCode } | null;
   initialView: PlayerView;
   initialVersion: number;
+  /** Questions, options, hints and tasks in the player's language (chosen by the server page). */
+  texts: PubGameTexts;
+}
+
+/** True when the café has playable questions or a pubtask photo task (else the team skips the pubtask). */
+function hasPubtask(cafeId: string): boolean {
+  const cafe = playablePubGameDefinition.cafes.find((candidate) => candidate.id === cafeId);
+  return Boolean(cafe && (cafe.questions.length > 0 || cafe.tasks.some((task) => task.presentedAs === "pubtask")));
 }
 
 /** Remembers on this phone that the rules were shown for this game (a convenience: losing it just shows them again). */
@@ -43,7 +57,7 @@ function readIntroSeen(code: string): boolean {
  * One phone's Hidden Pubs game. Picks the screen from the live game state:
  * lobby → Beery's rules → the team's current café step → the end.
  */
-export function PubGame({ code, invite, initialView, initialVersion }: PubGameProps) {
+export function PubGame({ code, invite, initialView, initialVersion, texts }: PubGameProps) {
   const t = useT();
   const game = usePubGame(code, initialView, initialVersion);
   const { view, connection } = game;
@@ -55,8 +69,10 @@ export function PubGame({ code, invite, initialView, initialVersion }: PubGamePr
   const [showRules, setShowRules] = useState(false);
   // Location allowed once in this game: the next cafés skip the explainer.
   const [gpsEnabled, setGpsEnabled] = useState(false);
-  // The last card of a round this phone has seen ("On to the pubtask").
+  // What this phone has already looked at after the team moved on: the round's last
+  // card ("On to the pubtask") and the finished pubtask with its explanations ("Continue").
   const [seenLastCard, setSeenLastCard] = useState<string | null>(null);
+  const [seenPubtask, setSeenPubtask] = useState<number | null>(null);
   // Café + card: after a reshuffle the same card can come up again at a later café.
   const lastCard = view.team.currentCard ? `${view.team.cafeIndex}:${view.team.currentCard.cardId}` : null;
 
@@ -90,19 +106,27 @@ export function PubGame({ code, invite, initialView, initialVersion }: PubGamePr
   } else if (view.team.step === "drinks") {
     // Keyed by café: the drink choice starts empty at every café.
     screen = <DrinkStep key={view.team.cafeIndex} game={game} />;
+  } else if (view.team.finishedAt) {
+    screen = <TeamFinishedScreen view={view} />;
   } else if (view.team.step === "cards") {
     screen = <CardStep key={view.team.cafeIndex} game={game} />;
-  } else if (view.team.step === "pubtask" && lastCard && seenLastCard !== lastCard) {
+  } else if (lastCard && seenLastCard !== lastCard) {
     // The round just ended: show its last card until this player moves on.
     screen = <CardStep key={view.team.cafeIndex} game={game} onRoundSeen={() => setSeenLastCard(lastCard)} />;
+  } else if (view.team.step === "pubtask") {
+    screen = <PubtaskStep key={view.team.cafeIndex} game={game} />;
+  } else if (hasPubtask(view.team.route[view.team.cafeIndex]) && seenPubtask !== view.team.cafeIndex) {
+    // The pubtask just ended: keep its answers and explanations until this player continues.
+    screen = <PubtaskStep key={view.team.cafeIndex} game={game} onDone={() => setSeenPubtask(view.team.cafeIndex)} />;
+  } else if (view.team.step === "bonus") {
+    screen = <BonusStep key={view.team.cafeIndex} game={game} />;
   } else {
-    // Stage 7 adds the pubtask, bonus task and fun fact here.
-    screen = <CardsDoneScreen view={view} />;
+    screen = <FunFactStep key={view.team.cafeIndex} game={game} />;
   }
   const showEffects = view.phase === "playing" && introSeen === true && !showRules;
 
   return (
-    <>
+    <PubGameTextsProvider texts={texts}>
       <nav aria-label={t("pubgame.menu.label")} className="flex items-center justify-between gap-3 px-4 pt-4 text-sm sm:px-6">
         <span className="font-mono tracking-[0.2em] text-parchment/60">{code}</span>
         <span className="flex gap-4">
@@ -127,6 +151,6 @@ export function PubGame({ code, invite, initialView, initialVersion }: PubGamePr
       {showEffects && <EffectsBar game={game} />}
       {screen}
       {view.phase !== "lobby" && <EventPopup game={game} />}
-    </>
+    </PubGameTextsProvider>
   );
 }

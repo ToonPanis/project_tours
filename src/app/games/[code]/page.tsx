@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
 import { JoinGameForm } from "@/features/pub-game/components/JoinGameForm";
 import { PubGame } from "@/features/pub-game/components/PubGame";
+import { getPubGameTexts } from "@/data/walks/hidden-pubs/game/content";
 import { inviteFor, loadGamePage } from "@/features/pub-game/server/page-data";
+import { getLocale } from "@/i18n/server";
 
 /**
  * /games/CODE: the link everyone opens. Server Component: it reads this
@@ -21,6 +23,8 @@ export default async function GamePage({ params }: PageProps<"/games/[code]">) {
       invite={invite}
       initialView={page.player.view}
       initialVersion={page.player.version}
+      // The texts in the visitor's language; a language switch re-renders the page with new ones.
+      texts={getPubGameTexts(await getLocale())}
     />
   );
 }

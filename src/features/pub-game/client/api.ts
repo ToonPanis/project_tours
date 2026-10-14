@@ -1,7 +1,7 @@
 import { createId } from "@/lib/create-id";
 import type { MessageKey } from "@/i18n/translate";
 import type { ClientAction } from "../logic/client-action";
-import type { ActionResult, GameUpdate } from "../logic/api-types";
+import type { ActionResult, CafeReveal, GameUpdate } from "../logic/api-types";
 
 /**
  * The browser side of /api/games. Plain fetch, no library.
@@ -47,6 +47,10 @@ export const joinGameRequest = (code: string, input: { name: string; teamId: str
 
 export const fetchGameUpdate = (code: string, since: number) =>
   request<GameUpdate>(`/api/games/${code}/state?since=${since}`);
+
+/** What this player has earned at a café: finished questions' explanations, the fun fact. */
+export const fetchReveal = (code: string, cafeId: string) =>
+  request<CafeReveal>(`/api/games/${code}/reveal?cafe=${encodeURIComponent(cafeId)}`);
 
 /** Host only: a personal link for a player (late joiner, new phone). */
 export const createPlayerLinkRequest = (code: string, playerId: string) =>

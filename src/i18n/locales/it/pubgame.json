@@ -253,5 +253,51 @@
       "other": "{name} beve con il suo buddy {buddy}: {count} sorsi"
     },
     "ok": "OK"
+  },
+  "pubtask": {
+    "eyebrow": "Locale {current} di {total} · Pubtask",
+    "title": "Pubtask",
+    "teamAnswers": "Una risposta per squadra: chi tocca per primo risponde per tutti.",
+    "playerAnswers": "Ognuno risponde sul proprio telefono e fa punti per sé.",
+    "questionOf": "Domanda {current} di {total}",
+    "worth": "Tentativo {attempt}: vale {points} punti",
+    "correct": "Giusto! +{points} punti",
+    "wrong": {
+      "one": "Quasi: {count} risposta sbagliata.",
+      "other": "Quasi: {count} risposte sbagliate."
+    },
+    "hint": "L'indizio di Beery: {hint}",
+    "revealed": "La risposta era: {answer}. Questa volta niente punti.",
+    "wrongOption": "sbagliata",
+    "rightOption": "giusta",
+    "score": "Punteggio finora: {points} punti",
+    "continue": "Continua"
+  },
+  "tasks": {
+    "uploadSoon": "L'invio di foto e video arriva nel prossimo aggiornamento. Per ora puoi saltare questa missione.",
+    "skip": "Salta questa missione",
+    "done": "Fatto",
+    "points": {
+      "one": "{count} punto",
+      "other": "{count} punti"
+    },
+    "perPlayer": "{points} punti per ogni giocatore che partecipa",
+    "respect": "Chiedi prima al personale e ai clienti, e non intralciare mai."
+  },
+  "bonus": {
+    "eyebrow": "Locale {current} di {total} · Bonus",
+    "title": "Missione bonus",
+    "skip": "Niente bonus: continua"
+  },
+  "funFact": {
+    "eyebrow": "Locale {current} di {total} · Curiosità",
+    "loading": "Beery sta cercando…",
+    "cafeStory": "La storia raccontata dal locale",
+    "next": "Al prossimo locale",
+    "finish": "Concludi la partita"
+  },
+  "teamFinished": {
+    "title": "La tua squadra ha finito!",
+    "text": "Ben giocato! La classifica finale appare quando tutte le squadre hanno finito, o quando l'host termina la partita."
   }
 }

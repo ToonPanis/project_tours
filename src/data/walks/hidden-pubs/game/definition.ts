@@ -106,3 +106,21 @@ export const pubGameDefinition: PubGameDefinition = {
   // → Den Engel. In route-groups.json, shared with the route generator script.
   route: routeGroups.groups,
 };
+
+/**
+ * The game as it's played today: questions still waiting for the owner's
+ * answer (`pending`) are left out, so a café without a playable question goes
+ * straight from the cards to its bonus task or fun fact. Used by the server
+ * AND the screens, so both always agree.
+ */
+export function playableDefinition(definition: PubGameDefinition): PubGameDefinition {
+  return {
+    ...definition,
+    cafes: definition.cafes.map((cafe) => ({
+      ...cafe,
+      questions: cafe.questions.filter((question) => !question.pending),
+    })),
+  };
+}
+
+export const playablePubGameDefinition = playableDefinition(pubGameDefinition);

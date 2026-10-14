@@ -30,7 +30,7 @@ Before café 1, **Beery** explains in a few short screens (skippable, can be reo
 
 - All teams **start together at Rococo** and **finish at Den Engel**.
 - Cafés **2–7** (Barok, Quinten Matsijs, De Kat, Billie's, Café Barries, Paters Vaetje): random order.
-- Cafés **8 and 9** (De Varkenspoot, Boer van Tienen): back to back. Your document says they're at the same location ⟨D6⟩.
+- Cafés **8 and 9** (De Varkenspoot, Boer van Tienen): always one right after the other, with no other café in between. They are two separate places ⟨D6⟩.
 - Cafés **10 and 11** (De Muze, Cabron): random order.
 - Each café exactly once: `1 → [2–7 shuffled] → 8 → 9 → [10, 11 shuffled] → 12`.
 - One random route **per team** ⟨D5⟩. A team only sees its own next café.
