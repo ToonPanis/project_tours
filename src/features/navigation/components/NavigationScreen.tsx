@@ -41,7 +41,8 @@ interface NavigationScreenProps {
   gpsAlreadyEnabled: boolean;
   onGpsEnabled: () => void;
   onArrive: () => void;
-  onShowRoute: () => void;
+  /** Opens the list of all stops. Left out by Hidden Pubs, whose route stays private per team. */
+  onShowRoute?: () => void;
 }
 
 export function NavigationScreen({
@@ -300,10 +301,12 @@ export function NavigationScreen({
         <Button onClick={handleManualArrival} variant={isManualArrivalPrimary ? "primary" : "outline"} fullWidth>
           {phase === "manual" || !destinationCoordinates ? t("gps.arrived") : t("gps.imHere")}
         </Button>
-        <div className="flex justify-between text-sm">
-          <button type="button" onClick={onShowRoute} className="min-h-11 text-gold underline underline-offset-4">
-            {t("gps.showRoute")}
-          </button>
+        <div className={`flex text-sm ${onShowRoute ? "justify-between" : "justify-end"}`}>
+          {onShowRoute && (
+            <button type="button" onClick={onShowRoute} className="min-h-11 text-gold underline underline-offset-4">
+              {t("gps.showRoute")}
+            </button>
+          )}
           <a href={externalMapUrl} target="_blank" rel="noopener noreferrer" className="flex min-h-11 items-center text-parchment/60 underline underline-offset-4">
             {t("gps.externalMap")}
           </a>

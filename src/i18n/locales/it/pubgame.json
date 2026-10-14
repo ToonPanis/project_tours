@@ -77,7 +77,11 @@
   },
   "nextCafe": {
     "eyebrow": "Locale {current} di {total}",
-    "text": "La prossima tappa della tua squadra. Presto Beery ti mostrerà qui la strada."
+    "text": "La prossima tappa della tua squadra."
+  },
+  "arrived": {
+    "title": "Benvenuti al {cafe}!",
+    "text": "Ce l'avete fatta! Trovate un posto: il turno del locale inizia qui."
   },
   "menu": {
     "label": "Menu della partita",

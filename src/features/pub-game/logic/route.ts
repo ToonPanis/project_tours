@@ -41,3 +41,29 @@ function shuffle<T>(items: T[], random: () => number): T[] {
   }
   return result;
 }
+
+/**
+ * Every walk from one café to another that some random route can contain:
+ * within a shuffled group any order, within a fixed group the next café, and
+ * from the end of a group to the start of the next one. These are the legs
+ * scripts/generate-walking-routes.mjs must generate (the same rule is written
+ * out there; a test checks that routes.json matches this function).
+ */
+export function requiredLegs(groups: RouteGroup[]): [string, string][] {
+  const legs: [string, string][] = [];
+  groups.forEach((group, index) => {
+    const ids = group.cafeIds;
+    if (group.shuffle) {
+      for (const from of ids) for (const to of ids) if (from !== to) legs.push([from, to]);
+    } else {
+      for (let i = 0; i < ids.length - 1; i++) legs.push([ids[i], ids[i + 1]]);
+    }
+    const next = groups[index + 1];
+    if (!next) return;
+    // A shuffled group can end with any of its cafés / the next one can start with any of its cafés.
+    const lasts = group.shuffle ? ids : ids.slice(-1);
+    const firsts = next.shuffle ? next.cafeIds : next.cafeIds.slice(0, 1);
+    for (const from of lasts) for (const to of firsts) legs.push([from, to]);
+  });
+  return legs;
+}

@@ -77,7 +77,11 @@
   },
   "nextCafe": {
     "eyebrow": "Café {current} van {total}",
-    "text": "De volgende stop van je team. Beery wijst hier binnenkort de weg."
+    "text": "De volgende stop van je team."
+  },
+  "arrived": {
+    "title": "Welkom in {cafe}!",
+    "text": "Gelukt! Zoek een plekje, de caféronde begint hier."
   },
   "menu": {
     "label": "Spelmenu",

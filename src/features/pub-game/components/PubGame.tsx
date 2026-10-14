@@ -10,6 +10,7 @@ import type { QrCode } from "../logic/qr";
 import { Beery } from "./Beery";
 import { BeeryIntro } from "./BeeryIntro";
 import { LobbyScreen } from "./LobbyScreen";
+import { ArrivedScreen } from "./ArrivedScreen";
 import { NextCafeScreen } from "./NextCafeScreen";
 
 interface PubGameProps {
@@ -48,6 +49,8 @@ export function PubGame({ code, invite, initialView, initialVersion }: PubGamePr
   const [finishedIntroNow, setFinishedIntroNow] = useState(false);
   const introSeen = storedIntroSeen === null ? null : storedIntroSeen || finishedIntroNow;
   const [showRules, setShowRules] = useState(false);
+  // Location allowed once in this game: the next cafés skip the explainer.
+  const [gpsEnabled, setGpsEnabled] = useState(false);
 
   function finishIntro() {
     try {
@@ -74,9 +77,11 @@ export function PubGame({ code, invite, initialView, initialVersion }: PubGamePr
     screen = null;
   } else if (!introSeen || showRules) {
     screen = <BeeryIntro onDone={finishIntro} />;
+  } else if (view.team.step === "travelling") {
+    screen = <NextCafeScreen game={game} gpsEnabled={gpsEnabled} onGpsEnabled={() => setGpsEnabled(true)} />;
   } else {
-    // Stages 5–7 add the drink, card, pubtask, bonus and fun-fact screens per `view.team.step`.
-    screen = <NextCafeScreen view={view} />;
+    // Stages 6–7 add the drink, card, pubtask, bonus and fun-fact screens per `view.team.step`.
+    screen = <ArrivedScreen view={view} />;
   }
 
   return (

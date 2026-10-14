@@ -77,7 +77,11 @@
   },
   "nextCafe": {
     "eyebrow": "Café {current} de {total}",
-    "text": "La próxima parada de tu equipo. Beery te mostrará el camino aquí muy pronto."
+    "text": "La próxima parada de tu equipo."
+  },
+  "arrived": {
+    "title": "¡Bienvenidos a {cafe}!",
+    "text": "¡Lo conseguisteis! Buscad un sitio: la ronda del café empieza aquí."
   },
   "menu": {
     "label": "Menú de la partida",

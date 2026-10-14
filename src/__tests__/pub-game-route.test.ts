@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { drawRoute, isValidRoute } from "@/features/pub-game/logic/route";
+import { drawRoute, isValidRoute, requiredLegs } from "@/features/pub-game/logic/route";
 import { straightRoute, testDefinition } from "./fixtures/pub-game-definition";
 
 const groups = testDefinition.route;
@@ -65,5 +65,32 @@ describe("refusing a broken route", () => {
 
   test("shuffled groups in another order are fine", () => {
     expect(isValidRoute(groups, swap(swap(straightRoute, 1, 6), 9, 10))).toBe(true);
+  });
+});
+
+describe("walking legs a random route can need", () => {
+  const legs = requiredLegs(groups);
+  const key = ([from, to]: [string, string] | string[]) => `${from}→${to}`;
+
+  test("12 cafés in these groups need 49 legs, each once", () => {
+    // Rococo→6, 6×5 within cafés 2–7, 6→café 8, 8→9, 9→2, 2 within 10–11, 2→Den Engel.
+    expect(legs).toHaveLength(6 + 30 + 6 + 1 + 2 + 2 + 2);
+    expect(new Set(legs.map(key)).size).toBe(legs.length);
+  });
+
+  test("every step of 10,000 random routes is one of them, and every one of them is used", () => {
+    const allowed = new Set(legs.map(key));
+    const used = new Set<string>();
+    const missing: string[] = [];
+    for (let run = 0; run < 10_000; run++) {
+      const route = drawRoute(groups, Math.random);
+      for (let i = 0; i < route.length - 1; i++) {
+        const step = key([route[i], route[i + 1]]);
+        used.add(step);
+        if (!allowed.has(step)) missing.push(step);
+      }
+    }
+    expect(missing).toEqual([]);
+    expect(used.size).toBe(allowed.size);
   });
 });

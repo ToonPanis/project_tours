@@ -77,7 +77,11 @@
   },
   "nextCafe": {
     "eyebrow": "Kneipe {current} von {total}",
-    "text": "Der nächste Halt deines Teams. Beery zeigt dir hier bald den Weg."
+    "text": "Der nächste Halt deines Teams."
+  },
+  "arrived": {
+    "title": "Willkommen im {cafe}!",
+    "text": "Geschafft! Sucht euch einen Platz, die Kneipenrunde beginnt hier."
   },
   "menu": {
     "label": "Spielmenü",

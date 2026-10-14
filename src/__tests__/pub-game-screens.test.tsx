@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { pubGameCafeNames } from "@/data/walks/hidden-pubs/game/cafes";
+import { cafeName, pubGameCafes } from "@/data/walks/hidden-pubs/game/cafes";
 import { pubGameDefinition } from "@/data/walks/hidden-pubs/game/definition";
 import { POLL_INTERVAL_MS } from "@/features/pub-game/client/usePubGame";
 import { ClaimPlayerLink } from "@/features/pub-game/components/ClaimPlayerLink";
@@ -15,6 +15,9 @@ import { qrCodeFor } from "@/features/pub-game/logic/qr";
 import { drawRoute } from "@/features/pub-game/logic/route";
 import { englishTranslator as t } from "@/i18n/translate";
 import type { PubGameAction, PubGameState } from "@/types/pub-game";
+
+// The real map needs WebGL, which jsdom doesn't have.
+vi.mock("@/features/navigation/components/WalkingMap", () => ({ default: () => <div data-testid="walking-map" /> }));
 
 const router = { push: vi.fn(), refresh: vi.fn(), replace: vi.fn() };
 vi.mock("next/navigation", () => ({ useRouter: () => router }));
@@ -194,11 +197,32 @@ describe("the game screen", () => {
     fireEvent.click(screen.getByRole("button", { name: t("pubgame.beery.intro.done") }));
 
     const popup = screen.getByRole("dialog", { name: t("pubgame.beery.nextLocation") });
-    expect(within(popup).getByText(pubGameCafeNames[pubGameDefinition.route[0].cafeIds[0]])).toBeTruthy();
+    expect(within(popup).getByText(cafeName(pubGameDefinition.route[0].cafeIds[0]))).toBeTruthy();
     fireEvent.click(within(popup).getByRole("button", { name: t("pubgame.beery.letsGo") }));
     expect(screen.queryByRole("dialog")).toBeNull();
-    expect(screen.getByRole("heading", { name: "Rococo" })).toBeTruthy();
     expect(window.localStorage.getItem(`hidden-antwerp:pub-intro:${CODE}`)).toBe("seen");
+
+    // Then the walking navigation (loaded lazily): the café and its address.
+    expect(await screen.findByRole("heading", { name: "Rococo" })).toBeTruthy();
+    expect(screen.getByText(pubGameCafes["pubs-rococo"].address!)).toBeTruthy();
+  });
+
+  test("navigation → \"I'm here\" → the whole team has arrived", async () => {
+    const playing = started(lobbyState(true));
+    const arrived = apply(playing, "b", { type: "ARRIVE" });
+    window.localStorage.setItem(`hidden-antwerp:pub-intro:${CODE}`, "seen");
+    const fetchMock = fakeFetch({ body: { version: 3, view: viewOf(arrived, "b") } });
+    render(<PubGame code={CODE} invite={null} initialView={viewOf(playing, "b")} initialVersion={2} />);
+
+    fireEvent.click(screen.getByRole("button", { name: t("pubgame.beery.letsGo") }));
+    fireEvent.click(await screen.findByRole("button", { name: t("gps.continueWithoutGps") }));
+    // The route list stays private: no "show route" button in Hidden Pubs.
+    expect(screen.queryByRole("button", { name: t("gps.showRoute") })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: t("gps.arrived") }));
+
+    const firstCafe = cafeName(pubGameDefinition.route[0].cafeIds[0]);
+    expect(await screen.findByRole("heading", { name: t("pubgame.arrived.title", { cafe: firstCafe }) })).toBeTruthy();
+    expect(bodyOf(fetchMock, 0)).toMatchObject({ action: { type: "ARRIVE" } });
   });
 
   test("the rules can be skipped and opened again from the menu", () => {

@@ -1,4 +1,5 @@
 import type { PubGameDefinition } from "@/types/pub-game";
+import routeGroups from "./route-groups.json";
 
 /**
  * Hidden Pubs 2.0: the technical data of the 12 cafés, from
@@ -101,23 +102,7 @@ export const pubGameDefinition: PubGameDefinition = {
       ],
     },
   ],
-  // Rococo → cafés 2–7 in a random order → De Varkenspoot → Boer van Tienen
-  // → De Muze and Cabron in a random order → Den Engel (one route per team, D5/D6).
-  route: [
-    { cafeIds: ["pubs-rococo"], shuffle: false },
-    {
-      cafeIds: [
-        "pubs-barok",
-        "pubs-quinten-matsijs",
-        "pubs-de-kat",
-        "pubs-billies",
-        "pubs-barries",
-        "pubs-paters-vaetje",
-      ],
-      shuffle: true,
-    },
-    { cafeIds: ["pubs-de-varkenspoot", "pubs-boer-van-tienen"], shuffle: false },
-    { cafeIds: ["pubs-de-muze", "pubs-cabron"], shuffle: true },
-    { cafeIds: ["pubs-den-engel"], shuffle: false },
-  ],
+  // Rococo → cafés 2–7 shuffled → De Varkenspoot → Boer van Tienen → De Muze/Cabron shuffled
+  // → Den Engel. In route-groups.json, shared with the route generator script.
+  route: routeGroups.groups,
 };

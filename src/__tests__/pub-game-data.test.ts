@@ -2,7 +2,12 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import { describe, expect, test } from "vitest";
 import { pubGameAnswerKey } from "@/data/walks/hidden-pubs/game/answers.server";
+import { pubGameCafes } from "@/data/walks/hidden-pubs/game/cafes";
+import coordinatesFile from "@/data/walks/hidden-pubs/game/coordinates.json";
 import { pubGameDefinition } from "@/data/walks/hidden-pubs/game/definition";
+import { cafeDestination, walkBetween } from "@/data/walks/hidden-pubs/game/navigation";
+import routesFile from "@/data/walks/hidden-pubs/game/routes.json";
+import { requiredLegs } from "@/features/pub-game/logic/route";
 
 const cafes = pubGameDefinition.cafes;
 const questions = cafes.flatMap((cafe) => cafe.questions);
@@ -63,6 +68,50 @@ describe("Hidden Pubs 2.0 café data", () => {
       ["pubs-boer-van-tienen-rps", 100, "per-team", "photo", "bonus"],
       ["pubs-den-engel-clog", 300, "per-team", "video", "bonus"],
     ]);
+  });
+});
+
+describe("Hidden Pubs 2.0 positions and walking routes", () => {
+  const positioned = new Set(coordinatesFile.locations.map((location) => location.id));
+
+  test("every café has a name; only Café Barries still lacks an address and a position", () => {
+    for (const cafe of cafes) expect(pubGameCafes[cafe.id]?.name, cafe.id).toBeTruthy();
+    // When the owner sends Barries' address: add it to cafes.ts + coordinates.json, regenerate routes, update here.
+    expect(cafes.filter((cafe) => !pubGameCafes[cafe.id].address).map((cafe) => cafe.id)).toEqual(["pubs-barries"]);
+    expect(cafes.filter((cafe) => !positioned.has(cafe.id)).map((cafe) => cafe.id)).toEqual(["pubs-barries"]);
+    for (const location of coordinatesFile.locations) {
+      expect(location.status).toBe("to-verify");
+      // Antwerp city centre.
+      expect(location.latitude).toBeGreaterThan(51.2);
+      expect(location.latitude).toBeLessThan(51.23);
+      expect(location.longitude).toBeGreaterThan(4.38);
+      expect(location.longitude).toBeLessThan(4.43);
+    }
+  });
+
+  test("routes.json has exactly the legs a random route can need (between cafés with a position)", () => {
+    const expected = requiredLegs(pubGameDefinition.route)
+      .filter(([from, to]) => positioned.has(from) && positioned.has(to))
+      .map(([from, to]) => `${from}→${to}`)
+      .sort();
+    const generated = routesFile.legs.map((leg) => `${leg.fromLocationId}→${leg.toLocationId}`).sort();
+    expect(generated).toEqual(expected);
+  });
+
+  test("navigation: every leg is a real walk; a café without a position has no map route", () => {
+    for (const [from, to] of requiredLegs(pubGameDefinition.route)) {
+      const walk = walkBetween(from, to);
+      if (positioned.has(from) && positioned.has(to)) {
+        // Quinten Matsijs ↔ De Kat is only ~11 m in the draft positions (on-site check, see FIELD_TEST_CHECKLIST.md).
+        expect(walk?.distanceMeters, `${from} → ${to}`).toBeGreaterThan(0);
+        expect(walk!.distanceMeters).toBeLessThan(2500);
+      } else {
+        expect(walk).toBeNull();
+      }
+    }
+    expect(walkBetween(undefined, "pubs-rococo")).toBeNull();
+    expect(cafeDestination("pubs-barries", 6).coordinates).toBeNull();
+    expect(cafeDestination("pubs-den-engel", 12)).toMatchObject({ name: "Den Engel", order: 12 });
   });
 });
 
