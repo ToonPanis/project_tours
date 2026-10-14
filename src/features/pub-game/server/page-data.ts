@@ -1,4 +1,5 @@
 import { cookies, headers } from "next/headers";
+import { qrCodeFor } from "../logic/qr";
 import { getGameContext } from "./context";
 import { getGameUpdate, getLobby } from "./game-service";
 import { playerCookieName } from "./identity";
@@ -25,4 +26,10 @@ export async function joinUrlFor(code: string): Promise<string> {
   const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "localhost:3000";
   const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
   return `${protocol}://${host}/games/${code}`;
+}
+
+/** The join link and its QR code (both for the lobby). */
+export async function inviteFor(code: string) {
+  const joinUrl = await joinUrlFor(code);
+  return { joinUrl, qrCode: qrCodeFor(joinUrl) };
 }

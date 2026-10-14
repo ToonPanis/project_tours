@@ -5,24 +5,30 @@ import { Button } from "@/components/ui/Button";
 import { PlayScreen } from "@/features/walk-session/components/PlayScreen";
 import { useT } from "@/i18n/client";
 import type { PubGameHandle } from "../client/usePubGame";
+import type { QrCode } from "../logic/qr";
 import { allTeams } from "../logic/view-helpers";
 import { Beery } from "./Beery";
 import { FormError } from "./FormError";
+import { QrCodeImage } from "./QrCodeImage";
 
 interface LobbyScreenProps {
   code: string;
-  /** The full join link (built on the server from the request's host). */
-  joinUrl: string;
+  /**
+   * The full join link (built on the server from the request's host) and its QR code.
+   * Null only if the page was rendered after the start; the link is then rebuilt here.
+   */
+  invite: { joinUrl: string; qrCode: QrCode } | null;
   game: PubGameHandle;
 }
 
 /** Before the start: invite the others, see who joined; the host starts the game. */
-export function LobbyScreen({ code, joinUrl, game }: LobbyScreenProps) {
+export function LobbyScreen({ code, invite, game }: LobbyScreenProps) {
   const t = useT();
   const { view, act, busy } = game;
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const joinUrl = invite?.joinUrl ?? `${typeof window === "undefined" ? "" : window.location.origin}/games/${code}`;
   const teams = allTeams(view);
   const everyTeamHasPlayers = teams.every((team) => view.players.some((player) => player.teamId === team.id));
 
@@ -72,6 +78,7 @@ export function LobbyScreen({ code, joinUrl, game }: LobbyScreenProps) {
       <section className="flex flex-col gap-3 rounded-sm border border-gold/40 bg-ink/30 p-4">
         <h2 className="font-display text-2xl font-semibold text-parchment">{t("pubgame.lobby.inviteTitle")}</h2>
         <p>{t("pubgame.lobby.inviteText")}</p>
+        {invite && <QrCodeImage code={invite.qrCode} label={t("pubgame.lobby.qrLabel", { code })} />}
         <p className="flex items-baseline justify-between gap-3">
           <span className="text-xs font-semibold uppercase tracking-wider text-gold">{t("pubgame.lobby.code")}</span>
           <span className="font-mono text-3xl font-semibold tracking-[0.3em] text-parchment">{code}</span>

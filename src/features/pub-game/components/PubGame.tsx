@@ -6,6 +6,7 @@ import { PlayScreen } from "@/features/walk-session/components/PlayScreen";
 import { useT } from "@/i18n/client";
 import { usePubGame } from "../client/usePubGame";
 import type { PlayerView } from "../logic/player-view";
+import type { QrCode } from "../logic/qr";
 import { Beery } from "./Beery";
 import { BeeryIntro } from "./BeeryIntro";
 import { LobbyScreen } from "./LobbyScreen";
@@ -13,7 +14,8 @@ import { NextCafeScreen } from "./NextCafeScreen";
 
 interface PubGameProps {
   code: string;
-  joinUrl: string;
+  /** Join link + QR code; null once the game has started (the page then skips the QR work). */
+  invite: { joinUrl: string; qrCode: QrCode } | null;
   initialView: PlayerView;
   initialVersion: number;
 }
@@ -36,7 +38,7 @@ function readIntroSeen(code: string): boolean {
  * One phone's Hidden Pubs game. Picks the screen from the live game state:
  * lobby → Beery's rules → the team's current café step → the end.
  */
-export function PubGame({ code, joinUrl, initialView, initialVersion }: PubGameProps) {
+export function PubGame({ code, invite, initialView, initialVersion }: PubGameProps) {
   const t = useT();
   const game = usePubGame(code, initialView, initialVersion);
   const { view, connection } = game;
@@ -59,7 +61,7 @@ export function PubGame({ code, joinUrl, initialView, initialVersion }: PubGameP
 
   let screen;
   if (view.phase === "lobby") {
-    screen = <LobbyScreen code={code} joinUrl={joinUrl} game={game} />;
+    screen = <LobbyScreen code={code} invite={invite} game={game} />;
   } else if (view.phase === "finished") {
     screen = (
       <PlayScreen title={t("pubgame.finished.title")} screenId="pub-game-finished">

@@ -11,6 +11,7 @@ import { PubGame } from "@/features/pub-game/components/PubGame";
 import { applyPubGameAction } from "@/features/pub-game/logic/apply-action";
 import { createPubGame } from "@/features/pub-game/logic/create-game";
 import { toPlayerView, type PlayerView } from "@/features/pub-game/logic/player-view";
+import { qrCodeFor } from "@/features/pub-game/logic/qr";
 import { drawRoute } from "@/features/pub-game/logic/route";
 import { englishTranslator as t } from "@/i18n/translate";
 import type { PubGameAction, PubGameState } from "@/types/pub-game";
@@ -28,6 +29,7 @@ beforeEach(() => {
 
 const CODE = "K7M2QX";
 const JOIN_URL = `http://localhost:3000/games/${CODE}`;
+const INVITE = { joinUrl: JOIN_URL, qrCode: qrCodeFor(JOIN_URL) };
 
 function apply(state: PubGameState, actorId: string, action: PubGameAction): PubGameState {
   const result = applyPubGameAction(pubGameDefinition, {}, state, actorId, action);
@@ -154,18 +156,20 @@ describe("join form", () => {
 
 describe("the game screen", () => {
   test("lobby: the host can only start when every team has a player", () => {
-    const { rerender } = render(<PubGame code={CODE} joinUrl={JOIN_URL} initialView={viewOf(lobbyState(false), "h")} initialVersion={0} />);
+    const { rerender } = render(<PubGame code={CODE} invite={INVITE} initialView={viewOf(lobbyState(false), "h")} initialVersion={0} />);
     expect(screen.getByRole<HTMLButtonElement>("button", { name: t("pubgame.lobby.start") }).disabled).toBe(true);
     expect(screen.getByText(t("pubgame.lobby.startHint"))).toBeTruthy();
     expect(screen.getByText(CODE, { selector: "span.font-mono.text-3xl" })).toBeTruthy();
+    // The QR code for the join link (computed on the server, drawn as SVG).
+    expect(screen.getByRole("img", { name: t("pubgame.lobby.qrLabel", { code: CODE }) })).toBeTruthy();
 
-    rerender(<PubGame key="2" code={CODE} joinUrl={JOIN_URL} initialView={viewOf(lobbyState(true), "h")} initialVersion={1} />);
+    rerender(<PubGame key="2" code={CODE} invite={INVITE} initialView={viewOf(lobbyState(true), "h")} initialVersion={1} />);
     expect(screen.getByRole<HTMLButtonElement>("button", { name: t("pubgame.lobby.start") }).disabled).toBe(false);
     expect(screen.getByText("Bea")).toBeTruthy();
   });
 
   test("lobby: other players wait for the host", () => {
-    render(<PubGame code={CODE} joinUrl={JOIN_URL} initialView={viewOf(lobbyState(true), "b")} initialVersion={1} />);
+    render(<PubGame code={CODE} invite={INVITE} initialView={viewOf(lobbyState(true), "b")} initialVersion={1} />);
     expect(screen.queryByRole("button", { name: t("pubgame.lobby.start") })).toBeNull();
     expect(screen.getByText(t("pubgame.lobby.waitingForHost"))).toBeTruthy();
     expect(screen.queryByRole("link", { name: t("pubgame.menu.host") })).toBeNull();
@@ -175,7 +179,7 @@ describe("the game screen", () => {
     const lobby = lobbyState(true);
     const playing = started(lobby);
     const fetchMock = fakeFetch({ body: { version: 2, view: viewOf(playing, "h") } });
-    render(<PubGame code={CODE} joinUrl={JOIN_URL} initialView={viewOf(lobby, "h")} initialVersion={1} />);
+    render(<PubGame code={CODE} invite={INVITE} initialView={viewOf(lobby, "h")} initialVersion={1} />);
 
     fireEvent.click(screen.getByRole("button", { name: t("pubgame.lobby.start") }));
     expect(await screen.findByRole("heading", { name: t("pubgame.beery.intro.welcomeTitle") })).toBeTruthy();
@@ -198,7 +202,7 @@ describe("the game screen", () => {
   });
 
   test("the rules can be skipped and opened again from the menu", () => {
-    render(<PubGame code={CODE} joinUrl={JOIN_URL} initialView={viewOf(started(lobbyState(true)), "b")} initialVersion={2} />);
+    render(<PubGame code={CODE} invite={INVITE} initialView={viewOf(started(lobbyState(true)), "b")} initialVersion={2} />);
     fireEvent.click(screen.getByRole("button", { name: t("pubgame.beery.intro.skip") }));
     fireEvent.click(screen.getByRole("button", { name: t("pubgame.beery.letsGo") }));
     fireEvent.click(screen.getByRole("button", { name: t("pubgame.menu.rules") }));
@@ -207,7 +211,7 @@ describe("the game screen", () => {
 
   test("a refused action shows why", async () => {
     fakeFetch({ status: 409, body: { error: "empty-team" } }, { body: { changed: false, version: 1 } });
-    render(<PubGame code={CODE} joinUrl={JOIN_URL} initialView={viewOf(lobbyState(true), "h")} initialVersion={1} />);
+    render(<PubGame code={CODE} invite={INVITE} initialView={viewOf(lobbyState(true), "h")} initialVersion={1} />);
     fireEvent.click(screen.getByRole("button", { name: t("pubgame.lobby.start") }));
     expect(await screen.findByText(t("pubgame.errors.emptyTeam"))).toBeTruthy();
   });
@@ -223,7 +227,7 @@ describe("polling", () => {
         { body: { changed: false, version: 0 } },
         { body: { changed: true, version: 1, view: viewOf(lobbyState(true), "h"), events: [{ type: "player-joined", playerId: "b" }] } },
       );
-      render(<PubGame code={CODE} joinUrl={JOIN_URL} initialView={viewOf(lobbyState(false), "h")} initialVersion={0} />);
+      render(<PubGame code={CODE} invite={INVITE} initialView={viewOf(lobbyState(false), "h")} initialVersion={0} />);
       expect(screen.queryByText("Bea")).toBeNull();
 
       await act(async () => vi.advanceTimersByTimeAsync(POLL_INTERVAL_MS));
@@ -247,7 +251,7 @@ describe("polling", () => {
     const visibility = vi.spyOn(document, "visibilityState", "get").mockReturnValue("hidden");
     try {
       const fetchMock = fakeFetch();
-      render(<PubGame code={CODE} joinUrl={JOIN_URL} initialView={viewOf(lobbyState(false), "h")} initialVersion={0} />);
+      render(<PubGame code={CODE} invite={INVITE} initialView={viewOf(lobbyState(false), "h")} initialVersion={0} />);
       await act(async () => vi.advanceTimersByTimeAsync(POLL_INTERVAL_MS * 3));
       expect(fetchMock).not.toHaveBeenCalled();
 

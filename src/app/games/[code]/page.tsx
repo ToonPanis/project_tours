@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { JoinGameForm } from "@/features/pub-game/components/JoinGameForm";
 import { PubGame } from "@/features/pub-game/components/PubGame";
-import { joinUrlFor, loadGamePage } from "@/features/pub-game/server/page-data";
+import { inviteFor, loadGamePage } from "@/features/pub-game/server/page-data";
 
 /**
  * /games/CODE: the link everyone opens. Server Component: it reads this
@@ -13,10 +13,12 @@ export default async function GamePage({ params }: PageProps<"/games/[code]">) {
   if (!page) notFound();
 
   if (!page.player) return <JoinGameForm code={page.code} lobby={page.lobby} />;
+  // Only needed in the lobby: no QR work once the game runs.
+  const invite = page.player.view.phase === "lobby" ? await inviteFor(page.code) : null;
   return (
     <PubGame
       code={page.code}
-      joinUrl={await joinUrlFor(page.code)}
+      invite={invite}
       initialView={page.player.view}
       initialVersion={page.player.version}
     />
