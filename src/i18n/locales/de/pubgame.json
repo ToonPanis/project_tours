@@ -1,0 +1,141 @@
+{
+  "create": {
+    "eyebrow": "Hidden Pubs · Neues Spiel",
+    "title": "Stellt euer Spiel zusammen",
+    "teamCount": "Wie viele Teams?",
+    "playersPerTeam": "Spieler pro Team (max.)",
+    "teamName": "Name von Team {number}",
+    "defaultTeamName": "Team {number}",
+    "yourName": "Dein Name",
+    "yourTeam": "Dein Team",
+    "hostNote": "Du bist der Host: Du startest das Spiel und bestätigst die Bonusfotos. Du spielst auch selbst in deinem Team mit.",
+    "submit": "Spiel erstellen",
+    "creating": "Wird erstellt…"
+  },
+  "adults": {
+    "confirm": "Alle Mitspielenden sind 18 Jahre oder älter",
+    "note": "Trinken ist nie Pflicht: Jedes Getränk darf alkoholfrei sein."
+  },
+  "join": {
+    "eyebrow": "Hidden Pubs · Spiel {code}",
+    "title": "Mitspielen",
+    "yourName": "Dein Name",
+    "chooseTeam": "Wähle dein Team",
+    "placesLeft": {
+      "one": "Noch {count} Platz frei",
+      "other": "Noch {count} Plätze frei"
+    },
+    "full": "Voll",
+    "submit": "Mitspielen",
+    "joining": "Einen Moment…",
+    "closed": "Dieses Spiel hat schon begonnen. Bitte den Host, dich hinzuzufügen.",
+    "finished": "Dieses Spiel ist vorbei."
+  },
+  "lobby": {
+    "eyebrow": "Spiel {code}",
+    "title": "Warten auf alle",
+    "inviteTitle": "Lade die anderen ein",
+    "inviteText": "Alle spielen auf ihrem eigenen Handy: Teile den Link mit den anderen.",
+    "code": "Spielcode",
+    "share": "Link teilen",
+    "copied": "Link kopiert",
+    "shareText": "Spiel mit bei unserem Hidden-Pubs-Spiel!",
+    "players": {
+      "one": "{count} Spieler",
+      "other": "{count} Spieler"
+    },
+    "emptyTeam": "Noch niemand",
+    "you": "du",
+    "host": "Host",
+    "start": "Spiel starten",
+    "startHint": "Jedes Team braucht mindestens einen Spieler.",
+    "waitingForHost": "Der Host startet das Spiel, sobald alle da sind."
+  },
+  "beery": {
+    "portrait": "Beery, das Maskottchen von Hidden Pubs: ein fröhlicher Bierkrug",
+    "nextLocation": "Beery bringt dich zum nächsten Ort!",
+    "bonusTask": "Beery hat eine Bonusaufgabe für dich!",
+    "letsGo": "Los geht's",
+    "intro": {
+      "eyebrow": "Beery erklärt",
+      "progress": "{current} von {total}",
+      "next": "Weiter",
+      "skip": "Überspringen",
+      "done": "Auf geht's!",
+      "welcomeTitle": "Prost! Ich bin Beery.",
+      "welcomeText": "Heute Abend bin ich euer Gastgeber: 12 Kneipen, vom Rococo bis zum Den Engel. In jeder Kneipe wählt ihr ein Getränk, spielt Drunken Bastard, löst die Pubtask und lest einen Fun Fact. Wer die meisten Punkte hat, gewinnt!",
+      "cardsTitle": "Drunken Bastard",
+      "cardsText": "In jeder Kneipe wählt jeder Spieler eine von 10 verdeckten Karten. Jede Karte bewirkt etwas: einen Schluck verteilen, einen Drinking Buddy wählen, eine Regel erfinden, Thumb King werden… Ein Schluck ist immer ein Schluck vom eigenen Getränk, und alkoholfrei zählt auch.",
+      "pubtasksTitle": "Pubtasks",
+      "pubtasksText": "Jede Kneipe hat eine Frage über den Ort selbst. Beim ersten Versuch richtig: 100 Punkte. Zweiter Versuch: 80. Dritter Versuch: 60. Danach verrate ich euch die Antwort, aber ohne Punkte.",
+      "bonusTitle": "Bonusaufgaben",
+      "bonusText": "Manchmal habe ich eine Bonusaufgabe für euch. Schickt ein Foto oder Video als Beweis: Der Host bestätigt es, und erst dann zählen die Punkte.",
+      "respectTitle": "Hausregeln",
+      "respectText": "Fragt Personal und Gäste, bevor ihr sie fotografiert, steht nie an der Theke im Weg und trinkt in eurem eigenen Tempo. Tradition: Alle spendieren dem Gewinner ein Getränk seiner Wahl. Alkoholfrei ist völlig in Ordnung, und niemand muss."
+    }
+  },
+  "nextCafe": {
+    "eyebrow": "Kneipe {current} von {total}",
+    "text": "Der nächste Halt deines Teams. Beery zeigt dir hier bald den Weg."
+  },
+  "menu": {
+    "label": "Spielmenü",
+    "rules": "Regeln",
+    "host": "Host-Übersicht",
+    "game": "Zurück zum Spiel"
+  },
+  "host": {
+    "eyebrow": "Spiel {code} · Host",
+    "title": "Host-Übersicht",
+    "teams": "Teams",
+    "progress": "{done} von {total} Kneipen",
+    "teamFinished": "Fertig",
+    "pendingEvidence": {
+      "one": "{count} Foto oder Video wartet auf deine Bestätigung",
+      "other": "{count} Fotos oder Videos warten auf deine Bestätigung"
+    },
+    "noPendingEvidence": "Keine Fotos oder Videos in der Warteschlange.",
+    "addPlayer": "Spieler hinzufügen",
+    "addPlayerName": "Name",
+    "addPlayerTeam": "Team",
+    "addPlayerSubmit": "Hinzufügen",
+    "playerAdded": "{name} wurde hinzugefügt. Schick den persönlichen Link (tippe oben auf den Namen).",
+    "endGame": "Spiel beenden",
+    "endConfirmTitle": "Das Spiel für alle beenden?",
+    "endConfirmText": "Jedes Team hört dort auf, wo es gerade ist, und das Ergebnis wird angezeigt. Das lässt sich nicht rückgängig machen.",
+    "endConfirm": "Spiel beenden",
+    "notHost": "Nur der Host kann diese Seite öffnen.",
+    "playerLinkFor": "Persönlicher Link für {name}",
+    "playerLinkHelp": "Schick diesen Link nur an {name}: Wer ihn öffnet, spielt als {name}. Praktisch für Nachzügler und neue Handys.",
+    "shareLink": "Link teilen",
+    "linkCopied": "Link kopiert"
+  },
+  "finished": {
+    "title": "Das Spiel ist vorbei",
+    "text": "Danke fürs Spielen von Hidden Pubs! Der Endstand erscheint auf diesem Bildschirm."
+  },
+  "connection": {
+    "offline": "Keine Verbindung. Neuer Versuch…",
+    "gone": "Dieses Spiel gibt es nicht mehr. Spiele werden nach 7 Tagen gelöscht."
+  },
+  "errors": {
+    "generic": "Das hat nicht geklappt. Bitte versuch es noch einmal.",
+    "adultsOnly": "Bitte bestätige, dass alle Mitspielenden 18 Jahre oder älter sind.",
+    "invalidSettings": "Bitte prüfe die Namen und Zahlen.",
+    "invalidText": "Bitte gib einen Namen ein (höchstens 30 Zeichen).",
+    "nameTaken": "Jemand in diesem Spiel hat schon diesen Namen.",
+    "teamFull": "Dieses Team ist voll. Wähle ein anderes Team.",
+    "joiningClosed": "Dieses Spiel hat schon begonnen. Bitte den Host, dich hinzuzufügen.",
+    "notHost": "Das kann nur der Host.",
+    "emptyTeam": "Jedes Team braucht mindestens einen Spieler, bevor das Spiel starten kann.",
+    "unknownGame": "Dieses Spiel gibt es nicht (mehr).",
+    "gameFinished": "Dieses Spiel ist vorbei.",
+    "outdated": "Jemand aus deinem Team war schneller. Der Bildschirm wurde aktualisiert.",
+    "unknownLink": "Dieser Link funktioniert nicht (mehr). Bitte den Host um einen neuen.",
+    "chooseTeam": "Bitte wähle ein Team."
+  },
+  "claim": {
+    "title": "Dein Spiel wird geöffnet…",
+    "invalid": "Dieser Link funktioniert nicht (mehr). Bitte den Host um einen neuen."
+  }
+}

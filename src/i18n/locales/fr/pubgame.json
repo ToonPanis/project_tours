@@ -1,0 +1,141 @@
+{
+  "create": {
+    "eyebrow": "Hidden Pubs · Nouvelle partie",
+    "title": "Préparez votre partie",
+    "teamCount": "Combien d'équipes ?",
+    "playersPerTeam": "Joueurs par équipe (max.)",
+    "teamName": "Nom de l'équipe {number}",
+    "defaultTeamName": "Équipe {number}",
+    "yourName": "Ton prénom",
+    "yourTeam": "Ton équipe",
+    "hostNote": "Tu es l'hôte : tu lances la partie et tu valides les photos bonus. Tu joues aussi dans ta propre équipe.",
+    "submit": "Créer la partie",
+    "creating": "Création…"
+  },
+  "adults": {
+    "confirm": "Tous les joueurs ont 18 ans ou plus",
+    "note": "Boire n'est jamais obligatoire : chaque boisson peut être sans alcool."
+  },
+  "join": {
+    "eyebrow": "Hidden Pubs · Partie {code}",
+    "title": "Rejoindre la partie",
+    "yourName": "Ton prénom",
+    "chooseTeam": "Choisis ton équipe",
+    "placesLeft": {
+      "one": "Encore {count} place",
+      "other": "Encore {count} places"
+    },
+    "full": "Complet",
+    "submit": "Rejoindre",
+    "joining": "Un instant…",
+    "closed": "Cette partie a déjà commencé. Demande à l'hôte de t'ajouter.",
+    "finished": "Cette partie est terminée."
+  },
+  "lobby": {
+    "eyebrow": "Partie {code}",
+    "title": "On attend tout le monde",
+    "inviteTitle": "Invite les autres",
+    "inviteText": "Chacun joue sur son propre téléphone : partage le lien avec les autres.",
+    "code": "Code de la partie",
+    "share": "Partager le lien",
+    "copied": "Lien copié",
+    "shareText": "Rejoins notre partie de Hidden Pubs !",
+    "players": {
+      "one": "{count} joueur",
+      "other": "{count} joueurs"
+    },
+    "emptyTeam": "Personne pour l'instant",
+    "you": "toi",
+    "host": "hôte",
+    "start": "Lancer la partie",
+    "startHint": "Chaque équipe doit compter au moins un joueur.",
+    "waitingForHost": "L'hôte lance la partie dès que tout le monde est là."
+  },
+  "beery": {
+    "portrait": "Beery, la mascotte de Hidden Pubs : une chope de bière souriante",
+    "nextLocation": "Beery t'emmène au prochain lieu !",
+    "bonusTask": "Beery a une mission bonus pour toi !",
+    "letsGo": "C'est parti",
+    "intro": {
+      "eyebrow": "Beery explique",
+      "progress": "{current} sur {total}",
+      "next": "Suivant",
+      "skip": "Passer",
+      "done": "On joue !",
+      "welcomeTitle": "Santé ! Moi, c'est Beery.",
+      "welcomeText": "Ce soir, je suis votre hôte : 12 cafés, du Rococo jusqu'à Den Engel. Dans chaque café, vous choisissez une boisson, jouez au Drunken Bastard, résolvez la pubtask et lisez une anecdote. Le plus de points gagne !",
+      "cardsTitle": "Drunken Bastard",
+      "cardsText": "Dans chaque café, chaque joueur choisit une carte parmi 10 cartes retournées. Chaque carte fait quelque chose : distribuer une gorgée, choisir un drinking buddy, inventer une règle, devenir Thumb King… Une gorgée, c'est toujours une gorgée de ta propre boisson, et sans alcool, ça compte aussi.",
+      "pubtasksTitle": "Pubtasks",
+      "pubtasksText": "Chaque café a une question sur le lieu lui-même. Bonne réponse du premier coup : 100 points. Deuxième essai : 80. Troisième essai : 60. Ensuite, je vous donne la réponse, mais sans points.",
+      "bonusTitle": "Missions bonus",
+      "bonusText": "Parfois, j'ai une mission bonus pour vous. Envoyez une photo ou une vidéo comme preuve : l'hôte la valide, et seulement alors les points comptent.",
+      "respectTitle": "Règles de la maison",
+      "respectText": "Demandez au personnel et aux clients avant de les photographier, ne gênez jamais au comptoir et buvez à votre rythme. Tradition : chacun offre au gagnant une boisson de son choix. Sans alcool, c'est très bien, et personne n'y est obligé."
+    }
+  },
+  "nextCafe": {
+    "eyebrow": "Café {current} sur {total}",
+    "text": "La prochaine étape de ton équipe. Beery t'y guidera très bientôt."
+  },
+  "menu": {
+    "label": "Menu de la partie",
+    "rules": "Règles",
+    "host": "Tableau de l'hôte",
+    "game": "Retour à la partie"
+  },
+  "host": {
+    "eyebrow": "Partie {code} · Hôte",
+    "title": "Tableau de l'hôte",
+    "teams": "Équipes",
+    "progress": "{done} cafés sur {total}",
+    "teamFinished": "Terminé",
+    "pendingEvidence": {
+      "one": "{count} photo ou vidéo attend ta validation",
+      "other": "{count} photos ou vidéos attendent ta validation"
+    },
+    "noPendingEvidence": "Aucune photo ni vidéo en attente.",
+    "addPlayer": "Ajouter un joueur",
+    "addPlayerName": "Prénom",
+    "addPlayerTeam": "Équipe",
+    "addPlayerSubmit": "Ajouter",
+    "playerAdded": "{name} a été ajouté·e. Envoie-lui son lien personnel (touche son prénom ci-dessus).",
+    "endGame": "Terminer la partie",
+    "endConfirmTitle": "Terminer la partie pour tout le monde ?",
+    "endConfirmText": "Chaque équipe s'arrête là où elle est et le classement s'affiche. C'est définitif.",
+    "endConfirm": "Terminer la partie",
+    "notHost": "Seul l'hôte peut ouvrir cette page.",
+    "playerLinkFor": "Lien personnel pour {name}",
+    "playerLinkHelp": "Envoie ce lien uniquement à {name} : celui ou celle qui l'ouvre joue en tant que {name}. Pratique pour les retardataires et les nouveaux téléphones.",
+    "shareLink": "Partager le lien",
+    "linkCopied": "Lien copié"
+  },
+  "finished": {
+    "title": "La partie est terminée",
+    "text": "Merci d'avoir joué à Hidden Pubs ! Le classement final s'affichera sur cet écran."
+  },
+  "connection": {
+    "offline": "Pas de connexion. Nouvel essai…",
+    "gone": "Cette partie n'existe plus. Les parties sont effacées après 7 jours."
+  },
+  "errors": {
+    "generic": "Ça n'a pas marché. Réessaie.",
+    "adultsOnly": "Confirme que tous les joueurs ont 18 ans ou plus.",
+    "invalidSettings": "Vérifie les noms et les nombres.",
+    "invalidText": "Tape un prénom (30 caractères maximum).",
+    "nameTaken": "Quelqu'un dans cette partie porte déjà ce prénom.",
+    "teamFull": "Cette équipe est complète. Choisis-en une autre.",
+    "joiningClosed": "Cette partie a déjà commencé. Demande à l'hôte de t'ajouter.",
+    "notHost": "Seul l'hôte peut faire ça.",
+    "emptyTeam": "Chaque équipe doit compter au moins un joueur avant de lancer la partie.",
+    "unknownGame": "Cette partie n'existe pas (ou plus).",
+    "gameFinished": "Cette partie est terminée.",
+    "outdated": "Quelqu'un de ton équipe a été plus rapide. L'écran a été mis à jour.",
+    "unknownLink": "Ce lien ne fonctionne pas (ou plus). Demande un nouveau lien à l'hôte.",
+    "chooseTeam": "Choisis une équipe."
+  },
+  "claim": {
+    "title": "Ouverture de ta partie…",
+    "invalid": "Ce lien ne fonctionne pas (ou plus). Demande un nouveau lien à l'hôte."
+  }
+}

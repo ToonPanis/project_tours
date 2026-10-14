@@ -1,0 +1,141 @@
+{
+  "create": {
+    "eyebrow": "Hidden Pubs · Nieuw spel",
+    "title": "Stel jullie spel samen",
+    "teamCount": "Hoeveel teams?",
+    "playersPerTeam": "Spelers per team (max.)",
+    "teamName": "Naam van team {number}",
+    "defaultTeamName": "Team {number}",
+    "yourName": "Jouw naam",
+    "yourTeam": "Jouw team",
+    "hostNote": "Jij bent de host: jij start het spel en keurt de bonusfoto's goed. Je speelt zelf ook mee in je eigen team.",
+    "submit": "Spel aanmaken",
+    "creating": "Bezig met aanmaken…"
+  },
+  "adults": {
+    "confirm": "Iedereen die meespeelt is 18 jaar of ouder",
+    "note": "Drinken is nooit verplicht: elk drankje mag alcoholvrij zijn."
+  },
+  "join": {
+    "eyebrow": "Hidden Pubs · Spel {code}",
+    "title": "Doe mee",
+    "yourName": "Jouw naam",
+    "chooseTeam": "Kies je team",
+    "placesLeft": {
+      "one": "Nog {count} plaats vrij",
+      "other": "Nog {count} plaatsen vrij"
+    },
+    "full": "Vol",
+    "submit": "Meedoen",
+    "joining": "Bezig…",
+    "closed": "Dit spel is al begonnen. Vraag de host om je toe te voegen.",
+    "finished": "Dit spel is voorbij."
+  },
+  "lobby": {
+    "eyebrow": "Spel {code}",
+    "title": "Wachten op iedereen",
+    "inviteTitle": "Nodig de anderen uit",
+    "inviteText": "Iedereen speelt op zijn eigen gsm: deel de link met de anderen.",
+    "code": "Spelcode",
+    "share": "Link delen",
+    "copied": "Link gekopieerd",
+    "shareText": "Doe mee met ons Hidden Pubs-spel!",
+    "players": {
+      "one": "{count} speler",
+      "other": "{count} spelers"
+    },
+    "emptyTeam": "Nog niemand",
+    "you": "jij",
+    "host": "host",
+    "start": "Start het spel",
+    "startHint": "Elk team heeft minstens één speler nodig.",
+    "waitingForHost": "De host start het spel zodra iedereen er is."
+  },
+  "beery": {
+    "portrait": "Beery, de mascotte van Hidden Pubs: een vrolijke bierpot",
+    "nextLocation": "Beery brengt je naar de volgende locatie!",
+    "bonusTask": "Beery heeft een bonusopdracht voor je!",
+    "letsGo": "Op weg",
+    "intro": {
+      "eyebrow": "Beery legt uit",
+      "progress": "{current} van {total}",
+      "next": "Volgende",
+      "skip": "Overslaan",
+      "done": "Spelen maar!",
+      "welcomeTitle": "Santé! Ik ben Beery.",
+      "welcomeText": "Ik ben vanavond jullie gastheer: 12 cafés, van Rococo tot Den Engel. In elk café kies je een drankje, speel je Drunken Bastard, los je de pubtask op en lees je een funfact. Wie de meeste punten heeft, wint!",
+      "cardsTitle": "Drunken Bastard",
+      "cardsText": "In elk café kiest elke speler één van 10 omgedraaide kaarten. Elke kaart doet iets: een slok uitdelen, een drinking buddy kiezen, een regel verzinnen, Thumb King worden… Een slok is altijd een slok van je eigen drankje, en alcoholvrij telt ook.",
+      "pubtasksTitle": "Pubtasks",
+      "pubtasksText": "Elk café heeft een vraag over het café zelf. Meteen juist: 100 punten. Tweede poging: 80. Derde poging: 60. Daarna geef ik het antwoord, maar dan zijn er geen punten.",
+      "bonusTitle": "Bonusopdrachten",
+      "bonusText": "Soms heb ik een bonusopdracht voor jullie. Stuur een foto of video als bewijs: de host keurt hem goed, en pas dan tellen de punten.",
+      "respectTitle": "Huisregels",
+      "respectText": "Vraag het personeel en de gasten voor je hen fotografeert, sta nooit in de weg aan de toog en drink op je eigen tempo. Traditie: iedereen trakteert de winnaar op een drankje naar keuze. Alcoholvrij mag, en niemand moet."
+    }
+  },
+  "nextCafe": {
+    "eyebrow": "Café {current} van {total}",
+    "text": "De volgende stop van je team. Beery wijst hier binnenkort de weg."
+  },
+  "menu": {
+    "label": "Spelmenu",
+    "rules": "Regels",
+    "host": "Hostoverzicht",
+    "game": "Terug naar het spel"
+  },
+  "host": {
+    "eyebrow": "Spel {code} · Host",
+    "title": "Hostoverzicht",
+    "teams": "Teams",
+    "progress": "{done} van {total} cafés",
+    "teamFinished": "Klaar",
+    "pendingEvidence": {
+      "one": "{count} foto of video wacht op jouw goedkeuring",
+      "other": "{count} foto's of video's wachten op jouw goedkeuring"
+    },
+    "noPendingEvidence": "Er wachten geen foto's of video's.",
+    "addPlayer": "Speler toevoegen",
+    "addPlayerName": "Naam",
+    "addPlayerTeam": "Team",
+    "addPlayerSubmit": "Toevoegen",
+    "playerAdded": "{name} is toegevoegd. Stuur de persoonlijke link (tik hierboven op de naam).",
+    "endGame": "Spel beëindigen",
+    "endConfirmTitle": "Het spel voor iedereen beëindigen?",
+    "endConfirmText": "Elk team stopt waar het is en de uitslag wordt getoond. Dit kan niet ongedaan worden gemaakt.",
+    "endConfirm": "Spel beëindigen",
+    "notHost": "Alleen de host kan deze pagina openen.",
+    "playerLinkFor": "Persoonlijke link voor {name}",
+    "playerLinkHelp": "Stuur deze link alleen naar {name}: wie hem opent, speelt als {name}. Handig voor laatkomers en een nieuwe gsm.",
+    "shareLink": "Link delen",
+    "linkCopied": "Link gekopieerd"
+  },
+  "finished": {
+    "title": "Het spel is voorbij",
+    "text": "Bedankt om Hidden Pubs te spelen! De eindstand volgt op dit scherm."
+  },
+  "connection": {
+    "offline": "Geen verbinding. We proberen opnieuw…",
+    "gone": "Dit spel bestaat niet meer. Spellen worden na 7 dagen gewist."
+  },
+  "errors": {
+    "generic": "Dat lukte niet. Probeer het opnieuw.",
+    "adultsOnly": "Bevestig dat iedereen die meespeelt 18 jaar of ouder is.",
+    "invalidSettings": "Controleer de namen en aantallen.",
+    "invalidText": "Typ een naam (hoogstens 30 tekens).",
+    "nameTaken": "Iemand in dit spel heeft die naam al.",
+    "teamFull": "Dit team is vol. Kies een ander team.",
+    "joiningClosed": "Dit spel is al begonnen. Vraag de host om je toe te voegen.",
+    "notHost": "Alleen de host kan dat doen.",
+    "emptyTeam": "Elk team heeft minstens één speler nodig voor het spel kan starten.",
+    "unknownGame": "Dit spel bestaat niet (meer).",
+    "gameFinished": "Dit spel is voorbij.",
+    "outdated": "Iemand in je team was sneller. Het scherm is bijgewerkt.",
+    "unknownLink": "Deze link werkt niet (meer). Vraag de host om een nieuwe.",
+    "chooseTeam": "Kies een team."
+  },
+  "claim": {
+    "title": "Je spel wordt geopend…",
+    "invalid": "Deze link werkt niet (meer). Vraag de host om een nieuwe."
+  }
+}

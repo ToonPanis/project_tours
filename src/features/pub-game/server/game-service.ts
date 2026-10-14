@@ -1,11 +1,14 @@
-import type { AnswerKey, PubGameAction, PubGameDefinition, PubGameEvent, PubGameState } from "@/types/pub-game";
+import type { AnswerKey, PubGameAction, PubGameDefinition, PubGameState } from "@/types/pub-game";
 import { MAX_PLAYERS_PER_TEAM, MAX_TEAMS } from "../config";
 import { applyPubGameAction, teamPlayers } from "../logic/apply-action";
 import { isValidActionId, parseClientAction, toGameAction } from "../logic/client-action";
 import { createPubGame } from "../logic/create-game";
+import type { GameUpdate, Lobby } from "../logic/api-types";
 import { toPlayerView, type PlayerView } from "../logic/player-view";
 import { canSeeEvent } from "../logic/visible-events";
 import type { GameStore, StoredGame } from "./game-store";
+
+export type { GameUpdate, Lobby };
 import { GAME_LIFETIME_DAYS, hashToken, isGameCode, newGameCode, newPlayerToken } from "./identity";
 
 /**
@@ -111,13 +114,6 @@ export async function createGame(ctx: GameContext, walkSlug: string, body: unkno
 
 // ─── Lobby and joining ──────────────────────────────────────────────────────
 
-export interface Lobby {
-  phase: PubGameState["phase"];
-  joiningOpen: boolean;
-  playersPerTeam: number;
-  teams: { id: string; name: string; playerCount: number }[];
-}
-
 /** What someone with the join link sees before joining: teams and free places, no names. */
 export async function getLobby(ctx: GameContext, code: string): Promise<ServiceResult<Lobby>> {
   const game = await loadGame(ctx, code);
@@ -174,11 +170,45 @@ export async function joinGame(
   return ok({ playerId, token });
 }
 
-// ─── Playing ────────────────────────────────────────────────────────────────
+/**
+ * The host makes a personal link for a player: for someone added after the
+ * start (D34), or whose phone died. Opening the link on a phone makes that
+ * phone this player. The secret is a new player token (a player may have
+ * several: old phone and new phone).
+ */
+export async function createPlayerLink(
+  ctx: GameContext,
+  code: string,
+  hostToken: string | null,
+  playerId: string,
+): Promise<ServiceResult<{ token: string }>> {
+  const game = await loadGame(ctx, code);
+  if (!game) return fail(404, "unknown-game");
+  const hostId = await findPlayer(ctx, code, hostToken);
+  if (!hostId) return fail(401, "not-joined");
+  if (!game.state.players.some((player) => player.id === hostId && player.isHost)) return fail(403, "not-host");
+  if (!game.state.players.some((player) => player.id === playerId)) return fail(404, "unknown-player");
 
-export type GameUpdate =
-  | { changed: false; version: number }
-  | { changed: true; version: number; view: PlayerView; events: PubGameEvent[] };
+  const token = newPlayerToken();
+  await ctx.store.savePlayerToken(code, hashToken(token), playerId);
+  return ok({ token });
+}
+
+/** A phone opens a player link: the token becomes this phone's cookie, if it belongs to the game. */
+export async function claimPlayerLink(
+  ctx: GameContext,
+  code: string,
+  body: unknown,
+): Promise<ServiceResult<{ playerId: string; token: string }>> {
+  if (!isRecord(body) || typeof body.token !== "string" || body.token.length > 100) {
+    return fail(400, "invalid-request");
+  }
+  const playerId = await findPlayer(ctx, code, body.token);
+  if (!playerId) return fail(404, "unknown-link");
+  return ok({ playerId, token: body.token });
+}
+
+// ─── Playing ────────────────────────────────────────────────────────────────
 
 /**
  * GET /state: the player's view, polled every ~2 s by each phone.

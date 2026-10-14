@@ -1,0 +1,141 @@
+{
+  "create": {
+    "eyebrow": "Hidden Pubs · Nuova partita",
+    "title": "Preparate la vostra partita",
+    "teamCount": "Quante squadre?",
+    "playersPerTeam": "Giocatori per squadra (max.)",
+    "teamName": "Nome della squadra {number}",
+    "defaultTeamName": "Squadra {number}",
+    "yourName": "Il tuo nome",
+    "yourTeam": "La tua squadra",
+    "hostNote": "Sei l'host: avvii la partita e approvi le foto bonus. Giochi anche tu nella tua squadra.",
+    "submit": "Crea la partita",
+    "creating": "Creazione…"
+  },
+  "adults": {
+    "confirm": "Tutti i giocatori hanno almeno 18 anni",
+    "note": "Bere non è mai obbligatorio: ogni bevanda può essere analcolica."
+  },
+  "join": {
+    "eyebrow": "Hidden Pubs · Partita {code}",
+    "title": "Unisciti alla partita",
+    "yourName": "Il tuo nome",
+    "chooseTeam": "Scegli la tua squadra",
+    "placesLeft": {
+      "one": "Ancora {count} posto",
+      "other": "Ancora {count} posti"
+    },
+    "full": "Al completo",
+    "submit": "Partecipa",
+    "joining": "Un attimo…",
+    "closed": "Questa partita è già iniziata. Chiedi all'host di aggiungerti.",
+    "finished": "Questa partita è finita."
+  },
+  "lobby": {
+    "eyebrow": "Partita {code}",
+    "title": "In attesa di tutti",
+    "inviteTitle": "Invita gli altri",
+    "inviteText": "Ognuno gioca sul proprio telefono: condividi il link con gli altri.",
+    "code": "Codice partita",
+    "share": "Condividi il link",
+    "copied": "Link copiato",
+    "shareText": "Unisciti alla nostra partita di Hidden Pubs!",
+    "players": {
+      "one": "{count} giocatore",
+      "other": "{count} giocatori"
+    },
+    "emptyTeam": "Ancora nessuno",
+    "you": "tu",
+    "host": "host",
+    "start": "Avvia la partita",
+    "startHint": "Ogni squadra ha bisogno di almeno un giocatore.",
+    "waitingForHost": "L'host avvia la partita quando ci siete tutti."
+  },
+  "beery": {
+    "portrait": "Beery, la mascotte di Hidden Pubs: un boccale di birra sorridente",
+    "nextLocation": "Beery ti porta al prossimo locale!",
+    "bonusTask": "Beery ha una missione bonus per te!",
+    "letsGo": "Andiamo",
+    "intro": {
+      "eyebrow": "Beery spiega",
+      "progress": "{current} di {total}",
+      "next": "Avanti",
+      "skip": "Salta",
+      "done": "Si gioca!",
+      "welcomeTitle": "Salute! Sono Beery.",
+      "welcomeText": "Stasera sono il vostro host: 12 locali, dal Rococo fino a Den Engel. In ogni locale scegliete una bevanda, giocate a Drunken Bastard, risolvete la pubtask e leggete una curiosità. Vince chi fa più punti!",
+      "cardsTitle": "Drunken Bastard",
+      "cardsText": "In ogni locale ogni giocatore sceglie una tra 10 carte coperte. Ogni carta fa qualcosa: distribuire un sorso, scegliere un drinking buddy, inventare una regola, diventare Thumb King… Un sorso è sempre un sorso della tua bevanda, e anche analcolico vale.",
+      "pubtasksTitle": "Pubtasks",
+      "pubtasksText": "Ogni locale ha una domanda sul locale stesso. Giusto al primo colpo: 100 punti. Secondo tentativo: 80. Terzo tentativo: 60. Poi vi dico la risposta, ma senza punti.",
+      "bonusTitle": "Missioni bonus",
+      "bonusText": "A volte ho una missione bonus per voi. Mandate una foto o un video come prova: l'host la approva, e solo allora i punti contano.",
+      "respectTitle": "Regole della casa",
+      "respectText": "Chiedete al personale e ai clienti prima di fotografarli, non intralciate mai al bancone e bevete con calma. Tradizione: tutti offrono al vincitore una bevanda a sua scelta. Analcolica va benissimo, e nessuno è obbligato."
+    }
+  },
+  "nextCafe": {
+    "eyebrow": "Locale {current} di {total}",
+    "text": "La prossima tappa della tua squadra. Presto Beery ti mostrerà qui la strada."
+  },
+  "menu": {
+    "label": "Menu della partita",
+    "rules": "Regole",
+    "host": "Pannello dell'host",
+    "game": "Torna alla partita"
+  },
+  "host": {
+    "eyebrow": "Partita {code} · Host",
+    "title": "Pannello dell'host",
+    "teams": "Squadre",
+    "progress": "{done} locali su {total}",
+    "teamFinished": "Finito",
+    "pendingEvidence": {
+      "one": "{count} foto o video aspetta la tua approvazione",
+      "other": "{count} foto o video aspettano la tua approvazione"
+    },
+    "noPendingEvidence": "Nessuna foto o video in attesa.",
+    "addPlayer": "Aggiungi un giocatore",
+    "addPlayerName": "Nome",
+    "addPlayerTeam": "Squadra",
+    "addPlayerSubmit": "Aggiungi",
+    "playerAdded": "{name} è stato aggiunto. Mandagli il suo link personale (tocca il suo nome qui sopra).",
+    "endGame": "Termina la partita",
+    "endConfirmTitle": "Terminare la partita per tutti?",
+    "endConfirmText": "Ogni squadra si ferma dove si trova e viene mostrata la classifica. Non si può annullare.",
+    "endConfirm": "Termina la partita",
+    "notHost": "Solo l'host può aprire questa pagina.",
+    "playerLinkFor": "Link personale per {name}",
+    "playerLinkHelp": "Manda questo link solo a {name}: chi lo apre gioca come {name}. Utile per chi arriva tardi o cambia telefono.",
+    "shareLink": "Condividi il link",
+    "linkCopied": "Link copiato"
+  },
+  "finished": {
+    "title": "La partita è finita",
+    "text": "Grazie per aver giocato a Hidden Pubs! La classifica finale apparirà su questa schermata."
+  },
+  "connection": {
+    "offline": "Nessuna connessione. Nuovo tentativo…",
+    "gone": "Questa partita non esiste più. Le partite vengono cancellate dopo 7 giorni."
+  },
+  "errors": {
+    "generic": "Non ha funzionato. Riprova.",
+    "adultsOnly": "Conferma che tutti i giocatori hanno almeno 18 anni.",
+    "invalidSettings": "Controlla i nomi e i numeri.",
+    "invalidText": "Scrivi un nome (al massimo 30 caratteri).",
+    "nameTaken": "Qualcuno in questa partita ha già quel nome.",
+    "teamFull": "Questa squadra è al completo. Scegline un'altra.",
+    "joiningClosed": "Questa partita è già iniziata. Chiedi all'host di aggiungerti.",
+    "notHost": "Solo l'host può farlo.",
+    "emptyTeam": "Ogni squadra ha bisogno di almeno un giocatore prima che la partita possa iniziare.",
+    "unknownGame": "Questa partita non esiste (più).",
+    "gameFinished": "Questa partita è finita.",
+    "outdated": "Qualcuno della tua squadra è stato più veloce. La schermata è stata aggiornata.",
+    "unknownLink": "Questo link non funziona (più). Chiedi all'host un link nuovo.",
+    "chooseTeam": "Scegli una squadra."
+  },
+  "claim": {
+    "title": "Apertura della tua partita…",
+    "invalid": "Questo link non funziona (più). Chiedi all'host un link nuovo."
+  }
+}

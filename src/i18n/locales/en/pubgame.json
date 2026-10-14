@@ -1,0 +1,141 @@
+{
+  "create": {
+    "eyebrow": "Hidden Pubs · New game",
+    "title": "Set up your game",
+    "teamCount": "How many teams?",
+    "playersPerTeam": "Players per team (max.)",
+    "teamName": "Name of team {number}",
+    "defaultTeamName": "Team {number}",
+    "yourName": "Your name",
+    "yourTeam": "Your team",
+    "hostNote": "You're the host: you start the game and approve the bonus photos. You also play in your own team.",
+    "submit": "Create game",
+    "creating": "Creating…"
+  },
+  "adults": {
+    "confirm": "Everyone playing is 18 or older",
+    "note": "Drinking is never required: every drink may be alcohol-free."
+  },
+  "join": {
+    "eyebrow": "Hidden Pubs · Game {code}",
+    "title": "Join the game",
+    "yourName": "Your name",
+    "chooseTeam": "Choose your team",
+    "placesLeft": {
+      "one": "{count} place left",
+      "other": "{count} places left"
+    },
+    "full": "Full",
+    "submit": "Join",
+    "joining": "Joining…",
+    "closed": "This game has already started. Ask the host to add you.",
+    "finished": "This game is over."
+  },
+  "lobby": {
+    "eyebrow": "Game {code}",
+    "title": "Waiting for everyone",
+    "inviteTitle": "Invite the others",
+    "inviteText": "Everyone plays on their own phone: share the link with the others.",
+    "code": "Game code",
+    "share": "Share link",
+    "copied": "Link copied",
+    "shareText": "Join our Hidden Pubs game!",
+    "players": {
+      "one": "{count} player",
+      "other": "{count} players"
+    },
+    "emptyTeam": "No one yet",
+    "you": "you",
+    "host": "host",
+    "start": "Start the game",
+    "startHint": "Every team needs at least one player.",
+    "waitingForHost": "The host starts the game when everyone is in."
+  },
+  "beery": {
+    "portrait": "Beery, the Hidden Pubs mascot: a cheerful beer mug",
+    "nextLocation": "Beery takes you to the next location!",
+    "bonusTask": "Beery has a bonus task for you!",
+    "letsGo": "Let's go",
+    "intro": {
+      "eyebrow": "Beery explains",
+      "progress": "{current} of {total}",
+      "next": "Next",
+      "skip": "Skip",
+      "done": "Let's play!",
+      "welcomeTitle": "Proost! I'm Beery.",
+      "welcomeText": "I'm your host tonight: 12 cafés, from Rococo to Den Engel. At every café you pick a drink, play Drunken Bastard, solve the pubtask and read a fun fact. Most points wins!",
+      "cardsTitle": "Drunken Bastard",
+      "cardsText": "At every café each player picks one of 10 face-down cards. Every card does something: hand out a sip, pick a drinking buddy, invent a rule, become Thumb King… A sip is always a sip of your own drink, and alcohol-free counts.",
+      "pubtasksTitle": "Pubtasks",
+      "pubtasksText": "Every café has a question about the place itself. Right first time: 100 points. Second try: 80. Third try: 60. After that I'll tell you the answer, but there are no points.",
+      "bonusTitle": "Bonus tasks",
+      "bonusText": "Sometimes I have a bonus task for you. Send a photo or video as proof: the host approves it, and only then do the points count.",
+      "respectTitle": "House rules",
+      "respectText": "Ask staff and guests before you photograph them, never get in the way at the bar, and drink at your own pace. Tradition: everyone treats the winner to a drink of their choice. Alcohol-free is fine, and nobody has to."
+    }
+  },
+  "nextCafe": {
+    "eyebrow": "Café {current} of {total}",
+    "text": "Your team's next stop. Beery shows the way here very soon."
+  },
+  "menu": {
+    "label": "Game menu",
+    "rules": "Rules",
+    "host": "Host dashboard",
+    "game": "Back to the game"
+  },
+  "host": {
+    "eyebrow": "Game {code} · Host",
+    "title": "Host dashboard",
+    "teams": "Teams",
+    "progress": "{done} of {total} cafés",
+    "teamFinished": "Finished",
+    "pendingEvidence": {
+      "one": "{count} photo or video waiting for your approval",
+      "other": "{count} photos or videos waiting for your approval"
+    },
+    "noPendingEvidence": "No photos or videos waiting.",
+    "addPlayer": "Add a player",
+    "addPlayerName": "Name",
+    "addPlayerTeam": "Team",
+    "addPlayerSubmit": "Add",
+    "playerAdded": "{name} has been added. Send them their personal link (tap their name above).",
+    "endGame": "End the game",
+    "endConfirmTitle": "End the game for everyone?",
+    "endConfirmText": "Every team stops where it is and the results are shown. This can't be undone.",
+    "endConfirm": "End the game",
+    "notHost": "Only the host can open this page.",
+    "playerLinkFor": "Personal link for {name}",
+    "playerLinkHelp": "Send this link to {name} only: whoever opens it plays as {name}. Handy for late arrivals and new phones.",
+    "shareLink": "Share link",
+    "linkCopied": "Link copied"
+  },
+  "finished": {
+    "title": "The game is over",
+    "text": "Thanks for playing Hidden Pubs! The final scores follow on this screen."
+  },
+  "connection": {
+    "offline": "No connection. Trying again…",
+    "gone": "This game no longer exists. Games are deleted after 7 days."
+  },
+  "errors": {
+    "generic": "That didn't work. Please try again.",
+    "adultsOnly": "Please confirm that everyone playing is 18 or older.",
+    "invalidSettings": "Please check the names and numbers.",
+    "invalidText": "Please type a name (at most 30 characters).",
+    "nameTaken": "Someone in this game already has that name.",
+    "teamFull": "This team is full. Choose another team.",
+    "joiningClosed": "This game has already started. Ask the host to add you.",
+    "notHost": "Only the host can do that.",
+    "emptyTeam": "Every team needs at least one player before the game can start.",
+    "unknownGame": "This game doesn't exist (any more).",
+    "gameFinished": "This game is over.",
+    "outdated": "Someone in your team was quicker. The screen has been updated.",
+    "unknownLink": "This link doesn't work (any more). Ask the host for a new one.",
+    "chooseTeam": "Please choose a team."
+  },
+  "claim": {
+    "title": "Opening your game…",
+    "invalid": "This link doesn't work (any more). Ask the host for a new one."
+  }
+}

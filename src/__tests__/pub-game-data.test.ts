@@ -86,12 +86,14 @@ describe("the answers stay on the server", () => {
     expect(importers.filter((file) => !file.startsWith("features/pub-game/server/"))).toEqual([]);
   });
 
-  test("no client component imports the server folder", () => {
+  test("browser code never imports the server folder (not even types)", () => {
     const root = join(process.cwd(), "src");
-    const clientImporters = sourceFiles(root).filter((file) => {
+    const importsServer = /from\s+["'][^"']*(pub-game\/server|\.\.\/server)\//;
+    const clientFiles = sourceFiles(root).filter((file) => {
       const text = readFileSync(file, "utf8");
-      return /^["']use client["']/m.test(text) && text.includes("pub-game/server");
+      const isClient = /^["']use client["']/m.test(text) || /[\\/]pub-game[\\/](client|components)[\\/]/.test(file);
+      return isClient && importsServer.test(text);
     });
-    expect(clientImporters).toEqual([]);
+    expect(clientFiles.map((file) => relative(root, file))).toEqual([]);
   });
 });

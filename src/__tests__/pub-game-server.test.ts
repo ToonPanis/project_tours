@@ -4,7 +4,9 @@ import { pubGameDefinition } from "@/data/walks/hidden-pubs/game/definition";
 import { parseClientAction } from "@/features/pub-game/logic/client-action";
 import type { PlayerView } from "@/features/pub-game/logic/player-view";
 import {
+  claimPlayerLink,
   createGame,
+  createPlayerLink,
   getGameUpdate,
   getLobby,
   joinGame,
@@ -127,6 +129,42 @@ describe("joining", () => {
     expect(await joinGame(ctx, "ZZZZZZ", null, { name: "X", teamId: "t1", adultsConfirmed: true })).toMatchObject({
       status: 404,
     });
+  });
+});
+
+describe("personal links (late arrivals, new phones)", () => {
+  test("only the host makes them; opening one on a phone makes it that player", async () => {
+    const { ctx, code, hostToken, beaToken, beaId } = await gameWithTwoTeams();
+    expect(await createPlayerLink(ctx, code, beaToken, beaId)).toMatchObject({ status: 403, error: "not-host" });
+    expect(await createPlayerLink(ctx, code, null, beaId)).toMatchObject({ status: 401 });
+    expect(await createPlayerLink(ctx, code, hostToken, "nobody")).toMatchObject({ status: 404 });
+
+    const { token } = unwrap(await createPlayerLink(ctx, code, hostToken, beaId));
+    expect(token).not.toBe(beaToken);
+    expect(unwrap(await claimPlayerLink(ctx, code, { token }))).toEqual({ playerId: beaId, token });
+    // Bea's new phone sees Bea's game; her old phone still works too.
+    expect((await view(ctx, code, token)).me.id).toBe(beaId);
+    expect((await view(ctx, code, beaToken)).me.id).toBe(beaId);
+  });
+
+  test("a player added by the host after the first card gets in through a link", async () => {
+    const { ctx, code, hostToken } = await gameWithTwoTeams();
+    await reachPubtask(ctx, code, hostToken);
+    expect(await joinGame(ctx, code, null, { name: "Late", teamId: "t2", adultsConfirmed: true })).toMatchObject({
+      error: "joining-closed",
+    });
+    const added = unwrap(await tap(ctx, code, hostToken, { type: "ADD_PLAYER", name: "Late", teamId: "t2" }));
+    const late = added.view.players.find((player) => player.name === "Late")!;
+    const { token } = unwrap(await createPlayerLink(ctx, code, hostToken, late.id));
+    expect((await view(ctx, code, unwrap(await claimPlayerLink(ctx, code, { token })).token)).me.name).toBe("Late");
+  });
+
+  test("a made-up or foreign link is refused", async () => {
+    const first = await gameWithTwoTeams();
+    const second = await gameWithTwoTeams(first.ctx);
+    expect(await claimPlayerLink(first.ctx, first.code, { token: "made-up" })).toMatchObject({ status: 404 });
+    expect(await claimPlayerLink(first.ctx, first.code, { token: second.beaToken })).toMatchObject({ status: 404 });
+    expect(await claimPlayerLink(first.ctx, first.code, { token: 42 })).toMatchObject({ status: 400 });
   });
 });
 

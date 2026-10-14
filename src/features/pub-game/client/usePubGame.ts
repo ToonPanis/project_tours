@@ -1,0 +1,110 @@
+"use client";
+
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { PubGameEvent } from "@/types/pub-game";
+import type { ClientAction } from "../logic/client-action";
+import type { PlayerView } from "../logic/player-view";
+import { fetchGameUpdate, newActionId, sendAction } from "./api";
+
+/** How often each phone asks "anything new?" while the game is on screen. */
+export const POLL_INTERVAL_MS = 2_000;
+
+export type ConnectionStatus = "online" | "offline" | "gone";
+
+export interface PubGameHandle {
+  view: PlayerView;
+  /** New events (for popups), oldest first. Remove them with `dismissEvents`. */
+  events: PubGameEvent[];
+  dismissEvents: (count: number) => void;
+  connection: ConnectionStatus;
+  /** Sends an action. Resolves to null on success, or the server's error code. */
+  act: (action: ClientAction) => Promise<string | null>;
+  /** True while an action is on its way (to disable buttons against double taps). */
+  busy: boolean;
+}
+
+/**
+ * The live game on one phone. Starts from the view the server rendered the
+ * page with, then:
+ * - polls /state every 2 s while the tab is visible (not in a pocket: saves
+ *   battery and data), and right away when it becomes visible again;
+ * - sends actions and shows the result immediately, without waiting for the poll.
+ *
+ * A newer version always wins: an answer that arrives late (slow network)
+ * never replaces a newer view.
+ */
+export function usePubGame(code: string, initialView: PlayerView, initialVersion: number): PubGameHandle {
+  const [view, setView] = useState(initialView);
+  const [events, setEvents] = useState<PubGameEvent[]>([]);
+  const [connection, setConnection] = useState<ConnectionStatus>("online");
+  const [busy, setBusy] = useState(false);
+  const versionRef = useRef(initialVersion);
+  const pollingRef = useRef(false);
+
+  const applyView = useCallback((version: number, nextView: PlayerView) => {
+    if (version < versionRef.current) return;
+    versionRef.current = version;
+    setView(nextView);
+  }, []);
+
+  const poll = useCallback(async () => {
+    // One request at a time: a slow network must not pile up requests.
+    if (pollingRef.current) return;
+    pollingRef.current = true;
+    try {
+      const since = versionRef.current;
+      const result = await fetchGameUpdate(code, since);
+      if (!result.ok) {
+        setConnection(result.status === 404 || result.status === 401 ? "gone" : "offline");
+        return;
+      }
+      setConnection("online");
+      if (!result.data.changed || result.data.version <= since) return;
+      const newEvents = result.data.events;
+      applyView(result.data.version, result.data.view);
+      if (newEvents.length > 0) setEvents((current) => [...current, ...newEvents]);
+    } finally {
+      pollingRef.current = false;
+    }
+  }, [code, applyView]);
+
+  useEffect(() => {
+    const tick = () => {
+      if (document.visibilityState === "visible") void poll();
+    };
+    const timer = window.setInterval(tick, POLL_INTERVAL_MS);
+    document.addEventListener("visibilitychange", tick);
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", tick);
+    };
+  }, [poll]);
+
+  const act = useCallback(
+    async (action: ClientAction): Promise<string | null> => {
+      setBusy(true);
+      const actionId = newActionId();
+      try {
+        let result = await sendAction(code, action, actionId);
+        // Lost connection: try once more with the SAME id (applied at most once).
+        if (!result.ok && result.status === 0) result = await sendAction(code, action, actionId);
+        if (!result.ok) {
+          if (result.status === 0) setConnection("offline");
+          // Someone else was quicker: fetch the newest state so the screen matches.
+          if (result.status === 409) void poll();
+          return result.error;
+        }
+        setConnection("online");
+        applyView(result.data.version, result.data.view);
+        return null;
+      } finally {
+        setBusy(false);
+      }
+    },
+    [code, applyView, poll],
+  );
+
+  const dismissEvents = useCallback((count: number) => setEvents((current) => current.slice(count)), []);
+
+  return { view, events, dismissEvents, connection, act, busy };
+}
