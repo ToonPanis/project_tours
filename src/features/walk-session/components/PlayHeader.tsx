@@ -11,7 +11,7 @@ interface PlayHeaderProps {
   onOpenRoute: () => void;
 }
 
-/** Always-visible progress: stop number, progress bar, clues and the route button ("Ledger" in Hidden Pubs). */
+/** Always-visible progress: stop number, progress bar and the route button. */
 export function PlayHeader({ walk, session, onOpenRoute }: PlayHeaderProps) {
   const t = useT();
   const stats = getSessionStats(walk, session);
@@ -24,11 +24,6 @@ export function PlayHeader({ walk, session, onOpenRoute }: PlayHeaderProps) {
           <p className="truncate text-xs uppercase tracking-[0.2em] text-gold">{walk.title}</p>
           <p className="font-display text-lg font-semibold text-parchment">
             {stats.isAtBonusStop ? t("guide.extraStop") : t("game.header.stopCounter", { current: stats.currentStopNumber, total: stats.totalStops })}
-            {stats.totalClues > 0 && (
-              <span className="ml-3 text-sm font-normal text-parchment/70">
-                {t("game.header.clues", { found: stats.collectedClues, total: stats.totalClues })}
-              </span>
-            )}
           </p>
         </div>
         <button

@@ -11,9 +11,6 @@ export interface SessionStats {
   solvedStops: number;
   /** True while the walker is at (or on the way to) an optional bonus stop. */
   isAtBonusStop: boolean;
-  collectedClues: number;
-  totalClues: number;
-  challengesCompleted: number;
 }
 
 export function getSessionStats(walk: Walk, session: WalkSession): SessionStats {
@@ -35,9 +32,6 @@ export function getSessionStats(walk: Walk, session: WalkSession): SessionStats 
     totalStops: mainLocations.length,
     solvedStops: solvedLocations.filter((location) => !location.isBonus).length,
     isAtBonusStop: currentLocation?.isBonus === true,
-    collectedClues: session.collectedClueIds.length,
-    totalClues: walk.clues?.length ?? 0,
-    challengesCompleted: solvedLocations.filter((location) => location.challenge).length,
   };
 }
 
@@ -49,11 +43,6 @@ export function formatElapsedTime(milliseconds: number, t: Translator): string {
   return hours > 0
     ? t("common.units.elapsedHoursMinutes", { hours, minutes })
     : t("common.units.elapsedMinutes", { minutes });
-}
-
-/** "Tony, Sarah and Jan" / "Tony, Sarah en Jan": the team's names, joined the way the language does it. */
-export function formatPlayerNames(players: { name: string }[], t: Translator): string {
-  return new Intl.ListFormat(t.locale, { type: "conjunction" }).format(players.map((player) => player.name));
 }
 
 export function getElapsedTime(session: WalkSession, now: Date, t: Translator): string {

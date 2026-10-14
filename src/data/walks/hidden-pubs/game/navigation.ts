@@ -24,7 +24,6 @@ export function cafeDestination(cafeId: string, order: number): WalkLocation {
     address: pubGameCafes[cafeId]?.address ?? "",
     ...findPosition(coordinatesFile, cafeId),
     description: "",
-    content: [],
   };
 }
 

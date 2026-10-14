@@ -1,6 +1,3 @@
-import type { Challenge } from "./challenge";
-import type { Clue } from "./clue";
-import type { StoryBlock } from "./content";
 import type { GuideIntro, WalkChapter, WalkCollection } from "./guide";
 import type { ContentStatus, ImageAsset, LanguageCode } from "./common";
 import type { WalkLocation } from "./location";
@@ -15,15 +12,10 @@ export type Difficulty = "easy" | "moderate" | "challenging";
 export type WalkTheme = "classic" | "tavern" | "archive";
 
 /**
- * "game": an interactive walk (challenges, clues, votes…).
- * "guide": a narrated city guide with no game elements.
+ * "guide": narrated stops, played at /walks/[slug]/play (GuideWalkPlayer).
+ * "pub-game": the multiplayer pub game, played at /games/… (Hidden Pubs).
  */
-/**
- * "guide": narrated stops (GuideWalkPlayer). "game": the one-phone team game
- * (WalkPlayer; only the old Hidden Pubs test fixture uses it now).
- * "pub-game": the multiplayer pub game at /games/… (Hidden Pubs 2.0).
- */
-export type WalkExperience = "game" | "guide" | "pub-game";
+export type WalkExperience = "guide" | "pub-game";
 
 /** Money is stored in cents to avoid floating-point rounding (and matches Stripe). */
 export interface Price {
@@ -49,41 +41,20 @@ export interface PracticalInfoItem {
 export type RouteReveal = "all" | "progressive";
 
 /**
- * Flavour text used during play. Walks can override any line
- * (e.g. "The tavern has spoken."); defaults live in the walk-session feature.
+ * Walk-specific texts for shared screens. Walks can override any line;
+ * defaults live in the walk-session feature (walk-copy.ts).
  */
 export interface WalkCopy {
-  voteResultTitle: string;
-  tieTitle: string;
-  tieSubtitle: string;
-  afterVoteMessage: string;
-  wrongAnswer: string;
-  correctAnswer: string;
-  nextLocationTitle: string;
   completionTitle: string;
   completionMessage: string;
   /** Label of the button that starts the walk, e.g. "Start adventure". */
   startLabel: string;
-  /** Shown when a clue is added, e.g. "The ledger has changed". */
-  clueCollectedTitle: string;
   /** Heading of the route list, e.g. "Taverns". */
   locationsTitle: string;
   /** Completion stat label, e.g. "taverns discovered". */
   locationsDiscoveredLabel: string;
-  /** The button that opens the route panel, e.g. "Route", or "Ledger" in Hidden Pubs. */
+  /** The button that opens the route panel, e.g. "Route". */
   routeButtonLabel: string;
-}
-
-/**
- * An optional final puzzle after the last location: several questions that
- * test what the team remembers, followed by a closing story.
- */
-export interface WalkFinale {
-  title: string;
-  intro: string;
-  questions: Challenge[];
-  /** Fiction shown once the finale is solved. */
-  closingStory: StoryBlock[];
 }
 
 export interface TeamSize {
@@ -135,13 +106,10 @@ export interface Walk extends Omit<WalkSummary, "locationCount"> {
   howItWorksSteps?: string[];
   practicalInfo?: PracticalInfoItem[];
   locations: WalkLocation[];
-  finale?: WalkFinale;
   /** Start-screen texts for guide walks. */
   guideIntro?: GuideIntro;
   /** Pre-calculated walking routes between consecutive locations. */
   routeLegs?: RouteLeg[];
-  /** Collectible clues. Walks without clues simply omit this. */
-  clues?: Clue[];
   /** Parts of the route with their own character, each introduced by a chapter card. */
   chapters?: WalkChapter[];
   /** Historical collection shown alongside the route (e.g. all drawn gates, also vanished ones). */

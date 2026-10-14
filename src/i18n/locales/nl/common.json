@@ -3,11 +3,8 @@
   "close": "Sluiten",
   "cancel": "Annuleren",
   "continue": "Verder",
-  "back": "Terug",
   "next": "Volgende",
   "previous": "Vorige",
-  "submit": "Controleren",
-  "yourAnswer": "Jouw antwoord",
   "labelValue": "{label}: {value}",
   "units": {
     "meters": "{value} m",

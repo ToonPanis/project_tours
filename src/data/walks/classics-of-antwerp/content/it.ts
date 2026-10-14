@@ -39,7 +39,6 @@ export const classicsContentIt: ClassicsContent = {
     },
     copy: {
       startLabel: "Inizia la passeggiata",
-      nextLocationTitle: "Prossima tappa",
       completionTitle: "La fine della passeggiata",
       completionMessage: "Non avete solo attraversato Anversa. Avete ripercorso a ritroso la sua storia.",
       locationsTitle: "Il percorso",

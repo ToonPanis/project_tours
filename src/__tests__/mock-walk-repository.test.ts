@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { the17GatesWalk } from "./fixtures/the-17-gates";
+import { classicsOfAntwerpWalk } from "@/data/walks/classics-of-antwerp";
 import { MockWalkRepository } from "@/lib/repositories/mock-walk-repository";
 
 describe("MockWalkRepository", () => {
@@ -36,14 +36,14 @@ describe("MockWalkRepository", () => {
   });
 
   test("locationCount does not include bonus stops", async () => {
-    const bonusLocation = { ...the17GatesWalk.locations[0], id: "bonus", isBonus: true };
+    const bonusLocation = { ...classicsOfAntwerpWalk.locations[0], id: "bonus", isBonus: true };
     const walkWithBonus = {
-      ...the17GatesWalk,
-      locations: [...the17GatesWalk.locations, bonusLocation],
+      ...classicsOfAntwerpWalk,
+      locations: [...classicsOfAntwerpWalk.locations, bonusLocation],
     };
 
     const [summary] = await new MockWalkRepository([walkWithBonus]).getAllWalks();
-    expect(summary.locationCount).toBe(3);
+    expect(summary.locationCount).toBe(classicsOfAntwerpWalk.locations.length);
   });
 
   test("getUpcomingWalks returns the announced walks", async () => {

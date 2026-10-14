@@ -1,18 +1,15 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import { getClassicsWalk } from "@/data/walks/classics-of-antwerp";
-import { getOldHiddenPubsWalk } from "./fixtures/old-hidden-pubs";
 import { GuideCompletionScreen } from "@/features/guide/components/GuideCompletionScreen";
 import { PlayHeader } from "@/features/walk-session/components/PlayHeader";
 import { RoutePanel } from "@/features/walk-session/components/RoutePanel";
-import { checkAnswer, normalizeAnswer, parseNumber } from "@/features/walk-session/logic/answers";
 import { createWalkSession } from "@/features/walk-session/logic/create-session";
-import { formatElapsedTime } from "@/features/walk-session/logic/session-stats";
+import { formatElapsedTime, getSessionStats } from "@/features/walk-session/logic/session-stats";
 import { getWalkCopy } from "@/features/walk-session/logic/walk-copy";
 import { LocaleProvider } from "@/i18n/client";
 import { matchLocale } from "@/i18n/config";
 import { createTranslator } from "@/i18n/translate";
-import type { Challenge } from "@/types/challenge";
 
 // Pages read the visitor's language on the server; here it is Dutch.
 vi.mock("@/i18n/server", async () => {
@@ -27,40 +24,39 @@ beforeEach(() => {
 });
 
 const nl = createTranslator("nl");
-const team = { id: "t", name: "", players: [{ id: "p", name: "Tony" }] };
 
 // ── M-05: no English on translated screens ────────────────────────────────
 
-describe("M-05: Hidden Pubs header and route panel in Dutch", () => {
-  const walk = getOldHiddenPubsWalk("nl");
-  const session = createWalkSession({ walk, team, sessionId: "s", startedAt: "2026-09-29T10:00:00.000Z" });
+describe("M-05: the header and route panel in Dutch", () => {
+  const walk = getClassicsWalk("nl");
+  const session = createWalkSession({ walk, sessionId: "s", startedAt: "2026-09-29T10:00:00.000Z" });
+  const copy = getWalkCopy(walk, nl);
 
-  test("the header shows the clue count and the Ledger button in Dutch", () => {
+  test("the header shows the stop counter and the route button in Dutch", () => {
     render(
       <LocaleProvider locale="nl">
         <PlayHeader walk={walk} session={session} onOpenRoute={() => {}} />
       </LocaleProvider>,
     );
-    const total = walk.clues!.length;
-    expect(screen.getByText(nl("game.header.clues", { found: 0, total }))).toBeDefined();
-    expect(screen.getByRole("button", { name: "Kasboek" })).toBeDefined();
-    expect(document.body.textContent).not.toMatch(/Clues|Ledger/);
+    const { currentStopNumber, totalStops } = getSessionStats(walk, session);
+    expect(screen.getByText(nl("game.header.stopCounter", { current: currentStopNumber, total: totalStops }))).toBeDefined();
+    expect(screen.getByRole("button", { name: copy.routeButtonLabel })).toBeDefined();
   });
 
-  test("the route panel lists the clues in Dutch", () => {
+  test("the route panel's headings are in Dutch", () => {
     render(
       <LocaleProvider locale="nl">
-        <RoutePanel walk={walk} session={session} copy={getWalkCopy(walk, nl)} open onClose={() => {}} />
+        <RoutePanel walk={walk} session={session} copy={copy} open onClose={() => {}} />
       </LocaleProvider>,
     );
     const dialog = screen.getByRole("dialog", { hidden: true });
-    expect(dialog.textContent).toContain(nl("game.ledger.discoveredClues", { found: 0, total: walk.clues!.length }));
-    expect(dialog.textContent).toContain(nl("game.ledger.clueLocked", { number: 1 }));
-    expect(dialog.textContent).not.toMatch(/Discovered clues|locked/);
+    expect(dialog.textContent).toContain(nl("game.ledger.yourRoute", { title: walk.title }));
+    expect(dialog.textContent).toContain(copy.locationsTitle);
+    expect(dialog.textContent).toContain(nl("game.ledger.current"));
   });
 
   test("a walk without its own name for the route panel gets the translated default", () => {
-    expect(getWalkCopy(getClassicsWalk("nl"), nl).routeButtonLabel).toBe(nl("game.header.route"));
+    expect(copy.routeButtonLabel).toBe(nl("game.header.route"));
   });
 });
 
@@ -69,48 +65,13 @@ describe("M-05: guide completion time in the visitor's language", () => {
     const ru = createTranslator("ru");
     const walk = getClassicsWalk("ru");
     const session = {
-      ...createWalkSession({ walk, team, sessionId: "s", startedAt: "2026-09-29T10:00:00.000Z" }),
+      ...createWalkSession({ walk, sessionId: "s", startedAt: "2026-09-29T10:00:00.000Z" }),
       completedAt: "2026-09-29T12:47:00.000Z",
     };
     render(<GuideCompletionScreen walk={walk} session={session} copy={getWalkCopy(walk, ru)} t={ru} onShowRoute={() => {}} />);
     const expected = formatElapsedTime(167 * 60 * 1000, ru);
     expect(expected).not.toBe("2h 47m");
     expect(screen.getByText(expected)).toBeDefined();
-  });
-});
-
-// ── L-35: answer checking across languages ────────────────────────────────
-
-describe("L-35: answers", () => {
-  test("German ß counts as ss", () => {
-    expect(normalizeAnswer("Faß")).toBe(normalizeAnswer("Fass"));
-    expect(normalizeAnswer("STRASSE")).toBe(normalizeAnswer("Straße"));
-  });
-
-  test.each([
-    ["1582", 1582],
-    ["1.582", 1582],
-    ["1,582", 1582],
-    ["1 582", 1582],
-    ["1 582", 1582],
-    ["1'582", 1582],
-    ["3,5", 3.5],
-    ["3.5", 3.5],
-    ["12", 12],
-    ["1.58", 1.58],
-    ["0,500", 0.5],
-    ["1.5000", 1.5],
-    ["abc", null],
-    ["", null],
-  ])("%s → %s", (input, expected) => {
-    expect(parseNumber(input)).toBe(expected);
-  });
-
-  test("a year typed with a thousands separator is accepted", () => {
-    const challenge: Challenge = { id: "c", type: "number-answer", title: "", question: "", hints: [], correctNumber: 1582 };
-    expect(checkAnswer(challenge, "1.582")).toBe(true);
-    expect(checkAnswer(challenge, "1 582")).toBe(true);
-    expect(checkAnswer(challenge, "1583")).toBe(false);
   });
 });
 

@@ -6,7 +6,6 @@ import { getWalks, walks } from "@/data/walks";
 import { locales } from "@/i18n/config";
 import { distanceInMeters } from "@/lib/geo";
 import { getOrderedLocations } from "@/lib/walk-locations";
-import type { Challenge } from "@/types/challenge";
 import type { Walk } from "@/types/walk";
 import { readImageSize } from "../../scripts/lib/image-size.mjs";
 
@@ -193,36 +192,6 @@ describe("image sizes match the real files (L-42)", () => {
     }
     expect(checked.size).toBeGreaterThan(52);
     expect(wrong).toEqual([]);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// L-43: every challenge has hints
-// ---------------------------------------------------------------------------
-
-/**
- * CONTENT DECISION PENDING (L-43): add hints or confirm none.
- * These challenges ship without hints today. Remove an id once it has hints;
- * a NEW challenge without hints fails the test.
- */
-// No live walk has old-style challenges since Hidden Pubs became the multiplayer game
-// (its questions and hints are checked in pub-game-content.test.ts).
-const CHALLENGES_WITHOUT_HINTS_ALLOWED: string[] = [];
-
-function allChallenges(walk: Walk): Challenge[] {
-  return [
-    ...walk.locations.flatMap((location) => [location.challenge, location.bonusChallenge]),
-    ...(walk.finale?.questions ?? []),
-  ].filter((challenge): challenge is Challenge => challenge !== undefined);
-}
-
-describe("every challenge has at least one hint (L-43)", () => {
-  test.each(locales)("%s", (locale) => {
-    const withoutHints = getWalks(locale)
-      .flatMap(allChallenges)
-      .filter((challenge) => challenge.hints.filter((hint) => hint.trim().length > 0).length === 0)
-      .map((challenge) => challenge.id);
-    expect(withoutHints.sort()).toEqual([...CHALLENGES_WITHOUT_HINTS_ALLOWED].sort());
   });
 });
 

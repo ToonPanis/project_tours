@@ -45,9 +45,9 @@ src/app/games/                Hidden Pubs: /games/new (create), /games/[code] (p
 src/app/api/games/            Hidden Pubs Route Handlers: create, join, state (polling), actions, claim, reveal, media upload/file
 src/components/layout|ui/     SiteHeader/Footer, LanguageSelector (🌐), Button, Badge, Dialog, ConfirmDialog, ProgressBar…
 src/features/walks/           walk cards, detail-page sections, format-walk.ts (Intl formatting), walk-content.ts
-src/features/walk-session/    the player core: WalkPlayer (routes to game or guide), usePlayerShell + getCurrentStop +
-                              StopNavigation (shared by both players), game screens, session-reducer.ts,
-                              answers.ts, voting.ts, session-stats.ts, storage/session-storage.ts, playtest/
+src/features/walk-session/    the walk player core: WalkPlayer (→ GuideWalkPlayer), usePlayerShell + getCurrentStop,
+                              StopNavigation, PlayScreen/PlayHeader/RoutePanel, session-reducer.ts, session-stats.ts,
+                              storage/session-storage.ts, playtest/ (fast-forward + tools)
 src/features/guide/           GuideWalkPlayer + stop page, chapter cards, card decks, search tasks, collection, glossary
 src/features/pub-game/        HIDDEN PUBS (see "Hidden Pubs" below): logic/ (pure rules: apply-action, cards, route, scoring,
                               sips, player-view…), server/ (game-service, stores, identity; server only), client/ (usePubGame
@@ -58,7 +58,7 @@ src/hooks/                    shared client hooks (useScreenFocus: new screen �
 src/i18n/                     translation layer (see "Languages")
 src/lib/                      repositories/ (walkRepository, cached getWalk), routing/ (OSRM normalising, maneuver labels),
                               geo.ts, walk-locations.ts (route order), validate-walk.ts, security-headers.ts
-src/types/                    shared models (walk, location, challenge, content, guide, navigation, session, …)
+src/types/                    shared models (walk, location, guide, navigation, session, pub-game, …)
 src/data/walks/               ALL walk data (see "Walks")
 scripts/                      route generator, Commons image downloader, MapLibre worker copy, translation check
 db/migrations/                Hidden Pubs SQL migrations (run with npm run db:migrate)
@@ -72,14 +72,13 @@ HIDDEN_PUBS_DATA_AUDIT.md     decisions D1–D34 taken on that concept, and what
 ## Architecture
 
 - Pages are Server Components that read walks through **`walkRepository`** (`src/lib/repositories/`, currently `MockWalkRepository` over `src/data/walks`, methods take a `locale`). Swap this for a real DB later; keep pages unaware of the source.
-- `/walks/[slug]/play` renders the client `<WalkPlayer>`. It picks **`GuideWalkPlayer`** when `walk.experience === "guide"`, else the game flow. A walk with `experience: "pub-game"` (Hidden Pubs) is redirected to `/games/new?walk=<slug>` instead (see "Hidden Pubs").
-- Session state: `useWalkSession` (`useState` + the pure `applySessionAction` in `session-reducer.ts`, `SessionAction`s), saved to **localStorage** key `hidden-antwerp:playtest:<slug>` (`STORAGE_VERSION = 3`). Only progress is saved. When bumping the version, add a step to `migrateToCurrent` in `storage/session-storage.ts` so mid-walk saves survive (versions without a step are discarded). Saves are validated field by field (`isWellFormedSession`), then adapted to the walk's current stops by `logic/reconcile-session.ts`: new stops are added as locked, removed stops and their clues dropped; only a removed *current* stop resets the game. The same reconcile runs on in-memory state when the page re-renders (language switch), so the game is never reloaded from storage for the same walk.
-- Game flow per stop: navigate ("I'm here" always available; asks to confirm when GPS says > 150 m away) → arrive → drink vote (skippable) → story (ledger page) → challenge (hints unlock after wrong answers; after 3 wrong answers the team may **show the answer**, `logic/reveal-answer.ts`: the stop still counts as solved and gives its clue, and the translated explanation is shown) → solved → historical reveal → clue → next stop; finale after the last stop.
+- `walk.experience` is `"guide"` or `"pub-game"`. `/walks/[slug]/play` renders the client `<WalkPlayer>` → **`GuideWalkPlayer`**; a `"pub-game"` walk (Hidden Pubs) is redirected to `/games/new?walk=<slug>` instead (see "Hidden Pubs"). The old one-phone game engine (challenges, drink votes, clues, finale) was removed in stage 12b; it is in git history (before the commit "remove the one-phone game engine") if a challenge walk is ever wanted again.
+- Session state: `useWalkSession` (`useState` + the pure `applySessionAction` in `session-reducer.ts`, `SessionAction`s), saved to **localStorage** key `hidden-antwerp:playtest:<slug>` (`STORAGE_VERSION = 4`). Only progress is saved: per stop a status `locked → travelling → arrived → (story) → solved`; actions `ARRIVE`, `SHOW_STORY`, `COMPLETE_VISIT`, `CONTINUE_TO_NEXT_LOCATION`. When bumping the version, add a step to `migrateToCurrent` in `storage/session-storage.ts` so mid-walk saves survive (versions without a step are discarded). Saves are validated field by field (`isWellFormedSession`), then adapted to the walk's current stops by `logic/reconcile-session.ts`: new stops are added as locked, removed stops dropped; only a removed *current* stop resets the walk. Version 2/3 saves (from the game era) are migrated: the game fields are dropped, game-only statuses become `arrived`. The same reconcile runs on in-memory state when the page re-renders (language switch), so progress is never reloaded from storage for the same walk.
 - Errors: `app/walks/[slug]/play/error.tsx` (retry = full reload, or restart only this walk) and `app/global-error.tsx`. Production error logs contain only the error name (`lib/log-error.ts`), never messages (could contain positions).
-- Guide flow: start screen → chapter card (when a chapter starts) → navigate → stop page (intro, sections by kind, cards, search task, then/now, "did you know", glossary, info boxes with "checked on" date, sources) → optional detour choice → … → closing/completion.
+- Guide flow: start screen → chapter card (when a chapter starts) → navigate ("I'm here" always available; asks to confirm when GPS says > 150 m away) → stop page (intro, sections by kind, cards, search task, then/now, "did you know", glossary, info boxes with "checked on" date, sources) → optional detour choice → … → closing/completion.
 - **Everything is data-driven.** Never write walk-specific conditions (`if (walk.slug === "…")`). Add optional fields/types instead so any walk can use the same components.
 - Visual themes: `walk.theme` = `classic` | `tavern` | `archive`, applied via `data-walk-theme` CSS token overrides in `globals.css`.
-- Playtest tools (yellow panels: jump to stop, show answer, simulated/auto-walk GPS): on in dev; in production only if `NEXT_PUBLIC_PLAYTEST_TOOLS=true`. English only on purpose.
+- Playtest tools (yellow panels: jump to stop, skip to next stage, simulated/auto-walk GPS): on in dev; in production only if `NEXT_PUBLIC_PLAYTEST_TOOLS=true`. English only on purpose.
 
 ## Walks (`src/data/walks/`)
 
@@ -91,9 +90,6 @@ Registered in `src/data/walks/index.ts` → `getWalks(locale)`: **Poortjes, Hidd
 | **Hidden Pubs** (`hidden-pubs`), brand name, not translated | pub-game | Hidden Pubs 2.0, the multiplayer game (see "Hidden Pubs" below): 12 cafés, a random route per team, Drunken Bastard cards, pubtasks, bonus photo/video tasks, fun facts, live leaderboard. | `index.ts` (the Walk for list/detail page), `walk-texts.ts` (detail-page texts per language), `game/` (`definition.ts`, `cafes.ts`, `drinks.ts`, `route-groups.json`, `answers.server.ts`, `reveals/`, `content/<lang>.ts`, `navigation.ts`, `coordinates.json`, `routes.json`) |
 | **Classics of Antwerp** (`classics-of-antwerp`) | guide | 18 stops from Antwerpen-Centraal back in time to the Scheldt, historical photos + then/now. | `stops.ts`, `content/<lang>.ts`, `image-sources.json` → `images.json`, `coordinates.json`, `routes.json` |
 | Upcoming: Dark Antwerp, The Rubens Code | – | "coming soon" cards only | `upcoming-walks.ts` |
-
-**"The 17 Gates" (`src/__tests__/fixtures/the-17-gates.ts`) is NOT a live walk.** It's an old English placeholder walk kept only as a test fixture (5 tests import it). The real gates walk is Poortjes van Antwerpen.
-**The old Hidden Pubs game (8 cafés, "The Lost Tavern Ledger") is NOT a live walk either.** It lives in `src/__tests__/fixtures/old-hidden-pubs/` (slug `old-hidden-pubs`) only because the tests of the single-phone game engine (`src/features/walk-session/`) use it.
 
 Pattern: **technical data exists once** (ids, coordinates, addresses, images, answers, statuses); **texts exist per language** in `content/`. `content/types.ts` of each walk defines the text shape.
 
@@ -134,7 +130,7 @@ Pattern: **technical data exists once** (ids, coordinates, addresses, images, an
 
 ## Key types (`src/types/`)
 
-`Walk` (+ `WalkSummary`, `UpcomingWalk`, `WalkCopy`, `WalkFinale`, `WalkNarrative`, `experience`, `theme`, `routeReveal`, `contentStatus`), `WalkLocation` (coordinates|null, `content: ContentBlock[]`, `challenge`, `bonusChallenge`, `drinkRound`, `historicalReveal`, `guide?: GuideStopContent`, `isBonus`), `Challenge` (union: multiple-choice / text-answer / number-answer / observation / sequence / code, `hints`, `researchStatus`), `ContentBlock` (`history` with `verification` | `legend` | `story` with `originalLanguage`/`translation`), `HistoricalReveal`, `Clue`, `DrinkOption` (`alcoholic`, `menuVerification`), guide types (`GuideSection` kind history/interpretation/context/legend, `GuideImage`, `CollectionItem`, `HeritageStatus`, `SearchTask`, `InfoBox` with `checkedOn`, `WalkChapter`), navigation (`RouteLeg`, `WalkingRoute`, `Maneuver`, `GpsFix`), session (`WalkSession`, `LocationProgress`, `SessionAction`).
+`Walk` (+ `WalkSummary`, `UpcomingWalk`, `WalkCopy`, `WalkNarrative`, `experience` guide|pub-game, `theme`, `routeReveal`, `contentStatus`), `WalkLocation` (coordinates|null, `guide?: GuideStopContent`, `isBonus`), `Source` (`content.ts`), `VerificationStatus` (`reveal.ts`), guide types (`GuideSection` kind history/interpretation/context/legend, `GuideImage`, `CollectionItem`, `HeritageStatus`, `SearchTask`, `InfoBox` with `checkedOn`, `WalkChapter`), navigation (`RouteLeg`, `WalkingRoute`, `Maneuver`, `GpsFix`), session (`WalkSession`, `LocationProgress`, `SessionAction`), pub game (`pub-game.ts`: `PubGameState`, `PubGameAction`, player views…).
 
 ## Environment & external services
 
@@ -150,7 +146,7 @@ Security headers for every response come from `src/lib/security-headers.ts` via 
 - Hidden Pubs: open points are listed in `HIDDEN_PUBS_DATA_AUDIT.md`: real Postgres/Blob test (`.env.local`), field test of all 12 cafés (coordinates `to-verify`), the owner's approval of the proposed Rococo and De Kat answer options, the savings-box photo, price/duration/team size (D32), fun facts marked research-required, drink spellings `to-verify`.
 - Smekens drawing rights, see Images.
 - Translations were made by AI and are not reviewed by native speakers (ru/uk name transliterations and some glossary terms were flagged as worth checking). Italian UI uses "tu" in a few labels, content addresses the group with "voi".
-- Not built yet: payments (prices are display only), accounts, analytics. (Hidden Pubs checks answers on the server; the old single-phone game engine still ships answers to the client.)
+- Not built yet: payments (prices are display only), accounts, analytics. (Hidden Pubs checks answers on the server; answers never ship to the browser.)
 
 **Known quirks:** flag emoji show as letters ("GB", "NL") on Windows (fine on phones). In `npm run dev`, the nested `/api/games/[code]/…` routes sometimes return 404 right after a cold Turbopack compile; restarting the dev server fixes it (the production build is fine). Local branches `backup/pre-i18n` (snapshot before i18n) and `feature/i18n-8-languages` (already merged into `main`) still exist.
 
@@ -159,12 +155,11 @@ Security headers for every response come from `src/lib/security-headers.ts` via 
 - Custom i18n without a package; locale in cookie, not in the URL; English is master/fallback; semantic keys; walk text separated from technical data.
 - Pre-generated routes (no runtime routing API), MapLibre + OpenFreeMap, self-served MapLibre worker.
 - No GPS storage, ever.
-- History vs fiction vs legend always labelled; history comes *after* the challenge; research markers stay visible.
-- Alcohol rules below. They are enforced by `walk-data.test.ts` (walks with drink rounds, every language) and the `pub-game-*` tests (Hidden Pubs).
+- History vs fiction vs legend always labelled; in Hidden Pubs explanations and fun facts come *after* the question is answered; research markers stay visible.
+- Alcohol rules below. They are enforced by the `pub-game-*` tests (no shots on a menu, "any drink counts" wording, in every language).
 - "Hidden Pubs" title, café/brand names and "Beery" untranslated.
 - Hidden Pubs follows `HIDDEN_PUBS_CONCEPT.txt` (the owner's game: don't redesign it) + the decisions in `HIDDEN_PUBS_DATA_AUDIT.md`. The server decides everything random (route, cards, wheel), all times and ids; answers and explanations live only in `answers.server.ts` / `reveals/*` and only `src/features/pub-game/server/` may import them (a test checks this). Players get a per-player view (`toPlayerView`): never other teams' routes, never answers before they're earned. A player is identified by an httpOnly cookie `hp_<CODE>`; only its SHA-256 hash is stored.
 - Vanished gates are never waypoints; optional stops get bypass legs.
-- `the-17-gates.ts` is a test fixture (in `src/__tests__/fixtures/`), not a walk to revive.
 - Every walk must pass `validateWalk` (`src/lib/validate-walk.ts`, run in `walk-data.test.ts` for every walk × language): add new structural rules there, not per walk.
 
 ## Code guidelines
@@ -176,19 +171,18 @@ Security headers for every response come from `src/lib/security-headers.ts` via 
 5. Small reusable components. UI in `src/components/` or `src/features/*/components/`, data in `src/data/` / `src/lib/`, shared types in `src/types/`, business logic in plain TS functions (not in components).
 6. Clear names, minimal dependencies, never hardcode secrets (`.env.local`; only `NEXT_PUBLIC_*` reaches the browser).
 7. Mobile-first (base styles, then `sm:`/`md:`/`lg:`); check 390 px width, long German words and Cyrillic.
-8. Accessibility: semantic HTML, alt text, labels, keyboard access, contrast, `lang` attributes for foreign-language text. A screen that replaces another in place focuses its `h1` via `useScreenFocus(stableId)`. Live feedback goes in a status element that is always mounted (e.g. `WrongAnswerStatus`), never in one that appears with its text. Dialogs that delete progress use `ConfirmDialog isDestructive`. Untranslated Dutch source titles get `language: "nl"` on the `Source`.
+8. Accessibility: semantic HTML, alt text, labels, keyboard access, contrast, `lang` attributes for foreign-language text. A screen that replaces another in place focuses its `h1` via `useScreenFocus(stableId)`. Live feedback goes in a status element that is always mounted (e.g. each pubtask question's status in `PubtaskStep`), never in one that appears with its text. Dialogs that delete progress use `ConfirmDialog isDestructive`. Untranslated Dutch source titles get `language: "nl"` on the `Source`.
 9. New user-facing text → a key in **all 8** `locales/<lang>/*.json` (never hardcoded strings), then `npm run i18n:check`. `t` is always a required parameter (no English default); `no-hardcoded-text.test.ts` fails on text typed into JSX. Walk-specific names for shared UI go in the walk's `copy` (e.g. `routeButtonLabel`). Shared metadata (Open Graph base, robots) comes from `src/lib/shared-metadata.ts`, because Next.js merges metadata shallowly.
 
 ## Content rules
 
 - **Never invent historical facts.** Real history has a verification status: `"verified"` (needs sources), `"partially-verified"` or `"research-required"`. Unresearched text carries a visible `[Historical research required]` marker.
-- **Always separate history from fiction.** Blocks are `history`, `legend` or `story`; `historicalReveal` holds real history only. The UI labels each by kind and status.
-- **History comes after the challenge:** real history goes in `historicalReveal`, not in the story shown before the challenge.
-- **Never invent** drink menus, prices, opening hours, coordinates, sources or physical objects for riddles. Use visible placeholders (`[RESEARCH REQUIRED]`, `coordinates: null`), `menuVerification: "to-verify"` for unverified drinks, `researchStatus: "on-site-verification-required"` for on-site answers still to check. Practical info (opening hours, prices) always gets a `checkedOn` date and source.
+- **Always separate history from fiction.** Guide sections have a `kind` (history / interpretation / context / legend / fiction); Hidden Pubs fun facts a `kind` (history / legend / cafe-story) and a `status`. The UI labels each by kind and status.
+- **In Hidden Pubs, history comes after the question:** explanations and fun facts are server-only (`reveals/`) and only sent once the question or pubtask is finished.
+- **Never invent** drink menus, prices, opening hours, coordinates, sources or physical objects for riddles. Use visible placeholders (`[RESEARCH REQUIRED]`, `coordinates: null`, coordinates with `status: "to-verify"`), and mark a Hidden Pubs question `pending` until the owner gives its answer (it is left out of the playable game). Practical info (opening hours, prices) always gets a `checkedOn` date and source.
 - **Alcohol and cafés:** progress never depends on ordering or drinking; every drink choice has an alcohol-free option and can be skipped, and everyone chooses their own drink; **no shots on any menu**; never count, store, show or celebrate the number of drinks (no drink stats, not in scores or results); alcohol-free players get exactly the same experience and can earn every point.
-  - Guide/old game walks: a drink vote is only a suggestion; no drinking challenges, speed, quantities, penalties or proof of drinking.
   - Hidden Pubs (the owner's party game, decision D2): the Drunken Bastard cards say "drink" = **one sip of your own drink, alcohol-free counts** (at most 2 sips from one instruction); the app only shows who sips and records nothing. Bonus tasks that involve drinking (Barok, Boer van Tienen, Den Engel's clog) say **any drink counts** (D3), so water earns the same points. The winner's tradition is "not an obligation" (D28). The game is for 18+ (detail page).
-- **Challenges** depend on the physical location (observation, inscriptions, symbols, counting), not on googleable trivia.
+- **Questions and tasks** depend on the physical location (observation, inscriptions, symbols, counting), not on googleable trivia.
 
 ## How to work with me
 

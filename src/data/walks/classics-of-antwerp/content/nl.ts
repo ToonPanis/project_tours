@@ -39,7 +39,6 @@ export const classicsContentNl: ClassicsContent = {
     },
     copy: {
       startLabel: "Start de wandeling",
-      nextLocationTitle: "Volgende halte",
       completionTitle: "Het einde van de wandeling",
       completionMessage: "Je bent niet zomaar door Antwerpen gewandeld. Je bent terug door zijn geschiedenis gewandeld.",
       locationsTitle: "De route",

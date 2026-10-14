@@ -45,7 +45,6 @@ export const poortjesContentUk: PoortjesContent = {
     },
     copy: {
       startLabel: "Почати прогулянку",
-      nextLocationTitle: "Наступна зупинка",
       completionTitle: "Кінець прогулянки",
       completionMessage: "Сьогодні ви побачили п’ятдесят брам. Відтепер придивляйтеся до дверей.",
       locationsTitle: "Маршрут",

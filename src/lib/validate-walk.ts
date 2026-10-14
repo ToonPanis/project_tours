@@ -14,22 +14,10 @@ export function validateWalk(walk: Walk): string[] {
   if (stops.length === 0) problems.push("the walk has no stops");
   if (stopIds.size !== stops.length) problems.push("two stops share the same id");
 
-  // Each experience uses a different player; mixing their fields leads to dead ends.
+  // The guide player shows each stop's page; without one the walker gets a blank page.
   for (const stop of stops) {
-    if (walk.experience === "guide") {
-      if (!stop.guide) problems.push(`${stop.id}: a guide walk stop needs guide content (else a blank page)`);
-      if (stop.challenge || stop.drinkRound) {
-        problems.push(`${stop.id}: a guide walk stop can't have a challenge or drink round (the guide player can't finish it)`);
-      }
-    }
-    // Typed numbers are read with thousands separators ("1.582" = 1582, see answers.ts),
-    // which only works when the right answer is a whole number.
-    for (const challenge of [stop.challenge, stop.bonusChallenge]) {
-      if (challenge?.type === "number-answer" && !Number.isInteger(challenge.correctNumber)) {
-        problems.push(`${stop.id}: a number answer must be a whole number (${challenge.correctNumber})`);
-      }
-      // The player can't play "sequence" challenges yet: a team would be stuck there.
-      if (challenge?.type === "sequence") problems.push(`${stop.id}: "sequence" challenges can't be played yet (dead end)`);
+    if (walk.experience === "guide" && !stop.guide) {
+      problems.push(`${stop.id}: a guide walk stop needs guide content (else a blank page)`);
     }
   }
 
@@ -57,24 +45,8 @@ export function validateWalk(walk: Walk): string[] {
   }
 
   // References between parts of the walk.
-  const clueIds = new Set((walk.clues ?? []).map((clue) => clue.id));
-  for (const clue of walk.clues ?? []) {
-    if (!stopIds.has(clue.sourceLocationId)) problems.push(`clue ${clue.id} comes from unknown stop ${clue.sourceLocationId}`);
-  }
   for (const chapter of walk.chapters ?? []) {
     if (!stopIds.has(chapter.firstLocationId)) problems.push(`chapter ${chapter.id} starts at unknown stop ${chapter.firstLocationId}`);
-  }
-  const challenges = [
-    ...stops.flatMap((stop) => [stop.challenge, stop.bonusChallenge]),
-    ...(walk.finale?.questions ?? []),
-  ].filter((challenge) => challenge !== undefined);
-  for (const challenge of challenges) {
-    for (const clueId of challenge.requiredClueIds ?? []) {
-      if (!clueIds.has(clueId)) problems.push(`challenge ${challenge.id} needs unknown clue ${clueId}`);
-    }
-    if (challenge.answerClueId && !clueIds.has(challenge.answerClueId)) {
-      problems.push(`challenge ${challenge.id} reveals unknown clue ${challenge.answerClueId}`);
-    }
   }
 
   return problems;

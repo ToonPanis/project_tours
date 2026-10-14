@@ -3,11 +3,8 @@
   "close": "Close",
   "cancel": "Cancel",
   "continue": "Continue",
-  "back": "Back",
   "next": "Next",
   "previous": "Previous",
-  "submit": "Submit",
-  "yourAnswer": "Your answer",
   "labelValue": "{label}: {value}",
   "units": {
     "meters": "{value} m",

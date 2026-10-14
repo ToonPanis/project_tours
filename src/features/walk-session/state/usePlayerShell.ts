@@ -5,7 +5,7 @@ import type { Walk } from "@/types/walk";
 import { useWalkSession, type WalkSessionControls } from "./useWalkSession";
 
 export interface PlayerShell extends WalkSessionControls {
-  /** The route panel (list of stops; "Ledger" in Hidden Pubs). */
+  /** The route panel (list of stops). */
   isRouteOpen: boolean;
   openRoute: () => void;
   closeRoute: () => void;
@@ -20,9 +20,8 @@ export interface PlayerShell extends WalkSessionControls {
 }
 
 /**
- * The state both players (game and guide) share: the saved session plus a few
- * visit-only switches. Each player keeps its own screens and flow (game phases,
- * chapter cards, detours…) on top of this.
+ * The player's state: the saved session plus a few visit-only switches. The
+ * guide player keeps its own screens and flow (chapter cards, detours…) on top of this.
  */
 export function usePlayerShell(walk: Walk): PlayerShell {
   const walkSession = useWalkSession(walk);

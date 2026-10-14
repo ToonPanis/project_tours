@@ -14,7 +14,6 @@ import { getPlaytestNavigation, PlaytestControls } from "@/features/walk-session
 import { usePlayerShell } from "@/features/walk-session/state/usePlayerShell";
 import { useT } from "@/i18n/client";
 import { getOrderedLocations } from "@/lib/walk-locations";
-import type { Team } from "@/types/team";
 import type { Walk } from "@/types/walk";
 import { ChapterCard } from "./ChapterCard";
 import { CollectionList } from "./CollectionList";
@@ -22,13 +21,9 @@ import { GuideCompletionScreen } from "./GuideCompletionScreen";
 import { GuideStartScreen } from "./GuideStartScreen";
 import { GuideStopPage, type DetourOption } from "./GuideStopPage";
 
-/** A guide walk has no teams; one "visitor" follows the route. */
-const VISITOR_TEAM: Team = { id: "visitor", name: "", players: [{ id: "visitor", name: "You" }] };
-
 /**
- * The player for guide walks (experience: "guide"). It reuses the game's
- * session, saving, navigation, route panel and playtest tools, but replaces
- * the game screens with narrated stop pages:
+ * The player for guide walks (experience: "guide"): the shared session, saving,
+ * navigation, route panel and playtest tools, with narrated stop pages:
  *
  *   (chapter card) → travelling → (navigation) → arrived → stop page → next stop …
  *
@@ -36,7 +31,7 @@ const VISITOR_TEAM: Team = { id: "visitor", name: "", players: [{ id: "visitor",
  * them; skipping one navigates straight to the stop after it.
  */
 export function GuideWalkPlayer({ walk }: { walk: Walk }) {
-  // Shared with the game player: saved session, route panel, GPS flag, navigation reset.
+  // Saved session, route panel, GPS flag, navigation reset.
   const shell = usePlayerShell(walk);
   const { isLoaded, session, dispatch, startNewSession } = shell;
   const [isPlaying, setIsPlaying] = useState(false);
@@ -62,7 +57,7 @@ export function GuideWalkPlayer({ walk }: { walk: Walk }) {
         isLoading={!isLoaded}
         t={t}
         onStart={() => {
-          startNewSession(VISITOR_TEAM);
+          startNewSession();
           setIsPlaying(true);
         }}
         onContinue={() => setIsPlaying(true)}

@@ -20,9 +20,8 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 
-const visitor = { id: "visitor", name: "", players: [{ id: "visitor", name: "You" }] };
 const start = (walk: Walk) =>
-  createWalkSession({ walk, team: visitor, sessionId: "s", startedAt: "2026-09-29T09:00:00.000Z" });
+  createWalkSession({ walk, sessionId: "s", startedAt: "2026-09-29T09:00:00.000Z" });
 const play = (walk: Walk, session: WalkSession, actions: SessionAction[]) =>
   actions.reduce((state, action) => applySessionAction(walk, state, action), session);
 

@@ -4,7 +4,8 @@ import { hydrateRoot } from "react-dom/client";
 import { renderToString } from "react-dom/server";
 import { screen } from "@testing-library/react";
 import { classicsOfAntwerpWalk } from "@/data/walks/classics-of-antwerp";
-import { oldHiddenPubsWalk } from "./fixtures/old-hidden-pubs";
+import { poortjesWalk } from "@/data/walks/poortjes-van-antwerpen";
+import { getSessionStats } from "@/features/walk-session/logic/session-stats";
 import { WalkPlayer } from "@/features/walk-session/components/WalkPlayer";
 import { createWalkSession } from "@/features/walk-session/logic/create-session";
 import { localWalkSessionStore } from "@/features/walk-session/storage/session-storage";
@@ -56,12 +57,6 @@ describe("play page first paint (server HTML)", () => {
     expect(html).toMatch(/<link rel="preload" as="image"/);
   });
 
-  test("a game walk's start screen is in the server HTML, with its button waiting for the save", () => {
-    const html = renderToString(<WalkPlayer walk={oldHiddenPubsWalk} />);
-    expect(html).toContain(oldHiddenPubsWalk.narrative?.title ?? oldHiddenPubsWalk.title);
-    expect(html).toMatch(DISABLED_LOADING_BUTTON);
-    expect(html).not.toContain(`>${t("game.start.newAdventure")}</button>`);
-  });
 });
 
 describe("play page hydration", () => {
@@ -72,16 +67,12 @@ describe("play page hydration", () => {
   });
 
   test("with a save: hydrates cleanly, then offers to continue (never a start that overwrites it)", async () => {
-    localWalkSessionStore.save(
-      createWalkSession({
-        walk: oldHiddenPubsWalk,
-        team: { id: "t", name: "", players: [{ id: "p1", name: "Tony" }] },
-        sessionId: "s",
-        startedAt: "2026-09-23T14:00:00.000Z",
-      }),
-    );
-    expect(await hydrateServerHtml(oldHiddenPubsWalk)).toEqual([]);
-    expect((screen.getByRole("button", { name: t("game.start.continueWalk") }) as HTMLButtonElement).disabled).toBe(false);
-    expect(screen.queryByRole("button", { name: t("game.start.newAdventure") })).toBeNull();
+    const saved = createWalkSession({ walk: poortjesWalk, sessionId: "s", startedAt: "2026-09-23T14:00:00.000Z" });
+    localWalkSessionStore.save(saved);
+    expect(await hydrateServerHtml(poortjesWalk)).toEqual([]);
+    const { currentStopNumber, totalStops } = getSessionStats(poortjesWalk, saved);
+    const continueLabel = t("guide.continueAt", { stop: currentStopNumber, total: totalStops });
+    expect((screen.getByRole("button", { name: continueLabel }) as HTMLButtonElement).disabled).toBe(false);
+    expect(screen.queryByRole("button", { name: t("guide.startWalk") })).toBeNull();
   });
 });

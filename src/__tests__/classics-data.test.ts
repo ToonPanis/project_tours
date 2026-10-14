@@ -31,14 +31,9 @@ describe("Classics of Antwerp: route", () => {
     ]);
   });
 
-  test("is a guide walk: no challenges, clues, drinks or finale", () => {
+  test("is a guide walk: every stop has its page", () => {
     expect(classicsOfAntwerpWalk.experience).toBe("guide");
-    expect(classicsOfAntwerpWalk.clues).toBeUndefined();
-    expect(classicsOfAntwerpWalk.finale).toBeUndefined();
-    for (const location of locations) {
-      expect(location.challenge).toBeUndefined();
-      expect(location.drinkRound).toBeUndefined();
-    }
+    for (const location of locations) expect(location.guide).toBeDefined();
   });
 
   test("every stop is in central Antwerp and has a walking route from the previous stop", () => {

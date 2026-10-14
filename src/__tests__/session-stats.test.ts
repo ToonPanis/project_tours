@@ -1,30 +1,36 @@
 import { englishTranslator as t } from "@/i18n/translate";
 import { describe, expect, test } from "vitest";
-import { oldHiddenPubsWalk } from "./fixtures/old-hidden-pubs";
-import { walks } from "@/data/walks";
-import { checkAnswer } from "@/features/walk-session/logic/answers";
+import { poortjesWalk } from "@/data/walks/poortjes-van-antwerpen";
 import { createWalkSession } from "@/features/walk-session/logic/create-session";
 import { formatElapsedTime, getElapsedTime, getSessionStats } from "@/features/walk-session/logic/session-stats";
-import { getCorrectAnswer } from "@/features/walk-session/playtest/get-correct-answer";
+import { getOrderedLocations } from "@/lib/walk-locations";
 
 describe("session stats", () => {
   const session = createWalkSession({
-    walk: oldHiddenPubsWalk,
-    team: { id: "t", name: "", players: [{ id: "p1", name: "Tony" }] },
+    walk: poortjesWalk,
     sessionId: "s1",
     startedAt: "2026-09-23T14:00:00.000Z",
   });
 
-  test("a new Hidden Pubs session is at stop 1 of 8 with 0 of 8 clues", () => {
-    expect(getSessionStats(oldHiddenPubsWalk, session)).toEqual({
+  const stops = getOrderedLocations(poortjesWalk);
+  const mainStops = stops.filter((location) => !location.isBonus).length;
+
+  test("a new session is at stop 1; optional stops don't count", () => {
+    expect(getSessionStats(poortjesWalk, session)).toEqual({
       currentStopNumber: 1,
-      totalStops: 8,
+      totalStops: mainStops,
       solvedStops: 0,
       isAtBonusStop: false,
-      collectedClues: 0,
-      totalClues: 8,
-      challengesCompleted: 0,
     });
+    expect(mainStops).toBeLessThan(stops.length);
+  });
+
+  test("at an optional stop: it keeps the previous number and says so", () => {
+    const detour = stops.find((location) => location.isBonus)!;
+    const atDetour = { ...session, currentLocationId: detour.id };
+    const stats = getSessionStats(poortjesWalk, atDetour);
+    expect(stats.isAtBonusStop).toBe(true);
+    expect(stats.currentStopNumber).toBe(stops.slice(0, stops.indexOf(detour)).filter((location) => !location.isBonus).length);
   });
 
   test.each([
@@ -39,21 +45,4 @@ describe("session stats", () => {
     const finished = { ...session, completedAt: "2026-09-23T16:47:00.000Z" };
     expect(getElapsedTime(finished, new Date("2030-01-01"), t)).toBe("2h 47m");
   });
-});
-
-describe("playtest 'solve' helper", () => {
-  // Also a data check: every stored answer really solves its challenge (the old
-  // one-phone game engine's walks: today only the old Hidden Pubs fixture).
-  for (const walk of [...walks, oldHiddenPubsWalk]) {
-    const challenges = [
-      ...walk.locations.flatMap((location) => [location.challenge, location.bonusChallenge]),
-      ...(walk.finale?.questions ?? []),
-    ];
-    for (const challenge of challenges) {
-      if (!challenge) continue;
-      test(`${walk.title} · ${challenge.title}: the stored answer is accepted`, () => {
-        expect(checkAnswer(challenge, getCorrectAnswer(challenge))).toBe(true);
-      });
-    }
-  }
 });

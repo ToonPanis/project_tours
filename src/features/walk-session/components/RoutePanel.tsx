@@ -18,7 +18,7 @@ interface RoutePanelProps {
   children?: ReactNode;
 }
 
-/** The route panel: the stops so far, plus the discovered clues when the walk has them (the Ledger in Hidden Pubs). */
+/** The route panel: the stops so far, plus optional extra content (e.g. a collection). */
 export function RoutePanel({ walk, session, copy, open, onClose, children }: RoutePanelProps) {
   const t = useT();
   const title = walk.narrative?.title ?? t("game.ledger.yourRoute", { title: walk.title });
@@ -28,7 +28,6 @@ export function RoutePanel({ walk, session, copy, open, onClose, children }: Rou
   const mainStopNumbers = new Map(
     orderedLocations.filter((location) => !location.isBonus).map((location, index) => [location.id, index + 1]),
   );
-  const clues = walk.clues ?? [];
 
   return (
     <Dialog open={open} onClose={onClose} title={title}>
@@ -45,35 +44,6 @@ export function RoutePanel({ walk, session, copy, open, onClose, children }: Rou
             <span aria-hidden="true">✕</span>
           </button>
         </div>
-
-        {clues.length > 0 && (
-          <section aria-labelledby="ledger-clues">
-            <h3 id="ledger-clues" className="text-xs font-semibold uppercase tracking-[0.25em] text-parchment/70">
-              {t("game.ledger.discoveredClues", { found: session.collectedClueIds.length, total: clues.length })}
-            </h3>
-            <ol className="mt-3 space-y-2">
-              {clues.map((clue, index) => {
-                const isFound = session.collectedClueIds.includes(clue.id);
-                return (
-                  <li key={clue.id} className="flex items-center gap-3 border-b border-parchment/10 pb-2">
-                    <span aria-hidden="true" className={`w-5 text-center ${isFound ? "text-gold" : "text-parchment/65"}`}>
-                      {isFound ? "✓" : "?"}
-                    </span>
-                    {isFound ? (
-                      <span className="font-display text-xl font-semibold tracking-wider text-parchment">
-                        {clue.value}
-                      </span>
-                    ) : (
-                      <span className="uppercase italic tracking-wider text-parchment/65">
-                        {t("game.ledger.clueLocked", { number: index + 1 })}
-                      </span>
-                    )}
-                  </li>
-                );
-              })}
-            </ol>
-          </section>
-        )}
 
         <section aria-labelledby="ledger-route">
           <h3 id="ledger-route" className="text-xs font-semibold uppercase tracking-[0.25em] text-parchment/70">

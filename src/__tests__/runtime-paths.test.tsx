@@ -2,11 +2,12 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { act, fireEvent, render, renderHook, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { LanguageSelector } from "@/components/layout/LanguageSelector";
-import { oldHiddenPubsWalk } from "./fixtures/old-hidden-pubs";
+import { classicsOfAntwerpWalk } from "@/data/walks/classics-of-antwerp";
+import { getSessionStats } from "@/features/walk-session/logic/session-stats";
 import { WalkPlayer } from "@/features/walk-session/components/WalkPlayer";
 import { createWalkSession } from "@/features/walk-session/logic/create-session";
 import { applySessionAction } from "@/features/walk-session/logic/session-reducer";
-import { getJumpToStopActions } from "@/features/walk-session/playtest/get-correct-answer";
+import { getJumpToStopActions } from "@/features/walk-session/playtest/fast-forward";
 import { localWalkSessionStore } from "@/features/walk-session/storage/session-storage";
 import { englishTranslator as t } from "@/i18n/translate";
 import { getOrderedLocations } from "@/lib/walk-locations";
@@ -167,15 +168,14 @@ describe("useGeolocation (real GPS path)", () => {
   });
 });
 
-describe("PRIVACY: a whole walk to a café keeps no position", () => {
+describe("PRIVACY: a whole walk to a stop keeps no position", () => {
   beforeEach(() => installFakeGeolocation());
 
   test("readings on the way and at arrival never reach storage (only progress is saved)", async () => {
-    const walk = oldHiddenPubsWalk;
+    const walk = classicsOfAntwerpWalk;
     const destination = getOrderedLocations(walk)[1];
     const start = createWalkSession({
       walk,
-      team: { id: "t", name: "", players: [{ id: "p", name: "Tony" }] },
       sessionId: "s",
       startedAt: "2026-09-29T10:00:00.000Z",
     });
@@ -186,11 +186,12 @@ describe("PRIVACY: a whole walk to a café keeps no position", () => {
     localWalkSessionStore.save(travelling);
 
     render(<WalkPlayer walk={walk} />);
-    fireEvent.click(await screen.findByRole("button", { name: t("game.start.continueWalk") }));
+    const { currentStopNumber, totalStops } = getSessionStats(walk, travelling);
+    fireEvent.click(await screen.findByRole("button", { name: t("guide.continueAt", { stop: currentStopNumber, total: totalStops }) }));
     fireEvent.click(await screen.findByRole("button", { name: t("gps.enableLocation") }));
     expect(watches.length).toBeGreaterThan(0);
 
-    // Distinctive readings: a few metres from the café, with digits that can't occur by chance.
+    // Distinctive readings: a few metres from the stop, with digits that can't occur by chance.
     const { latitude, longitude } = destination.coordinates!;
     const readings = [0.0000123, 0.0000131, 0.0000147].map((offset, index) => ({
       coords: { latitude: latitude + offset, longitude: longitude + offset, accuracy: 5, heading: null, speed: null },
@@ -200,7 +201,7 @@ describe("PRIVACY: a whole walk to a café keeps no position", () => {
       await act(async () => watches.at(-1)!.success(reading as unknown as GeolocationPosition));
     }
 
-    // The team arrived (so the game saved new progress)…
+    // The walker arrived (so new progress was saved)…
     const saved = Object.values({ ...window.localStorage }).join("\n");
     expect(saved).toContain('"status":"arrived"');
     // …and not one digit sequence of a reading was stored.

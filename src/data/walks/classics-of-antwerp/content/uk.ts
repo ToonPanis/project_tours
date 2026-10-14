@@ -39,7 +39,6 @@ export const classicsContentUk: ClassicsContent = {
     },
     copy: {
       startLabel: "Почати прогулянку",
-      nextLocationTitle: "Наступна зупинка",
       completionTitle: "Кінець прогулянки",
       completionMessage: "Ви не просто пройшлися Антверпеном. Ви пройшли назад крізь його історію.",
       locationsTitle: "Маршрут",

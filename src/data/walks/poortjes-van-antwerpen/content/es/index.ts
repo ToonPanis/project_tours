@@ -46,7 +46,6 @@ export const poortjesContentEs: PoortjesContent = {
     },
     copy: {
       startLabel: "Empezar el paseo",
-      nextLocationTitle: "Siguiente parada",
       completionTitle: "Fin del paseo",
       completionMessage: "Hoy has visto cincuenta puertas. A partir de ahora, fíjate en las puertas.",
       locationsTitle: "La ruta",

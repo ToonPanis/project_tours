@@ -1,10 +1,4 @@
-/**
- * Location content is a list of typed blocks, so the app always knows whether
- * a paragraph is real history, a local legend or fictional game story.
- */
-
-import type { VerificationStatus } from "./reveal";
-
+/** Where a piece of content comes from (shown in source lists). */
 export interface Source {
   title: string;
   url?: string;
@@ -14,48 +8,3 @@ export interface Source {
    */
   language?: string;
 }
-
-/**
- * When a block is shown during play: on arrival (default) or after the
- * location's challenge is solved.
- */
-export type RevealMoment = "arrival" | "solved";
-
-interface BaseBlock {
-  body: string;
-  revealAt?: RevealMoment;
-}
-
-/** Real history. Must be "verified" before it can be presented as fact. */
-export interface HistoryBlock extends BaseBlock {
-  kind: "history";
-  /** Anything but "verified" must be shown as unverified in the UI. */
-  verification: VerificationStatus;
-  sources?: Source[];
-}
-
-/** A local legend: told as a legend, never presented as fact. */
-export interface LegendBlock extends BaseBlock {
-  kind: "legend";
-  sources?: Source[];
-}
-
-/** Fictional game narrative (e.g. "The Lost Tavern Ledger"). */
-export interface StoryBlock extends BaseBlock {
-  kind: "story";
-  /** Chapter name, used later by the Ledger screen. */
-  chapterTitle?: string;
-  /** "urgent" renders the text as hasty, shaky handwriting. */
-  tone?: "normal" | "urgent";
-  /**
-   * The language `body` is written in when it is an in-world document (e.g.
-   * the Dutch tavern ledger), so screen readers pronounce it correctly.
-   */
-  originalLanguage?: string;
-  /** A translation of `body` in the visitor's language, shown underneath. */
-  translation?: string;
-}
-
-export type ContentBlock = HistoryBlock | LegendBlock | StoryBlock;
-
-export type ContentBlockKind = ContentBlock["kind"];

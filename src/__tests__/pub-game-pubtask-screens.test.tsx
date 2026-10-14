@@ -104,6 +104,24 @@ describe("pubtask", () => {
     expect(actionsSent(fetchMock)).toEqual([{ type: "ANSWER", questionId: question.id, optionId: wrong }]);
   });
 
+  test("M-11: the feedback status exists before the first wrong answer; the same element is updated (so it's announced)", async () => {
+    const before = afterCards("pubs-rococo");
+    const afterWrong = apply(before, "b", { type: "ANSWER", questionId: question.id, optionId: wrong });
+    fakeServer(() => ({ explanations: {}, funFact: null }), "b", afterWrong);
+    show(before);
+
+    // The question's own status (the options group points at it with aria-describedby).
+    const group = screen.getByRole("button", { name: questionText.options[wrong] }).closest('[role="group"]')!;
+    const statusOf = () => document.getElementById(group.getAttribute("aria-describedby")!)!;
+    const status = statusOf();
+    expect(status.getAttribute("role")).toBe("status");
+    expect(status.textContent).toBe("");
+    fireEvent.click(screen.getByRole("button", { name: questionText.options[wrong] }));
+
+    await waitFor(() => expect(status.textContent).toContain(t.plural("pubgame.pubtask.wrong", 1)));
+    expect(statusOf()).toBe(status);
+  });
+
   test("right answer: the points, the explanation, then the fun fact and on to the next café", async () => {
     const before = afterCards("pubs-rococo");
     const afterRight = apply(before, "b", { type: "ANSWER", questionId: question.id, optionId: right });

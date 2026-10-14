@@ -1,7 +1,7 @@
 import { englishTranslator as t } from "@/i18n/translate";
 import { describe, expect, test } from "vitest";
-import { oldHiddenPubsWalk } from "./fixtures/old-hidden-pubs";
-import { the17GatesWalk } from "./fixtures/the-17-gates";
+import { classicsOfAntwerpWalk } from "@/data/walks/classics-of-antwerp";
+import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
 import { getDefaultWalkCopy, getWalkCopy } from "@/features/walk-session/logic/walk-copy";
 import { distanceInMeters } from "@/lib/geo";
 import {
@@ -18,27 +18,27 @@ describe("route visibility", () => {
   });
 
   test("before the start, Hidden Pubs only reveals its first café", () => {
-    const revealed = getOrderedLocations(oldHiddenPubsWalk)
-      .filter((location) => isRevealedBeforeStart(oldHiddenPubsWalk, location))
-      .map((location) => location.name);
-    expect(revealed).toEqual(["Rococo Antwerp"]);
+    const stops = getOrderedLocations(hiddenPubsWalk);
+    const revealed = stops.filter((location) => isRevealedBeforeStart(hiddenPubsWalk, location));
+    expect(revealed).toEqual([stops[0]]);
   });
 
-  test("The 17 Gates reveals every stop", () => {
-    const revealed = the17GatesWalk.locations.filter((location) =>
-      isRevealedBeforeStart(the17GatesWalk, location),
+  test("a guide walk reveals every stop", () => {
+    const revealed = classicsOfAntwerpWalk.locations.filter((location) =>
+      isRevealedBeforeStart(classicsOfAntwerpWalk, location),
     );
-    expect(revealed).toHaveLength(the17GatesWalk.locations.length);
+    expect(revealed).toHaveLength(classicsOfAntwerpWalk.locations.length);
   });
 });
 
-describe("game copy", () => {
+describe("walk copy", () => {
   test("walk texts override the defaults", () => {
-    expect(getWalkCopy(oldHiddenPubsWalk, t).voteResultTitle).toBe("The tavern has spoken");
+    expect(getWalkCopy(hiddenPubsWalk, t).startLabel).toBe(hiddenPubsWalk.copy?.startLabel);
+    expect(getWalkCopy(hiddenPubsWalk, t).startLabel).not.toBe(getDefaultWalkCopy(t).startLabel);
   });
 
   test("walks without their own texts use the defaults", () => {
-    expect(getWalkCopy(the17GatesWalk, t)).toEqual(getDefaultWalkCopy(t));
+    expect(getWalkCopy({ ...hiddenPubsWalk, copy: undefined }, t)).toEqual(getDefaultWalkCopy(t));
   });
 });
 

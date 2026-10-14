@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createId } from "@/lib/create-id";
 import type { SessionAction, WalkSession } from "@/types/session";
-import type { Team } from "@/types/team";
 import type { Walk } from "@/types/walk";
 import { createWalkSession } from "../logic/create-session";
 import { applySessionAction } from "../logic/session-reducer";
@@ -11,17 +10,17 @@ import { reconcileSessionWithWalk } from "../logic/reconcile-session";
 import { localWalkSessionStore, type WalkSessionStore } from "../storage/session-storage";
 
 export interface WalkSessionControls {
-  /** False until the saved game (if any) has been read from storage. */
+  /** False until the saved walk (if any) has been read from storage. */
   isLoaded: boolean;
   session: WalkSession | null;
   dispatch: (action: SessionAction) => void;
-  startNewSession: (team: Team) => void;
-  /** Deletes the saved game. */
+  startNewSession: () => void;
+  /** Deletes the saved walk. */
   resetSession: () => void;
 }
 
 /**
- * Holds the current walk session, applies actions through the game rules
+ * Holds the current walk session, applies actions through the walk rules
  * and saves every change. Components only use this hook, so switching to a
  * server or realtime backend later means changing only this file.
  */
@@ -70,10 +69,8 @@ export function useWalkSession(
   );
 
   const startNewSession = useCallback(
-    (team: Team) => {
-      setSession(
-        createWalkSession({ walk, team, sessionId: createId(), startedAt: new Date().toISOString() }),
-      );
+    () => {
+      setSession(createWalkSession({ walk, sessionId: createId(), startedAt: new Date().toISOString() }));
     },
     [walk],
   );

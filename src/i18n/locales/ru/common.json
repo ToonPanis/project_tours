@@ -3,11 +3,8 @@
   "close": "Закрыть",
   "cancel": "Отмена",
   "continue": "Продолжить",
-  "back": "Назад",
   "next": "Далее",
   "previous": "Назад",
-  "submit": "Проверить",
-  "yourAnswer": "Ваш ответ",
   "labelValue": "{label}: {value}",
   "units": {
     "meters": "{value} м",
