@@ -3,10 +3,17 @@ import type { GpsFix } from "@/types/navigation";
 import { distanceInMeters } from "@/lib/geo";
 import { NAVIGATION_CONFIG } from "../config";
 
-/** Is this single reading good enough, and close enough, to count as "at the location"? */
-export function isArrivalReading(fix: GpsFix, destination: GeoCoordinates): boolean {
+/**
+ * Is this single reading good enough, and close enough, to count as "at the location"?
+ * `radiusMeters` can be set per stop (e.g. a quest); by default the usual arrival radius.
+ */
+export function isArrivalReading(
+  fix: GpsFix,
+  destination: GeoCoordinates,
+  radiusMeters: number = NAVIGATION_CONFIG.ARRIVAL_RADIUS_METERS,
+): boolean {
   if (fix.accuracyMeters > NAVIGATION_CONFIG.MAX_ACCURACY_FOR_ARRIVAL_METERS) return false;
-  return distanceInMeters(fix.coordinates, destination) <= NAVIGATION_CONFIG.ARRIVAL_RADIUS_METERS;
+  return distanceInMeters(fix.coordinates, destination) <= radiusMeters;
 }
 
 /**
@@ -14,8 +21,13 @@ export function isArrivalReading(fix: GpsFix, destination: GeoCoordinates): bool
  * inaccurate reading) resets the count, so a single GPS jump never
  * triggers arrival.
  */
-export function nextArrivalCount(previousCount: number, fix: GpsFix, destination: GeoCoordinates): number {
-  return isArrivalReading(fix, destination) ? previousCount + 1 : 0;
+export function nextArrivalCount(
+  previousCount: number,
+  fix: GpsFix,
+  destination: GeoCoordinates,
+  radiusMeters?: number,
+): number {
+  return isArrivalReading(fix, destination, radiusMeters) ? previousCount + 1 : 0;
 }
 
 export function hasArrived(arrivalCount: number): boolean {

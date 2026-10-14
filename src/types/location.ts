@@ -3,6 +3,7 @@ import type { GeoCoordinates, ImageAsset } from "./common";
 import type { ContentBlock } from "./content";
 import type { DrinkRound } from "./drink";
 import type { GuideStopContent } from "./guide";
+import type { LocationQuest } from "./quest";
 import type { HistoricalReveal } from "./reveal";
 
 /** What kind of place a location is. (Whether it's a bonus stop is a separate flag.) */
@@ -88,6 +89,8 @@ export interface WalkLocation {
   historicalReveal?: HistoricalReveal;
   /** The narrated stop page, for guide walks. */
   guide?: GuideStopContent;
+  /** A "find it yourself" task: navigation shows a search zone instead of the exact place. */
+  quest?: LocationQuest;
   /** Not used by the app yet (the reducer decides when a stop unlocks). Kept for future rules. */
   unlockCondition?: UnlockCondition;
   /** Not shown by the app yet. */

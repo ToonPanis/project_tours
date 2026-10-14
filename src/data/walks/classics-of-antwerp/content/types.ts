@@ -1,4 +1,4 @@
-import type { GuideClosing, GuideIntro, GuideSection, LookAtItem } from "@/types/guide";
+import type { GuideClosing, GuideIntro, GuideSection, InfoBox, LookAtItem } from "@/types/guide";
 import type { WalkCopy, PracticalInfoItem } from "@/types/walk";
 
 /**
@@ -16,6 +16,42 @@ export interface StopText {
   lookAt?: LookAtItem[];
   transitionToNext?: string;
   closing?: GuideClosing;
+  /** Texts of the slides listed in stops.ts, by card id. */
+  cards?: Record<string, CardText>;
+  /** Texts of the optional stories listed in stops.ts, by card id. */
+  moreStories?: Record<string, CardText>;
+  /** Titles of the image galleries listed in stops.ts, by gallery id (captions are with the images). */
+  galleries?: Record<string, GalleryText>;
+  /** Practical information, e.g. what can be visited (always with checkedOn and a source). */
+  infoBoxes?: InfoBox[];
+  /**
+   * The texts of a quest (stops.ts says where and which clue). `name` and `subtitle`
+   * above are then shown BEFORE the place is found, so they must not give it away.
+   */
+  quest?: QuestText;
+}
+
+/** Spooky's task. For "find the place", nothing here may name the answer, except `revealedName`. */
+export interface QuestText {
+  title: string;
+  task: string[];
+  /** Find the place only: shown with the search circle, e.g. "The building is somewhere inside this zone." */
+  zoneHint?: string;
+  /** Find the place only: the stop's real name, shown once it is found. */
+  revealedName?: string;
+}
+
+/** The text of one slide ("card") within a stop. */
+export interface CardText {
+  title: string;
+  subtitle?: string;
+  sections: GuideSection[];
+  didYouKnow?: string[];
+}
+
+export interface GalleryText {
+  title: string;
+  intro?: string;
 }
 
 export interface ImageText {

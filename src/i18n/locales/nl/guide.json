@@ -21,7 +21,8 @@
     "history": "Gedocumenteerd",
     "legend": "Legende",
     "interpretation": "Interpretatie",
-    "context": "Achtergrond"
+    "context": "Achtergrond",
+    "fiction": "Fictie"
   },
   "whatYouSee": "Wat zie je?",
   "didYouKnow": "Wist je dat?",
@@ -59,6 +60,9 @@
   "checkedOn": "Gecontroleerd op {date}",
   "moreInfo": "Meer info",
   "cardOf": "{card} van {total}",
+  "moreStories": "Ontdek meer verhalen",
+  "moreStoriesHide": "Verberg de extra verhalen",
+  "moreStoriesNote": "Optioneel: extra achtergrond voor wie meer wil lezen. Je kunt dit overslaan en gewoon verder wandelen.",
   "searchTask": "Zoekopdracht",
   "showHint": "Toon hint",
   "showNextHint": "Nog een hint",
@@ -83,5 +87,17 @@
   "viewRoute": "Bekijk de route",
   "discoverAnotherWalk": "Ontdek een andere wandeling",
   "unknownArtist": "Onbekend",
-  "stopUnavailable": "Het verhaal van deze stop is nu niet beschikbaar. Je kunt de wandeling gewoon verderzetten."
+  "sourceToVerify": "Bron nog te verifiëren",
+  "rightsToVerify": "Rechten nog te verifiëren",
+  "stopUnavailable": "Het verhaal van deze stop is nu niet beschikbaar. Je kunt de wandeling gewoon verderzetten.",
+  "gallery": {
+    "eyebrow": "Historische beelden",
+    "roleDescription": "galerij",
+    "slide": "afbeelding",
+    "trackLabel": "{title}: veeg of gebruik de pijltjestoetsen",
+    "position": "Afbeelding {current} van {total}",
+    "enlarge": "Groter bekijken",
+    "previous": "Vorige afbeelding",
+    "next": "Volgende afbeelding"
+  }
 }

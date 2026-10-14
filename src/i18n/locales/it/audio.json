@@ -1,0 +1,16 @@
+{
+  "eyebrow": "Audioguida",
+  "listen": "Ascolta la storia",
+  "play": "Riproduci",
+  "pause": "Pausa",
+  "restart": "Ricomincia",
+  "back": "Indietro di {seconds} secondi",
+  "forward": "Avanti di {seconds} secondi",
+  "progress": "Posizione nella storia",
+  "positionText": "{current} di {total}",
+  "speed": "Velocità",
+  "volume": "Volume",
+  "aiVoice": "Letto da una voce IA",
+  "loadError": "Impossibile caricare l’audio. Controllate la connessione e riprovate.",
+  "playerLabel": "Lettore audio: {title}"
+}

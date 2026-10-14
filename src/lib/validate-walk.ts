@@ -1,3 +1,4 @@
+import { validateQuest } from "@/features/quests/logic/validate-quest";
 import type { Walk } from "@/types/walk";
 
 /**
@@ -32,6 +33,9 @@ export function validateWalk(walk: Walk): string[] {
       if (challenge?.type === "sequence") problems.push(`${stop.id}: "sequence" challenges can't be played yet (dead end)`);
     }
   }
+
+  // Quests: the place lies in its search zone, and nothing shown beforehand names it.
+  stops.forEach((stop, index) => problems.push(...validateQuest(stop, stops[index - 1])));
 
   // Walking routes: one per consecutive pair, plus a bypass around each optional stop
   // (the same pairs scripts/generate-walking-routes.mjs creates).

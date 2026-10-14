@@ -70,7 +70,7 @@ describe("stop counts", () => {
   const expected: Record<string, { main: number; optional: number }> = {
     "poortjes-van-antwerpen": { main: 33, optional: 2 },
     "hidden-pubs": { main: 8, optional: 0 },
-    "classics-of-antwerp": { main: 18, optional: 0 },
+    "classics-of-antwerp": { main: 20, optional: 0 },
   };
 
   test.each(locales)("in %s every walk has its documented stops", (locale) => {
@@ -179,7 +179,11 @@ describe("image sizes match the real files (L-42)", () => {
         ...(walk.collection?.items ?? []).map((item) => item.image),
         ...walk.locations.flatMap((location) => [
           ...(location.guide?.images ?? []),
-          ...(location.guide?.cards ?? []).flatMap((card) => (card.image ? [card.image] : [])),
+          ...[...(location.guide?.cards ?? []), ...(location.guide?.moreStories ?? [])].flatMap((card) => [
+            ...(card.image ? [card.image] : []),
+            ...(card.images ?? []),
+          ]),
+          ...(location.guide?.galleries ?? []).flatMap((gallery) => gallery.images),
         ]),
       ];
       for (const image of images) {

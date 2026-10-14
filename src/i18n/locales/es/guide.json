@@ -21,7 +21,8 @@
     "history": "Documentado",
     "legend": "Leyenda",
     "interpretation": "Interpretación",
-    "context": "Contexto"
+    "context": "Contexto",
+    "fiction": "Ficción"
   },
   "whatYouSee": "Qué ves",
   "didYouKnow": "¿Sabías que…?",
@@ -59,6 +60,9 @@
   "checkedOn": "Comprobado el {date}",
   "moreInfo": "Más información",
   "cardOf": "{card} de {total}",
+  "moreStories": "Descubre más historias",
+  "moreStoriesHide": "Ocultar las historias adicionales",
+  "moreStoriesNote": "Opcional: más contexto para quien quiera leer más. Puedes saltarlo y seguir el paseo sin más.",
   "searchTask": "Misión de búsqueda",
   "showHint": "Ver una pista",
   "showNextHint": "Otra pista",
@@ -83,5 +87,17 @@
   "viewRoute": "Ver la ruta",
   "discoverAnotherWalk": "Descubre otro paseo",
   "unknownArtist": "Desconocido",
-  "stopUnavailable": "La historia de esta parada no está disponible ahora mismo. Puedes seguir con el paseo sin problema."
+  "sourceToVerify": "Fuente aún por verificar",
+  "rightsToVerify": "Derechos aún por verificar",
+  "stopUnavailable": "La historia de esta parada no está disponible ahora mismo. Puedes seguir con el paseo sin problema.",
+  "gallery": {
+    "eyebrow": "Imágenes históricas",
+    "roleDescription": "galería",
+    "slide": "imagen",
+    "trackLabel": "{title}: desliza o usa las flechas del teclado",
+    "position": "Imagen {current} de {total}",
+    "enlarge": "Ver más grande",
+    "previous": "Imagen anterior",
+    "next": "Imagen siguiente"
+  }
 }

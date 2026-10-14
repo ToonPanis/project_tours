@@ -78,6 +78,16 @@ describe("Guide walk player: Classics of Antwerp", () => {
     click(t("gps.continueWithoutGps"));
     click(t("gps.arrived"));
 
+    // Spooky's first task (find a detail): popup → task with its clue photo → found → "well found".
+    const quest = first.quest!;
+    expect(screen.getByRole("dialog", { name: t("quest.taskForYou") })).toBeDefined();
+    click(t("quest.viewTask"));
+    expect(screen.getByRole("heading", { level: 1, name: quest.title })).toBeDefined();
+    expect(screen.getByAltText(quest.clueImage.alt)).toBeDefined();
+    click(t("quest.foundIt"));
+    expect(screen.getByRole("dialog", { name: t("quest.discoveryFoundTitle") })).toBeDefined();
+    click(t("quest.discoverStory"));
+
     // The stop page
     expect(screen.getByText(t("guide.stopOf", { stop: 1, total: mainStopCount }))).toBeDefined();
     expect(screen.getByRole("heading", { level: 1, name: first.name })).toBeDefined();
@@ -93,16 +103,18 @@ describe("Guide walk player: Classics of Antwerp", () => {
   });
 
   test("shows the legend of Brabo clearly labelled as legend", async () => {
-    await continueAfter([...getJumpToStopActions(walk, 11, "2026-09-23T11:00:00.000Z"), { type: "ARRIVE" }]);
+    const brabo = stops.findIndex((location) => location.id === "classics-brabo");
+    await continueAfter([...getJumpToStopActions(walk, brabo + 1, "2026-09-23T11:00:00.000Z"), { type: "ARRIVE" }]);
 
-    expect(screen.getByRole("heading", { level: 1, name: stops[10].name })).toBeDefined();
+    expect(screen.getByRole("heading", { level: 1, name: stops[brabo].name })).toBeDefined();
     expect(screen.getByText(t("guide.sectionLabels.legend"))).toBeDefined();
     expect(screen.getByText(t("guide.sectionLabels.interpretation"))).toBeDefined();
   });
 
   test("the THEN / NOW comparison switches between the photos", async () => {
-    await continueAfter([...getJumpToStopActions(walk, 10, "2026-09-23T11:00:00.000Z"), { type: "ARRIVE" }]);
-    const pair = stops[9].guide!.thenNow!;
+    const grand = stops.findIndex((location) => location.id === "classics-grote-markt");
+    await continueAfter([...getJumpToStopActions(walk, grand + 1, "2026-09-23T11:00:00.000Z"), { type: "ARRIVE" }]);
+    const pair = stops[grand].guide!.thenNow!;
 
     const thenButton = screen.getByRole("button", { name: t("guide.thenLabel", { year: pair.then.approximateYear }) });
     const nowButton = screen.getByRole("button", { name: t("guide.nowLabel") });

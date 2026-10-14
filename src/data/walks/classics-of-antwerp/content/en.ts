@@ -13,11 +13,11 @@ export const classicsContentEn: ClassicsContent = {
     title: "Classics of Antwerp",
     tagline: "A Walk Through the History of Antwerp",
     shortDescription:
-      "A narrated walk from the grand railway station to the banks of the Scheldt: eighteen stops, eight centuries, and the stories behind Antwerp's most famous places.",
+      "A narrated walk from the grand railway station to the banks of the Scheldt: nineteen stops, eight centuries, and the stories behind Antwerp's most famous places.",
     description:
       "Walk from Antwerp's grand railway station through centuries of trade, art, religion and power, ending where the story of the city began: on the banks of the Scheldt.\n\nAt every stop your phone becomes your guide: what you are looking at, why it was built, what happened here, and the details most visitors walk straight past. Historical photographs show you how the city looked a century ago and more. There are no games or questions; just Antwerp, and the time to look at it properly.",
     highlights: [
-      "18 of Antwerp's most important historical places",
+      "19 of Antwerp's most important historical places",
       "Written like a guide walking beside you",
       "Historical photographs, engravings and postcards at every major stop",
       "“Did you know?” stories you won't find on the information panels",
@@ -87,6 +87,14 @@ export const classicsContentEn: ClassicsContent = {
           body: "Walk into the train hall and turn around. Above the entrance of the station building you'll find a large clock, the word ANTWERPEN and the city's coat of arms: a castle with two hands above it. Remember those hands; they will come back later on this walk, on the Grote Markt.",
         },
       ],
+      // Spooky's task on arrival (a detail to find); the walker says when they found it.
+      quest: {
+        title: "Find Antwerp's coat of arms",
+        task: [
+          "Find the coat of arms of Antwerp.",
+          "The photo is your clue: look carefully around you, inside and outside the station. Found it? Tap the button below.",
+        ],
+      },
       transitionToNext:
         "Leave the station along its west side. Within a few minutes you enter a small district where a very different kind of treasure has been traded for centuries.",
     },
@@ -119,6 +127,38 @@ export const classicsContentEn: ClassicsContent = {
       didYouKnow: [
         "Over the weekend of 15 and 16 February 2003, thieves broke into the vault of the Antwerp Diamond Centre in this district. The loot, estimated at more than 100 million dollars in diamonds, gold and jewellery, made it one of the largest diamond heists in history. Arrests followed, but most of the diamonds were never found.",
       ],
+      moreStories: {
+        "jewish-community": {
+          title: "The Jewish community",
+          subtitle: "The Second World War and after",
+          sections: [
+            {
+              heading: "The Second World War",
+              kind: "history",
+              paragraphs: [
+                "18 August 1941: the Wehrmacht raided the Diamantkring and seized diamonds. 164 members of the Diamantkring were murdered.",
+                "Summer 1942: raids, among others on 15–16 and 28–29 August, in streets such as the Van Immerseelstraat, the Lange Kievitstraat and the Provinciestraat. The dates differ slightly from source to source.",
+                "During the raid of 28–29 August the Antwerp police itself carried out the arrests. That was unique in the history of the occupation of Belgium.",
+                "The victims were deported via Kazerne Dossin in Mechelen to Auschwitz-Birkenau.",
+              ],
+            },
+            {
+              heading: "How many?",
+              kind: "history",
+              paragraphs: [
+                "Between 56% and 66% of Antwerp's Jews were deported, depending on how it is calculated: more than half, and by some calculations two thirds. According to Antwerpen Herdenkt, about 10,000 Jews from the region did not survive the war.",
+              ],
+            },
+            {
+              heading: "After the war",
+              kind: "history",
+              paragraphs: [
+                "In 1945 about 2,000 Jews were still living in the city. By the end of the 1940s there were again about 10,000, a strongly orthodox community.",
+              ],
+            },
+          ],
+        },
+      },
       transitionToNext:
         "Walk back towards the station square and turn onto De Keyserlei, the grand avenue that leads into the old city. Around 1900 this was the way every visitor arriving by train entered Antwerp.",
     },
@@ -139,18 +179,9 @@ export const classicsContentEn: ClassicsContent = {
             "On the afternoon of 16 December 1944 around 1,100 people were watching a film in Cinema Rex, at number 15 on this avenue. At 15:20 a V-2 rocket hit the roof. 567 people were killed: 271 civilians and 296 Allied soldiers. It was the highest death toll from a single rocket attack of the entire war, and it took nearly a week to recover everyone from the rubble.",
           ],
         },
-        {
-          heading: "A palace on the Meir",
-          kind: "history",
-          paragraphs: [
-            "Continue onto the Meir and look out for a long, elegant 18th-century façade: the Paleis op de Meir. It was built from 1745 for a wealthy merchant, Johan Alexander van Susteren, by the Antwerp architect Jan Pieter van Baurscheit the Younger. Later it passed through remarkable hands: Napoleon bought it in 1811–1812 but never lived there, the Russian Tsar Alexander I stayed there in 1814, and for a long time it served as a royal palace.",
-            "Just off the Meir, on the Wapper, stands the house where Peter Paul Rubens lived and worked. You will meet Rubens again several times on this walk.",
-          ],
-        },
       ],
       didYouKnow: [
         "Cinema Rex was rebuilt after the war and reopened in 1947. It finally closed in 1993 and was demolished two years later. Today little in the street reminds passers-by of what happened here.",
-        "Napoleon owned the palace on the Meir, but by the time it was ready for him he was already in exile on the island of Elba.",
       ],
       transitionToNext:
         "Follow the Meir towards the old city. A little further on the left, a golden dome glints above a grand entrance: a party hall that burned down and rose again.",
@@ -184,44 +215,142 @@ export const classicsContentEn: ClassicsContent = {
         "Much of the “historic” interior you see inside is in fact a careful 21st-century reconstruction, made after the fire of 2000 from photographs, plans and surviving fragments.",
       ],
       transitionToNext:
-        "Leave the Meir for a moment and turn into the narrow streets behind it. Hidden behind ordinary façades is the building where Antwerp once taught the world how to trade.",
+        "Continue along the Meir towards the old city. A few minutes further on, Spooky is waiting for you with a task…",
+    },
+
+    // ── 4b: Spooky's quest ───────────────────────────────────────────────
+    // `name` and `subtitle` show BEFORE the façade is found: they must not give it away.
+    "classics-paleis-op-de-meir": {
+      name: "A mystery on the Meir",
+      subtitle: "The façade from Spooky's drawing",
+      introduction: [
+        "You found it: the long, elegant 18th-century façade in front of you is the Paleis op de Meir.",
+      ],
+      sections: [
+        {
+          heading: "A palace on the Meir",
+          kind: "history",
+          paragraphs: [
+            "It was built from 1745 for a wealthy merchant, Johan Alexander van Susteren, by the Antwerp architect Jan Pieter van Baurscheit the Younger. Later it passed through remarkable hands: Napoleon bought it in 1811–1812 but never lived there, the Russian Tsar Alexander I stayed there in 1814, and for a long time it served as a royal palace.",
+          ],
+        },
+      ],
+      didYouKnow: [
+        "Napoleon owned the palace on the Meir, but by the time it was ready for him he was already in exile on the island of Elba.",
+      ],
+      quest: {
+        title: "Spooky's task",
+        task: [
+          "Take a good look at this old building drawing. Somewhere on the Meir stands the building it belongs to.",
+          "Walk to the search zone on the map, look up at the façades and compare them with the drawing. Can you discover which building it is? When you're standing in front of it, Hidden Antwerp will notice.",
+        ],
+        zoneHint: "The building is somewhere inside this zone.",
+        revealedName: "Paleis op de Meir",
+      },
+      transitionToNext:
+        "A few steps away, a small square opens up beside the Meir: the Wapper, where Antwerp's most famous painter built his home.",
     },
 
     // ── 5 ────────────────────────────────────────────────────────────────
+    "classics-rubenshuis": {
+      name: "The Rubens House",
+      subtitle: "Where Antwerp's greatest painter lived and worked",
+      introduction: [
+        "You are standing on the Wapper, a small square just off the Meir. Behind the façade in front of you, Peter Paul Rubens, the most famous painter Antwerp has ever produced, lived and worked until his death in 1640.",
+        "The portrait at the top of this page is Rubens as he painted himself in 1623, at the height of his fame: a broad black hat, a dark cloak, a calm and confident look. Today that self-portrait belongs to the British Royal Collection.",
+      ],
+      sections: [
+        {
+          heading: "An Italian palazzo on the Wapper",
+          kind: "history",
+          paragraphs: [
+            "In 1608 Rubens came home to Antwerp after eight years in Italy. In 1610 he bought an existing Flemish house here and spent the following decade turning it into a home and workshop in the Italian manner: a studio in Baroque style, an art room with a semicircular sculpture gallery, a monumental portico and a garden pavilion. He and his wife Isabella Brant moved in in 1617.",
+            "After his death the house was rented out, rebuilt and divided up. The city bought it in 1937, and between 1937 and 1946 city architect Emiel Van Averbeke reconstructed it, largely on the basis of engravings by Harrewijn from 1684 and 1692. The portico, the garden pavilion and the shell of the studio are largely original; the living quarters and their interiors are a reconstruction.",
+          ],
+        },
+        {
+          heading: "Rubens and Isabella",
+          kind: "history",
+          paragraphs: [
+            "On 3 October 1609, a year after his return from Italy, the 32-year-old Rubens married the 18-year-old Isabella Brant. Around that time he painted the two of them together: the double portrait on this page, now in the Alte Pinakothek in Munich. Isabella lived with him in this house until her death in 1626.",
+          ],
+        },
+        {
+          heading: "Reading the painting",
+          kind: "interpretation",
+          paragraphs: [
+            "The couple sit close together in a bower of honeysuckle. Their right hands rest one on the other: since Roman times, joined right hands were a sign of marriage. Honeysuckle stood for lasting love; one of its German names, Jelängerjelieber, means “the longer, the dearer”.",
+            "Look at the clothes and the pose as well. Rubens wears the fine costume of a gentleman, his hand close to the hilt of a sword; Isabella wears a tall hat, a wide lace collar and a richly embroidered bodice. The large format and the costly clothes present the young couple as people of standing. A painter showing himself with his bride outdoors, relaxed, as a couple in love: for its time the double portrait broke new ground.",
+          ],
+        },
+        {
+          heading: "Why it belongs on this walk",
+          kind: "interpretation",
+          paragraphs: [
+            "The painting marks the beginning of the life Rubens built on this spot: a marriage, a growing workshop, and a house that showed the world who he was. A year after the wedding he bought this house. On the rest of the walk you will meet him again: at the Groenplaats, where the city put up his statue, at the cathedral, which holds altarpieces he painted, and at the St Charles Borromeo Church, whose ceilings his studio once decorated.",
+          ],
+        },
+      ],
+      didYouKnow: [
+        "From 1648 to 1660, after Rubens' death, the house was rented by William and Margaret Cavendish, English royalists living in exile.",
+      ],
+      infoBoxes: [
+        {
+          kind: "visit",
+          title: "Visiting the Rubens House",
+          paragraphs: [
+            "The house itself is closed for restoration until 2030 at the earliest. The garden, the library and the Rubens Experience in the new visitor building are open; the visitor entrance is at the back, at Hopland 13.",
+            "Check the opening hours and ticket prices on the Rubens House website before you go.",
+          ],
+          checkedOn: "2026-09-30",
+          sourceUrl: "https://rubenshuis.be/nl/vraag-antwoord",
+        },
+      ],
+      transitionToNext:
+        "Leave the Meir for a moment and turn into the narrow streets behind it. Hidden behind ordinary façades is the building where Antwerp once taught the world how to trade.",
+    },
+
+    // ── 6 ────────────────────────────────────────────────────────────────
     "classics-handelsbeurs": {
       name: "The Handelsbeurs",
       subtitle: "Where the world came to do business",
       introduction: [
         "Before you is the Handelsbeurs, Antwerp's old commercial exchange. From the street it hardly announces itself. Inside is one of the most extraordinary rooms in the city: a Gothic courtyard surrounded by galleries, covered by a soaring roof of iron and glass.",
-        "We now step back into the 16th century, when Antwerp was one of the richest cities in Europe.",
+        "Now imagine that roof away. For more than three centuries the heart of this building was an open courtyard under the sky, where the merchants of half of Europe met every day.",
       ],
       sections: [
         {
-          heading: "Trading without telephones",
+          heading: "A square under the open sky",
           kind: "history",
           paragraphs: [
-            "Imagine Antwerp around 1530. Ships from Portugal arrive with spices from Asia; merchants from Italy, Germany, England and Spain live in the city. They need to know prices, find buyers, borrow money, insure cargoes, and there are no telephones, no newspapers as we know them, no internet. Information travels by letter and, above all, by word of mouth.",
-            "So Antwerp built a place where all those merchants could meet every day. In 1531 the city opened an exchange designed by Domien de Waghemakere, in the late Gothic Brabant style: an open courtyard surrounded by a covered gallery with elaborate star vaults. It was one of the first buildings anywhere built specifically for this purpose. Here, in a babel of languages, prices were set and deals were closed.",
+            "In 1531 Antwerp opened a new exchange, designed by Domien de Waghemakere in the late Gothic Brabant style. Its heart was a rectangular courtyard, open to the sky and surrounded on all four sides by covered galleries with star vaults on columns.",
+            "Every day merchants from Portugal, Italy, Germany, England and Spain gathered in that open square, in a babel of languages, to set prices, give credit and trade bills of exchange. When it rained they sheltered under the galleries; above the galleries were shops and rooms. The engraving at the top of this page shows the courtyard full of small groups of traders.",
+            "It was one of the first buildings anywhere built specifically for trading, and the idea travelled. When Thomas Gresham, the English crown's agent in Antwerp, founded the Royal Exchange in London in the 1560s, he took this courtyard with its galleries as his model; Amsterdam followed in 1611.",
           ],
         },
         {
-          heading: "Fire, and fire again",
+          heading: "A roof over the courtyard",
           kind: "history",
           paragraphs: [
-            "The building you see is not simply the one from 1531. The exchange was rebuilt in 1583 and burned down in 1858. Architect Joseph Schadde then designed the present building; the commission was finally given to him in 1868, and the new exchange was solemnly inaugurated on 19 October 1872. He kept the idea of the Gothic courtyard but covered it with a spectacular roof of iron and glass, and remains of the old exchange were incorporated into the complex.",
-            "By the end of the 20th century trading had moved elsewhere, and the building stood empty for some twenty years. After a thorough restoration it opened again in 2019, now as a venue for events.",
+            "Only in 1852–1854 was the courtyard covered for the first time, by the engineer Charles Marcellis, with iron and a glass dome. Four years later, on 2 August 1858, fire destroyed both the old exchange and its new roof.",
+            "Architect Joseph Schadde rebuilt it; the new exchange was inaugurated on 19 October 1872. He kept the courtyard with its galleries, which still follow the plan of 1531, but covered it with the spectacular roof of iron and glass you see today.",
           ],
         },
       ],
       didYouKnow: [
-        "Antwerp's exchange became a model abroad. When Thomas Gresham, the English crown's agent in Antwerp, founded the Royal Exchange in London in the 1560s, he took the Antwerp bourse as his example.",
-        "The word “bourse” itself is usually traced back not to Antwerp but to Bruges, where merchants met in front of the house of the Van der Beurse family.",
+        "For more than three centuries, from 1531 until the first roof of 1852–1854, Antwerp's merchants did their business in sun, wind and rain, in a courtyard open to the sky.",
       ],
+      galleries: {
+        "exchange-in-prints": {
+          title: "The exchange in old prints",
+          intro: "Two 19th-century prints of the galleries, from before and after the fire of 1858.",
+        },
+      },
       transitionToNext:
         "Back on the Meir, look up. A tower rises above the rooftops like a piece of New York dropped into a medieval city. We step forward in time for a moment, before our journey into the past really begins.",
     },
 
-    // ── 6 ────────────────────────────────────────────────────────────────
+    // ── 7 ────────────────────────────────────────────────────────────────
     "classics-boerentoren": {
       name: "The Boerentoren",
       subtitle: "Europe's first skyscraper",
@@ -245,7 +374,7 @@ export const classicsContentEn: ClassicsContent = {
         "From here the tower points you towards the old heart of Antwerp. Walk to the large square ahead of you, where the cathedral appears for the first time in all its height, and where the ground beneath your feet hides a secret.",
     },
 
-    // ── 7 ────────────────────────────────────────────────────────────────
+    // ── 8 ────────────────────────────────────────────────────────────────
     "classics-groenplaats": {
       name: "Groenplaats",
       subtitle: "A square that used to be a graveyard",
@@ -259,6 +388,7 @@ export const classicsContentEn: ClassicsContent = {
           paragraphs: [
             "This square, together with the Lijnwaadmarkt, Melkmarkt, Schoenmarkt and Handschoenmarkt around the cathedral, once formed the cathedral's cemetery. Antwerpians called it the Groot Kerkhof, the Great Churchyard, and later the Groen Kerkhof, the Green Churchyard. Some still use that name today.",
             "In 1754 the cemetery was walled in, but not for long. In 1784 Emperor Joseph II banned burials inside cities, for reasons of public health, and in 1799 the wall came down. The graveyard slowly became the square you see now.",
+            "A painting from 1597, shown below, gives an idea of the churchyard in its time: a funeral procession of mourners in black passes along it, with the cathedral rising behind.",
           ],
         },
         {
@@ -266,6 +396,7 @@ export const classicsContentEn: ClassicsContent = {
           kind: "history",
           paragraphs: [
             "In 1840 Antwerp marked 200 years since the death of Rubens. A statue was designed by Willem Geefs, but money was short and the bronze was not ready in time, so on 25 August 1840 a temporary plaster version was unveiled on another square. Only on 9 and 10 August 1843 did the bronze Rubens take his place here, in the middle of the Groenplaats.",
+            "Geefs showed him as painter and diplomat: at his feet lie a palette and a sword, because Rubens also served the Spanish king as an envoy. Fittingly for a former churchyard, the statue stands on the spot of an old churchyard cross above the grave of a bishop, Antonius d'Espinosa.",
           ],
         },
       ],
@@ -276,7 +407,7 @@ export const classicsContentEn: ClassicsContent = {
         "Walk towards the cathedral. As you go, look at the row of houses built against the choir of the church. They hide the foundations of a cathedral that was never finished.",
     },
 
-    // ── 8 ────────────────────────────────────────────────────────────────
+    // ── 9 ────────────────────────────────────────────────────────────────
     "classics-cathedral": {
       name: "Cathedral of Our Lady",
       subtitle: "The cathedral Antwerp almost made even bigger",
@@ -284,44 +415,125 @@ export const classicsContentEn: ClassicsContent = {
         "Before you stands the Cathedral of Our Lady, one of the largest Gothic churches in the Low Countries and for centuries the landmark that sailors on the Scheldt saw first. Its north tower, some 123 metres high, still dominates the skyline.",
         "We are now in the late Middle Ages. The cathedral was built over roughly 170 years, from the middle of the 14th century until 1521, by generations of builders who knew they would never see it finished.",
       ],
-      sections: [
-        {
-          heading: "Even bigger: the Nieuwerck",
-          kind: "history",
-          paragraphs: [
-            "In 1521, just as the church was completed, Antwerp decided it was not big enough. The richest city in northern Europe wanted a church to match, and a gigantic extension of the choir, the Nieuwerck, was designed by Domien de Waghemakere and Rombout Keldermans.",
-            "On 15 July 1521 the young emperor Charles V laid the first stone himself. Then disaster struck. A great fire in 1533 badly damaged the church, all money went into repairing the existing building, work on the Nieuwerck stopped, and in 1537 the project was abandoned for good.",
+      sections: [],
+      didYouKnow: [],
+      cards: {
+        cathedral: {
+          title: "The cathedral",
+          subtitle: "Two centuries of building, and a plan that was too big",
+          sections: [
+            {
+              heading: "Built over 170 years",
+              kind: "history",
+              paragraphs: [
+                "Building began in 1352 and lasted until 1521, with a long pause between 1356 and 1378. Generations of master builders followed one another on the same plan, among them Peter Appelmans and Herman and Domien de Waghemakere. The money came from gifts, the guilds and the city; when it ran out, the work simply waited.",
+                "The north tower, some 123 metres high, was finished around 1518–1521 and is still the tallest church tower in the Benelux. The south tower was halted in 1475 for lack of money, at about 65 metres, and was never completed.",
+              ],
+            },
+            {
+              heading: "Even bigger: the Nieuwerck",
+              kind: "history",
+              paragraphs: [
+                "In 1521, just as the church was completed, Antwerp decided it was not big enough. The richest city in northern Europe wanted a church to match, and a gigantic extension of the choir, the Nieuwerck, was designed by Domien de Waghemakere and Rombout Keldermans.",
+                "On 15 July 1521 the young emperor Charles V laid the first stone himself. But the enthusiasm was already fading by around 1528, and in the night of 5 to 6 October 1533 a great fire badly damaged the roof and pillars of the church; its cause is unknown. All money went into repairing the existing building, and in 1537 the Nieuwerck was abandoned for good.",
+              ],
+            },
+            {
+              heading: "Storms of history",
+              kind: "history",
+              paragraphs: [
+                "The cathedral has survived a great deal. During the iconoclastic fury of 1566, a wave of Protestant anger against images, much of its interior was smashed. Two centuries later, French revolutionary troops occupied the city, closed the church and carried off its treasures.",
+                "Much of what you can see inside today was brought back or restored afterwards, including altarpieces by Rubens that are among his most famous works.",
+              ],
+            },
+          ],
+          didYouKnow: [
+            "The Nieuwerck was never built, but it did not vanish completely. Its foundations and pillars survive in the row of houses around the choir, between the Lijnwaadmarkt and the Groenplaats. Some of those houses literally stand on the start of a cathedral that was never finished.",
+            "Charles V's foundation stone carried a Latin inscription recording that the emperor laid it on the Ides of July, 1521.",
           ],
         },
-        {
-          heading: "Storms of history",
-          kind: "history",
-          paragraphs: [
-            "The cathedral has survived a great deal. During the iconoclastic fury of 1566, a wave of Protestant anger against images, much of its interior was smashed. Two centuries later, French revolutionary troops occupied the city, closed the church and carried off its treasures.",
-            "Much of what you can see inside today was brought back or restored afterwards, including altarpieces by Rubens that are among his most famous works.",
+        "quinten-matsijs": {
+          title: "Quinten Matsijs",
+          subtitle: "From blacksmith to painter?",
+          sections: [
+            {
+              heading: "A painter for the cathedral",
+              kind: "history",
+              paragraphs: [
+                "Quinten Matsijs (around 1466–1530) was born in Leuven, the son of a blacksmith, and became one of the leading painters of Antwerp in its golden age. In 1491 he became a master in the Guild of St Luke, the painters' guild.",
+                "His link with this church is real. Between 1508 and 1511 he painted a great altarpiece for the altar of the joiners' guild in the cathedral: a Lamentation of Christ between scenes of St John the Baptist and St John the Evangelist. Today it hangs in the KMSKA, Antwerp's Royal Museum of Fine Arts.",
+              ],
+            },
+            {
+              heading: "The smith who painted for love",
+              kind: "legend",
+              paragraphs: [
+                "Antwerp tells a romantic story about him. Quinten, it says, was a blacksmith who fell in love with a girl who preferred a painter to a smith. So he put down his hammer and picked up the brush. Karel van Mander, who wrote it down in 1604, also gives another version: a long illness made heavy smithing impossible, and he began colouring prints to support his mother.",
+                "Another tale says he painted a fly so lifelike on a painting by his sweetheart's father that the man tried to brush it away, and then agreed to the marriage.",
+              ],
+            },
+            {
+              heading: "What historians say",
+              kind: "interpretation",
+              paragraphs: [
+                "There is no evidence that Quinten himself ever worked as a smith; his father did. Historians see the story as a legend that grew over time. It is an old one, though: the Latin verse under his portrait, printed in Antwerp in 1572 and shown at the top of this card, already has him say that love turned the smith into a painter.",
+              ],
+            },
+          ],
+          didYouKnow: [
+            "Right next to the cathedral, on the Handschoenmarkt, stands a well with a Gothic wrought-iron cage crowned by a small Brabo. Tradition attributes the ironwork to Matsijs, but that is not proven. A few metres away, on the west front of the cathedral, a memorial stone with his portrait bears the Latin line “Connubialis amor de Mulcibre fecit Apellem”: married love turned the smith into a painter.",
           ],
         },
-      ],
-      didYouKnow: [
-        "The Nieuwerck was never built, but it did not vanish completely. Its foundations and pillars survive in the row of houses around the choir, between the Lijnwaadmarkt and the Groenplaats. Some of those houses literally stand on the start of a cathedral that was never finished.",
-        "Charles V's foundation stone carried a Latin inscription recording that the emperor laid it on the Ides of July, 1521.",
-      ],
+        "nello-patrasche": {
+          title: "Nello & Patrasche",
+          subtitle: "An English novel, a Japanese classic and a marble statue",
+          sections: [
+            {
+              heading: "The story",
+              kind: "fiction",
+              paragraphs: [
+                "Nello is a poor orphan boy who lives in a village “a league from Antwerp”. With his dog Patrasche, who pulls the cart, he brings milk to the city every day. Nello dreams of becoming a painter and longs to see the two paintings by Rubens in the cathedral, but they are covered, and only those who pay may see them.",
+                "He enters a drawing competition, does not win, and loses everything. On Christmas Eve he finds the church open and at last sees The Elevation of the Cross and The Descent from the Cross. The next morning Nello and Patrasche are found together in front of the paintings, frozen to death.",
+              ],
+            },
+            {
+              heading: "A book from England, a classic in Japan",
+              kind: "history",
+              paragraphs: [
+                "A Dog of Flanders was written by the English author Ouida (Marie Louise de la Ramée). It appeared in a magazine at the end of 1871 and as a book in 1872. The two paintings are real: they still hang in this cathedral. In the novel they stand for the art Nello longs for, which stays hidden from people who cannot pay.",
+                "For a long time the story was hardly known in Flanders itself. Abroad it became a classic: it was filmed several times in the United States, from 1935 onwards, and in Japan the anime series of 1975 made it a children's classic. A documentary of 2007 was called, fittingly, Patrasche, a Dog of Flanders – Made in Japan.",
+              ],
+            },
+            {
+              heading: "The statue",
+              kind: "history",
+              paragraphs: [
+                "In 2016 a statue by Batist Vermeulen was placed on the Handschoenmarkt, in front of the cathedral. It replaced a memorial stone from 2003. Nello and Patrasche lie asleep in each other's arms, under a blanket made of the square's own cobblestones. Since November 2022 it has been lit at night.",
+              ],
+            },
+          ],
+          didYouKnow: [
+            "Ouida never names Nello's village. The link with Hoboken, now a district of Antwerp, was made later.",
+          ],
+        },
+      },
       lookAt: [
         {
           title: "One tower and a half",
-          body: "Look at the front of the cathedral. The left (north) tower rises all the way to its elegant spire; the right (south) tower stops at roughly a third of that height. The plan was for two great towers, but only one was ever completed. Look at the etching from 1649 on this page: the lopsided silhouette was already the same then.",
+          body: "Look at the front of the cathedral. The left (north) tower rises all the way to its elegant spire; the right (south) tower stops at about half that height. The plan was for two great towers, but only one was ever completed. Look at the etching from 1649 on this page: the lopsided silhouette was already the same then.",
         },
       ],
       transitionToNext:
         "Walk around the cathedral to the Oude Koornmarkt. Look carefully for a narrow entrance between the houses: it leads to a hidden alley that time seems to have forgotten.",
     },
 
-    // ── 9 ────────────────────────────────────────────────────────────────
+    // ── 10 ───────────────────────────────────────────────────────────────
     "classics-vlaeykensgang": {
       name: "Vlaeykensgang",
       subtitle: "A secret passage into old Antwerp",
       introduction: [
         "Step through the narrow entrance and the noise of the city disappears. You are in the Vlaeykensgang, a winding alley between old brick walls, little courtyards and small houses. For a moment it is easy to imagine Antwerp centuries ago.",
+        "The Vlaeykensgang is often called one of the oldest and narrowest alleys in Antwerp. The heritage inventory makes no such ranking, but it does confirm what makes the place special: an L-shaped, cobbled passage lined with eleven small back houses, which has kept almost all of its old appearance.",
       ],
       sections: [
         {
@@ -346,7 +558,7 @@ export const classicsContentEn: ClassicsContent = {
         "Follow the alley and the side streets to the city's great market square. Prepare to look up: the façades around it are full of gold.",
     },
 
-    // ── 10 ───────────────────────────────────────────────────────────────
+    // ── 11 ───────────────────────────────────────────────────────────────
     "classics-grote-markt": {
       name: "Grote Markt & the guild houses",
       subtitle: "The golden square that is younger than it looks",
@@ -384,7 +596,7 @@ export const classicsContentEn: ClassicsContent = {
         "In the middle of the square a bronze figure is about to throw something into the air. Walk over to the fountain: it tells the most famous story Antwerp has.",
     },
 
-    // ── 11 ───────────────────────────────────────────────────────────────
+    // ── 12 ───────────────────────────────────────────────────────────────
     "classics-brabo": {
       name: "The Brabo Fountain",
       subtitle: "A giant, a hand, and the name of a city",
@@ -422,7 +634,7 @@ export const classicsContentEn: ClassicsContent = {
         "Turn towards the long, pale building behind Brabo. It survived one of the most terrible nights in the city's history.",
     },
 
-    // ── 12 ───────────────────────────────────────────────────────────────
+    // ── 13 ───────────────────────────────────────────────────────────────
     "classics-stadhuis": {
       name: "City Hall",
       subtitle: "Built in pride, burned in fury",
@@ -437,15 +649,6 @@ export const classicsContentEn: ClassicsContent = {
             "The City Hall was built between 1561 and 1565, after designs by Cornelis Floris de Vriendt together with other architects and artists. Antwerp was then one of the richest cities in Europe, and it wanted its government to be housed in a building that showed it.",
           ],
         },
-        {
-          heading: "The Spanish Fury, 4 November 1576",
-          kind: "history",
-          paragraphs: [
-            "Barely ten years later, this building witnessed catastrophe. The Low Countries were in revolt against the Spanish king, and his soldiers in the region had not been paid for a long time. On 4 November 1576 mutinous Spanish troops stormed Antwerp and began to plunder it.",
-            "The city government organised a counter-attack from this City Hall, here on the Grote Markt. The soldiers set the building on fire. The flames spread to the surrounding houses, hundreds of which burned down. Of the City Hall, only the outer walls remained standing.",
-            "How many people died is not known precisely. Estimates range from several hundred to around 8,000; many historians think that more than 7,000 people lost their lives. The event became known as the Spanish Fury, and it shook the confidence of what had been Europe's great trading city.",
-          ],
-        },
       ],
       didYouKnow: [
         "The building you see was restored after the fire of 1576. Look at the photograph on this page, taken in the mid-1860s: from the square, the City Hall looked then much as it does today.",
@@ -456,11 +659,53 @@ export const classicsContentEn: ClassicsContent = {
           body: "Compare the sober wings of the façade with the central part, which is stacked with columns, niches and statues and rises above the roofline. That contrast, calm and orderly with a burst of decoration in the middle, is typical of the Renaissance that Floris brought to Antwerp.",
         },
       ],
+      // The Spanish Fury, as slides: the approved section, paragraph by paragraph, each with its images.
+      cards: {
+        "fury-attack": {
+          title: "The Spanish Fury, 4 November 1576",
+          sections: [
+            {
+              kind: "history",
+              paragraphs: [
+                "Barely ten years later, this building witnessed catastrophe. The Low Countries were in revolt against the Spanish king, and his soldiers in the region had not been paid for a long time. On 4 November 1576 mutinous Spanish troops broke out of the citadel south of the city, joined by mutineers from Aalst, stormed Antwerp and began to plunder it.",
+              ],
+            },
+          ],
+        },
+        "fury-city-hall": {
+          title: "The City Hall in flames",
+          sections: [
+            {
+              kind: "history",
+              paragraphs: [
+                "The city government organised a counter-attack from this City Hall, here on the Grote Markt. Antwerp's citizens defended themselves on the square and inside the building, and fired from the windows of the City Hall at the Spanish horsemen charging across the square. The riders suffered heavy losses, until a few of them forced their way in and set the building on fire with bundles of straw they had brought along.",
+              ],
+            },
+          ],
+        },
+        "fury-city": {
+          title: "The city in chaos",
+          sections: [
+            {
+              kind: "history",
+              paragraphs: [
+                "The flames spread to the surrounding houses: about six hundred burned down, most of them behind and beside the City Hall. Of the City Hall itself, only the outer walls remained standing.",
+              ],
+            },
+            {
+              kind: "history",
+              paragraphs: [
+                "How many people died is not known precisely. Estimates range from several hundred to around 8,000; many historians think that more than 7,000 people lost their lives. The event became known as the Spanish Fury, and it shook the confidence of what had been Europe's great trading city.",
+              ],
+            },
+          ],
+        },
+      },
       transitionToNext:
         "Leave the Grote Markt and walk east, through quiet streets, to a small square that many visitors call the most beautiful in Antwerp.",
     },
 
-    // ── 13 ───────────────────────────────────────────────────────────────
+    // ── 14 ───────────────────────────────────────────────────────────────
     "classics-conscienceplein": {
       name: "Hendrik Conscienceplein",
       subtitle: "The man who taught his people to read",
@@ -484,7 +729,7 @@ export const classicsContentEn: ClassicsContent = {
         "Now turn around. The richly decorated church behind you is the next stop, and the place where we enter the age of Rubens.",
     },
 
-    // ── 14 ───────────────────────────────────────────────────────────────
+    // ── 15 ───────────────────────────────────────────────────────────────
     "classics-carolus-borromeus": {
       name: "St Charles Borromeo Church",
       subtitle: "Rubens' lost masterpiece",
@@ -516,7 +761,7 @@ export const classicsContentEn: ClassicsContent = {
         "From the Baroque we now go back further, into the late Middle Ages. Walk north towards the river, to a striking building in red and white stripes.",
     },
 
-    // ── 15 ───────────────────────────────────────────────────────────────
+    // ── 16 ───────────────────────────────────────────────────────────────
     "classics-vleeshuis": {
       name: "The Vleeshuis",
       subtitle: "A palace for butchers",
@@ -543,11 +788,25 @@ export const classicsContentEn: ClassicsContent = {
           body: "Look at the walls: rows of red brick alternate with bands of pale sandstone. Now that you know their name, you will spot these speklagen on many old buildings in Antwerp and elsewhere in Flanders.",
         },
       ],
+      galleries: {
+        "vleeshuis-postcards": {
+          title: "The Vleeshuis on old postcards",
+          intro: "Three old postcards of Museum Vleeshuis show its rooms, furnished with fireplaces, furniture and objects from the collection.",
+        },
+      },
+      // Spooky's task on arrival (a detail to find); the walker says when they found it.
+      quest: {
+        title: "Find the old burcht wall",
+        task: [
+          "Find the old wall that protected the burcht from the early 13th century.",
+          "The photo is your clue: look around the Vleeshuis for a piece of wall like this one. Found it? Tap the button below.",
+        ],
+      },
       transitionToNext:
         "Continue a few streets north, into the old harbour quarter. Here stands a church whose story is bound up with the river, and with fire.",
     },
 
-    // ── 16 ───────────────────────────────────────────────────────────────
+    // ── 17 ───────────────────────────────────────────────────────────────
     "classics-sint-paulus": {
       name: "St Paul's Church",
       subtitle: "Gothic, Baroque, and saved from the flames",
@@ -579,7 +838,7 @@ export const classicsContentEn: ClassicsContent = {
         "Walk to the river. At the water's edge stands the oldest building in Antwerp, the last remnant of the castle where the city began.",
     },
 
-    // ── 17 ───────────────────────────────────────────────────────────────
+    // ── 18 ───────────────────────────────────────────────────────────────
     "classics-het-steen": {
       name: "Het Steen",
       subtitle: "The last piece of the castle where Antwerp began",
@@ -593,6 +852,15 @@ export const classicsContentEn: ClassicsContent = {
           paragraphs: [
             "Around the year 850 a refuge fortress stood here, protected by an earthen rampart against Viking raids. In the late 10th century the ground was raised and a moat was probably dug. Around 1200–1225 the stone castle, Het Steen, was built, together with a wall around the burcht.",
             "From the early 14th century onwards the building served as a prison, a role it would keep for more than five centuries, until 1823.",
+          ],
+        },
+        {
+          heading: "The executioner of Antwerp",
+          kind: "history",
+          paragraphs: [
+            "As the city prison, Het Steen was part of Antwerp's justice. The schout, the city's sheriff, prosecuted; the aldermen judged; and the executioner carried out the sentence. Suspects were interrogated here, sometimes under torture, in an underground chamber.",
+            "Between 1405 and 1550 the Antwerp executioner carried out at least 336 beheadings with the sword, most of them on the Grote Markt in front of the City Hall. Other sentences were carried out on the Meir, on the bank of the Scheldt and at the gallows field. Between 1558 and 1562 more than fifty condemned people were drowned, preferably in secret inside Het Steen: public burnings of heretics had caused too much unrest.",
+            "The executioners themselves did not always fare well. In 1508 a new executioner, a former shoemaker's journeyman, botched his first beheading, and children pelted him with stones. And on 17 January 1565 master Geleyn, the city's executioner since 1542, was himself beheaded on the Meir, convicted of murder, theft and violence.",
           ],
         },
         {
@@ -614,6 +882,7 @@ export const classicsContentEn: ClassicsContent = {
       didYouKnow: [
         "What you see as “the castle” is only a small part of the medieval burcht. Most of it was demolished in the 1880s to make way for the quays.",
         "Het Steen served as a prison from the early 14th century until 1823: more than 500 years.",
+        "Few real instruments of torture or execution survive: in 1794 the French burned most of them.",
       ],
       lookAt: [
         {
@@ -629,7 +898,7 @@ export const classicsContentEn: ClassicsContent = {
         "Walk the last few steps to the water. Our journey back through time ends where Antwerp's story began.",
     },
 
-    // ── 18 ───────────────────────────────────────────────────────────────
+    // ── 19 ───────────────────────────────────────────────────────────────
     "classics-scheldt": {
       name: "The Scheldt",
       subtitle: "Where it all began",
@@ -657,6 +926,12 @@ export const classicsContentEn: ClassicsContent = {
       didYouKnow: [
         "For about two hundred years, from the blockade after 1585 until 1795, Antwerp was a great port without free access to the sea. It is one of the reasons the city's golden age came to an end.",
       ],
+      galleries: {
+        "siege-of-antwerp": {
+          title: "The siege of Antwerp, 1584–1585",
+          intro: "The fall of Antwerp in 1585 came after a siege of more than a year by Alexander Farnese, Duke of Parma. These prints show how he closed the river, and how the city tried to break through.",
+        },
+      },
       closing: {
         timeline: [
           "Antwerpen-Centraal: the 20th century begins",
@@ -692,6 +967,12 @@ export const classicsContentEn: ClassicsContent = {
       caption: "The train hall today, with the clock, the word ANTWERPEN and the city's coat of arms above the entrance.",
       alt: "Modern photo of the iron and glass train hall with the ornate stone front of the station building",
       approximateYear: "2023",
+    },
+    // Clue of Spooky's task at the station: says where it was taken, not what to find.
+    "central-station-hall-clue-today": {
+      caption: "Spooky's clue: a photo taken in the station.",
+      alt: "Photo of an ornate wall under a glass and iron roof, with a clock, gilded decorations and a name in gold letters",
+      approximateYear: "2006",
     },
     "diamond-pelikaanstraat": {
       caption: "Pelikaanstraat, on the edge of today's diamond district, around 1900.",
@@ -778,6 +1059,41 @@ export const classicsContentEn: ClassicsContent = {
       alt: "Old postcard of a tall brick building with an archway and children in the street",
       approximateYear: "ca. 1901",
     },
+    "vleeshuis-wall-clue": {
+      caption: "Spooky's clue: an old photo of a corner near the Vleeshuis.",
+      alt: "Black-and-white photo of a rough wall of uneven stones against a tall brick building",
+      approximateYear: "date unknown",
+    },
+    "vleeshuis-postcard-kitchen": {
+      caption: "A room furnished as an old kitchen, with a large hearth, copper kettles and a decorated water pump with a basin (postcard of Museum Vleeshuis, date unknown; MAS collection).",
+      alt: "Sepia postcard of a room with a large fireplace, copper kettles on the hearth, tiled walls, two chairs and an ornate pump with a stone basin",
+      approximateYear: "date unknown",
+    },
+    "vleeshuis-postcard-panelled-room": {
+      caption: "A room with a fireplace, carved cabinets, decorated wall panels and a statue on a cabinet (postcard of Museum Vleeshuis, date unknown; MAS collection).",
+      alt: "Sepia postcard of a room whose walls are covered with decorated panels, with a fireplace, carved cabinets, a table and a statue",
+      approximateYear: "date unknown",
+    },
+    "vleeshuis-postcard-hall": {
+      caption: "A hall with a long table and chairs, a glass chandelier, a tall clock and a richly carved fireplace with a seated figure above it (postcard of Museum Vleeshuis, date unknown; MAS collection).",
+      alt: "Sepia postcard of a hall with a long table surrounded by chairs, a glass chandelier, stained-glass windows, a tall clock and a large carved fireplace",
+      approximateYear: "date unknown",
+    },
+    "siege-parma-bridge": {
+      caption: "Parma's bridge of boats across the Scheldt, finished in February 1585 to cut the city off from help by water; Antwerp is on the horizon. Print by Lamberecht Causé after Romeyn de Hooghe, 1670–1699 (Rijksmuseum).",
+      alt: "Engraving of a long bridge built on boats across a wide river, with soldiers and carriages on it, warships around it and a city skyline in the distance",
+      approximateYear: "1670–1699",
+    },
+    "siege-bridge-attack": {
+      caption: "April 1585: Antwerp sends fire ships against the bridge. The title says that Alexander of Parma himself nearly died, but the bridge held and the attack failed. Print by Lamberecht Causé after Romeyn de Hooghe, 1670–1699 (Rijksmuseum).",
+      alt: "Engraving of a huge explosion on a bridge of boats, with planks, boats and soldiers flung through the air and smoke over the river",
+      approximateYear: "1670–1699",
+    },
+    "siege-map-luyken": {
+      caption: "The whole siege on one map by Jan Luyken (1680–1684): Antwerp at top left, the bridge of boats in the middle, the flooded land, and on the right the fighting on the Kouwenstein dike in May 1585, another failed attempt to break through (Rijksmuseum).",
+      alt: "Engraved map of the Scheldt below Antwerp with forts, a bridge across the river, flooded fields, ships and troops fighting along a dike",
+      approximateYear: "1680–1684",
+    },
     "sint-paulus-1901": {
       caption: "St Paul's Church and the cafés around it, on a postcard dated 1901.",
       alt: "Old postcard of a Gothic church with a Baroque tower above small houses and cafés",
@@ -802,6 +1118,137 @@ export const classicsContentEn: ClassicsContent = {
       caption: "The Scheldt quays around 1900, lined with ships and sheds.",
       alt: "Illustrated old postcard of steamships and sailing boats along the quay",
       approximateYear: "ca. 1900",
+    },
+    "diamond-bourse-today": {
+      caption: "The Beurs voor Diamanthandel in the Pelikaanstraat, one of the diamond bourses of the district and a protected monument.",
+      alt: "Modern photo of a tall stone office building with a carved name band and flags above the entrance",
+      approximateYear: "2010",
+    },
+    "flatow-expulsion-card-1941": {
+      caption: "Card from 1941 for Siegfried Flatow, a German born in Berlin in 1921, who lived at Zurenborgstraat 17 in Antwerp. It records that on 1 February 1941 he was forcibly removed to Beverloo, Leysestraat 25.",
+      alt: "Yellowed bilingual German and Dutch form filled in on a typewriter, with a fingerprint in the bottom box and an empty space for a photo",
+      approximateYear: "1941",
+    },
+    "dossin-courtyard-1942": {
+      caption: "The courtyard of Kazerne Dossin in Mechelen, 1942: luggage spread over the ground, lorries and groups of people.",
+      alt: "Black-and-white photo of an enclosed barracks courtyard with rows of suitcases and bundles on the ground, two lorries and groups of people along the edges",
+      approximateYear: "1942",
+    },
+    "paleis-op-de-meir-today": {
+      caption: "The Paleis op de Meir today: the 18th-century merchant's palace that Napoleon bought.",
+      alt: "Modern photo of a pale Rococo palace façade with a balcony and an ornate crest on the roof",
+      approximateYear: "2023",
+    },
+    "rex-ruins": {
+      caption: "Cinema Rex in ruins after the V-2 strike of 16 December 1944.",
+      alt: "Sepia photo of a bombed cinema building with collapsed walls and an exposed domed roof, with a 1940s car parked in front",
+      approximateYear: "1944–1947",
+    },
+    // The clue of Spooky's quest: shown before the place is found, so it must not name it.
+    "paleis-op-de-meir-drawing": {
+      caption: "Spooky's clue: an old elevation drawing of a long façade.",
+      alt: "Old drawing of a long, symmetrical façade with tall windows, small balconies, vases on the roof and a large ornate crest in the middle",
+      approximateYear: "date unknown",
+    },
+    "rubens-self-portrait-1623": {
+      caption: "Peter Paul Rubens, self-portrait, 1623 (Royal Collection, London).",
+      alt: "Painted portrait of a bearded man in a broad black hat and dark cloak",
+      approximateYear: "1623",
+    },
+    "rubenshuis-garden-today": {
+      caption: "The garden of the Rubens House today, with the house and, on the right, the portico from Rubens' own time.",
+      alt: "Modern photo of a garden with a fountain in front of a Renaissance house and a stone gateway topped with statues",
+      approximateYear: "2025",
+    },
+    "rubens-honeysuckle-bower": {
+      caption: "Rubens and Isabella Brant in the Honeysuckle Bower, around 1609–1610 (Alte Pinakothek, Munich).",
+      alt: "Painting of a richly dressed young couple sitting hand in hand under a bower of honeysuckle",
+      approximateYear: "ca. 1609–1610",
+    },
+    "handelsbeurs-open-courtyard-1613": {
+      caption: "The exchange of 1531 with its open courtyard, full of merchants: an engraving published in 1613.",
+      alt: "Black-and-white engraving of a rectangular courtyard surrounded by galleries, with small groups of people and two towers",
+      approximateYear: "1613",
+    },
+    "groenkerkhof-1597": {
+      caption: "A funeral procession at the churchyard of the cathedral, today's Groenplaats: an anonymous painting from 1597 (Museum Vleeshuis).",
+      alt: "Old painting of mourners in black walking past a churchyard, with the tall cathedral tower behind",
+      approximateYear: "1597",
+    },
+    "groenplaats-rubens-statue-1840s": {
+      caption: "The cathedral seen from the Groenplaats, with the new statue of Rubens: a lithograph by Jules Alexandre Monthelier, 1840s.",
+      alt: "Lithograph of a bronze statue on a high pedestal among trees, with the cathedral and its spire behind",
+      approximateYear: "1840s",
+    },
+    "matsijs-portrait-1572": {
+      caption: "Quinten Matsijs in a portrait print published in Antwerp in 1572. The Latin verse below tells how love made him a painter.",
+      alt: "Engraved profile portrait of a man in a cap and cloak holding rolled papers, with Latin verse below",
+      approximateYear: "1572",
+    },
+    "matsijs-altarpiece-1511": {
+      caption: "Quinten Matsijs' altarpiece for the joiners' guild, painted in 1508–1511 for this cathedral (KMSKA, Antwerp).",
+      alt: "Painted triptych with a Lamentation of Christ in the middle panel and two side panels",
+      approximateYear: "1511",
+    },
+    "matsijs-well": {
+      caption: "The well beside the cathedral, photographed around 1875–1900. Its wrought-iron cage is traditionally attributed to Matsijs.",
+      alt: "Old photograph of an ornate wrought-iron well cage on a stone base in front of a Gothic wall",
+      approximateYear: "ca. 1875–1900",
+    },
+    "nello-patrasche-today": {
+      caption: "Nello and Patrasche by Batist Vermeulen (2016), sleeping under a blanket of cobblestones in front of the cathedral.",
+      alt: "Modern photo of a white marble statue of a boy and a dog lying under a cobblestone blanket, the cathedral tower behind",
+      approximateYear: "2023",
+    },
+    "vlaeykensgang-today": {
+      caption: "The Vlaeykensgang today: cobblestones, brick walls and a covered passage.",
+      alt: "Modern photo of a narrow cobbled alley between brick walls, seen through a low covered passage",
+      approximateYear: "2022",
+    },
+    "stadhuis-spanish-fury-hogenberg": {
+      caption: "The City Hall in flames during the Spanish Fury, with fighting on the Grote Markt: an etching by Frans Hogenberg, made before 1585.",
+      alt: "Etching of a large Renaissance city hall with flames and smoke rising, soldiers fighting on the square in front",
+      approximateYear: "before 1585",
+    },
+    "handelsbeurs-vandennest": {
+      caption: "The galleries decorated with chandeliers, drapery and small trees, in a print by J.B.J. Vandennest made between 1842 and 1851: still before the courtyard got its first roof (University of Antwerp, Special Collections).",
+      alt: "Print of long vaulted galleries with carved columns, hanging chandeliers, drapery and rows of small trees, with two men in uniform in the foreground",
+      approximateYear: "1842–1851",
+    },
+    "handelsbeurs-lebrun-liedel": {
+      caption: "The exchange after its rebuilding: carved columns, vaulted galleries and a few merchants, in a print by Lebrun-Liedel from after 1872 (University of Antwerp, Special Collections).",
+      alt: "Black-and-white print of a hall with richly carved columns and pointed vaults, with a man in a top hat reading in the foreground",
+      approximateYear: "after 1872",
+    },
+    "spanish-fury-overview-1577": {
+      caption: "The Spanish Fury on one sheet: an anonymous print from 1577 with a map of Antwerp and its citadel in the middle, surrounded by scenes of the attack, the fighting and the burning City Hall (Rijksmuseum).",
+      alt: "Print with a bird's-eye map of Antwerp and its star-shaped citadel in the centre, framed by small scenes of soldiers attacking, fighting and plundering",
+      approximateYear: "1577",
+    },
+    "spanish-fury-de-braekeleer": {
+      caption: "The Spanish Fury in Antwerp as Ferdinand de Braekeleer the Elder painted it in 1836: a romantic 19th-century picture of armed citizens and wounded among smoke and fire, with the cathedral tower behind (KMSKA, Antwerp).",
+      alt: "Painting of a crowd of armed townspeople, wounded men and a woman kneeling beside a dying man, with smoke, fire and a cathedral tower in the background",
+      approximateYear: "1836",
+    },
+    "spanish-fury-mas": {
+      caption: "A street full of victims, with houses burning at the far end: an anonymous painting of the Spanish Fury, made between 1576 and about 1585 (MAS, Antwerp).",
+      alt: "Painting of a crowded street with soldiers, horsemen and many dead bodies, burning houses and black smoke in the distance and a church tower on the left",
+      approximateYear: "1576–1585",
+    },
+    "spanish-fury-hogenberg-plunder": {
+      caption: "Plunder and torture in Antwerp's houses during the Spanish Fury, in a print by Frans Hogenberg (16th century; Rijksmuseum).",
+      alt: "Engraving of soldiers torturing people hung from ropes inside houses, with bodies on the ground and a street with gabled houses behind",
+      approximateYear: "16th century",
+    },
+    "spanish-fury-print-1618": {
+      caption: "‘Spaensche Furie tot Antwerpen’: a print from about 1618–1624 that repeats the scene, with a verse lamenting the fate of the city (anonymous; Rijksmuseum).",
+      alt: "Engraving of the same torture and plunder scene, with the title ‘Spaensche Furie tot Antwerpen’ and two columns of Dutch verse below",
+      approximateYear: "c. 1618–1624",
+    },
+    "execution-hogenberg-1568": {
+      caption: "An execution in the Low Countries of the time: the beheading of the Counts of Egmont and Horne on the Grote Markt of Brussels in 1568, in an etching by Frans Hogenberg. Not Antwerp, but the same era and the same kind of justice.",
+      alt: "Etching of a scaffold surrounded by soldiers with pikes, an executioner with a sword beside a kneeling man",
+      approximateYear: "1568–1570",
     },
     "scheldt-photochrom": {
       caption: "Antwerp seen from the river in the 1890s: Het Steen on the left, the cathedral rising above the city.",

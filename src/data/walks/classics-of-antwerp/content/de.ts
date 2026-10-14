@@ -9,11 +9,11 @@ export const classicsContentDe: ClassicsContent = {
     title: "Klassiker von Antwerpen",
     tagline: "Ein Spaziergang durch die Geschichte Antwerpens",
     shortDescription:
-      "Ein erzählter Rundgang vom prächtigen Bahnhof bis ans Ufer der Schelde: achtzehn Stationen, acht Jahrhunderte und die Geschichten hinter Antwerpens berühmtesten Orten.",
+      "Ein erzählter Rundgang vom prächtigen Bahnhof bis ans Ufer der Schelde: neunzehn Stationen, acht Jahrhunderte und die Geschichten hinter Antwerpens berühmtesten Orten.",
     description:
       "Vom prächtigen Bahnhof Antwerpens geht es durch Jahrhunderte voller Handel, Kunst, Glauben und Macht bis dorthin, wo die Geschichte der Stadt begann: ans Ufer der Schelde.\n\nAn jeder Station wird dein Handy zu deinem Guide: was du vor dir siehst, warum es gebaut wurde, was hier geschah und welche Details die meisten Besucher einfach übersehen. Historische Fotos zeigen dir, wie die Stadt vor hundert Jahren und früher aussah. Es gibt keine Spiele und keine Fragen, nur Antwerpen und die Zeit, es dir in Ruhe anzusehen.",
     highlights: [
-      "18 der wichtigsten historischen Orte Antwerpens",
+      "19 der wichtigsten historischen Orte Antwerpens",
       "Erzählt wie von einem Guide, der neben dir hergeht",
       "Historische Fotos, Stiche und Postkarten an jeder wichtigen Station",
       "„Wusstest du schon?“-Geschichten, die auf keiner Infotafel stehen",
@@ -83,6 +83,14 @@ export const classicsContentDe: ClassicsContent = {
           body: "Geh in die Bahnhofshalle und dreh dich um. Über dem Eingang des Empfangsgebäudes findest du eine große Uhr, das Wort ANTWERPEN und das Stadtwappen: eine Burg mit zwei Händen darüber. Merk dir diese Hände; sie begegnen dir später auf diesem Rundgang wieder, auf dem Grote Markt.",
         },
       ],
+      // Spooky's task on arrival (a detail to find); the walker says when they found it.
+      quest: {
+        title: "Finde das Stadtwappen von Antwerpen",
+        task: [
+          "Finde das Stadtwappen von Antwerpen.",
+          "Das Foto ist dein Hinweis: Schau dich gut um, im Bahnhof und draußen. Gefunden? Dann tippe unten auf die Schaltfläche.",
+        ],
+      },
       transitionToNext:
         "Verlass den Bahnhof an seiner Westseite. Nach wenigen Minuten betrittst du ein kleines Viertel, in dem seit Jahrhunderten mit einem ganz anderen Schatz gehandelt wird.",
     },
@@ -115,6 +123,38 @@ export const classicsContentDe: ClassicsContent = {
       didYouKnow: [
         "Am Wochenende des 15. und 16. Februar 2003 brachen Diebe in den Tresorraum des Antwerp Diamond Centre in diesem Viertel ein. Die Beute, geschätzt auf mehr als 100 Millionen Dollar in Diamanten, Gold und Schmuck, machte den Einbruch zu einem der größten Diamantenraube der Geschichte. Es gab Festnahmen, doch die meisten Diamanten wurden nie gefunden.",
       ],
+      moreStories: {
+        "jewish-community": {
+          title: "Die jüdische Gemeinde",
+          subtitle: "Der Zweite Weltkrieg und danach",
+          sections: [
+            {
+              heading: "Der Zweite Weltkrieg",
+              kind: "history",
+              paragraphs: [
+                "18. August 1941: Die Wehrmacht dringt in den Diamantkring ein und beschlagnahmt Diamanten. 164 Mitglieder des Diamantkring werden ermordet.",
+                "Sommer 1942: Razzien, unter anderem am 15./16. und 28./29. August, in Straßen wie der Van Immerseelstraat, der Lange Kievitstraat und der Provinciestraat. Die Daten weichen je nach Quelle leicht voneinander ab.",
+                "Bei der Razzia vom 28./29. August nahm die Antwerpener Polizei die Verhaftungen selbst vor. Das war einmalig in der Geschichte der Besatzung Belgiens.",
+                "Die Opfer wurden über die Kazerne Dossin in Mechelen nach Auschwitz-Birkenau deportiert.",
+              ],
+            },
+            {
+              heading: "Wie viele?",
+              kind: "history",
+              paragraphs: [
+                "Zwischen 56 % und 66 % der Antwerpener Juden wurden deportiert, je nach Berechnung: mehr als die Hälfte, nach manchen Berechnungen zwei Drittel. Laut Antwerpen Herdenkt überlebten etwa 10.000 Juden aus der Region den Krieg nicht.",
+              ],
+            },
+            {
+              heading: "Nach dem Krieg",
+              kind: "history",
+              paragraphs: [
+                "1945 lebten noch etwa 2.000 Juden in der Stadt. Ende der 1940er-Jahre waren es wieder etwa 10.000, eine stark orthodox geprägte Gemeinde.",
+              ],
+            },
+          ],
+        },
+      },
       transitionToNext:
         "Geh zurück Richtung Bahnhofsvorplatz und bieg in De Keyserlei ein, den Prachtboulevard, der in die Altstadt führt. Um 1900 betrat jeder, der mit dem Zug ankam, auf diesem Weg Antwerpen.",
     },
@@ -135,18 +175,9 @@ export const classicsContentDe: ClassicsContent = {
             "Am Nachmittag des 16. Dezember 1944 sahen sich rund 1.100 Menschen im Kino Rex, Hausnummer 15 an diesem Boulevard, einen Film an. Um 15.20 Uhr traf eine V2-Rakete das Dach. 567 Menschen kamen ums Leben: 271 Zivilisten und 296 alliierte Soldaten. Es war die höchste Zahl an Todesopfern durch einen einzelnen Raketenangriff im gesamten Krieg, und es dauerte fast eine Woche, bis alle aus den Trümmern geborgen waren.",
           ],
         },
-        {
-          heading: "Ein Palast an der Meir",
-          kind: "history",
-          paragraphs: [
-            "Geh weiter auf die Meir und achte auf eine lange, elegante Fassade aus dem 18. Jahrhundert: den Paleis op de Meir. Der Antwerpener Architekt Jan Pieter van Baurscheit der Jüngere errichtete ihn ab 1745 für einen wohlhabenden Kaufmann, Johan Alexander van Susteren. Später ging er durch bemerkenswerte Hände: Napoleon kaufte ihn 1811–1812, wohnte aber nie darin, der russische Zar Alexander I. logierte hier 1814, und lange Zeit diente er als königlicher Palast.",
-            "Gleich neben der Meir, am Wapper, steht das Haus, in dem Peter Paul Rubens lebte und arbeitete. Rubens wird dir auf diesem Rundgang noch mehrmals begegnen.",
-          ],
-        },
       ],
       didYouKnow: [
         "Das Kino Rex wurde nach dem Krieg wieder aufgebaut und 1947 neu eröffnet. 1993 schloss es endgültig und wurde zwei Jahre später abgerissen. Heute erinnert in der Straße kaum etwas die Passanten an das, was hier geschah.",
-        "Napoleon gehörte der Palast an der Meir, doch als er für ihn bereitstand, war er schon im Exil auf der Insel Elba.",
       ],
       transitionToNext:
         "Folge der Meir Richtung Altstadt. Etwas weiter links glänzt eine goldene Kuppel über einem prachtvollen Eingang: ein Festsaal, der abbrannte und wiederauferstand.",
@@ -180,44 +211,142 @@ export const classicsContentDe: ClassicsContent = {
         "Vieles von dem „historischen“ Interieur, das du drinnen siehst, ist in Wirklichkeit eine sorgfältige Rekonstruktion aus dem 21. Jahrhundert, angefertigt nach dem Brand von 2000 anhand von Fotos, Plänen und erhaltenen Fragmenten.",
       ],
       transitionToNext:
-        "Verlass die Meir für einen Moment und bieg in die schmalen Straßen dahinter ein. Hinter gewöhnlichen Fassaden verbirgt sich das Gebäude, in dem Antwerpen einst der Welt beibrachte, wie man Handel treibt.",
+        "Geh weiter auf der Meir Richtung Altstadt. Ein paar Minuten weiter wartet Spooky mit einer Aufgabe auf dich …",
+    },
+
+    // ── 4b: Spooky's quest ───────────────────────────────────────────────
+    // `name` and `subtitle` show BEFORE the façade is found: they must not give it away.
+    "classics-paleis-op-de-meir": {
+      name: "Ein Rätsel an der Meir",
+      subtitle: "Die Fassade aus Spookys Zeichnung",
+      introduction: [
+        "Gefunden! Die lange, elegante Fassade aus dem 18. Jahrhundert vor dir ist der Paleis op de Meir.",
+      ],
+      sections: [
+        {
+          heading: "Ein Palast an der Meir",
+          kind: "history",
+          paragraphs: [
+            "Der Antwerpener Architekt Jan Pieter van Baurscheit der Jüngere errichtete ihn ab 1745 für einen wohlhabenden Kaufmann, Johan Alexander van Susteren. Später ging er durch bemerkenswerte Hände: Napoleon kaufte ihn 1811–1812, wohnte aber nie darin, der russische Zar Alexander I. logierte hier 1814, und lange Zeit diente er als königlicher Palast.",
+          ],
+        },
+      ],
+      didYouKnow: [
+        "Napoleon gehörte der Palast an der Meir, doch als er für ihn bereitstand, war er schon im Exil auf der Insel Elba.",
+      ],
+      quest: {
+        title: "Spookys Aufgabe",
+        task: [
+          "Sieh dir diese alte Bauzeichnung genau an. Irgendwo an der Meir steht das Gebäude, zu dem sie gehört.",
+          "Geh zum Suchgebiet auf der Karte, schau an den Fassaden hinauf und vergleiche sie mit der Zeichnung. Findest du heraus, welches Gebäude es ist? Wenn du davorstehst, merkt Hidden Antwerp es von selbst.",
+        ],
+        zoneHint: "Das Gebäude befindet sich irgendwo in diesem Gebiet.",
+        revealedName: "Paleis op de Meir",
+      },
+      transitionToNext:
+        "Nur ein paar Schritte weiter öffnet sich neben der Meir ein kleiner Platz: der Wapper, wo Antwerpens berühmtester Maler sein Zuhause baute.",
     },
 
     // ── 5 ────────────────────────────────────────────────────────────────
+    "classics-rubenshuis": {
+      name: "Das Rubenshuis",
+      subtitle: "Wo Antwerpens größter Maler lebte und arbeitete",
+      introduction: [
+        "Du stehst am Wapper, einem kleinen Platz gleich neben der Meir. Hinter der Fassade vor dir lebte und arbeitete Peter Paul Rubens, der berühmteste Maler, den Antwerpen je hervorgebracht hat, bis zu seinem Tod 1640.",
+        "Das Porträt oben auf dieser Seite zeigt Rubens, wie er sich 1623 selbst malte, auf dem Höhepunkt seines Ruhms: ein breiter schwarzer Hut, ein dunkler Umhang, ein ruhiger, selbstsicherer Blick. Heute gehört dieses Selbstporträt der britischen Royal Collection.",
+      ],
+      sections: [
+        {
+          heading: "Ein italienischer Palazzo am Wapper",
+          kind: "history",
+          paragraphs: [
+            "1608 kehrte Rubens nach acht Jahren in Italien nach Antwerpen zurück. 1610 kaufte er hier ein bestehendes flämisches Haus und verbrachte das folgende Jahrzehnt damit, es nach italienischem Vorbild zu Wohnhaus und Werkstatt umzubauen: ein Atelier im Barockstil, eine Kunstkammer mit halbrunder Skulpturengalerie, ein monumentaler Portikus und ein Gartenpavillon. 1617 zogen er und seine Frau Isabella Brant ein.",
+            "Nach seinem Tod wurde das Haus vermietet, umgebaut und aufgeteilt. Die Stadt kaufte es 1937, und zwischen 1937 und 1946 rekonstruierte es der Stadtarchitekt Emiel Van Averbeke, weitgehend anhand von Stichen von Harrewijn aus den Jahren 1684 und 1692. Portikus, Gartenpavillon und der Rohbau des Ateliers sind größtenteils original; die Wohnräume und ihre Einrichtung sind eine Rekonstruktion.",
+          ],
+        },
+        {
+          heading: "Rubens und Isabella",
+          kind: "history",
+          paragraphs: [
+            "Am 3. Oktober 1609, ein Jahr nach seiner Rückkehr aus Italien, heiratete der 32-jährige Rubens die 18-jährige Isabella Brant. Um diese Zeit malte er die beiden zusammen: das Doppelbildnis auf dieser Seite, heute in der Alten Pinakothek in München. Isabella lebte bis zu ihrem Tod 1626 mit ihm in diesem Haus.",
+          ],
+        },
+        {
+          heading: "Das Gemälde lesen",
+          kind: "interpretation",
+          paragraphs: [
+            "Das Paar sitzt dicht beieinander in einer Laube aus Geißblatt. Ihre rechten Hände ruhen ineinander: Seit der Römerzeit waren verbundene rechte Hände ein Zeichen der Ehe. Das Geißblatt stand für dauerhafte Liebe; einer seiner deutschen Namen, Jelängerjelieber, sagt es schon: „je länger, je lieber“.",
+            "Achte auch auf Kleidung und Haltung. Rubens trägt die feine Tracht eines Edelmanns, seine Hand nahe am Griff eines Degens; Isabella trägt einen hohen Hut, einen breiten Spitzenkragen und ein reich besticktes Mieder. Das große Format und die kostbare Kleidung zeigen das junge Paar als Menschen von Rang. Ein Maler, der sich mit seiner Braut im Freien zeigt, entspannt, als verliebtes Paar: Für seine Zeit betrat das Doppelbildnis Neuland.",
+          ],
+        },
+        {
+          heading: "Warum es zu diesem Rundgang gehört",
+          kind: "interpretation",
+          paragraphs: [
+            "Das Gemälde markiert den Beginn des Lebens, das Rubens an diesem Ort aufbaute: eine Ehe, eine wachsende Werkstatt und ein Haus, das der Welt zeigte, wer er war. Ein Jahr nach der Hochzeit kaufte er dieses Haus. Auf dem weiteren Rundgang begegnest du ihm wieder: auf der Groenplaats, wo die Stadt seine Statue aufstellte, in der Kathedrale, die von ihm gemalte Altarbilder besitzt, und in der Sint-Carolus Borromeuskerk, deren Decken einst seine Werkstatt ausmalte.",
+          ],
+        },
+      ],
+      didYouKnow: [
+        "Von 1648 bis 1660, nach Rubens' Tod, mieteten William und Margaret Cavendish das Haus, englische Royalisten im Exil.",
+      ],
+      infoBoxes: [
+        {
+          kind: "visit",
+          title: "Das Rubenshuis besuchen",
+          paragraphs: [
+            "Das Haus selbst ist wegen Restaurierung frühestens bis 2030 geschlossen. Der Garten, die Bibliothek und die Rubens Experience im neuen Besuchergebäude sind geöffnet; der Besuchereingang liegt auf der Rückseite, am Hopland 13.",
+            "Prüfe vor deinem Besuch die Öffnungszeiten und Eintrittspreise auf der Website des Rubenshuis.",
+          ],
+          checkedOn: "2026-09-30",
+          sourceUrl: "https://rubenshuis.be/nl/vraag-antwoord",
+        },
+      ],
+      transitionToNext:
+        "Verlass die Meir für einen Moment und bieg in die schmalen Straßen dahinter ein. Hinter gewöhnlichen Fassaden verbirgt sich das Gebäude, in dem Antwerpen einst der Welt beibrachte, wie man Handel treibt.",
+    },
+
+    // ── 6 ────────────────────────────────────────────────────────────────
     "classics-handelsbeurs": {
       name: "Die Handelsbeurs",
       subtitle: "Wo die Welt ihre Geschäfte machte",
       introduction: [
         "Vor dir liegt die Handelsbeurs, Antwerpens alte Handelsbörse. Von der Straße aus macht sie kaum auf sich aufmerksam. Drinnen aber verbirgt sich einer der außergewöhnlichsten Räume der Stadt: ein gotischer Innenhof, umgeben von Galerien und überspannt von einem hoch aufragenden Dach aus Eisen und Glas.",
-        "Wir gehen nun zurück ins 16. Jahrhundert, als Antwerpen zu den reichsten Städten Europas gehörte.",
+        "Und jetzt denk dir dieses Dach weg. Mehr als drei Jahrhunderte lang war das Herz dieses Gebäudes ein offener Innenhof unter freiem Himmel, wo sich die Kaufleute halb Europas jeden Tag trafen.",
       ],
       sections: [
         {
-          heading: "Handel ohne Telefon",
+          heading: "Ein Platz unter freiem Himmel",
           kind: "history",
           paragraphs: [
-            "Stell dir Antwerpen um 1530 vor. Schiffe aus Portugal bringen Gewürze aus Asien; Kaufleute aus Italien, Deutschland, England und Spanien leben in der Stadt. Sie müssen Preise kennen, Käufer finden, Geld leihen, Ladungen versichern, und es gibt keine Telefone, keine Zeitungen, wie wir sie kennen, kein Internet. Nachrichten reisen per Brief und vor allem von Mund zu Mund.",
-            "Also baute Antwerpen einen Ort, an dem sich all diese Kaufleute täglich treffen konnten. 1531 eröffnete die Stadt eine Börse nach Entwurf von Domien de Waghemakere, im Stil der Brabanter Spätgotik: ein offener Innenhof, umgeben von einem überdachten Umgang mit kunstvollen Sterngewölben. Es war eines der ersten Gebäude überhaupt, das eigens für diesen Zweck errichtet wurde. Hier, in einem babylonischen Sprachgewirr, wurden Preise festgelegt und Geschäfte abgeschlossen.",
+            "1531 eröffnete Antwerpen eine neue Börse nach Entwurf von Domien de Waghemakere, im Stil der Brabanter Spätgotik. Ihr Herz war ein rechteckiger Innenhof, zum Himmel offen und an allen vier Seiten von überdachten Galerien mit Sterngewölben auf Säulen umgeben.",
+            "Jeden Tag versammelten sich Kaufleute aus Portugal, Italien, Deutschland, England und Spanien auf diesem offenen Platz, in einem babylonischen Sprachgewirr, um Preise festzulegen, Kredit zu geben und mit Wechseln zu handeln. Wenn es regnete, suchten sie unter den Galerien Schutz; über den Galerien lagen Läden und Räume. Der Stich oben auf dieser Seite zeigt den Innenhof voller kleiner Gruppen von Händlern.",
+            "Es war eines der ersten Gebäude überhaupt, das eigens für den Handel errichtet wurde, und die Idee machte Schule. Als Thomas Gresham, der Agent der englischen Krone in Antwerpen, in den 1560er-Jahren die Royal Exchange in London gründete, nahm er sich diesen Innenhof mit seinen Galerien zum Vorbild; Amsterdam folgte 1611.",
           ],
         },
         {
-          heading: "Feuer, und noch einmal Feuer",
+          heading: "Ein Dach über dem Innenhof",
           kind: "history",
           paragraphs: [
-            "Das Gebäude, das du siehst, ist nicht einfach das von 1531. Die Börse wurde 1583 neu gebaut und brannte 1858 nieder. Daraufhin entwarf der Architekt Joseph Schadde das heutige Gebäude; den Auftrag erhielt er schließlich 1868, und am 19. Oktober 1872 wurde die neue Börse feierlich eingeweiht. Er behielt die Idee des gotischen Innenhofs bei, überdachte ihn aber mit einer spektakulären Konstruktion aus Eisen und Glas, und Reste der alten Börse wurden in den Komplex einbezogen.",
-            "Ende des 20. Jahrhunderts war der Handel längst anderswohin gezogen, und das Gebäude stand rund zwanzig Jahre leer. Nach einer gründlichen Restaurierung öffnete es 2019 wieder, nun als Veranstaltungsort.",
+            "Erst 1852–1854 wurde der Innenhof zum ersten Mal überdacht, vom Ingenieur Charles Marcellis, mit Eisen und einer Glaskuppel. Vier Jahre später, am 2. August 1858, zerstörte ein Brand sowohl die alte Börse als auch ihr neues Dach.",
+            "Der Architekt Joseph Schadde baute sie wieder auf; am 19. Oktober 1872 wurde die neue Börse eingeweiht. Er behielt den Innenhof mit seinen Galerien bei, die noch immer dem Grundriss von 1531 folgen, überdachte ihn aber mit der spektakulären Konstruktion aus Eisen und Glas, die du heute siehst.",
           ],
         },
       ],
       didYouKnow: [
-        "Antwerpens Börse wurde im Ausland zum Vorbild. Als Thomas Gresham, der Agent der englischen Krone in Antwerpen, in den 1560er-Jahren die Royal Exchange in London gründete, nahm er sich die Antwerpener Börse zum Muster.",
-        "Das Wort „Börse“ selbst wird meist nicht auf Antwerpen zurückgeführt, sondern auf Brügge, wo sich Kaufleute vor dem Haus der Familie Van der Beurse trafen.",
+        "Mehr als drei Jahrhunderte lang, von 1531 bis zum ersten Dach von 1852–1854, machten Antwerpens Kaufleute ihre Geschäfte bei Sonne, Wind und Regen, in einem Innenhof unter freiem Himmel.",
       ],
+      galleries: {
+        "exchange-in-prints": {
+          title: "Die Börse in alten Drucken",
+          intro: "Zwei Drucke aus dem 19. Jahrhundert zeigen die Galerien vor und nach dem Brand von 1858.",
+        },
+      },
       transitionToNext:
         "Zurück auf der Meir: Schau nach oben. Über den Dächern ragt ein Turm auf, wie ein Stück New York, das in eine mittelalterliche Stadt gefallen ist. Wir machen kurz einen Sprung nach vorn in der Zeit, bevor unsere Reise in die Vergangenheit richtig beginnt.",
     },
 
-    // ── 6 ────────────────────────────────────────────────────────────────
+    // ── 7 ────────────────────────────────────────────────────────────────
     "classics-boerentoren": {
       name: "Der Boerentoren",
       subtitle: "Europas erster Wolkenkratzer",
@@ -241,7 +370,7 @@ export const classicsContentDe: ClassicsContent = {
         "Von hier aus weist dir der Turm den Weg ins alte Herz Antwerpens. Geh zum großen Platz vor dir, wo die Kathedrale zum ersten Mal in ihrer ganzen Höhe auftaucht und wo der Boden unter deinen Füßen ein Geheimnis birgt.",
     },
 
-    // ── 7 ────────────────────────────────────────────────────────────────
+    // ── 8 ────────────────────────────────────────────────────────────────
     "classics-groenplaats": {
       name: "Groenplaats",
       subtitle: "Ein Platz, der einst ein Friedhof war",
@@ -255,6 +384,7 @@ export const classicsContentDe: ClassicsContent = {
           paragraphs: [
             "Dieser Platz bildete zusammen mit dem Lijnwaadmarkt, dem Melkmarkt, dem Schoenmarkt und dem Handschoenmarkt rund um die Kathedrale einst deren Friedhof. Die Antwerpener nannten ihn den Groot Kerkhof, den Großen Kirchhof, und später den Groen Kerkhof, den Grünen Kirchhof. Manche verwenden diesen Namen noch heute.",
             "1754 wurde der Friedhof ummauert, doch nicht für lange. 1784 verbot Kaiser Joseph II. aus Gründen der öffentlichen Gesundheit Bestattungen innerhalb der Städte, und 1799 fiel die Mauer. Allmählich wurde der Friedhof zu dem Platz, den du heute siehst.",
+            "Ein Gemälde von 1597, unten abgebildet, vermittelt einen Eindruck vom Kirchhof jener Zeit: Ein Leichenzug schwarz gekleideter Trauernder zieht an ihm vorbei, dahinter erhebt sich die Kathedrale.",
           ],
         },
         {
@@ -262,6 +392,7 @@ export const classicsContentDe: ClassicsContent = {
           kind: "history",
           paragraphs: [
             "1840 beging Antwerpen den 200. Todestag von Rubens. Willem Geefs entwarf eine Statue, doch das Geld war knapp und die Bronze nicht rechtzeitig fertig. Deshalb wurde am 25. August 1840 auf einem anderen Platz eine vorläufige Gipsversion enthüllt. Erst am 9. und 10. August 1843 bezog der bronzene Rubens hier seinen Platz, mitten auf der Groenplaats.",
+            "Geefs stellte ihn als Maler und Diplomaten dar: Zu seinen Füßen liegen eine Palette und ein Degen, denn Rubens diente dem spanischen König auch als Gesandter. Passend zu einem ehemaligen Kirchhof steht die Statue an der Stelle eines alten Friedhofskreuzes über dem Grab eines Bischofs, Antonius d'Espinosa.",
           ],
         },
       ],
@@ -272,7 +403,7 @@ export const classicsContentDe: ClassicsContent = {
         "Geh auf die Kathedrale zu. Achte dabei auf die Häuserreihe, die an den Chor der Kirche gebaut ist. Sie verbirgt die Fundamente einer Kathedrale, die nie vollendet wurde.",
     },
 
-    // ── 8 ────────────────────────────────────────────────────────────────
+    // ── 9 ────────────────────────────────────────────────────────────────
     "classics-cathedral": {
       name: "Onze-Lieve-Vrouwekathedraal",
       subtitle: "Die Liebfrauenkathedrale, die fast noch größer geworden wäre",
@@ -280,44 +411,125 @@ export const classicsContentDe: ClassicsContent = {
         "Vor dir steht die Onze-Lieve-Vrouwekathedraal, die Liebfrauenkathedrale: eine der größten gotischen Kirchen der Niederen Lande und jahrhundertelang das Wahrzeichen, das Seeleute auf der Schelde als Erstes sahen. Ihr Nordturm, rund 123 Meter hoch, beherrscht noch immer die Silhouette der Stadt.",
         "Wir sind jetzt im Spätmittelalter. Die Kathedrale wurde über etwa 170 Jahre hinweg gebaut, von der Mitte des 14. Jahrhunderts bis 1521, von Generationen von Baumeistern, die wussten, dass sie ihre Vollendung nie erleben würden.",
       ],
-      sections: [
-        {
-          heading: "Noch größer: das Nieuwerck",
-          kind: "history",
-          paragraphs: [
-            "1521, gerade als die Kirche fertig war, beschloss Antwerpen, dass sie nicht groß genug sei. Die reichste Stadt Nordeuropas wollte eine Kirche, die dazu passte, und Domien de Waghemakere und Rombout Keldermans entwarfen eine gigantische Erweiterung des Chors, das Nieuwerck.",
-            "Am 15. Juli 1521 legte der junge Kaiser Karl V. persönlich den Grundstein. Dann kam das Unglück. Ein Großbrand im Jahr 1533 beschädigte die Kirche schwer, alles Geld floss in die Reparatur des bestehenden Baus, die Arbeiten am Nieuwerck wurden eingestellt, und 1537 gab man das Vorhaben endgültig auf.",
+      sections: [],
+      didYouKnow: [],
+      cards: {
+        cathedral: {
+          title: "Die Kathedrale",
+          subtitle: "Zwei Jahrhunderte Bauzeit und ein Plan, der zu groß war",
+          sections: [
+            {
+              heading: "In 170 Jahren erbaut",
+              kind: "history",
+              paragraphs: [
+                "Der Bau begann 1352 und dauerte bis 1521, mit einer langen Pause zwischen 1356 und 1378. Generationen von Baumeistern folgten einander nach demselben Plan, unter ihnen Peter Appelmans sowie Herman und Domien de Waghemakere. Das Geld kam aus Spenden, von den Zünften und von der Stadt; ging es aus, ruhte die Arbeit einfach.",
+                "Der Nordturm, rund 123 Meter hoch, wurde um 1518–1521 vollendet und ist bis heute der höchste Kirchturm der Benelux-Länder. Der Bau des Südturms wurde 1475 aus Geldmangel bei etwa 65 Metern eingestellt und nie vollendet.",
+              ],
+            },
+            {
+              heading: "Noch größer: das Nieuwerck",
+              kind: "history",
+              paragraphs: [
+                "1521, gerade als die Kirche fertig war, beschloss Antwerpen, dass sie nicht groß genug sei. Die reichste Stadt Nordeuropas wollte eine Kirche, die dazu passte, und Domien de Waghemakere und Rombout Keldermans entwarfen eine gigantische Erweiterung des Chors, das Nieuwerck.",
+                "Am 15. Juli 1521 legte der junge Kaiser Karl V. persönlich den Grundstein. Doch schon um 1528 ließ die Begeisterung nach, und in der Nacht vom 5. auf den 6. Oktober 1533 beschädigte ein Großbrand Dach und Pfeiler der Kirche schwer; seine Ursache ist unbekannt. Alles Geld floss in die Reparatur des bestehenden Baus, und 1537 gab man das Nieuwerck endgültig auf.",
+              ],
+            },
+            {
+              heading: "Stürme der Geschichte",
+              kind: "history",
+              paragraphs: [
+                "Die Kathedrale hat vieles überstanden. Beim Bildersturm von 1566, einer Welle protestantischer Wut gegen religiöse Bilder, wurde ein Großteil ihrer Ausstattung zerschlagen. Zwei Jahrhunderte später besetzten französische Revolutionstruppen die Stadt, schlossen die Kirche und schafften ihre Schätze fort.",
+                "Vieles von dem, was du heute drinnen sehen kannst, wurde später zurückgebracht oder restauriert, darunter Altarbilder von Rubens, die zu seinen berühmtesten Werken zählen.",
+              ],
+            },
+          ],
+          didYouKnow: [
+            "Das Nieuwerck wurde nie gebaut, verschwand aber nicht ganz. Seine Fundamente und Pfeiler haben in der Häuserreihe rund um den Chor überdauert, zwischen dem Lijnwaadmarkt und der Groenplaats. Einige dieser Häuser stehen buchstäblich auf dem Anfang einer Kathedrale, die nie vollendet wurde.",
+            "Der Grundstein Karls V. trug eine lateinische Inschrift, die festhielt, dass der Kaiser ihn an den Iden des Juli 1521 gelegt hatte.",
           ],
         },
-        {
-          heading: "Stürme der Geschichte",
-          kind: "history",
-          paragraphs: [
-            "Die Kathedrale hat vieles überstanden. Beim Bildersturm von 1566, einer Welle protestantischer Wut gegen religiöse Bilder, wurde ein Großteil ihrer Ausstattung zerschlagen. Zwei Jahrhunderte später besetzten französische Revolutionstruppen die Stadt, schlossen die Kirche und schafften ihre Schätze fort.",
-            "Vieles von dem, was du heute drinnen sehen kannst, wurde später zurückgebracht oder restauriert, darunter Altarbilder von Rubens, die zu seinen berühmtesten Werken zählen.",
+        "quinten-matsijs": {
+          title: "Quinten Matsijs",
+          subtitle: "Vom Schmied zum Maler?",
+          sections: [
+            {
+              heading: "Ein Maler für die Kathedrale",
+              kind: "history",
+              paragraphs: [
+                "Quinten Matsijs (um 1466–1530) wurde in Löwen als Sohn eines Schmieds geboren und wurde einer der führenden Maler Antwerpens in dessen Goldenem Zeitalter. 1491 wurde er Meister in der Lukasgilde, der Zunft der Maler.",
+                "Seine Verbindung zu dieser Kirche ist echt. Zwischen 1508 und 1511 malte er für den Altar der Schreinerzunft in der Kathedrale ein großes Altarbild: eine Beweinung Christi zwischen Szenen von Johannes dem Täufer und Johannes dem Evangelisten. Heute hängt es im KMSKA, dem Königlichen Museum der Schönen Künste Antwerpens.",
+              ],
+            },
+            {
+              heading: "Der Schmied, der aus Liebe malte",
+              kind: "legend",
+              paragraphs: [
+                "Antwerpen erzählt über ihn eine romantische Geschichte. Quinten, heißt es, war ein Schmied, der sich in ein Mädchen verliebte, das einen Maler einem Schmied vorzog. Also legte er den Hammer weg und griff zum Pinsel. Karel van Mander, der die Geschichte 1604 aufschrieb, nennt auch eine andere Version: Eine lange Krankheit habe ihm die schwere Schmiedearbeit unmöglich gemacht, und er habe begonnen, Drucke zu kolorieren, um seine Mutter zu unterstützen.",
+                "Einer anderen Erzählung nach malte er auf ein Gemälde des Vaters seiner Liebsten eine so lebensechte Fliege, dass der Mann sie wegzuwischen versuchte und daraufhin der Heirat zustimmte.",
+              ],
+            },
+            {
+              heading: "Was Historiker sagen",
+              kind: "interpretation",
+              paragraphs: [
+                "Es gibt keinen Beleg dafür, dass Quinten selbst je als Schmied gearbeitet hat; sein Vater tat es. Historiker sehen die Geschichte als Legende, die mit der Zeit gewachsen ist. Alt ist sie allerdings: Schon der lateinische Vers unter seinem Porträt, 1572 in Antwerpen gedruckt und oben auf dieser Karte abgebildet, lässt ihn sagen, dass die Liebe den Schmied zum Maler machte.",
+              ],
+            },
+          ],
+          didYouKnow: [
+            "Direkt neben der Kathedrale, am Handschoenmarkt, steht ein Brunnen mit einem gotischen schmiedeeisernen Gehäuse, gekrönt von einem kleinen Brabo. Die Überlieferung schreibt die Schmiedearbeit Matsijs zu, bewiesen ist das aber nicht. Ein paar Meter weiter, an der Westfassade der Kathedrale, trägt ein Gedenkstein mit seinem Porträt die lateinische Zeile „Connubialis amor de Mulcibre fecit Apellem“: Die eheliche Liebe machte den Schmied zum Maler.",
           ],
         },
-      ],
-      didYouKnow: [
-        "Das Nieuwerck wurde nie gebaut, verschwand aber nicht ganz. Seine Fundamente und Pfeiler haben in der Häuserreihe rund um den Chor überdauert, zwischen dem Lijnwaadmarkt und der Groenplaats. Einige dieser Häuser stehen buchstäblich auf dem Anfang einer Kathedrale, die nie vollendet wurde.",
-        "Der Grundstein Karls V. trug eine lateinische Inschrift, die festhielt, dass der Kaiser ihn an den Iden des Juli 1521 gelegt hatte.",
-      ],
+        "nello-patrasche": {
+          title: "Nello & Patrasche",
+          subtitle: "Ein englischer Roman, ein japanischer Klassiker und eine Marmorstatue",
+          sections: [
+            {
+              heading: "Die Geschichte",
+              kind: "fiction",
+              paragraphs: [
+                "Nello ist ein armer Waisenjunge, der in einem Dorf „eine Meile von Antwerpen“ lebt. Mit seinem Hund Patrasche, der den Karren zieht, bringt er jeden Tag Milch in die Stadt. Nello träumt davon, Maler zu werden, und sehnt sich danach, die beiden Gemälde von Rubens in der Kathedrale zu sehen, doch sie sind verhüllt, und nur wer bezahlt, darf sie sehen.",
+                "Er nimmt an einem Zeichenwettbewerb teil, gewinnt nicht und verliert alles. An Heiligabend findet er die Kirche offen und sieht endlich „Die Kreuzaufrichtung“ und „Die Kreuzabnahme“. Am nächsten Morgen findet man Nello und Patrasche zusammen vor den Gemälden, erfroren.",
+              ],
+            },
+            {
+              heading: "Ein Buch aus England, ein Klassiker in Japan",
+              kind: "history",
+              paragraphs: [
+                "„Ein Hund aus Flandern“ (A Dog of Flanders) schrieb die englische Autorin Ouida (Marie Louise de la Ramée). Die Geschichte erschien Ende 1871 in einer Zeitschrift und 1872 als Buch. Die beiden Gemälde sind echt: Sie hängen noch immer in dieser Kathedrale. Im Roman stehen sie für die Kunst, nach der Nello sich sehnt und die Menschen verborgen bleibt, die nicht bezahlen können.",
+                "In Flandern selbst war die Geschichte lange kaum bekannt. Im Ausland wurde sie zum Klassiker: In den Vereinigten Staaten wurde sie ab 1935 mehrfach verfilmt, und in Japan machte die Anime-Serie von 1975 sie zu einem Kinderklassiker. Ein Dokumentarfilm von 2007 hieß passenderweise „Patrasche, a Dog of Flanders – Made in Japan“.",
+              ],
+            },
+            {
+              heading: "Die Statue",
+              kind: "history",
+              paragraphs: [
+                "2016 wurde auf dem Handschoenmarkt vor der Kathedrale eine Statue von Batist Vermeulen aufgestellt. Sie ersetzte einen Gedenkstein von 2003. Nello und Patrasche liegen einander in den Armen und schlafen, unter einer Decke aus den Pflastersteinen des Platzes selbst. Seit November 2022 wird sie nachts beleuchtet.",
+              ],
+            },
+          ],
+          didYouKnow: [
+            "Ouida nennt Nellos Dorf nie beim Namen. Die Verbindung zu Hoboken, heute ein Stadtteil von Antwerpen, wurde erst später hergestellt.",
+          ],
+        },
+      },
       lookAt: [
         {
           title: "Anderthalb Türme",
-          body: "Schau dir die Vorderseite der Kathedrale an. Der linke (nördliche) Turm steigt bis zu seiner eleganten Spitze auf; der rechte (südliche) Turm endet auf etwa einem Drittel dieser Höhe. Geplant waren zwei große Türme, doch nur einer wurde je vollendet. Sieh dir die Radierung von 1649 auf dieser Seite an: Schon damals war die Silhouette genauso schief.",
+          body: "Schau dir die Vorderseite der Kathedrale an. Der linke (nördliche) Turm steigt bis zu seiner eleganten Spitze auf; der rechte (südliche) Turm endet auf etwa halber Höhe. Geplant waren zwei große Türme, doch nur einer wurde je vollendet. Sieh dir die Radierung von 1649 auf dieser Seite an: Schon damals war die Silhouette genauso schief.",
         },
       ],
       transitionToNext:
         "Geh um die Kathedrale herum zur Oude Koornmarkt. Halte gut Ausschau nach einem schmalen Eingang zwischen den Häusern: Er führt in eine versteckte Gasse, die die Zeit vergessen zu haben scheint.",
     },
 
-    // ── 9 ────────────────────────────────────────────────────────────────
+    // ── 10 ───────────────────────────────────────────────────────────────
     "classics-vlaeykensgang": {
       name: "Vlaeykensgang",
       subtitle: "Ein geheimer Durchgang ins alte Antwerpen",
       introduction: [
         "Tritt durch den schmalen Eingang, und der Lärm der Stadt verschwindet. Du bist im Vlaeykensgang, einer gewundenen Gasse zwischen alten Backsteinmauern, kleinen Innenhöfen und niedrigen Häuschen. Für einen Moment kannst du dir leicht vorstellen, wie Antwerpen vor Jahrhunderten war.",
+        "Der Vlaeykensgang wird oft als eine der ältesten und schmalsten Gassen Antwerpens bezeichnet. Das Denkmalinventar stellt keine solche Rangliste auf, bestätigt aber, was den Ort besonders macht: ein L-förmiger, gepflasterter Durchgang, gesäumt von elf kleinen Hinterhäusern, der sein altes Erscheinungsbild fast vollständig bewahrt hat.",
       ],
       sections: [
         {
@@ -342,7 +554,7 @@ export const classicsContentDe: ClassicsContent = {
         "Folge der Gasse und den Seitenstraßen bis zum großen Marktplatz der Stadt. Mach dich darauf gefasst, nach oben zu schauen: Die Fassaden ringsum sind voller Gold.",
     },
 
-    // ── 10 ───────────────────────────────────────────────────────────────
+    // ── 11 ───────────────────────────────────────────────────────────────
     "classics-grote-markt": {
       name: "Grote Markt & die Zunfthäuser",
       subtitle: "Der goldene Platz, der jünger ist, als er aussieht",
@@ -380,7 +592,7 @@ export const classicsContentDe: ClassicsContent = {
         "In der Mitte des Platzes ist eine Bronzefigur gerade dabei, etwas in die Luft zu werfen. Geh hinüber zum Brunnen: Er erzählt die berühmteste Geschichte, die Antwerpen hat.",
     },
 
-    // ── 11 ───────────────────────────────────────────────────────────────
+    // ── 12 ───────────────────────────────────────────────────────────────
     "classics-brabo": {
       name: "Der Brabobrunnen",
       subtitle: "Ein Riese, eine Hand und der Name einer Stadt",
@@ -418,7 +630,7 @@ export const classicsContentDe: ClassicsContent = {
         "Dreh dich zu dem langen, hellen Gebäude hinter Brabo. Es überstand eine der schrecklichsten Nächte in der Geschichte der Stadt.",
     },
 
-    // ── 12 ───────────────────────────────────────────────────────────────
+    // ── 13 ───────────────────────────────────────────────────────────────
     "classics-stadhuis": {
       name: "Das Rathaus",
       subtitle: "Mit Stolz erbaut, in blinder Wut verbrannt",
@@ -433,15 +645,6 @@ export const classicsContentDe: ClassicsContent = {
             "Das Rathaus wurde zwischen 1561 und 1565 nach Entwürfen von Cornelis Floris de Vriendt gemeinsam mit anderen Architekten und Künstlern gebaut. Antwerpen war damals eine der reichsten Städte Europas und wollte seine Regierung in einem Gebäude unterbringen, das dies zeigte.",
           ],
         },
-        {
-          heading: "Die Spanische Furie, 4. November 1576",
-          kind: "history",
-          paragraphs: [
-            "Kaum zehn Jahre später wurde dieses Gebäude Zeuge einer Katastrophe. Die Niederlande hatten sich gegen den spanischen König erhoben, und seine Soldaten in der Region waren lange nicht bezahlt worden. Am 4. November 1576 stürmten meuternde spanische Truppen Antwerpen und begannen, die Stadt zu plündern.",
-            "Die Stadtregierung organisierte von diesem Rathaus aus, hier am Grote Markt, einen Gegenangriff. Die Soldaten steckten das Gebäude in Brand. Die Flammen griffen auf die umliegenden Häuser über, Hunderte davon brannten nieder. Vom Rathaus blieben nur die Außenmauern stehen.",
-            "Wie viele Menschen starben, ist nicht genau bekannt. Die Schätzungen reichen von mehreren Hundert bis zu etwa 8.000; viele Historiker gehen davon aus, dass mehr als 7.000 Menschen ihr Leben verloren. Das Ereignis ging als Spanische Furie in die Geschichte ein und erschütterte das Selbstvertrauen der Stadt, die Europas große Handelsmetropole gewesen war.",
-          ],
-        },
       ],
       didYouKnow: [
         "Das Gebäude, das du siehst, wurde nach dem Brand von 1576 wiederhergestellt. Sieh dir das Foto auf dieser Seite an, aufgenommen Mitte der 1860er-Jahre: Vom Platz aus sah das Rathaus damals ganz ähnlich aus wie heute.",
@@ -452,11 +655,53 @@ export const classicsContentDe: ClassicsContent = {
           body: "Vergleiche die schlichten Flügel der Fassade mit dem Mittelteil, der mit Säulen, Nischen und Statuen übereinander aufgebaut ist und über die Dachlinie hinausragt. Dieser Kontrast, ruhig und geordnet mit einem Ausbruch an Schmuck in der Mitte, ist typisch für die Renaissance, die Floris nach Antwerpen brachte.",
         },
       ],
+      // The Spanish Fury, as slides: the approved section, paragraph by paragraph, each with its images.
+      cards: {
+        "fury-attack": {
+          title: "Die Spanische Furie, 4. November 1576",
+          sections: [
+            {
+              kind: "history",
+              paragraphs: [
+                "Kaum zehn Jahre später wurde dieses Gebäude Zeuge einer Katastrophe. Die Niederlande hatten sich gegen den spanischen König erhoben, und seine Soldaten in der Region waren lange nicht bezahlt worden. Am 4. November 1576 brachen meuternde spanische Truppen aus der Zitadelle südlich der Stadt aus, verstärkt durch Meuterer aus Aalst, stürmten Antwerpen und begannen, die Stadt zu plündern.",
+              ],
+            },
+          ],
+        },
+        "fury-city-hall": {
+          title: "Das Rathaus in Flammen",
+          sections: [
+            {
+              kind: "history",
+              paragraphs: [
+                "Die Stadtregierung organisierte von diesem Rathaus aus, hier am Grote Markt, einen Gegenangriff. Antwerpens Bürger verteidigten sich auf dem Platz und im Gebäude und schossen aus den Fenstern des Rathauses auf die spanischen Reiter, die über den Platz stürmten. Die Reiter erlitten schwere Verluste, bis einige von ihnen eindrangen und das Gebäude mit mitgebrachten Strohbündeln in Brand steckten.",
+              ],
+            },
+          ],
+        },
+        "fury-city": {
+          title: "Die Stadt im Chaos",
+          sections: [
+            {
+              kind: "history",
+              paragraphs: [
+                "Die Flammen griffen auf die umliegenden Häuser über: Etwa sechshundert brannten nieder, die meisten hinter und neben dem Rathaus. Vom Rathaus selbst blieben nur die Außenmauern stehen.",
+              ],
+            },
+            {
+              kind: "history",
+              paragraphs: [
+                "Wie viele Menschen starben, ist nicht genau bekannt. Die Schätzungen reichen von mehreren Hundert bis zu etwa 8.000; viele Historiker gehen davon aus, dass mehr als 7.000 Menschen ihr Leben verloren. Das Ereignis ging als Spanische Furie in die Geschichte ein und erschütterte das Selbstvertrauen der Stadt, die Europas große Handelsmetropole gewesen war.",
+              ],
+            },
+          ],
+        },
+      },
       transitionToNext:
         "Verlass den Grote Markt und geh durch ruhige Straßen nach Osten, zu einem kleinen Platz, den viele Besucher den schönsten Antwerpens nennen.",
     },
 
-    // ── 13 ───────────────────────────────────────────────────────────────
+    // ── 14 ───────────────────────────────────────────────────────────────
     "classics-conscienceplein": {
       name: "Hendrik Conscienceplein",
       subtitle: "Der Mann, der sein Volk lesen lehrte",
@@ -480,7 +725,7 @@ export const classicsContentDe: ClassicsContent = {
         "Dreh dich jetzt um. Die reich verzierte Kirche hinter dir ist die nächste Station, und hier betreten wir das Zeitalter von Rubens.",
     },
 
-    // ── 14 ───────────────────────────────────────────────────────────────
+    // ── 15 ───────────────────────────────────────────────────────────────
     "classics-carolus-borromeus": {
       name: "Sint-Carolus Borromeuskerk",
       subtitle: "Das verlorene Meisterwerk von Rubens",
@@ -512,7 +757,7 @@ export const classicsContentDe: ClassicsContent = {
         "Vom Barock gehen wir nun noch weiter zurück, ins Spätmittelalter. Geh nach Norden Richtung Fluss, zu einem auffälligen Gebäude mit rot-weißen Streifen.",
     },
 
-    // ── 15 ───────────────────────────────────────────────────────────────
+    // ── 16 ───────────────────────────────────────────────────────────────
     "classics-vleeshuis": {
       name: "Das Vleeshuis",
       subtitle: "Ein Palast für Metzger",
@@ -539,11 +784,25 @@ export const classicsContentDe: ClassicsContent = {
           body: "Schau dir die Mauern an: Reihen aus rotem Backstein wechseln sich mit Bändern aus hellem Sandstein ab. Jetzt, wo du ihren Namen kennst, wirst du diese speklagen an vielen alten Gebäuden in Antwerpen und anderswo in Flandern entdecken.",
         },
       ],
+      galleries: {
+        "vleeshuis-postcards": {
+          title: "Das Vleeshuis auf alten Postkarten",
+          intro: "Drei alte Postkarten des Museum Vleeshuis zeigen seine Räume, eingerichtet mit Kaminen, Möbeln und Objekten aus der Sammlung.",
+        },
+      },
+      // Spooky's task on arrival (a detail to find); the walker says when they found it.
+      quest: {
+        title: "Finde die alte Mauer der burcht",
+        task: [
+          "Finde die alte Mauer, die seit dem frühen 13. Jahrhundert die burcht schützte.",
+          "Das Foto ist dein Hinweis: Such rund um das Vleeshuis ein Stück Mauer wie dieses. Gefunden? Dann tippe unten auf die Schaltfläche.",
+        ],
+      },
       transitionToNext:
         "Geh ein paar Straßen weiter nach Norden, ins alte Hafenviertel. Hier steht eine Kirche, deren Geschichte mit dem Fluss verbunden ist, und mit dem Feuer.",
     },
 
-    // ── 16 ───────────────────────────────────────────────────────────────
+    // ── 17 ───────────────────────────────────────────────────────────────
     "classics-sint-paulus": {
       name: "Sint-Pauluskerk",
       subtitle: "Gotisch, barock und aus den Flammen gerettet",
@@ -575,7 +834,7 @@ export const classicsContentDe: ClassicsContent = {
         "Geh zum Fluss. Am Ufer steht das älteste Gebäude Antwerpens, der letzte Rest der Burg, mit der die Stadt begann.",
     },
 
-    // ── 17 ───────────────────────────────────────────────────────────────
+    // ── 18 ───────────────────────────────────────────────────────────────
     "classics-het-steen": {
       name: "Het Steen",
       subtitle: "Das letzte Stück der Burg, mit der Antwerpen begann",
@@ -589,6 +848,15 @@ export const classicsContentDe: ClassicsContent = {
           paragraphs: [
             "Um das Jahr 850 stand hier eine Fluchtburg, durch einen Erdwall gegen Überfälle der Wikinger geschützt. Im späten 10. Jahrhundert wurde das Gelände aufgeschüttet und wahrscheinlich ein Graben ausgehoben. Um 1200–1225 entstand die steinerne Burg, Het Steen, zusammen mit einer Mauer rund um die burcht.",
             "Ab dem frühen 14. Jahrhundert diente das Gebäude als Gefängnis, eine Rolle, die es mehr als fünf Jahrhunderte lang behielt, bis 1823.",
+          ],
+        },
+        {
+          heading: "Der Henker von Antwerpen",
+          kind: "history",
+          paragraphs: [
+            "Als städtisches Gefängnis war Het Steen Teil der Antwerpener Justiz. Der schout, der Amtmann der Stadt, erhob die Anklage; die Schöffen urteilten; und der Henker vollstreckte das Urteil. Verdächtige wurden hier verhört, manchmal unter Folter, in einer unterirdischen Kammer.",
+            "Zwischen 1405 und 1550 vollzog der Antwerpener Henker mindestens 336 Enthauptungen mit dem Schwert, die meisten auf dem Grote Markt vor dem Rathaus. Andere Urteile wurden auf der Meir, am Ufer der Schelde und auf dem Galgenfeld vollstreckt. Zwischen 1558 und 1562 wurden mehr als fünfzig Verurteilte ertränkt, vorzugsweise heimlich im Inneren von Het Steen: Öffentliche Ketzerverbrennungen hatten zu viel Unruhe ausgelöst.",
+            "Den Henkern selbst erging es nicht immer gut. 1508 verpfuschte ein neuer Henker, ein ehemaliger Schustergeselle, seine erste Enthauptung, und Kinder bewarfen ihn mit Steinen. Und am 17. Januar 1565 wurde Meister Geleyn, seit 1542 Henker der Stadt, selbst auf der Meir enthauptet, verurteilt wegen Mordes, Diebstahls und Gewalttaten.",
           ],
         },
         {
@@ -610,6 +878,7 @@ export const classicsContentDe: ClassicsContent = {
       didYouKnow: [
         "Was du als „die Burg“ siehst, ist nur ein kleiner Teil der mittelalterlichen burcht. Das meiste wurde in den 1880er-Jahren abgerissen, um Platz für die Kais zu schaffen.",
         "Het Steen diente vom frühen 14. Jahrhundert bis 1823 als Gefängnis: mehr als 500 Jahre lang.",
+        "Nur wenige echte Folter- oder Hinrichtungswerkzeuge sind erhalten: 1794 verbrannten die Franzosen die meisten davon.",
       ],
       lookAt: [
         {
@@ -625,7 +894,7 @@ export const classicsContentDe: ClassicsContent = {
         "Geh die letzten Schritte zum Wasser. Unsere Reise zurück durch die Zeit endet dort, wo die Geschichte Antwerpens begann.",
     },
 
-    // ── 18 ───────────────────────────────────────────────────────────────
+    // ── 19 ───────────────────────────────────────────────────────────────
     "classics-scheldt": {
       name: "Die Schelde",
       subtitle: "Wo alles begann",
@@ -653,6 +922,12 @@ export const classicsContentDe: ClassicsContent = {
       didYouKnow: [
         "Rund zweihundert Jahre lang, von der Blockade nach 1585 bis 1795, war Antwerpen ein großer Hafen ohne freien Zugang zum Meer. Das ist einer der Gründe, warum das Goldene Zeitalter der Stadt zu Ende ging.",
       ],
+      galleries: {
+        "siege-of-antwerp": {
+          title: "Die Belagerung Antwerpens, 1584–1585",
+          intro: "Der Fall Antwerpens 1585 kam nach einer Belagerung von mehr als einem Jahr durch Alexander Farnese, Herzog von Parma. Diese Drucke zeigen, wie er den Fluss sperrte und wie die Stadt den Durchbruch versuchte.",
+        },
+      },
       closing: {
         timeline: [
           "Antwerpen-Centraal: Das 20. Jahrhundert beginnt",
@@ -688,6 +963,12 @@ export const classicsContentDe: ClassicsContent = {
       caption: "Die Bahnhofshalle heute, mit der Uhr, dem Wort ANTWERPEN und dem Stadtwappen über dem Eingang.",
       alt: "Modernes Foto der Bahnhofshalle aus Eisen und Glas mit der verzierten Steinfront des Empfangsgebäudes",
       approximateYear: "2023",
+    },
+    // Clue of Spooky's task at the station: says where it was taken, not what to find.
+    "central-station-hall-clue-today": {
+      caption: "Spookys Hinweis: ein Foto, aufgenommen im Bahnhof.",
+      alt: "Foto einer reich verzierten Wand unter einem Dach aus Glas und Eisen, mit einer Uhr, vergoldeten Verzierungen und einem Namen in goldenen Buchstaben",
+      approximateYear: "2006",
     },
     "diamond-pelikaanstraat": {
       caption: "Die Pelikaanstraat am Rand des heutigen Diamantenviertels, um 1900.",
@@ -774,6 +1055,41 @@ export const classicsContentDe: ClassicsContent = {
       alt: "Alte Postkarte eines hohen Backsteingebäudes mit Torbogen und Kindern auf der Straße",
       approximateYear: "um 1901",
     },
+    "vleeshuis-wall-clue": {
+      caption: "Spookys Hinweis: ein altes Foto einer Ecke beim Vleeshuis.",
+      alt: "Schwarz-Weiß-Foto einer groben Mauer aus unregelmäßigen Steinen an einem hohen Backsteingebäude",
+      approximateYear: "Datum unbekannt",
+    },
+    "vleeshuis-postcard-kitchen": {
+      caption: "Ein Raum, eingerichtet als alte Küche, mit einer großen Herdstelle, Kupferkesseln und einer verzierten Wasserpumpe mit Becken (Postkarte des Museum Vleeshuis, Datum unbekannt; Sammlung des MAS).",
+      alt: "Sepia-Postkarte eines Raums mit großem Kamin, Kupferkesseln an der Herdstelle, gefliesten Wänden, zwei Stühlen und einer verzierten Pumpe mit Steinbecken",
+      approximateYear: "Datum unbekannt",
+    },
+    "vleeshuis-postcard-panelled-room": {
+      caption: "Ein Zimmer mit Kamin, geschnitzten Schränken, verzierten Wandpaneelen und einer Statue auf einem Möbelstück (Postkarte des Museum Vleeshuis, Datum unbekannt; Sammlung des MAS).",
+      alt: "Sepia-Postkarte eines Zimmers, dessen Wände mit verzierten Paneelen bedeckt sind, mit Kamin, geschnitzten Schränken, einem Tisch und einer Statue",
+      approximateYear: "Datum unbekannt",
+    },
+    "vleeshuis-postcard-hall": {
+      caption: "Ein Saal mit langem Tisch und Stühlen, einem Glaskronleuchter, einer Standuhr und einem reich geschnitzten Kamin mit einer sitzenden Figur darüber (Postkarte des Museum Vleeshuis, Datum unbekannt; Sammlung des MAS).",
+      alt: "Sepia-Postkarte eines Saals mit einem langen Tisch voller Stühle, einem Glaskronleuchter, Buntglasfenstern, einer Standuhr und einem großen geschnitzten Kamin",
+      approximateYear: "Datum unbekannt",
+    },
+    "siege-parma-bridge": {
+      caption: "Die Schiffsbrücke Parmas über die Schelde, im Februar 1585 vollendet, um die Stadt von Hilfe über das Wasser abzuschneiden; Antwerpen liegt am Horizont. Druck von Lamberecht Causé nach Romeyn de Hooghe, 1670–1699 (Rijksmuseum).",
+      alt: "Kupferstich einer langen, auf Booten gebauten Brücke über einen breiten Fluss, darauf Soldaten und Kutschen, ringsum Kriegsschiffe und in der Ferne die Silhouette einer Stadt",
+      approximateYear: "1670–1699",
+    },
+    "siege-bridge-attack": {
+      caption: "April 1585: Antwerpen schickt Brander gegen die Brücke. Laut Titel kam Alexander von Parma selbst beinahe ums Leben, doch die Brücke hielt und der Angriff scheiterte. Druck von Lamberecht Causé nach Romeyn de Hooghe, 1670–1699 (Rijksmuseum).",
+      alt: "Kupferstich einer gewaltigen Explosion auf einer Schiffsbrücke, mit Planken, Booten und Soldaten, die durch die Luft fliegen, und Rauch über dem Fluss",
+      approximateYear: "1670–1699",
+    },
+    "siege-map-luyken": {
+      caption: "Die ganze Belagerung auf einer Karte von Jan Luyken (1680–1684): Antwerpen oben links, die Schiffsbrücke in der Mitte, das überflutete Land und rechts die Kämpfe auf dem Kouwenstein-Deich im Mai 1585, ein weiterer gescheiterter Durchbruchsversuch (Rijksmuseum).",
+      alt: "Gestochene Karte der Schelde unterhalb Antwerpens mit Festungen, einer Brücke über den Fluss, überfluteten Feldern, Schiffen und Truppen, die entlang eines Deichs kämpfen",
+      approximateYear: "1680–1684",
+    },
     "sint-paulus-1901": {
       caption: "Die Sint-Pauluskerk und die Cafés ringsum, auf einer auf 1901 datierten Postkarte.",
       alt: "Alte Postkarte einer gotischen Kirche mit Barockturm über kleinen Häusern und Cafés",
@@ -798,6 +1114,137 @@ export const classicsContentDe: ClassicsContent = {
       caption: "Die Scheldekais um 1900, gesäumt von Schiffen und Lagerschuppen.",
       alt: "Illustrierte alte Postkarte von Dampfschiffen und Segelbooten am Kai",
       approximateYear: "um 1900",
+    },
+    "diamond-bourse-today": {
+      caption: "Die Beurs voor Diamanthandel in der Pelikaanstraat, eine der Diamantenbörsen des Viertels und ein geschütztes Denkmal.",
+      alt: "Modernes Foto eines hohen steinernen Bürogebäudes mit gemeißeltem Namensband und Fahnen über dem Eingang",
+      approximateYear: "2010",
+    },
+    "flatow-expulsion-card-1941": {
+      caption: "Karteikarte von 1941 über Siegfried Flatow, einen 1921 in Berlin geborenen Deutschen, der in Antwerpen in der Zurenborgstraat 17 wohnte. Sie hält fest, dass er am 1. Februar 1941 nach Beverloo, Leysestraat 25, ausgewiesen wurde.",
+      alt: "Vergilbtes zweisprachiges deutsch-niederländisches Formular, mit der Schreibmaschine ausgefüllt, mit einem Fingerabdruck im unteren Feld und einem leeren Platz für ein Foto",
+      approximateYear: "1941",
+    },
+    "dossin-courtyard-1942": {
+      caption: "Der Innenhof der Kazerne Dossin in Mechelen, 1942: Gepäck auf dem Boden verteilt, Lastwagen und Gruppen von Menschen.",
+      alt: "Schwarz-Weiß-Foto eines geschlossenen Kasernenhofs mit Reihen von Koffern und Bündeln auf dem Boden, zwei Lastwagen und Menschengruppen an den Rändern",
+      approximateYear: "1942",
+    },
+    "paleis-op-de-meir-today": {
+      caption: "Der Paleis op de Meir heute: der Kaufmannspalast aus dem 18. Jahrhundert, den Napoleon kaufte.",
+      alt: "Modernes Foto einer hellen Rokoko-Palastfassade mit Balkon und verziertem Wappen auf dem Dach",
+      approximateYear: "2023",
+    },
+    "rex-ruins": {
+      caption: "Das Kino Rex in Trümmern nach dem V2-Einschlag vom 16. Dezember 1944.",
+      alt: "Sepiafoto eines zerbombten Kinogebäudes mit eingestürzten Mauern und freiliegendem Kuppeldach, davor ein Auto aus den 1940er-Jahren",
+      approximateYear: "1944–1947",
+    },
+    // The clue of Spooky's quest: shown before the place is found, so it must not name it.
+    "paleis-op-de-meir-drawing": {
+      caption: "Spookys Hinweis: eine alte Aufrisszeichnung einer langen Fassade.",
+      alt: "Alte Zeichnung einer langen, symmetrischen Fassade mit hohen Fenstern, kleinen Balkonen, Vasen auf dem Dach und einem großen verzierten Wappen in der Mitte",
+      approximateYear: "Datum unbekannt",
+    },
+    "rubens-self-portrait-1623": {
+      caption: "Peter Paul Rubens, Selbstporträt, 1623 (Royal Collection, London).",
+      alt: "Gemaltes Porträt eines bärtigen Mannes mit breitem schwarzem Hut und dunklem Umhang",
+      approximateYear: "1623",
+    },
+    "rubenshuis-garden-today": {
+      caption: "Der Garten des Rubenshuis heute, mit dem Haus und rechts dem Portikus aus Rubens' eigener Zeit.",
+      alt: "Modernes Foto eines Gartens mit Brunnen vor einem Renaissancehaus und einem steinernen Tor mit Statuen obenauf",
+      approximateYear: "2025",
+    },
+    "rubens-honeysuckle-bower": {
+      caption: "Rubens und Isabella Brant in der Geißblattlaube, um 1609–1610 (Alte Pinakothek, München).",
+      alt: "Gemälde eines reich gekleideten jungen Paares, das Hand in Hand unter einer Geißblattlaube sitzt",
+      approximateYear: "um 1609–1610",
+    },
+    "handelsbeurs-open-courtyard-1613": {
+      caption: "Die Börse von 1531 mit ihrem offenen Innenhof voller Kaufleute: ein 1613 veröffentlichter Stich.",
+      alt: "Schwarz-Weiß-Stich eines rechteckigen Innenhofs, umgeben von Galerien, mit kleinen Gruppen von Menschen und zwei Türmen",
+      approximateYear: "1613",
+    },
+    "groenkerkhof-1597": {
+      caption: "Ein Leichenzug am Kirchhof der Kathedrale, der heutigen Groenplaats: ein anonymes Gemälde von 1597 (Museum Vleeshuis).",
+      alt: "Altes Gemälde schwarz gekleideter Trauernder, die an einem Kirchhof vorbeigehen, dahinter der hohe Kathedralturm",
+      approximateYear: "1597",
+    },
+    "groenplaats-rubens-statue-1840s": {
+      caption: "Die Kathedrale von der Groenplaats aus gesehen, mit der neuen Statue von Rubens: eine Lithografie von Jules Alexandre Monthelier, 1840er-Jahre.",
+      alt: "Lithografie einer Bronzestatue auf hohem Sockel zwischen Bäumen, dahinter die Kathedrale mit ihrer Turmspitze",
+      approximateYear: "1840er-Jahre",
+    },
+    "matsijs-portrait-1572": {
+      caption: "Quinten Matsijs auf einem 1572 in Antwerpen veröffentlichten Porträtstich. Der lateinische Vers darunter erzählt, wie die Liebe ihn zum Maler machte.",
+      alt: "Gestochenes Profilporträt eines Mannes mit Kappe und Umhang, der gerollte Papiere hält, darunter ein lateinischer Vers",
+      approximateYear: "1572",
+    },
+    "matsijs-altarpiece-1511": {
+      caption: "Das Altarbild von Quinten Matsijs für die Schreinerzunft, 1508–1511 für diese Kathedrale gemalt (KMSKA, Antwerpen).",
+      alt: "Gemaltes Triptychon mit einer Beweinung Christi auf der Mitteltafel und zwei Seitentafeln",
+      approximateYear: "1511",
+    },
+    "matsijs-well": {
+      caption: "Der Brunnen neben der Kathedrale, fotografiert um 1875–1900. Sein schmiedeeisernes Gehäuse wird traditionell Matsijs zugeschrieben.",
+      alt: "Altes Foto eines verzierten schmiedeeisernen Brunnengehäuses auf einem Steinsockel vor einer gotischen Mauer",
+      approximateYear: "um 1875–1900",
+    },
+    "nello-patrasche-today": {
+      caption: "Nello und Patrasche von Batist Vermeulen (2016), schlafend unter einer Decke aus Pflastersteinen vor der Kathedrale.",
+      alt: "Modernes Foto einer weißen Marmorstatue eines Jungen und eines Hundes unter einer Pflastersteindecke, dahinter der Kathedralturm",
+      approximateYear: "2023",
+    },
+    "vlaeykensgang-today": {
+      caption: "Der Vlaeykensgang heute: Kopfsteinpflaster, Backsteinmauern und ein überdachter Durchgang.",
+      alt: "Modernes Foto einer schmalen gepflasterten Gasse zwischen Backsteinmauern, gesehen durch einen niedrigen überdachten Durchgang",
+      approximateYear: "2022",
+    },
+    "stadhuis-spanish-fury-hogenberg": {
+      caption: "Das Rathaus in Flammen während der Spanischen Furie, mit Kämpfen auf dem Grote Markt: eine Radierung von Frans Hogenberg, entstanden vor 1585.",
+      alt: "Radierung eines großen Renaissancerathauses, aus dem Flammen und Rauch aufsteigen, davor kämpfende Soldaten auf dem Platz",
+      approximateYear: "vor 1585",
+    },
+    "handelsbeurs-vandennest": {
+      caption: "Die Galerien, geschmückt mit Kronleuchtern, Draperien und Bäumchen, auf einem Druck von J.B.J. Vandennest aus den Jahren 1842–1851: noch bevor der Innenhof sein erstes Dach bekam (Universität Antwerpen, Sondersammlungen).",
+      alt: "Druck langer gewölbter Galerien mit verzierten Säulen, hängenden Kronleuchtern, Draperien und Reihen von Bäumchen, im Vordergrund zwei Männer in Uniform",
+      approximateYear: "1842–1851",
+    },
+    "handelsbeurs-lebrun-liedel": {
+      caption: "Die Börse nach dem Wiederaufbau: verzierte Säulen, gewölbte Galerien und einige Kaufleute, auf einem Druck von Lebrun-Liedel aus der Zeit nach 1872 (Universität Antwerpen, Sondersammlungen).",
+      alt: "Schwarz-Weiß-Druck einer Halle mit reich verzierten Säulen und Spitzgewölben, im Vordergrund ein lesender Mann mit Zylinder",
+      approximateYear: "nach 1872",
+    },
+    "spanish-fury-overview-1577": {
+      caption: "Die Spanische Furie auf einem Blatt: ein anonymer Druck von 1577 mit einem Plan von Antwerpen und seiner Zitadelle in der Mitte, umgeben von Szenen des Angriffs, der Kämpfe und des brennenden Rathauses (Rijksmuseum).",
+      alt: "Druck mit einer Vogelschaukarte von Antwerpen und seiner sternförmigen Zitadelle in der Mitte, umgeben von kleinen Szenen angreifender, kämpfender und plündernder Soldaten",
+      approximateYear: "1577",
+    },
+    "spanish-fury-de-braekeleer": {
+      caption: "Die Spanische Furie in Antwerpen, wie Ferdinand de Braekeleer der Ältere sie 1836 malte: ein romantisches Bild des 19. Jahrhunderts mit bewaffneten Bürgern und Verwundeten zwischen Rauch und Feuer, im Hintergrund der Turm der Kathedrale (KMSKA, Antwerpen).",
+      alt: "Gemälde einer Menge bewaffneter Bürger, verwundeter Männer und einer Frau, die neben einem Sterbenden kniet, mit Rauch, Feuer und einem Kathedralturm im Hintergrund",
+      approximateYear: "1836",
+    },
+    "spanish-fury-mas": {
+      caption: "Eine Straße voller Opfer, in der Ferne brennende Häuser: ein anonymes Gemälde der Spanischen Furie, entstanden zwischen 1576 und um 1585 (MAS, Antwerpen).",
+      alt: "Gemälde einer belebten Straße mit Soldaten, Reitern und vielen Toten, brennenden Häusern und schwarzem Rauch in der Ferne und links einem Kirchturm",
+      approximateYear: "1576–1585",
+    },
+    "spanish-fury-hogenberg-plunder": {
+      caption: "Plünderung und Folter in den Antwerpener Häusern während der Spanischen Furie, auf einem Druck von Frans Hogenberg (16. Jahrhundert; Rijksmuseum).",
+      alt: "Kupferstich von Soldaten, die an Seilen in Häusern aufgehängte Menschen foltern, mit Leichen am Boden und einer Straße mit Giebelhäusern im Hintergrund",
+      approximateYear: "16. Jahrhundert",
+    },
+    "spanish-fury-print-1618": {
+      caption: "„Spaensche Furie tot Antwerpen“: ein Druck von etwa 1618–1624, der die Szene wiederholt, mit einem Gedicht, das das Schicksal der Stadt beklagt (anonym; Rijksmuseum).",
+      alt: "Kupferstich derselben Folter- und Plünderungsszene mit dem Titel „Spaensche Furie tot Antwerpen“ und darunter zwei Spalten niederländischer Verse",
+      approximateYear: "um 1618–1624",
+    },
+    "execution-hogenberg-1568": {
+      caption: "Eine Hinrichtung in den Niederlanden jener Zeit: die Enthauptung der Grafen Egmont und Hoorn auf dem Grote Markt von Brüssel 1568, auf einer Radierung von Frans Hogenberg. Nicht Antwerpen, aber dieselbe Epoche und dieselbe Art von Justiz.",
+      alt: "Radierung eines von Soldaten mit Piken umringten Schafotts, ein Henker mit Schwert neben einem knienden Mann",
+      approximateYear: "1568–1570",
     },
     "scheldt-photochrom": {
       caption: "Antwerpen vom Fluss aus gesehen in den 1890er-Jahren: links Het Steen, über der Stadt die Kathedrale.",

@@ -49,3 +49,8 @@ next-env.d.ts
 /test-results/
 /playwright-report/
 /coverage/
+
+# Generated speech (Voice Studio / audio guide), content-addressed cache
+/.cache/
+# Free local voices: Python environment + voice models (scripts/setup-local-tts.ps1)
+/.tts/

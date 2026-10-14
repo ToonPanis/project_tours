@@ -9,11 +9,11 @@ export const classicsContentNl: ClassicsContent = {
     title: "Klassiekers van Antwerpen",
     tagline: "Een wandeling door de geschiedenis van Antwerpen",
     shortDescription:
-      "Een wandeling met verhaal, van het grootse spoorwegstation tot aan de oevers van de Schelde: achttien haltes, acht eeuwen en de verhalen achter de bekendste plekken van Antwerpen.",
+      "Een wandeling met verhaal, van het grootse spoorwegstation tot aan de oevers van de Schelde: negentien haltes, acht eeuwen en de verhalen achter de bekendste plekken van Antwerpen.",
     description:
       "Wandel van het grootse station van Antwerpen door eeuwen van handel, kunst, geloof en macht, tot waar het verhaal van de stad begon: aan de oevers van de Schelde.\n\nBij elke halte wordt je smartphone je gids: waar je naar kijkt, waarom het gebouwd werd, wat er gebeurd is en welke details de meeste bezoekers gewoon voorbijlopen. Historische foto's laten zien hoe de stad er een eeuw geleden en langer uitzag. Er zijn geen spelletjes of vragen; alleen Antwerpen, en de tijd om er echt naar te kijken.",
     highlights: [
-      "18 van de belangrijkste historische plekken van Antwerpen",
+      "19 van de belangrijkste historische plekken van Antwerpen",
       "Geschreven alsof er een gids naast je loopt",
       "Historische foto's, gravures en postkaarten bij elke belangrijke halte",
       "“Wist je dat?”-verhalen die je niet op de infoborden vindt",
@@ -83,6 +83,14 @@ export const classicsContentNl: ClassicsContent = {
           body: "Loop de treinhal in en draai je om. Boven de ingang van het stationsgebouw vind je een grote klok, het woord ANTWERPEN en het stadswapen: een burcht met twee handen erboven. Onthoud die handen; ze komen later op deze wandeling terug, op de Grote Markt.",
         },
       ],
+      // Spooky's task on arrival (a detail to find); the walker says when they found it.
+      quest: {
+        title: "Zoek het stadswapen van Antwerpen",
+        task: [
+          "Zoek het stadswapen van Antwerpen.",
+          "De foto is je aanwijzing: kijk goed rond, binnen en buiten het station. Gevonden? Tik dan op de knop hieronder.",
+        ],
+      },
       transitionToNext:
         "Verlaat het station langs de westkant. Binnen enkele minuten kom je in een kleine wijk waar al eeuwenlang een heel ander soort schat verhandeld wordt.",
     },
@@ -115,6 +123,38 @@ export const classicsContentNl: ClassicsContent = {
       didYouKnow: [
         "In het weekend van 15 en 16 februari 2003 braken dieven in deze wijk in de kluis van het Antwerp Diamond Centre in. De buit, geschat op meer dan 100 miljoen dollar aan diamanten, goud en juwelen, maakte het tot een van de grootste diamantroven uit de geschiedenis. Er volgden arrestaties, maar het grootste deel van de diamanten werd nooit teruggevonden.",
       ],
+      moreStories: {
+        "jewish-community": {
+          title: "De Joodse gemeenschap",
+          subtitle: "De Tweede Wereldoorlog en daarna",
+          sections: [
+            {
+              heading: "De Tweede Wereldoorlog",
+              kind: "history",
+              paragraphs: [
+                "18 augustus 1941: de Wehrmacht valt de Diamantkring binnen en neemt diamanten in beslag. 164 leden van de Diamantkring worden vermoord.",
+                "Zomer 1942: razzia's, onder meer op 15–16 en 28–29 augustus, in straten als de Van Immerseelstraat, de Lange Kievitstraat en de Provinciestraat. De data verschillen iets per bron.",
+                "Bij de razzia van 28–29 augustus voerde de Antwerpse politie zelf de arrestaties uit. Dat was uniek in de Belgische bezettingsgeschiedenis.",
+                "De slachtoffers werden via Kazerne Dossin in Mechelen naar Auschwitz-Birkenau gedeporteerd.",
+              ],
+            },
+            {
+              heading: "Hoeveel?",
+              kind: "history",
+              paragraphs: [
+                "Tussen 56% en 66% van de Antwerpse Joden werd gedeporteerd, afhankelijk van de berekening: meer dan de helft, volgens sommige berekeningen twee derde. Volgens Antwerpen Herdenkt overleefden ongeveer 10.000 Joden uit de regio de oorlog niet.",
+              ],
+            },
+            {
+              heading: "Na de oorlog",
+              kind: "history",
+              paragraphs: [
+                "In 1945 woonden er nog ongeveer 2.000 Joden in de stad. Eind jaren 1940 waren het er weer ongeveer 10.000, een sterk orthodoxe gemeenschap.",
+              ],
+            },
+          ],
+        },
+      },
       transitionToNext:
         "Wandel terug naar het stationsplein en sla De Keyserlei in, de statige laan die naar de oude stad leidt. Rond 1900 kwam elke bezoeker die met de trein aankwam langs hier Antwerpen binnen.",
     },
@@ -135,18 +175,9 @@ export const classicsContentNl: ClassicsContent = {
             "Op de namiddag van 16 december 1944 zaten ongeveer 1.100 mensen naar een film te kijken in Cinema Rex, op nummer 15 van deze laan. Om 15.20 uur trof een V2-raket het dak. Er vielen 567 doden: 271 burgers en 296 geallieerde soldaten. Het was het hoogste dodental door één enkele raketaanval in de hele oorlog, en het duurde bijna een week om iedereen onder het puin vandaan te halen.",
           ],
         },
-        {
-          heading: "Een paleis op de Meir",
-          kind: "history",
-          paragraphs: [
-            "Wandel verder de Meir op en let op een lange, elegante 18de-eeuwse gevel: het Paleis op de Meir. Het werd vanaf 1745 gebouwd voor een rijke koopman, Johan Alexander van Susteren, door de Antwerpse architect Jan Pieter van Baurscheit de Jonge. Later kwam het in opmerkelijke handen: Napoleon kocht het in 1811-1812 maar woonde er nooit, de Russische tsaar Alexander I verbleef er in 1814, en lange tijd deed het dienst als koninklijk paleis.",
-            "Vlak bij de Meir, aan de Wapper, staat het huis waar Peter Paul Rubens woonde en werkte. Je komt Rubens op deze wandeling nog een paar keer tegen.",
-          ],
-        },
       ],
       didYouKnow: [
         "Cinema Rex werd na de oorlog heropgebouwd en ging in 1947 opnieuw open. In 1993 sloot de zaal definitief de deuren, en twee jaar later werd ze afgebroken. Vandaag herinnert weinig in de straat voorbijgangers aan wat hier gebeurd is.",
-        "Napoleon was eigenaar van het paleis op de Meir, maar tegen de tijd dat het klaar was voor hem, zat hij al in ballingschap op het eiland Elba.",
       ],
       transitionToNext:
         "Volg de Meir richting oude stad. Iets verderop aan de linkerkant glinstert een gouden koepel boven een statige ingang: een feestzaal die afbrandde en weer herrees.",
@@ -180,44 +211,142 @@ export const classicsContentNl: ClassicsContent = {
         "Een groot deel van het “historische” interieur dat je binnen ziet, is in werkelijkheid een zorgvuldige reconstructie uit de 21ste eeuw, gemaakt na de brand van 2000 op basis van foto's, plannen en bewaarde fragmenten.",
       ],
       transitionToNext:
-        "Verlaat de Meir even en sla de smalle straatjes erachter in. Verborgen achter gewone gevels staat het gebouw waar Antwerpen de wereld ooit leerde handeldrijven.",
+        "Volg de Meir verder richting oude stad. Een paar minuten verderop wacht Spooky op je, met een opdracht…",
+    },
+
+    // ── 4b: Spooky's quest ───────────────────────────────────────────────
+    // `name` and `subtitle` show BEFORE the façade is found: they must not give it away.
+    "classics-paleis-op-de-meir": {
+      name: "Een mysterie op de Meir",
+      subtitle: "De gevel van Spooky's tekening",
+      introduction: [
+        "Gevonden! De lange, elegante 18de-eeuwse gevel voor je is het Paleis op de Meir.",
+      ],
+      sections: [
+        {
+          heading: "Een paleis op de Meir",
+          kind: "history",
+          paragraphs: [
+            "Het werd vanaf 1745 gebouwd voor een rijke koopman, Johan Alexander van Susteren, door de Antwerpse architect Jan Pieter van Baurscheit de Jonge. Later kwam het in opmerkelijke handen: Napoleon kocht het in 1811-1812 maar woonde er nooit, de Russische tsaar Alexander I verbleef er in 1814, en lange tijd deed het dienst als koninklijk paleis.",
+          ],
+        },
+      ],
+      didYouKnow: [
+        "Napoleon was eigenaar van het paleis op de Meir, maar tegen de tijd dat het klaar was voor hem, zat hij al in ballingschap op het eiland Elba.",
+      ],
+      quest: {
+        title: "Spooky's opdracht",
+        task: [
+          "Bekijk deze oude bouwtekening goed. Ergens op de Meir staat het gebouw dat erbij hoort.",
+          "Wandel naar de zoekzone op de kaart, kijk omhoog naar de gevels en vergelijk ze met de tekening. Kun jij ontdekken welk gebouw het is? Sta je ervoor, dan merkt Hidden Antwerp het vanzelf.",
+        ],
+        zoneHint: "Het gebouw bevindt zich ergens binnen deze zone.",
+        revealedName: "Paleis op de Meir",
+      },
+      transitionToNext:
+        "Een paar stappen verder gaat naast de Meir een pleintje open: de Wapper, waar de beroemdste schilder van Antwerpen zijn huis bouwde.",
     },
 
     // ── 5 ────────────────────────────────────────────────────────────────
+    "classics-rubenshuis": {
+      name: "Het Rubenshuis",
+      subtitle: "Waar de grootste schilder van Antwerpen woonde en werkte",
+      introduction: [
+        "Je staat op de Wapper, een pleintje vlak bij de Meir. Achter de gevel voor je woonde en werkte Peter Paul Rubens, de beroemdste schilder die Antwerpen ooit voortbracht, tot aan zijn dood in 1640.",
+        "Het portret bovenaan deze pagina is Rubens zoals hij zichzelf in 1623 schilderde, op het hoogtepunt van zijn roem: een brede zwarte hoed, een donkere mantel, een rustige en zelfverzekerde blik. Vandaag hoort dat zelfportret bij de Britse Royal Collection.",
+      ],
+      sections: [
+        {
+          heading: "Een Italiaans palazzo aan de Wapper",
+          kind: "history",
+          paragraphs: [
+            "In 1608 kwam Rubens na acht jaar in Italië terug naar Antwerpen. In 1610 kocht hij hier een bestaand Vlaams huis, en het decennium daarna bouwde hij het om tot een woning en atelier op Italiaanse wijze: een atelier in barokstijl, een kunstkamer met een halfronde beeldengalerij, een monumentaal portiek en een tuinpaviljoen. In 1617 trokken hij en zijn vrouw Isabella Brant erin.",
+            "Na zijn dood werd het huis verhuurd, verbouwd en opgedeeld. De stad kocht het in 1937, en tussen 1937 en 1946 reconstrueerde stadsarchitect Emiel Van Averbeke het, grotendeels op basis van gravures van Harrewijn uit 1684 en 1692. Het portiek, het tuinpaviljoen en de buitenmuren van het atelier zijn grotendeels origineel; het woonhuis en zijn interieurs zijn een reconstructie.",
+          ],
+        },
+        {
+          heading: "Rubens en Isabella",
+          kind: "history",
+          paragraphs: [
+            "Op 3 oktober 1609, een jaar na zijn terugkeer uit Italië, trouwde de 32-jarige Rubens met de 18-jarige Isabella Brant. Rond die tijd schilderde hij hen samen: het dubbelportret op deze pagina, dat vandaag in de Alte Pinakothek in München hangt. Isabella woonde met hem in dit huis tot aan haar dood in 1626.",
+          ],
+        },
+        {
+          heading: "Het schilderij lezen",
+          kind: "interpretation",
+          paragraphs: [
+            "Het paar zit dicht tegen elkaar in een prieel van kamperfoelie. Hun rechterhanden rusten op elkaar: sinds de Romeinse tijd waren ineengelegde rechterhanden een teken van het huwelijk. Kamperfoelie stond voor blijvende liefde; een van de Duitse namen ervan, Jelängerjelieber, betekent “hoe langer, hoe liever”.",
+            "Kijk ook naar de kleren en de houding. Rubens draagt het verfijnde kostuum van een edelman, zijn hand dicht bij het gevest van een degen; Isabella draagt een hoge hoed, een brede kanten kraag en een rijk geborduurd keurslijf. Het grote formaat en de kostbare kleren tonen het jonge paar als mensen van aanzien. Een schilder die zichzelf met zijn bruid buiten laat zien, ontspannen, als verliefd stel: voor zijn tijd was het dubbelportret baanbrekend.",
+          ],
+        },
+        {
+          heading: "Waarom het bij deze wandeling hoort",
+          kind: "interpretation",
+          paragraphs: [
+            "Het schilderij markeert het begin van het leven dat Rubens op deze plek opbouwde: een huwelijk, een groeiend atelier en een huis dat de wereld liet zien wie hij was. Een jaar na het huwelijk kocht hij dit huis. Verder op de wandeling kom je hem opnieuw tegen: op de Groenplaats, waar de stad zijn standbeeld neerzette, in de kathedraal, waar altaarstukken van zijn hand hangen, en in de Sint-Carolus Borromeuskerk, waarvan zijn atelier ooit de plafonds versierde.",
+          ],
+        },
+      ],
+      didYouKnow: [
+        "Van 1648 tot 1660, na de dood van Rubens, werd het huis gehuurd door William en Margaret Cavendish, Engelse royalisten die in ballingschap leefden.",
+      ],
+      infoBoxes: [
+        {
+          kind: "visit",
+          title: "Het Rubenshuis bezoeken",
+          paragraphs: [
+            "Het huis zelf is gesloten voor restauratie tot minstens 2030. De tuin, de bibliotheek en de Rubens Experience in het nieuwe bezoekersgebouw zijn open; de bezoekersingang ligt aan de achterkant, aan Hopland 13.",
+            "Bekijk de openingsuren en ticketprijzen op de website van het Rubenshuis voor je gaat.",
+          ],
+          checkedOn: "2026-09-30",
+          sourceUrl: "https://rubenshuis.be/nl/vraag-antwoord",
+        },
+      ],
+      transitionToNext:
+        "Verlaat de Meir even en sla de smalle straatjes erachter in. Verborgen achter gewone gevels staat het gebouw waar Antwerpen de wereld ooit leerde handeldrijven.",
+    },
+
+    // ── 6 ────────────────────────────────────────────────────────────────
     "classics-handelsbeurs": {
       name: "De Handelsbeurs",
       subtitle: "Waar de wereld zaken kwam doen",
       introduction: [
         "Voor je ligt de Handelsbeurs, de oude koopmansbeurs van Antwerpen. Vanaf de straat valt ze nauwelijks op. Binnen ligt een van de meest uitzonderlijke ruimtes van de stad: een gotische binnenplaats omringd door galerijen, overkoepeld door een torenhoog dak van ijzer en glas.",
-        "We stappen nu terug naar de 16de eeuw, toen Antwerpen een van de rijkste steden van Europa was.",
+        "Denk dat dak nu eens weg. Meer dan drie eeuwen lang was het hart van dit gebouw een open binnenplaats onder de blote hemel, waar de kooplui van half Europa elkaar elke dag ontmoetten.",
       ],
       sections: [
         {
-          heading: "Handeldrijven zonder telefoon",
+          heading: "Een plein onder de open hemel",
           kind: "history",
           paragraphs: [
-            "Stel je Antwerpen voor rond 1530. Schepen uit Portugal komen aan met specerijen uit Azië; kooplui uit Italië, Duitsland, Engeland en Spanje wonen in de stad. Ze moeten prijzen kennen, kopers vinden, geld lenen, ladingen verzekeren, en er zijn geen telefoons, geen kranten zoals wij ze kennen, geen internet. Informatie reist per brief en vooral van mond tot mond.",
-            "Daarom bouwde Antwerpen een plek waar al die kooplui elkaar elke dag konden ontmoeten. In 1531 opende de stad een beurs, ontworpen door Domien de Waghemakere in laatgotische Brabantse stijl: een open binnenplaats omringd door een overdekte galerij met rijk versierde stergewelven. Het was een van de eerste gebouwen ter wereld die speciaal voor dat doel gebouwd werden. Hier werden, in een babylonische spraakverwarring, prijzen bepaald en deals gesloten.",
+            "In 1531 opende Antwerpen een nieuwe beurs, ontworpen door Domien de Waghemakere in laatgotische Brabantse stijl. Het hart ervan was een rechthoekige binnenplaats, open naar de hemel en aan alle vier de kanten omringd door overdekte galerijen met stergewelven op zuilen.",
+            "Elke dag kwamen kooplui uit Portugal, Italië, Duitsland, Engeland en Spanje op dat open plein samen om, in een babylonische spraakverwarring, prijzen te bepalen, krediet te geven en wisselbrieven te verhandelen. Als het regende, schuilden ze onder de galerijen; boven de galerijen lagen winkels en kamers. De gravure bovenaan deze pagina toont de binnenplaats vol groepjes handelaars.",
+            "Het was een van de eerste gebouwen ter wereld die speciaal voor de handel gebouwd werden, en het idee vond navolging. Toen Thomas Gresham, de agent van de Engelse kroon in Antwerpen, in de jaren 1560 de Royal Exchange in Londen oprichtte, nam hij deze binnenplaats met haar galerijen als model; Amsterdam volgde in 1611.",
           ],
         },
         {
-          heading: "Brand, en nog eens brand",
+          heading: "Een dak over de binnenplaats",
           kind: "history",
           paragraphs: [
-            "Het gebouw dat je ziet, is niet zomaar dat van 1531. De beurs werd in 1583 heropgebouwd en brandde in 1858 af. Architect Joseph Schadde ontwierp daarna het huidige gebouw; de opdracht werd hem uiteindelijk in 1868 toegekend, en de nieuwe beurs werd op 19 oktober 1872 plechtig ingehuldigd. Hij behield het idee van de gotische binnenplaats, maar overdekte die met een spectaculair dak van ijzer en glas, en resten van de oude beurs werden in het complex opgenomen.",
-            "Tegen het einde van de 20ste eeuw was de handel naar elders verhuisd, en het gebouw stond zo'n twintig jaar leeg. Na een grondige restauratie ging het in 2019 opnieuw open, nu als evenementenlocatie.",
+            "Pas in 1852-1854 werd de binnenplaats voor het eerst overdekt, door ingenieur Charles Marcellis, met ijzer en een glazen koepel. Vier jaar later, op 2 augustus 1858, verwoestte een brand zowel de oude beurs als haar nieuwe dak.",
+            "Architect Joseph Schadde bouwde ze opnieuw op; de nieuwe beurs werd op 19 oktober 1872 ingehuldigd. Hij behield de binnenplaats met haar galerijen, die nog altijd het grondplan van 1531 volgen, maar overdekte die met het spectaculaire dak van ijzer en glas dat je vandaag ziet.",
           ],
         },
       ],
       didYouKnow: [
-        "De Antwerpse beurs werd in het buitenland een voorbeeld. Toen Thomas Gresham, de agent van de Engelse kroon in Antwerpen, in de jaren 1560 de Royal Exchange in Londen oprichtte, nam hij de Antwerpse beurs als model.",
-        "Het woord “beurs” zelf wordt meestal niet naar Antwerpen teruggevoerd, maar naar Brugge, waar kooplui samenkwamen voor het huis van de familie Van der Beurse.",
+        "Meer dan drie eeuwen lang, van 1531 tot het eerste dak van 1852-1854, deden de Antwerpse kooplui hun zaken in zon, wind en regen, op een binnenplaats onder de open hemel.",
       ],
+      galleries: {
+        "exchange-in-prints": {
+          title: "De beurs in oude prenten",
+          intro: "Twee 19de-eeuwse prenten van de galerijen, van vóór en na de brand van 1858.",
+        },
+      },
       transitionToNext:
         "Terug op de Meir kijk je omhoog. Boven de daken rijst een toren op, als een stukje New York dat in een middeleeuwse stad is neergezet. We stappen even vooruit in de tijd, voor onze reis naar het verleden echt begint.",
     },
 
-    // ── 6 ────────────────────────────────────────────────────────────────
+    // ── 7 ────────────────────────────────────────────────────────────────
     "classics-boerentoren": {
       name: "De Boerentoren",
       subtitle: "De eerste wolkenkrabber van Europa",
@@ -241,7 +370,7 @@ export const classicsContentNl: ClassicsContent = {
         "Van hieruit wijst de toren je de weg naar het oude hart van Antwerpen. Wandel naar het grote plein voor je, waar de kathedraal voor het eerst in haar volle hoogte verschijnt, en waar de grond onder je voeten een geheim verbergt.",
     },
 
-    // ── 7 ────────────────────────────────────────────────────────────────
+    // ── 8 ────────────────────────────────────────────────────────────────
     "classics-groenplaats": {
       name: "Groenplaats",
       subtitle: "Een plein dat vroeger een kerkhof was",
@@ -255,6 +384,7 @@ export const classicsContentNl: ClassicsContent = {
           paragraphs: [
             "Dit plein vormde samen met de Lijnwaadmarkt, de Melkmarkt, de Schoenmarkt en de Handschoenmarkt rond de kathedraal ooit het kerkhof van de kathedraal. De Antwerpenaren noemden het het Groot Kerkhof, en later het Groen Kerkhof. Sommigen gebruiken die naam vandaag nog.",
             "In 1754 werd het kerkhof ommuurd, maar niet voor lang. In 1784 verbood keizer Jozef II om redenen van volksgezondheid begrafenissen binnen de steden, en in 1799 ging de muur neer. Het kerkhof werd langzaam het plein dat je nu ziet.",
+            "Een schilderij uit 1597, hieronder afgebeeld, geeft een idee van het kerkhof in die tijd: een begrafenisstoet van rouwenden in het zwart trekt erlangs, met de kathedraal die erachter oprijst.",
           ],
         },
         {
@@ -262,6 +392,7 @@ export const classicsContentNl: ClassicsContent = {
           kind: "history",
           paragraphs: [
             "In 1840 herdacht Antwerpen dat Rubens 200 jaar eerder gestorven was. Willem Geefs ontwierp een standbeeld, maar er was te weinig geld en het brons was niet op tijd klaar. Daarom werd op 25 augustus 1840 op een ander plein een voorlopige gipsen versie onthuld. Pas op 9 en 10 augustus 1843 kreeg de bronzen Rubens zijn plaats hier, midden op de Groenplaats.",
+            "Geefs beeldde hem uit als schilder en diplomaat: aan zijn voeten liggen een palet en een degen, want Rubens diende de Spaanse koning ook als gezant. Passend voor een vroeger kerkhof staat het beeld op de plek van een oud kerkhofkruis, boven het graf van een bisschop, Antonius d'Espinosa.",
           ],
         },
       ],
@@ -272,7 +403,7 @@ export const classicsContentNl: ClassicsContent = {
         "Wandel naar de kathedraal. Kijk onderweg naar de rij huizen die tegen het koor van de kerk gebouwd is. Ze verbergen de funderingen van een kathedraal die nooit afgewerkt werd.",
     },
 
-    // ── 8 ────────────────────────────────────────────────────────────────
+    // ── 9 ────────────────────────────────────────────────────────────────
     "classics-cathedral": {
       name: "Onze-Lieve-Vrouwekathedraal",
       subtitle: "De kathedraal die Antwerpen bijna nog groter maakte",
@@ -280,44 +411,125 @@ export const classicsContentNl: ClassicsContent = {
         "Voor je staat de Onze-Lieve-Vrouwekathedraal, een van de grootste gotische kerken van de Nederlanden en eeuwenlang het baken dat zeelui op de Schelde als eerste zagen. De noordtoren, zo'n 123 meter hoog, beheerst nog altijd de skyline.",
         "We zijn nu in de late middeleeuwen. De kathedraal werd gebouwd over een periode van ongeveer 170 jaar, van het midden van de 14de eeuw tot 1521, door generaties bouwers die wisten dat ze haar nooit af zouden zien.",
       ],
-      sections: [
-        {
-          heading: "Nog groter: het Nieuwerck",
-          kind: "history",
-          paragraphs: [
-            "In 1521, net toen de kerk voltooid was, besliste Antwerpen dat ze niet groot genoeg was. De rijkste stad van Noord-Europa wilde een kerk die daarbij paste, en Domien de Waghemakere en Rombout Keldermans ontwierpen een gigantische uitbreiding van het koor: het Nieuwerck.",
-            "Op 15 juli 1521 legde de jonge keizer Karel V zelf de eerste steen. Toen sloeg het noodlot toe. Een grote brand in 1533 beschadigde de kerk zwaar, al het geld ging naar het herstel van het bestaande gebouw, de werken aan het Nieuwerck werden stilgelegd en in 1537 werd het project definitief opgegeven.",
+      sections: [],
+      didYouKnow: [],
+      cards: {
+        cathedral: {
+          title: "De kathedraal",
+          subtitle: "Twee eeuwen bouwen, en een plan dat te groot was",
+          sections: [
+            {
+              heading: "Gebouwd over 170 jaar",
+              kind: "history",
+              paragraphs: [
+                "De bouw begon in 1352 en duurde tot 1521, met een lange onderbreking tussen 1356 en 1378. Generaties bouwmeesters volgden elkaar op volgens hetzelfde plan, onder wie Peter Appelmans en Herman en Domien de Waghemakere. Het geld kwam van schenkingen, de gilden en de stad; als het op was, lag het werk gewoon stil.",
+                "De noordtoren, zo'n 123 meter hoog, werd rond 1518-1521 voltooid en is nog altijd de hoogste kerktoren van de Benelux. De zuidtoren werd in 1475 bij gebrek aan geld stilgelegd, op ongeveer 65 meter, en werd nooit afgewerkt.",
+              ],
+            },
+            {
+              heading: "Nog groter: het Nieuwerck",
+              kind: "history",
+              paragraphs: [
+                "In 1521, net toen de kerk voltooid was, besliste Antwerpen dat ze niet groot genoeg was. De rijkste stad van Noord-Europa wilde een kerk die daarbij paste, en Domien de Waghemakere en Rombout Keldermans ontwierpen een gigantische uitbreiding van het koor: het Nieuwerck.",
+                "Op 15 juli 1521 legde de jonge keizer Karel V zelf de eerste steen. Maar rond 1528 bekoelde het enthousiasme al, en in de nacht van 5 op 6 oktober 1533 beschadigde een grote brand het dak en de pijlers van de kerk zwaar; de oorzaak is onbekend. Al het geld ging naar het herstel van het bestaande gebouw, en in 1537 werd het Nieuwerck definitief opgegeven.",
+              ],
+            },
+            {
+              heading: "Stormen van de geschiedenis",
+              kind: "history",
+              paragraphs: [
+                "De kathedraal heeft heel wat doorstaan. Tijdens de Beeldenstorm van 1566, een golf van protestantse woede tegen beelden, werd een groot deel van het interieur kort en klein geslagen. Twee eeuwen later bezetten Franse revolutionaire troepen de stad, sloten ze de kerk en voerden ze haar schatten weg.",
+                "Veel van wat je vandaag binnen kunt zien, werd achteraf teruggebracht of gerestaureerd, waaronder altaarstukken van Rubens die tot zijn beroemdste werken behoren.",
+              ],
+            },
+          ],
+          didYouKnow: [
+            "Het Nieuwerck werd nooit gebouwd, maar het verdween ook niet helemaal. De funderingen en pijlers ervan zitten nog in de rij huizen rond het koor, tussen de Lijnwaadmarkt en de Groenplaats. Sommige van die huizen staan letterlijk op het begin van een kathedraal die nooit afgewerkt werd.",
+            "De eerste steen van Karel V droeg een Latijns opschrift dat vermeldde dat de keizer hem op de iden van juli 1521 legde.",
           ],
         },
-        {
-          heading: "Stormen van de geschiedenis",
-          kind: "history",
-          paragraphs: [
-            "De kathedraal heeft heel wat doorstaan. Tijdens de Beeldenstorm van 1566, een golf van protestantse woede tegen beelden, werd een groot deel van het interieur kort en klein geslagen. Twee eeuwen later bezetten Franse revolutionaire troepen de stad, sloten ze de kerk en voerden ze haar schatten weg.",
-            "Veel van wat je vandaag binnen kunt zien, werd achteraf teruggebracht of gerestaureerd, waaronder altaarstukken van Rubens die tot zijn beroemdste werken behoren.",
+        "quinten-matsijs": {
+          title: "Quinten Matsijs",
+          subtitle: "Van smid tot schilder?",
+          sections: [
+            {
+              heading: "Een schilder voor de kathedraal",
+              kind: "history",
+              paragraphs: [
+                "Quinten Matsijs (rond 1466-1530) werd in Leuven geboren als zoon van een smid en werd een van de toonaangevende schilders van Antwerpen in zijn gouden eeuw. In 1491 werd hij meester in de Sint-Lucasgilde, de gilde van de schilders.",
+                "Zijn band met deze kerk is echt. Tussen 1508 en 1511 schilderde hij een groot altaarstuk voor het altaar van de schrijnwerkersgilde in de kathedraal: een Bewening van Christus tussen taferelen uit het leven van Johannes de Doper en Johannes de Evangelist. Vandaag hangt het in het KMSKA, het Koninklijk Museum voor Schone Kunsten Antwerpen.",
+              ],
+            },
+            {
+              heading: "De smid die schilderde uit liefde",
+              kind: "legend",
+              paragraphs: [
+                "Antwerpen vertelt een romantisch verhaal over hem. Quinten, zo gaat het, was een smid die verliefd werd op een meisje dat een schilder verkoos boven een smid. Dus legde hij zijn hamer neer en nam hij het penseel op. Karel van Mander, die het verhaal in 1604 optekende, geeft ook een andere versie: door een lange ziekte kon hij het zware smidswerk niet meer aan, en hij begon prenten in te kleuren om zijn moeder te onderhouden.",
+                "Een ander verhaal zegt dat hij op een schilderij van de vader van zijn geliefde een vlieg schilderde die zo levensecht was dat de man haar probeerde weg te vegen, en daarna met het huwelijk instemde.",
+              ],
+            },
+            {
+              heading: "Wat historici zeggen",
+              kind: "interpretation",
+              paragraphs: [
+                "Er is geen bewijs dat Quinten zelf ooit als smid gewerkt heeft; zijn vader wel. Historici zien het verhaal als een legende die met de tijd gegroeid is. Het is wel een oude legende: het Latijnse vers onder zijn portret, in 1572 in Antwerpen gedrukt en bovenaan deze kaart afgebeeld, laat hem al zeggen dat de liefde de smid tot schilder maakte.",
+              ],
+            },
+          ],
+          didYouKnow: [
+            "Vlak naast de kathedraal, op de Handschoenmarkt, staat een waterput met een gotische smeedijzeren overkapping, bekroond met een kleine Brabo. Volgens de overlevering is het smeedwerk van Matsijs, maar dat is niet bewezen. Een paar meter verderop, op de westgevel van de kathedraal, draagt een gedenksteen met zijn portret de Latijnse regel “Connubialis amor de Mulcibre fecit Apellem”: de huwelijksliefde maakte van de smid een schilder.",
           ],
         },
-      ],
-      didYouKnow: [
-        "Het Nieuwerck werd nooit gebouwd, maar het verdween ook niet helemaal. De funderingen en pijlers ervan zitten nog in de rij huizen rond het koor, tussen de Lijnwaadmarkt en de Groenplaats. Sommige van die huizen staan letterlijk op het begin van een kathedraal die nooit afgewerkt werd.",
-        "De eerste steen van Karel V droeg een Latijns opschrift dat vermeldde dat de keizer hem op de iden van juli 1521 legde.",
-      ],
+        "nello-patrasche": {
+          title: "Nello & Patrasche",
+          subtitle: "Een Engelse roman, een Japanse klassieker en een marmeren beeld",
+          sections: [
+            {
+              heading: "Het verhaal",
+              kind: "fiction",
+              paragraphs: [
+                "Nello is een arme weesjongen die in een dorp “een uur gaans van Antwerpen” woont. Met zijn hond Patrasche, die de kar trekt, brengt hij elke dag melk naar de stad. Nello droomt ervan schilder te worden en wil dolgraag de twee schilderijen van Rubens in de kathedraal zien, maar die zijn afgedekt, en alleen wie betaalt, mag ze zien.",
+                "Hij doet mee aan een tekenwedstrijd, wint niet en verliest alles. Op kerstavond vindt hij de kerk open en ziet hij eindelijk De Kruisoprichting en De Kruisafneming. De volgende ochtend worden Nello en Patrasche samen voor de schilderijen gevonden, doodgevroren.",
+              ],
+            },
+            {
+              heading: "Een boek uit Engeland, een klassieker in Japan",
+              kind: "history",
+              paragraphs: [
+                "A Dog of Flanders (in het Nederlands Een hond van Vlaanderen) werd geschreven door de Engelse schrijfster Ouida (Marie Louise de la Ramée). Het verscheen eind 1871 in een tijdschrift en in 1872 als boek. De twee schilderijen zijn echt: ze hangen nog altijd in deze kathedraal. In de roman staan ze voor de kunst waar Nello naar verlangt, en die verborgen blijft voor wie niet kan betalen.",
+                "Lange tijd was het verhaal in Vlaanderen zelf nauwelijks bekend. In het buitenland werd het een klassieker: het werd vanaf 1935 verschillende keren verfilmd in de Verenigde Staten, en in Japan maakte de animereeks van 1975 er een kinderklassieker van. Een documentaire uit 2007 heette dan ook Patrasche, a Dog of Flanders – Made in Japan.",
+              ],
+            },
+            {
+              heading: "Het beeld",
+              kind: "history",
+              paragraphs: [
+                "In 2016 werd op de Handschoenmarkt, voor de kathedraal, een beeld van Batist Vermeulen geplaatst. Het verving een gedenksteen uit 2003. Nello en Patrasche liggen in elkaars armen te slapen, onder een deken gemaakt van de kasseien van het plein zelf. Sinds november 2022 wordt het 's nachts verlicht.",
+              ],
+            },
+          ],
+          didYouKnow: [
+            "Ouida noemt het dorp van Nello nergens bij naam. De link met Hoboken, vandaag een district van Antwerpen, werd pas later gelegd.",
+          ],
+        },
+      },
       lookAt: [
         {
           title: "Anderhalve toren",
-          body: "Kijk naar de voorgevel van de kathedraal. De linkertoren (de noordtoren) rijst helemaal op tot zijn sierlijke spits; de rechtertoren (de zuidtoren) houdt op ongeveer een derde van die hoogte op. Het plan voorzag twee grote torens, maar er werd er maar één voltooid. Bekijk de ets uit 1649 op deze pagina: het scheve silhouet was toen al hetzelfde.",
+          body: "Kijk naar de voorgevel van de kathedraal. De linkertoren (de noordtoren) rijst helemaal op tot zijn sierlijke spits; de rechtertoren (de zuidtoren) houdt op ongeveer de helft van die hoogte op. Het plan voorzag twee grote torens, maar er werd er maar één voltooid. Bekijk de ets uit 1649 op deze pagina: het scheve silhouet was toen al hetzelfde.",
         },
       ],
       transitionToNext:
         "Wandel rond de kathedraal naar de Oude Koornmarkt. Zoek goed naar een smalle ingang tussen de huizen: die leidt naar een verborgen steegje dat de tijd lijkt te zijn vergeten.",
     },
 
-    // ── 9 ────────────────────────────────────────────────────────────────
+    // ── 10 ───────────────────────────────────────────────────────────────
     "classics-vlaeykensgang": {
       name: "Vlaeykensgang",
       subtitle: "Een geheime doorgang naar het oude Antwerpen",
       introduction: [
         "Stap door de smalle ingang en het lawaai van de stad verdwijnt. Je bent in de Vlaeykensgang, een kronkelend steegje tussen oude bakstenen muren, binnenplaatsjes en kleine huisjes. Even kun je je makkelijk het Antwerpen van eeuwen geleden voorstellen.",
+        "De Vlaeykensgang wordt vaak een van de oudste en smalste steegjes van Antwerpen genoemd. De erfgoedinventaris maakt zo'n rangschikking niet, maar bevestigt wel wat de plek bijzonder maakt: een L-vormige, gekasseide gang met elf kleine achterhuizen, die bijna helemaal zijn oude uitzicht bewaard heeft.",
       ],
       sections: [
         {
@@ -342,7 +554,7 @@ export const classicsContentNl: ClassicsContent = {
         "Volg het steegje en de zijstraten naar het grote marktplein van de stad. Maak je klaar om omhoog te kijken: de gevels eromheen zitten vol goud.",
     },
 
-    // ── 10 ───────────────────────────────────────────────────────────────
+    // ── 11 ───────────────────────────────────────────────────────────────
     "classics-grote-markt": {
       name: "Grote Markt & de gildehuizen",
       subtitle: "Het gouden plein dat jonger is dan het lijkt",
@@ -380,7 +592,7 @@ export const classicsContentNl: ClassicsContent = {
         "Midden op het plein staat een bronzen figuur op het punt iets de lucht in te gooien. Wandel naar de fontein: die vertelt het beroemdste verhaal dat Antwerpen heeft.",
     },
 
-    // ── 11 ───────────────────────────────────────────────────────────────
+    // ── 12 ───────────────────────────────────────────────────────────────
     "classics-brabo": {
       name: "De Brabofontein",
       subtitle: "Een reus, een hand en de naam van een stad",
@@ -418,7 +630,7 @@ export const classicsContentNl: ClassicsContent = {
         "Draai je naar het lange, lichte gebouw achter Brabo. Het overleefde een van de verschrikkelijkste nachten uit de geschiedenis van de stad.",
     },
 
-    // ── 12 ───────────────────────────────────────────────────────────────
+    // ── 13 ───────────────────────────────────────────────────────────────
     "classics-stadhuis": {
       name: "Stadhuis",
       subtitle: "Gebouwd met trots, verbrand in furie",
@@ -433,15 +645,6 @@ export const classicsContentNl: ClassicsContent = {
             "Het stadhuis werd gebouwd tussen 1561 en 1565, naar ontwerpen van Cornelis Floris de Vriendt samen met andere architecten en kunstenaars. Antwerpen was toen een van de rijkste steden van Europa, en het wilde zijn bestuur onderbrengen in een gebouw dat dat ook liet zien.",
           ],
         },
-        {
-          heading: "De Spaanse Furie, 4 november 1576",
-          kind: "history",
-          paragraphs: [
-            "Amper tien jaar later was dit gebouw getuige van een ramp. De Nederlanden waren in opstand tegen de Spaanse koning, en zijn soldaten in de streek waren al lange tijd niet betaald. Op 4 november 1576 bestormden muitende Spaanse troepen Antwerpen en begonnen de stad te plunderen.",
-            "Het stadsbestuur organiseerde een tegenaanval vanuit dit stadhuis, hier op de Grote Markt. De soldaten staken het gebouw in brand. De vlammen sloegen over naar de omliggende huizen, waarvan er honderden afbrandden. Van het stadhuis bleven alleen de buitenmuren overeind.",
-            "Hoeveel mensen er stierven, is niet precies bekend. De schattingen lopen uiteen van enkele honderden tot ongeveer 8.000; veel historici denken dat meer dan 7.000 mensen het leven lieten. De gebeurtenis werd bekend als de Spaanse Furie, en ze deed het vertrouwen wankelen van wat de grote handelsstad van Europa was geweest.",
-          ],
-        },
       ],
       didYouKnow: [
         "Het gebouw dat je ziet, werd na de brand van 1576 hersteld. Bekijk de foto op deze pagina, genomen halverwege de jaren 1860: vanaf het plein zag het stadhuis er toen grotendeels uit zoals vandaag.",
@@ -452,11 +655,53 @@ export const classicsContentNl: ClassicsContent = {
           body: "Vergelijk de sobere vleugels van de gevel met het middendeel, dat vol zuilen, nissen en beelden zit en boven de daklijn uitsteekt. Dat contrast, rustig en ordelijk met een uitbarsting van versiering in het midden, is typisch voor de renaissance die Floris naar Antwerpen bracht.",
         },
       ],
+      // The Spanish Fury, as slides: the approved section, paragraph by paragraph, each with its images.
+      cards: {
+        "fury-attack": {
+          title: "De Spaanse Furie, 4 november 1576",
+          sections: [
+            {
+              kind: "history",
+              paragraphs: [
+                "Amper tien jaar later was dit gebouw getuige van een ramp. De Nederlanden waren in opstand tegen de Spaanse koning, en zijn soldaten in de streek waren al lange tijd niet betaald. Op 4 november 1576 braken muitende Spaanse troepen uit de citadel ten zuiden van de stad, kregen versterking van muiters uit Aalst, bestormden Antwerpen en begonnen de stad te plunderen.",
+              ],
+            },
+          ],
+        },
+        "fury-city-hall": {
+          title: "Het stadhuis in vlammen",
+          sections: [
+            {
+              kind: "history",
+              paragraphs: [
+                "Het stadsbestuur organiseerde een tegenaanval vanuit dit stadhuis, hier op de Grote Markt. De Antwerpse burgers verdedigden zich op het plein en in het gebouw, en schoten vanuit de ramen van het stadhuis op de Spaanse ruiters die over het plein aanstormden. De ruiters leden zware verliezen, tot enkelen van hen zich een weg naar binnen baanden en het gebouw in brand staken met bundels stro die ze hadden meegebracht.",
+              ],
+            },
+          ],
+        },
+        "fury-city": {
+          title: "De stad in chaos",
+          sections: [
+            {
+              kind: "history",
+              paragraphs: [
+                "De vlammen sloegen over naar de omliggende huizen: ongeveer zeshonderd brandden af, de meeste achter en naast het stadhuis. Van het stadhuis zelf bleven alleen de buitenmuren overeind.",
+              ],
+            },
+            {
+              kind: "history",
+              paragraphs: [
+                "Hoeveel mensen er stierven, is niet precies bekend. De schattingen lopen uiteen van enkele honderden tot ongeveer 8.000; veel historici denken dat meer dan 7.000 mensen het leven lieten. De gebeurtenis werd bekend als de Spaanse Furie, en ze deed het vertrouwen wankelen van wat de grote handelsstad van Europa was geweest.",
+              ],
+            },
+          ],
+        },
+      },
       transitionToNext:
         "Verlaat de Grote Markt en wandel oostwaarts door rustige straten naar een klein plein dat veel bezoekers het mooiste van Antwerpen noemen.",
     },
 
-    // ── 13 ───────────────────────────────────────────────────────────────
+    // ── 14 ───────────────────────────────────────────────────────────────
     "classics-conscienceplein": {
       name: "Hendrik Conscienceplein",
       subtitle: "De man die zijn volk leerde lezen",
@@ -480,7 +725,7 @@ export const classicsContentNl: ClassicsContent = {
         "Draai je nu om. De rijk versierde kerk achter je is de volgende halte, en de plek waar we de tijd van Rubens binnenstappen.",
     },
 
-    // ── 14 ───────────────────────────────────────────────────────────────
+    // ── 15 ───────────────────────────────────────────────────────────────
     "classics-carolus-borromeus": {
       name: "Sint-Carolus Borromeuskerk",
       subtitle: "Het verloren meesterwerk van Rubens",
@@ -512,7 +757,7 @@ export const classicsContentNl: ClassicsContent = {
         "Van de barok gaan we nu verder terug, naar de late middeleeuwen. Wandel noordwaarts richting rivier, naar een opvallend gebouw met rode en witte strepen.",
     },
 
-    // ── 15 ───────────────────────────────────────────────────────────────
+    // ── 16 ───────────────────────────────────────────────────────────────
     "classics-vleeshuis": {
       name: "Het Vleeshuis",
       subtitle: "Een paleis voor slagers",
@@ -539,11 +784,25 @@ export const classicsContentNl: ClassicsContent = {
           body: "Kijk naar de muren: rijen rode baksteen wisselen af met banden van lichte zandsteen. Nu je hun naam kent, zul je deze speklagen op veel oude gebouwen in Antwerpen en elders in Vlaanderen herkennen.",
         },
       ],
+      galleries: {
+        "vleeshuis-postcards": {
+          title: "Het Vleeshuis op oude postkaarten",
+          intro: "Drie oude postkaarten van Museum Vleeshuis tonen de zalen, ingericht met schouwen, meubels en voorwerpen uit de collectie.",
+        },
+      },
+      // Spooky's task on arrival (a detail to find); the walker says when they found it.
+      quest: {
+        title: "Zoek de oude burchtmuur",
+        task: [
+          "Zoek de oude muur die vanaf het begin van de 13de eeuw de burcht beschermde.",
+          "De foto is je aanwijzing: zoek rond het Vleeshuis een stuk muur zoals dit. Gevonden? Tik dan op de knop hieronder.",
+        ],
+      },
       transitionToNext:
         "Wandel een paar straten verder naar het noorden, de oude havenbuurt in. Hier staat een kerk waarvan het verhaal verbonden is met de rivier, en met vuur.",
     },
 
-    // ── 16 ───────────────────────────────────────────────────────────────
+    // ── 17 ───────────────────────────────────────────────────────────────
     "classics-sint-paulus": {
       name: "Sint-Pauluskerk",
       subtitle: "Gotisch, barok en gered uit de vlammen",
@@ -575,7 +834,7 @@ export const classicsContentNl: ClassicsContent = {
         "Wandel naar de rivier. Aan de waterkant staat het oudste gebouw van Antwerpen, het laatste overblijfsel van de burcht waar de stad begon.",
     },
 
-    // ── 17 ───────────────────────────────────────────────────────────────
+    // ── 18 ───────────────────────────────────────────────────────────────
     "classics-het-steen": {
       name: "Het Steen",
       subtitle: "Het laatste stuk van de burcht waar Antwerpen begon",
@@ -589,6 +848,15 @@ export const classicsContentNl: ClassicsContent = {
           paragraphs: [
             "Rond het jaar 850 stond hier een vluchtburcht, met een aarden wal beschermd tegen invallen van de Vikingen. Eind 10de eeuw werd de grond opgehoogd en werd er waarschijnlijk een gracht gegraven. Rond 1200-1225 werd de stenen burcht, Het Steen, gebouwd, samen met een muur rond de burcht.",
             "Vanaf het begin van de 14de eeuw diende het gebouw als gevangenis, een rol die het meer dan vijf eeuwen zou houden, tot 1823.",
+          ],
+        },
+        {
+          heading: "De beul van Antwerpen",
+          kind: "history",
+          paragraphs: [
+            "Als stadsgevangenis maakte Het Steen deel uit van het Antwerpse gerecht. De schout, de gerechtsofficier van de stad, vervolgde; de schepenen oordeelden; en de beul voerde het vonnis uit. Verdachten werden hier verhoord, soms onder foltering, in een ondergrondse kamer.",
+            "Tussen 1405 en 1550 voltrok de Antwerpse beul minstens 336 onthoofdingen met het zwaard, de meeste op de Grote Markt voor het stadhuis. Andere vonnissen werden uitgevoerd op de Meir, aan de oever van de Schelde en op het galgenveld. Tussen 1558 en 1562 werden meer dan vijftig veroordeelden verdronken, bij voorkeur in het geheim binnen in Het Steen: openbare ketterverbrandingen hadden te veel onrust veroorzaakt.",
+            "Het verging de beulen zelf niet altijd goed. In 1508 verknoeide een nieuwe beul, een voormalige schoenmakersgezel, zijn eerste onthoofding, en kinderen bekogelden hem met stenen. En op 17 januari 1565 werd meester Geleyn, sinds 1542 de beul van de stad, zelf op de Meir onthoofd, veroordeeld voor moord, diefstal en geweld.",
           ],
         },
         {
@@ -610,6 +878,7 @@ export const classicsContentNl: ClassicsContent = {
       didYouKnow: [
         "Wat jij als “de burcht” ziet, is maar een klein deel van de middeleeuwse burcht. Het grootste deel werd in de jaren 1880 afgebroken om plaats te maken voor de kaaien.",
         "Het Steen diende als gevangenis van het begin van de 14de eeuw tot 1823: meer dan 500 jaar.",
+        "Er zijn maar weinig echte folter- of executiewerktuigen bewaard: in 1794 verbrandden de Fransen de meeste ervan.",
       ],
       lookAt: [
         {
@@ -625,7 +894,7 @@ export const classicsContentNl: ClassicsContent = {
         "Wandel de laatste paar stappen naar het water. Onze reis terug in de tijd eindigt waar het verhaal van Antwerpen begon.",
     },
 
-    // ── 18 ───────────────────────────────────────────────────────────────
+    // ── 19 ───────────────────────────────────────────────────────────────
     "classics-scheldt": {
       name: "De Schelde",
       subtitle: "Waar het allemaal begon",
@@ -653,6 +922,12 @@ export const classicsContentNl: ClassicsContent = {
       didYouKnow: [
         "Ongeveer tweehonderd jaar lang, van de blokkade na 1585 tot 1795, was Antwerpen een grote haven zonder vrije toegang tot de zee. Het is een van de redenen waarom de gouden eeuw van de stad ten einde kwam.",
       ],
+      galleries: {
+        "siege-of-antwerp": {
+          title: "Het beleg van Antwerpen, 1584–1585",
+          intro: "De val van Antwerpen in 1585 kwam na een beleg van meer dan een jaar door Alexander Farnese, hertog van Parma. Deze prenten tonen hoe hij de rivier afsloot, en hoe de stad probeerde door te breken.",
+        },
+      },
       closing: {
         timeline: [
           "Antwerpen-Centraal: de 20ste eeuw begint",
@@ -688,6 +963,12 @@ export const classicsContentNl: ClassicsContent = {
       caption: "De treinhal vandaag, met de klok, het woord ANTWERPEN en het stadswapen boven de ingang.",
       alt: "Moderne foto van de treinhal van ijzer en glas met de rijk versierde stenen voorkant van het stationsgebouw",
       approximateYear: "2023",
+    },
+    // Clue of Spooky's task at the station: says where it was taken, not what to find.
+    "central-station-hall-clue-today": {
+      caption: "Spooky's aanwijzing: een foto genomen in het station.",
+      alt: "Foto van een rijk versierde muur onder een dak van glas en ijzer, met een klok, vergulde versieringen en een naam in gouden letters",
+      approximateYear: "2006",
     },
     "diamond-pelikaanstraat": {
       caption: "De Pelikaanstraat, aan de rand van de huidige diamantwijk, rond 1900.",
@@ -774,6 +1055,41 @@ export const classicsContentNl: ClassicsContent = {
       alt: "Oude postkaart van een hoog bakstenen gebouw met een poortboog en kinderen op straat",
       approximateYear: "ca. 1901",
     },
+    "vleeshuis-wall-clue": {
+      caption: "Spooky's aanwijzing: een oude foto van een hoekje bij het Vleeshuis.",
+      alt: "Zwart-witfoto van een ruwe muur van onregelmatige stenen tegen een hoog bakstenen gebouw",
+      approximateYear: "datum onbekend",
+    },
+    "vleeshuis-postcard-kitchen": {
+      caption: "Een zaal ingericht als oude keuken, met een grote haard, koperen ketels en een versierde waterpomp met een bak (postkaart van Museum Vleeshuis, datum onbekend; collectie MAS).",
+      alt: "Sepia postkaart van een zaal met een grote schouw, koperen ketels bij de haard, betegelde muren, twee stoelen en een sierlijke pomp met een stenen bak",
+      approximateYear: "datum onbekend",
+    },
+    "vleeshuis-postcard-panelled-room": {
+      caption: "Een kamer met een schouw, gesneden kasten, versierde wandpanelen en een beeld op een kast (postkaart van Museum Vleeshuis, datum onbekend; collectie MAS).",
+      alt: "Sepia postkaart van een kamer waarvan de muren bekleed zijn met versierde panelen, met een schouw, gesneden kasten, een tafel en een beeld",
+      approximateYear: "datum onbekend",
+    },
+    "vleeshuis-postcard-hall": {
+      caption: "Een zaal met een lange tafel en stoelen, een glazen kroonluchter, een staande klok en een rijk gesneden schouw met daarboven een zittende figuur (postkaart van Museum Vleeshuis, datum onbekend; collectie MAS).",
+      alt: "Sepia postkaart van een zaal met een lange tafel omringd door stoelen, een glazen kroonluchter, glas-in-loodramen, een staande klok en een grote gesneden schouw",
+      approximateYear: "datum onbekend",
+    },
+    "siege-parma-bridge": {
+      caption: "De schipbrug van Parma over de Schelde, voltooid in februari 1585 om de stad af te snijden van hulp over het water; Antwerpen ligt aan de horizon. Prent van Lamberecht Causé naar Romeyn de Hooghe, 1670–1699 (Rijksmuseum).",
+      alt: "Gravure van een lange brug op boten over een brede rivier, met soldaten en rijtuigen erop, oorlogsschepen eromheen en in de verte de skyline van een stad",
+      approximateYear: "1670–1699",
+    },
+    "siege-bridge-attack": {
+      caption: "April 1585: Antwerpen stuurt branders op de brug af. Volgens de titel ontsnapte Alexander van Parma zelf maar nipt aan de dood, maar de brug hield stand en de aanslag mislukte. Prent van Lamberecht Causé naar Romeyn de Hooghe, 1670–1699 (Rijksmuseum).",
+      alt: "Gravure van een enorme ontploffing op een schipbrug, met planken, boten en soldaten die door de lucht vliegen en rook boven de rivier",
+      approximateYear: "1670–1699",
+    },
+    "siege-map-luyken": {
+      caption: "Het hele beleg op één kaart van Jan Luyken (1680–1684): Antwerpen linksboven, de schipbrug in het midden, het ondergelopen land en rechts de gevechten op de Kouwensteinsedijk in mei 1585, opnieuw een mislukte poging om door te breken (Rijksmuseum).",
+      alt: "Gegraveerde kaart van de Schelde stroomafwaarts van Antwerpen met forten, een brug over de rivier, ondergelopen velden, schepen en troepen die langs een dijk vechten",
+      approximateYear: "1680–1684",
+    },
     "sint-paulus-1901": {
       caption: "De Sint-Pauluskerk en de cafés eromheen, op een postkaart gedateerd 1901.",
       alt: "Oude postkaart van een gotische kerk met een barokke toren boven kleine huizen en cafés",
@@ -798,6 +1114,137 @@ export const classicsContentNl: ClassicsContent = {
       caption: "De Scheldekaaien rond 1900, vol schepen en loodsen.",
       alt: "Geïllustreerde oude postkaart van stoomschepen en zeilboten langs de kaai",
       approximateYear: "ca. 1900",
+    },
+    "diamond-bourse-today": {
+      caption: "De Beurs voor Diamanthandel in de Pelikaanstraat, een van de diamantbeurzen van de wijk en een beschermd monument.",
+      alt: "Moderne foto van een hoog stenen kantoorgebouw met een gebeeldhouwde naamband en vlaggen boven de ingang",
+      approximateYear: "2010",
+    },
+    "flatow-expulsion-card-1941": {
+      caption: "Kaart uit 1941 van Siegfried Flatow, een Duitser geboren in Berlijn in 1921, die in Antwerpen in de Zurenborgstraat 17 woonde. Ze vermeldt dat hij op 1 februari 1941 verplicht werd weggevoerd naar Beverloo, Leysestraat 25.",
+      alt: "Vergeeld tweetalig Duits-Nederlands formulier, ingevuld met de schrijfmachine, met een vingerafdruk in het onderste vak en een lege plek voor een foto",
+      approximateYear: "1941",
+    },
+    "dossin-courtyard-1942": {
+      caption: "De binnenplaats van Kazerne Dossin in Mechelen, 1942: bagage verspreid over de grond, vrachtwagens en groepjes mensen.",
+      alt: "Zwart-witfoto van een omsloten kazernebinnenplaats met rijen koffers en bundels op de grond, twee vrachtwagens en groepjes mensen aan de randen",
+      approximateYear: "1942",
+    },
+    "paleis-op-de-meir-today": {
+      caption: "Het Paleis op de Meir vandaag: het 18de-eeuwse koopmanspaleis dat Napoleon kocht.",
+      alt: "Moderne foto van een lichte rococogevel met een balkon en een sierlijk wapen op het dak",
+      approximateYear: "2023",
+    },
+    "rex-ruins": {
+      caption: "Cinema Rex in puin na de inslag van de V2 op 16 december 1944.",
+      alt: "Sepiafoto van een gebombardeerd bioscoopgebouw met ingestorte muren en een blootliggend koepeldak, met een auto uit de jaren 1940 ervoor",
+      approximateYear: "1944–1947",
+    },
+    // The clue of Spooky's quest: shown before the place is found, so it must not name it.
+    "paleis-op-de-meir-drawing": {
+      caption: "Spooky's aanwijzing: een oude bouwtekening van een lange gevel.",
+      alt: "Oude tekening van een lange, symmetrische gevel met hoge ramen, kleine balkons, vazen op het dak en een groot sierlijk wapenschild in het midden",
+      approximateYear: "datum onbekend",
+    },
+    "rubens-self-portrait-1623": {
+      caption: "Peter Paul Rubens, zelfportret, 1623 (Royal Collection, Londen).",
+      alt: "Geschilderd portret van een man met baard, een brede zwarte hoed en een donkere mantel",
+      approximateYear: "1623",
+    },
+    "rubenshuis-garden-today": {
+      caption: "De tuin van het Rubenshuis vandaag, met het huis en rechts het portiek uit de tijd van Rubens zelf.",
+      alt: "Moderne foto van een tuin met een fontein voor een renaissancehuis en een stenen poort met beelden erop",
+      approximateYear: "2025",
+    },
+    "rubens-honeysuckle-bower": {
+      caption: "Rubens en Isabella Brant in het kamperfoelieprieel, rond 1609-1610 (Alte Pinakothek, München).",
+      alt: "Schilderij van een rijk gekleed jong paar dat hand in hand onder een prieel van kamperfoelie zit",
+      approximateYear: "ca. 1609-1610",
+    },
+    "handelsbeurs-open-courtyard-1613": {
+      caption: "De beurs van 1531 met haar open binnenplaats vol kooplui: een gravure uitgegeven in 1613.",
+      alt: "Zwart-witgravure van een rechthoekige binnenplaats omringd door galerijen, met groepjes mensen en twee torens",
+      approximateYear: "1613",
+    },
+    "groenkerkhof-1597": {
+      caption: "Een begrafenisstoet bij het kerkhof van de kathedraal, de huidige Groenplaats: een anoniem schilderij uit 1597 (Museum Vleeshuis).",
+      alt: "Oud schilderij van rouwenden in het zwart die langs een kerkhof lopen, met de hoge kathedraaltoren erachter",
+      approximateYear: "1597",
+    },
+    "groenplaats-rubens-statue-1840s": {
+      caption: "De kathedraal gezien vanaf de Groenplaats, met het nieuwe standbeeld van Rubens: een litho van Jules Alexandre Monthelier, jaren 1840.",
+      alt: "Litho van een bronzen standbeeld op een hoge sokkel tussen bomen, met de kathedraal en haar spits erachter",
+      approximateYear: "jaren 1840",
+    },
+    "matsijs-portrait-1572": {
+      caption: "Quinten Matsijs op een portretprent die in 1572 in Antwerpen verscheen. Het Latijnse vers eronder vertelt hoe de liefde hem tot schilder maakte.",
+      alt: "Gegraveerd profielportret van een man met muts en mantel die opgerolde papieren vasthoudt, met een Latijns vers eronder",
+      approximateYear: "1572",
+    },
+    "matsijs-altarpiece-1511": {
+      caption: "Het altaarstuk van Quinten Matsijs voor de schrijnwerkersgilde, in 1508-1511 geschilderd voor deze kathedraal (KMSKA, Antwerpen).",
+      alt: "Geschilderd drieluik met een Bewening van Christus op het middenpaneel en twee zijpanelen",
+      approximateYear: "1511",
+    },
+    "matsijs-well": {
+      caption: "De waterput naast de kathedraal, gefotografeerd rond 1875-1900. De smeedijzeren overkapping wordt traditioneel aan Matsijs toegeschreven.",
+      alt: "Oude foto van een sierlijke smeedijzeren putoverkapping op een stenen voet voor een gotische muur",
+      approximateYear: "ca. 1875-1900",
+    },
+    "nello-patrasche-today": {
+      caption: "Nello en Patrasche van Batist Vermeulen (2016), slapend onder een deken van kasseien voor de kathedraal.",
+      alt: "Moderne foto van een wit marmeren beeld van een jongen en een hond die onder een deken van kasseien liggen, met de kathedraaltoren erachter",
+      approximateYear: "2023",
+    },
+    "vlaeykensgang-today": {
+      caption: "De Vlaeykensgang vandaag: kasseien, bakstenen muren en een overdekte doorgang.",
+      alt: "Moderne foto van een smal gekasseid steegje tussen bakstenen muren, gezien door een lage overdekte doorgang",
+      approximateYear: "2022",
+    },
+    "stadhuis-spanish-fury-hogenberg": {
+      caption: "Het stadhuis in vlammen tijdens de Spaanse Furie, met gevechten op de Grote Markt: een ets van Frans Hogenberg, gemaakt vóór 1585.",
+      alt: "Ets van een groot renaissancestadhuis waaruit vlammen en rook opstijgen, met vechtende soldaten op het plein ervoor",
+      approximateYear: "vóór 1585",
+    },
+    "handelsbeurs-vandennest": {
+      caption: "De galerijen versierd met kroonluchters, draperieën en boompjes, op een prent van J.B.J. Vandennest uit de jaren 1842–1851: nog vóór de binnenplaats haar eerste dak kreeg (Universiteit Antwerpen, Bijzondere Collecties).",
+      alt: "Prent van lange overwelfde galerijen met bewerkte zuilen, hangende kroonluchters, draperieën en rijen boompjes, met twee mannen in uniform op de voorgrond",
+      approximateYear: "1842–1851",
+    },
+    "handelsbeurs-lebrun-liedel": {
+      caption: "De beurs na de heropbouw: bewerkte zuilen, overwelfde galerijen en enkele handelaars, op een prent van Lebrun-Liedel van na 1872 (Universiteit Antwerpen, Bijzondere Collecties).",
+      alt: "Zwart-witte prent van een hal met rijk bewerkte zuilen en spitse gewelven, met op de voorgrond een lezende man met hoge hoed",
+      approximateYear: "na 1872",
+    },
+    "spanish-fury-overview-1577": {
+      caption: "De Spaanse Furie op één blad: een anonieme prent uit 1577 met in het midden een kaart van Antwerpen en de citadel, omringd door taferelen van de aanval, de gevechten en het brandende stadhuis (Rijksmuseum).",
+      alt: "Prent met in het midden een vogelvluchtkaart van Antwerpen en de stervormige citadel, omringd door kleine taferelen van aanvallende, vechtende en plunderende soldaten",
+      approximateYear: "1577",
+    },
+    "spanish-fury-de-braekeleer": {
+      caption: "De Spaanse Furie in Antwerpen zoals Ferdinand de Braekeleer de Oude ze in 1836 schilderde: een romantisch 19de-eeuws beeld van gewapende burgers en gewonden tussen rook en vuur, met de kathedraaltoren op de achtergrond (KMSKA, Antwerpen).",
+      alt: "Schilderij van een menigte gewapende burgers, gewonde mannen en een vrouw die knielt bij een stervende man, met rook, vuur en een kathedraaltoren op de achtergrond",
+      approximateYear: "1836",
+    },
+    "spanish-fury-mas": {
+      caption: "Een straat vol slachtoffers, met brandende huizen in de verte: een anoniem schilderij van de Spaanse Furie, gemaakt tussen 1576 en omstreeks 1585 (MAS, Antwerpen).",
+      alt: "Schilderij van een drukke straat met soldaten, ruiters en veel doden, brandende huizen en zwarte rook in de verte en links een kerktoren",
+      approximateYear: "1576–1585",
+    },
+    "spanish-fury-hogenberg-plunder": {
+      caption: "Plundering en marteling in de Antwerpse huizen tijdens de Spaanse Furie, op een prent van Frans Hogenberg (16de eeuw; Rijksmuseum).",
+      alt: "Gravure van soldaten die mensen martelen die aan touwen in huizen hangen, met lichamen op de grond en een straat met trapgevels op de achtergrond",
+      approximateYear: "16de eeuw",
+    },
+    "spanish-fury-print-1618": {
+      caption: "‘Spaensche Furie tot Antwerpen’: een prent van omstreeks 1618–1624 die het tafereel herhaalt, met een vers dat het lot van de stad beklaagt (anoniem; Rijksmuseum).",
+      alt: "Gravure van hetzelfde tafereel van marteling en plundering, met de titel ‘Spaensche Furie tot Antwerpen’ en daaronder twee kolommen Nederlandse verzen",
+      approximateYear: "ca. 1618–1624",
+    },
+    "execution-hogenberg-1568": {
+      caption: "Een terechtstelling in de Nederlanden van die tijd: de onthoofding van de graven van Egmont en Horne op de Grote Markt van Brussel in 1568, op een ets van Frans Hogenberg. Niet Antwerpen, maar hetzelfde tijdperk en hetzelfde soort gerecht.",
+      alt: "Ets van een schavot omringd door soldaten met pieken, een beul met een zwaard naast een knielende man",
+      approximateYear: "1568-1570",
     },
     "scheldt-photochrom": {
       caption: "Antwerpen gezien vanaf de rivier in de jaren 1890: Het Steen links, de kathedraal die boven de stad uitrijst.",

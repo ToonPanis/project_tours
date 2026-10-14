@@ -9,11 +9,11 @@ export const classicsContentIt: ClassicsContent = {
     title: "I classici di Anversa",
     tagline: "Una passeggiata nella storia di Anversa",
     shortDescription:
-      "Una passeggiata guidata dalla grandiosa stazione ferroviaria fino alle rive della Schelda: diciotto tappe, otto secoli e le storie dietro i luoghi più famosi di Anversa.",
+      "Una passeggiata guidata dalla grandiosa stazione ferroviaria fino alle rive della Schelda: diciannove tappe, otto secoli e le storie dietro i luoghi più famosi di Anversa.",
     description:
       "Dalla grandiosa stazione ferroviaria di Anversa attraverserete secoli di commerci, arte, fede e potere, fino al luogo in cui la storia della città ebbe inizio: le rive della Schelda.\n\nA ogni tappa il vostro telefono diventa la vostra guida: che cosa state guardando, perché fu costruito, che cosa accadde qui e quei dettagli davanti ai quali la maggior parte dei visitatori passa senza accorgersene. Fotografie d'epoca vi mostrano com'era la città un secolo fa e anche prima. Niente giochi né domande: solo Anversa, e il tempo per osservarla davvero.",
     highlights: [
-      "18 dei luoghi storici più importanti di Anversa",
+      "19 dei luoghi storici più importanti di Anversa",
       "Scritto come se una guida camminasse al vostro fianco",
       "Fotografie d'epoca, incisioni e cartoline a ogni tappa principale",
       "Curiosità «Lo sapevate?» che non troverete sui pannelli informativi",
@@ -83,6 +83,14 @@ export const classicsContentIt: ClassicsContent = {
           body: "Entrate nella galleria dei binari e voltatevi. Sopra l'ingresso dell'edificio della stazione troverete un grande orologio, la scritta ANTWERPEN e lo stemma della città: un castello sormontato da due mani. Ricordatevi di quelle mani: le ritroverete più avanti lungo il percorso, sulla Grote Markt.",
         },
       ],
+      // Spooky's task on arrival (a detail to find); the walker says when they found it.
+      quest: {
+        title: "Trovate lo stemma di Anversa",
+        task: [
+          "Trovate lo stemma della città di Anversa.",
+          "La foto è il vostro indizio: guardatevi bene intorno, dentro e fuori la stazione. Trovato? Toccate il pulsante qui sotto.",
+        ],
+      },
       transitionToNext:
         "Uscite dalla stazione dal lato ovest. In pochi minuti entrerete in un piccolo quartiere dove da secoli si commercia un tesoro di tutt'altro genere.",
     },
@@ -115,6 +123,38 @@ export const classicsContentIt: ClassicsContent = {
       didYouKnow: [
         "Nel fine settimana del 15 e 16 febbraio 2003 alcuni ladri penetrarono nel caveau dell'Antwerp Diamond Centre, in questo quartiere. Il bottino, stimato in oltre 100 milioni di dollari tra diamanti, oro e gioielli, ne fece uno dei più grandi furti di diamanti della storia. Seguirono degli arresti, ma la maggior parte dei diamanti non fu mai ritrovata.",
       ],
+      moreStories: {
+        "jewish-community": {
+          title: "La comunità ebraica",
+          subtitle: "La seconda guerra mondiale e il dopoguerra",
+          sections: [
+            {
+              heading: "La seconda guerra mondiale",
+              kind: "history",
+              paragraphs: [
+                "18 agosto 1941: la Wehrmacht fa irruzione nel Diamantkring e sequestra diamanti. 164 membri del Diamantkring vengono assassinati.",
+                "Estate 1942: retate, tra l'altro il 15–16 e il 28–29 agosto, in strade come la Van Immerseelstraat, la Lange Kievitstraat e la Provinciestraat. Le date variano leggermente a seconda della fonte.",
+                "Durante la retata del 28–29 agosto fu la stessa polizia di Anversa a eseguire gli arresti. Fu un caso unico nella storia dell'occupazione del Belgio.",
+                "Le vittime furono deportate ad Auschwitz-Birkenau passando per la caserma Dossin di Malines.",
+              ],
+            },
+            {
+              heading: "Quanti?",
+              kind: "history",
+              paragraphs: [
+                "Tra il 56% e il 66% degli ebrei di Anversa fu deportato, a seconda del calcolo: più della metà e, secondo alcuni calcoli, due terzi. Secondo Antwerpen Herdenkt, circa 10.000 ebrei della regione non sopravvissero alla guerra.",
+              ],
+            },
+            {
+              heading: "Dopo la guerra",
+              kind: "history",
+              paragraphs: [
+                "Nel 1945 in città vivevano ancora circa 2.000 ebrei. Alla fine degli anni Quaranta erano di nuovo circa 10.000, una comunità fortemente ortodossa.",
+              ],
+            },
+          ],
+        },
+      },
       transitionToNext:
         "Tornate verso la piazza della stazione e imboccate De Keyserlei, il grande viale che conduce alla città vecchia. Intorno al 1900 era questa la strada da cui ogni visitatore arrivato in treno entrava ad Anversa.",
     },
@@ -135,18 +175,9 @@ export const classicsContentIt: ClassicsContent = {
             "Nel pomeriggio del 16 dicembre 1944 circa 1.100 persone stavano guardando un film al Cinema Rex, al numero 15 di questo viale. Alle 15.20 un razzo V-2 colpì il tetto. Morirono 567 persone: 271 civili e 296 soldati alleati. Fu il bilancio più alto causato da un singolo attacco missilistico in tutta la guerra, e ci volle quasi una settimana per estrarre tutti dalle macerie.",
           ],
         },
-        {
-          heading: "Un palazzo sulla Meir",
-          kind: "history",
-          paragraphs: [
-            "Proseguite sulla Meir e cercate una lunga ed elegante facciata settecentesca: il Paleis op de Meir. Fu costruito a partire dal 1745 per un ricco mercante, Johan Alexander van Susteren, dall'architetto anversano Jan Pieter van Baurscheit il Giovane. In seguito passò per mani notevoli: Napoleone lo acquistò nel 1811–1812 ma non vi abitò mai, lo zar di Russia Alessandro I vi soggiornò nel 1814 e per lungo tempo fu utilizzato come palazzo reale.",
-            "Appena fuori dalla Meir, sul Wapper, si trova la casa in cui Peter Paul Rubens visse e lavorò. Incontrerete Rubens ancora diverse volte lungo questa passeggiata.",
-          ],
-        },
       ],
       didYouKnow: [
         "Il Cinema Rex fu ricostruito dopo la guerra e riaprì nel 1947. Chiuse definitivamente nel 1993 e fu demolito due anni dopo. Oggi nella strada ben poco ricorda ai passanti ciò che accadde qui.",
-        "Napoleone possedeva il palazzo sulla Meir, ma quando fu pronto per lui si trovava già in esilio sull'isola d'Elba.",
       ],
       transitionToNext:
         "Seguite la Meir verso la città vecchia. Poco più avanti, sulla sinistra, una cupola dorata brilla sopra un ingresso imponente: una sala delle feste che bruciò e poi rinacque.",
@@ -180,44 +211,142 @@ export const classicsContentIt: ClassicsContent = {
         "Gran parte degli interni «storici» che vedete sono in realtà un'accurata ricostruzione del XXI secolo, realizzata dopo l'incendio del 2000 sulla base di fotografie, progetti e frammenti superstiti.",
       ],
       transitionToNext:
-        "Lasciate per un attimo la Meir e addentratevi nelle stradine alle sue spalle. Nascosto dietro facciate comuni si trova l'edificio in cui Anversa insegnò un tempo al mondo come si fa commercio.",
+        "Proseguite lungo la Meir verso la città vecchia. Pochi minuti più avanti, Spooky vi aspetta con una missione…",
+    },
+
+    // ── 4b: Spooky's quest ───────────────────────────────────────────────
+    // `name` and `subtitle` show BEFORE the façade is found: they must not give it away.
+    "classics-paleis-op-de-meir": {
+      name: "Un mistero sulla Meir",
+      subtitle: "La facciata del disegno di Spooky",
+      introduction: [
+        "Trovato! La lunga ed elegante facciata settecentesca davanti a voi è il Paleis op de Meir.",
+      ],
+      sections: [
+        {
+          heading: "Un palazzo sulla Meir",
+          kind: "history",
+          paragraphs: [
+            "Fu costruito a partire dal 1745 per un ricco mercante, Johan Alexander van Susteren, dall'architetto anversano Jan Pieter van Baurscheit il Giovane. In seguito passò per mani notevoli: Napoleone lo acquistò nel 1811–1812 ma non vi abitò mai, lo zar di Russia Alessandro I vi soggiornò nel 1814 e per lungo tempo fu utilizzato come palazzo reale.",
+          ],
+        },
+      ],
+      didYouKnow: [
+        "Napoleone possedeva il palazzo sulla Meir, ma quando fu pronto per lui si trovava già in esilio sull'isola d'Elba.",
+      ],
+      quest: {
+        title: "La missione di Spooky",
+        task: [
+          "Osservate bene questo vecchio disegno architettonico. Da qualche parte sulla Meir si trova l'edificio a cui appartiene.",
+          "Raggiungete la zona di ricerca sulla mappa, alzate lo sguardo verso le facciate e confrontatele con il disegno. Riuscite a scoprire di quale edificio si tratta? Quando ci sarete davanti, Hidden Antwerp se ne accorgerà.",
+        ],
+        zoneHint: "L'edificio si trova da qualche parte in questa zona.",
+        revealedName: "Paleis op de Meir",
+      },
+      transitionToNext:
+        "A pochi passi si apre accanto alla Meir una piccola piazza: il Wapper, dove il pittore più famoso di Anversa costruì la sua casa.",
     },
 
     // ── 5 ────────────────────────────────────────────────────────────────
+    "classics-rubenshuis": {
+      name: "La Casa di Rubens",
+      subtitle: "Dove il più grande pittore di Anversa visse e lavorò",
+      introduction: [
+        "Vi trovate sul Wapper, una piccola piazza appena fuori dalla Meir. Dietro la facciata davanti a voi Peter Paul Rubens, il pittore più famoso che Anversa abbia mai dato al mondo, visse e lavorò fino alla sua morte nel 1640.",
+        "Il ritratto in cima a questa pagina è Rubens come si dipinse nel 1623, all'apice della fama: un ampio cappello nero, un mantello scuro, uno sguardo calmo e sicuro di sé. Oggi quell'autoritratto appartiene alla Royal Collection britannica.",
+      ],
+      sections: [
+        {
+          heading: "Un palazzo italiano sul Wapper",
+          kind: "history",
+          paragraphs: [
+            "Nel 1608 Rubens tornò ad Anversa dopo otto anni in Italia. Nel 1610 acquistò qui una casa fiamminga già esistente e dedicò il decennio successivo a trasformarla in abitazione e bottega all'italiana: un atelier in stile barocco, una sala d'arte con una galleria semicircolare per le sculture, un portico monumentale e un padiglione da giardino. Lui e sua moglie Isabella Brant vi si trasferirono nel 1617.",
+            "Dopo la sua morte la casa fu affittata, ricostruita e suddivisa. La città la acquistò nel 1937 e tra il 1937 e il 1946 l'architetto comunale Emiel Van Averbeke la ricostruì, in gran parte sulla base di incisioni di Harrewijn del 1684 e del 1692. Il portico, il padiglione da giardino e la struttura dell'atelier sono in gran parte originali; gli ambienti abitativi e i loro interni sono una ricostruzione.",
+          ],
+        },
+        {
+          heading: "Rubens e Isabella",
+          kind: "history",
+          paragraphs: [
+            "Il 3 ottobre 1609, un anno dopo il suo ritorno dall'Italia, il trentaduenne Rubens sposò la diciottenne Isabella Brant. In quel periodo dipinse i due insieme: il doppio ritratto in questa pagina, oggi all'Alte Pinakothek di Monaco di Baviera. Isabella visse con lui in questa casa fino alla sua morte nel 1626.",
+          ],
+        },
+        {
+          heading: "Leggere il dipinto",
+          kind: "interpretation",
+          paragraphs: [
+            "La coppia siede vicina sotto un pergolato di caprifoglio. Le loro mani destre poggiano l'una sull'altra: fin dall'epoca romana le mani destre unite erano un segno di matrimonio. Il caprifoglio simboleggiava l'amore duraturo; uno dei suoi nomi tedeschi, Jelängerjelieber, significa «più dura, più è caro».",
+            "Osservate anche gli abiti e la posa. Rubens indossa il raffinato costume di un gentiluomo, con la mano vicina all'elsa di una spada; Isabella porta un alto cappello, un ampio colletto di pizzo e un corpetto riccamente ricamato. Il grande formato e gli abiti costosi presentano la giovane coppia come persone di rango. Un pittore che si ritrae con la sposa all'aperto, rilassato, come una coppia innamorata: per l'epoca il doppio ritratto apriva una strada nuova.",
+          ],
+        },
+        {
+          heading: "Perché fa parte di questa passeggiata",
+          kind: "interpretation",
+          paragraphs: [
+            "Il dipinto segna l'inizio della vita che Rubens costruì in questo luogo: un matrimonio, una bottega in crescita e una casa che mostrava al mondo chi era. Un anno dopo le nozze acquistò questa casa. Nel resto della passeggiata lo incontrerete di nuovo: sulla Groenplaats, dove la città gli eresse una statua, alla cattedrale, che custodisce pale d'altare da lui dipinte, e alla chiesa di San Carlo Borromeo, i cui soffitti furono un tempo decorati dalla sua bottega.",
+          ],
+        },
+      ],
+      didYouKnow: [
+        "Dal 1648 al 1660, dopo la morte di Rubens, la casa fu affittata da William e Margaret Cavendish, realisti inglesi in esilio.",
+      ],
+      infoBoxes: [
+        {
+          kind: "visit",
+          title: "Visitare la Casa di Rubens",
+          paragraphs: [
+            "La casa vera e propria è chiusa per restauro almeno fino al 2030. Il giardino, la biblioteca e la Rubens Experience nel nuovo edificio per i visitatori sono aperti; l'ingresso per i visitatori si trova sul retro, in Hopland 13.",
+            "Prima di andare, controllate gli orari di apertura e i prezzi dei biglietti sul sito della Casa di Rubens.",
+          ],
+          checkedOn: "2026-09-30",
+          sourceUrl: "https://rubenshuis.be/nl/vraag-antwoord",
+        },
+      ],
+      transitionToNext:
+        "Lasciate per un attimo la Meir e addentratevi nelle stradine alle sue spalle. Nascosto dietro facciate comuni si trova l'edificio in cui Anversa insegnò un tempo al mondo come si fa commercio.",
+    },
+
+    // ── 6 ────────────────────────────────────────────────────────────────
     "classics-handelsbeurs": {
       name: "La Handelsbeurs",
       subtitle: "Dove il mondo veniva a fare affari",
       introduction: [
         "Davanti a voi c'è la Handelsbeurs, l'antica borsa del commercio di Anversa. Dalla strada quasi non si nota. All'interno si trova uno degli ambienti più straordinari della città: un cortile gotico circondato da gallerie, coperto da un altissimo tetto di ferro e vetro.",
-        "Torniamo ora al XVI secolo, quando Anversa era una delle città più ricche d'Europa.",
+        "Ora immaginate quel tetto scomparso. Per più di tre secoli il cuore di questo edificio fu un cortile aperto sotto il cielo, dove ogni giorno si incontravano i mercanti di mezza Europa.",
       ],
       sections: [
         {
-          heading: "Commerciare senza telefono",
+          heading: "Una piazza a cielo aperto",
           kind: "history",
           paragraphs: [
-            "Immaginate Anversa intorno al 1530. Dal Portogallo arrivano navi cariche di spezie asiatiche; in città vivono mercanti italiani, tedeschi, inglesi e spagnoli. Hanno bisogno di conoscere i prezzi, trovare acquirenti, prendere denaro in prestito, assicurare i carichi, e non esistono telefoni, né giornali come li conosciamo noi, né internet. Le informazioni viaggiano per lettera e, soprattutto, di bocca in bocca.",
-            "Anversa costruì allora un luogo dove tutti quei mercanti potessero incontrarsi ogni giorno. Nel 1531 la città aprì una borsa progettata da Domien de Waghemakere in stile gotico brabantino tardo: un cortile aperto circondato da una galleria coperta con elaborate volte stellari. Fu uno dei primi edifici al mondo costruiti appositamente per questo scopo. Qui, in una babele di lingue, si fissavano i prezzi e si concludevano gli affari.",
+            "Nel 1531 Anversa aprì una nuova borsa, progettata da Domien de Waghemakere in stile gotico brabantino tardo. Il suo cuore era un cortile rettangolare, aperto verso il cielo e circondato su tutti e quattro i lati da gallerie coperte con volte stellari su colonne.",
+            "Ogni giorno mercanti dal Portogallo, dall'Italia, dalla Germania, dall'Inghilterra e dalla Spagna si radunavano in quella piazza aperta, in una babele di lingue, per fissare i prezzi, concedere credito e negoziare lettere di cambio. Quando pioveva si riparavano sotto le gallerie; sopra le gallerie si trovavano botteghe e stanze. L'incisione in cima a questa pagina mostra il cortile pieno di piccoli gruppi di commercianti.",
+            "Fu uno dei primi edifici al mondo costruiti appositamente per il commercio, e l'idea fece strada. Quando Thomas Gresham, agente della corona inglese ad Anversa, fondò il Royal Exchange di Londra negli anni Sessanta del Cinquecento, prese a modello questo cortile con le sue gallerie; Amsterdam seguì nel 1611.",
           ],
         },
         {
-          heading: "Un incendio, e poi un altro",
+          heading: "Un tetto sopra il cortile",
           kind: "history",
           paragraphs: [
-            "L'edificio che vedete non è semplicemente quello del 1531. La borsa fu ricostruita nel 1583 e bruciò nel 1858. L'architetto Joseph Schadde progettò allora l'edificio attuale; l'incarico gli fu affidato definitivamente nel 1868 e la nuova borsa fu inaugurata solennemente il 19 ottobre 1872. Schadde mantenne l'idea del cortile gotico, ma lo coprì con uno spettacolare tetto di ferro e vetro, e resti della vecchia borsa furono integrati nel complesso.",
-            "Alla fine del XX secolo le contrattazioni si erano spostate altrove, e l'edificio rimase vuoto per una ventina d'anni. Dopo un restauro radicale ha riaperto nel 2019, oggi come sede di eventi.",
+            "Solo nel 1852–1854 il cortile fu coperto per la prima volta, dall'ingegnere Charles Marcellis, con ferro e una cupola di vetro. Quattro anni dopo, il 2 agosto 1858, un incendio distrusse sia la vecchia borsa sia il suo nuovo tetto.",
+            "L'architetto Joseph Schadde la ricostruì; la nuova borsa fu inaugurata il 19 ottobre 1872. Schadde mantenne il cortile con le sue gallerie, che seguono ancora la pianta del 1531, ma lo coprì con lo spettacolare tetto di ferro e vetro che vedete oggi.",
           ],
         },
       ],
       didYouKnow: [
-        "La borsa di Anversa divenne un modello anche all'estero. Quando Thomas Gresham, agente della corona inglese ad Anversa, fondò il Royal Exchange di Londra negli anni Sessanta del Cinquecento, prese a esempio la borsa anversana.",
-        "La parola «borsa» viene di solito fatta risalire non ad Anversa ma a Bruges, dove i mercanti si riunivano davanti alla casa della famiglia Van der Beurse.",
+        "Per più di tre secoli, dal 1531 fino al primo tetto del 1852–1854, i mercanti di Anversa conclusero i loro affari sotto il sole, il vento e la pioggia, in un cortile aperto verso il cielo.",
       ],
+      galleries: {
+        "exchange-in-prints": {
+          title: "La Borsa in antiche stampe",
+          intro: "Due stampe ottocentesche delle gallerie, di prima e dopo l'incendio del 1858.",
+        },
+      },
       transitionToNext:
         "Tornati sulla Meir, alzate lo sguardo. Una torre svetta sopra i tetti come un pezzo di New York caduto in una città medievale. Facciamo un breve salto in avanti nel tempo, prima che il nostro viaggio nel passato cominci davvero.",
     },
 
-    // ── 6 ────────────────────────────────────────────────────────────────
+    // ── 7 ────────────────────────────────────────────────────────────────
     "classics-boerentoren": {
       name: "La Boerentoren",
       subtitle: "Il primo grattacielo d'Europa",
@@ -241,7 +370,7 @@ export const classicsContentIt: ClassicsContent = {
         "Da qui la torre vi indica la strada verso il cuore antico di Anversa. Raggiungete la grande piazza davanti a voi, dove la cattedrale appare per la prima volta in tutta la sua altezza e dove il suolo sotto i vostri piedi nasconde un segreto.",
     },
 
-    // ── 7 ────────────────────────────────────────────────────────────────
+    // ── 8 ────────────────────────────────────────────────────────────────
     "classics-groenplaats": {
       name: "Groenplaats",
       subtitle: "Una piazza che un tempo era un cimitero",
@@ -255,6 +384,7 @@ export const classicsContentIt: ClassicsContent = {
           paragraphs: [
             "Questa piazza, insieme alla Lijnwaadmarkt, alla Melkmarkt, alla Schoenmarkt e alla Handschoenmarkt intorno alla cattedrale, formava un tempo il cimitero della cattedrale. Gli anversani lo chiamavano Groot Kerkhof, il Grande Cimitero, e più tardi Groen Kerkhof, il Cimitero Verde. Qualcuno usa quel nome ancora oggi.",
             "Nel 1754 il cimitero fu cinto da un muro, ma non per molto. Nel 1784 l'imperatore Giuseppe II vietò le sepolture all'interno delle città per ragioni di salute pubblica, e nel 1799 il muro fu abbattuto. Il camposanto divenne a poco a poco la piazza che vedete oggi.",
+            "Un dipinto del 1597, riprodotto qui sotto, dà un'idea del cimitero ai suoi tempi: un corteo funebre di persone in lutto vestite di nero vi passa accanto, con la cattedrale che si innalza sullo sfondo.",
           ],
         },
         {
@@ -262,6 +392,7 @@ export const classicsContentIt: ClassicsContent = {
           kind: "history",
           paragraphs: [
             "Nel 1840 Anversa celebrò i 200 anni dalla morte di Rubens. Willem Geefs progettò una statua, ma i fondi scarseggiavano e il bronzo non fu pronto in tempo: così il 25 agosto 1840 fu inaugurata su un'altra piazza una versione provvisoria in gesso. Solo il 9 e 10 agosto 1843 il Rubens di bronzo prese il suo posto qui, al centro della Groenplaats.",
+            "Geefs lo rappresentò come pittore e diplomatico: ai suoi piedi giacciono una tavolozza e una spada, perché Rubens servì anche il re di Spagna come inviato. Come si addice a un antico cimitero, la statua sorge nel punto in cui si trovava una vecchia croce cimiteriale, sopra la tomba di un vescovo, Antonius d'Espinosa.",
           ],
         },
       ],
@@ -272,7 +403,7 @@ export const classicsContentIt: ClassicsContent = {
         "Dirigetevi verso la cattedrale. Strada facendo, osservate la fila di case addossate al coro della chiesa: nascondono le fondamenta di una cattedrale che non fu mai terminata.",
     },
 
-    // ── 8 ────────────────────────────────────────────────────────────────
+    // ── 9 ────────────────────────────────────────────────────────────────
     "classics-cathedral": {
       name: "Cattedrale di Nostra Signora",
       subtitle: "La cattedrale che Anversa voleva ancora più grande",
@@ -280,44 +411,125 @@ export const classicsContentIt: ClassicsContent = {
         "Davanti a voi si erge la Onze-Lieve-Vrouwekathedraal, la Cattedrale di Nostra Signora, una delle più grandi chiese gotiche dei Paesi Bassi storici e per secoli il punto di riferimento che i marinai sulla Schelda vedevano per primo. La sua torre nord, alta circa 123 metri, domina ancora lo skyline.",
         "Siamo ora nel tardo Medioevo. La cattedrale fu costruita in circa 170 anni, dalla metà del XIV secolo fino al 1521, da generazioni di costruttori che sapevano che non l'avrebbero mai vista finita.",
       ],
-      sections: [
-        {
-          heading: "Ancora più grande: il Nieuwerck",
-          kind: "history",
-          paragraphs: [
-            "Nel 1521, proprio quando la chiesa fu completata, Anversa decise che non era abbastanza grande. La città più ricca del Nord Europa voleva una chiesa alla sua altezza, e Domien de Waghemakere e Rombout Keldermans progettarono un gigantesco ampliamento del coro, il Nieuwerck.",
-            "Il 15 luglio 1521 il giovane imperatore Carlo V posò personalmente la prima pietra. Poi arrivò la catastrofe. Un grande incendio nel 1533 danneggiò gravemente la chiesa, tutto il denaro fu destinato alla riparazione dell'edificio esistente, i lavori del Nieuwerck si fermarono e nel 1537 il progetto fu abbandonato definitivamente.",
+      sections: [],
+      didYouKnow: [],
+      cards: {
+        cathedral: {
+          title: "La cattedrale",
+          subtitle: "Due secoli di cantiere, e un progetto troppo grande",
+          sections: [
+            {
+              heading: "Costruita in 170 anni",
+              kind: "history",
+              paragraphs: [
+                "La costruzione iniziò nel 1352 e durò fino al 1521, con una lunga pausa tra il 1356 e il 1378. Generazioni di capomastri si succedettero sullo stesso progetto, tra cui Peter Appelmans e Herman e Domien de Waghemakere. Il denaro proveniva da donazioni, dalle corporazioni e dalla città; quando finiva, i lavori semplicemente si fermavano ad aspettare.",
+                "La torre nord, alta circa 123 metri, fu terminata intorno al 1518–1521 ed è ancora oggi il campanile più alto del Benelux. La torre sud fu interrotta nel 1475 per mancanza di fondi, a circa 65 metri, e non fu mai completata.",
+              ],
+            },
+            {
+              heading: "Ancora più grande: il Nieuwerck",
+              kind: "history",
+              paragraphs: [
+                "Nel 1521, proprio quando la chiesa fu completata, Anversa decise che non era abbastanza grande. La città più ricca del Nord Europa voleva una chiesa alla sua altezza, e Domien de Waghemakere e Rombout Keldermans progettarono un gigantesco ampliamento del coro, il Nieuwerck.",
+                "Il 15 luglio 1521 il giovane imperatore Carlo V posò personalmente la prima pietra. Ma già intorno al 1528 l'entusiasmo andava scemando, e nella notte tra il 5 e il 6 ottobre 1533 un grande incendio danneggiò gravemente il tetto e i pilastri della chiesa; la sua causa è sconosciuta. Tutto il denaro fu destinato alla riparazione dell'edificio esistente, e nel 1537 il Nieuwerck fu abbandonato definitivamente.",
+              ],
+            },
+            {
+              heading: "Le tempeste della storia",
+              kind: "history",
+              paragraphs: [
+                "La cattedrale è sopravvissuta a molto. Durante la furia iconoclasta del 1566, un'ondata di collera protestante contro le immagini, gran parte dei suoi interni fu distrutta. Due secoli dopo, le truppe rivoluzionarie francesi occuparono la città, chiusero la chiesa e ne portarono via i tesori.",
+                "Molto di ciò che si può vedere oggi all'interno fu riportato indietro o restaurato in seguito, comprese pale d'altare di Rubens che sono tra le sue opere più celebri.",
+              ],
+            },
+          ],
+          didYouKnow: [
+            "Il Nieuwerck non fu mai costruito, ma non è scomparso del tutto. Le sue fondamenta e i suoi pilastri sopravvivono nella fila di case intorno al coro, tra la Lijnwaadmarkt e la Groenplaats. Alcune di quelle case poggiano letteralmente sull'inizio di una cattedrale mai terminata.",
+            "La prima pietra di Carlo V recava un'iscrizione latina secondo cui l'imperatore la posò alle Idi di luglio del 1521.",
           ],
         },
-        {
-          heading: "Le tempeste della storia",
-          kind: "history",
-          paragraphs: [
-            "La cattedrale è sopravvissuta a molto. Durante la furia iconoclasta del 1566, un'ondata di collera protestante contro le immagini, gran parte dei suoi interni fu distrutta. Due secoli dopo, le truppe rivoluzionarie francesi occuparono la città, chiusero la chiesa e ne portarono via i tesori.",
-            "Molto di ciò che si può vedere oggi all'interno fu riportato indietro o restaurato in seguito, comprese pale d'altare di Rubens che sono tra le sue opere più celebri.",
+        "quinten-matsijs": {
+          title: "Quinten Matsijs",
+          subtitle: "Da fabbro a pittore?",
+          sections: [
+            {
+              heading: "Un pittore per la cattedrale",
+              kind: "history",
+              paragraphs: [
+                "Quinten Matsijs (1466 circa–1530) nacque a Lovanio, figlio di un fabbro, e divenne uno dei principali pittori di Anversa nel suo secolo d'oro. Nel 1491 divenne maestro nella Gilda di San Luca, la corporazione dei pittori.",
+                "Il suo legame con questa chiesa è reale. Tra il 1508 e il 1511 dipinse una grande pala per l'altare della corporazione dei falegnami nella cattedrale: un Compianto sul Cristo morto tra scene di san Giovanni Battista e san Giovanni Evangelista. Oggi è esposta al KMSKA, il Museo reale di belle arti di Anversa.",
+              ],
+            },
+            {
+              heading: "Il fabbro che dipinse per amore",
+              kind: "legend",
+              paragraphs: [
+                "Anversa racconta di lui una storia romantica. Quinten, si dice, era un fabbro che si innamorò di una ragazza che preferiva un pittore a un fabbro. Così posò il martello e prese in mano il pennello. Karel van Mander, che la mise per iscritto nel 1604, riporta anche un'altra versione: una lunga malattia gli rese impossibile il pesante lavoro di fabbro, e cominciò a colorare stampe per mantenere la madre.",
+                "Un altro racconto dice che dipinse una mosca così realistica su un quadro del padre della sua amata che l'uomo cercò di scacciarla con la mano, e poi acconsentì al matrimonio.",
+              ],
+            },
+            {
+              heading: "Che cosa dicono gli storici",
+              kind: "interpretation",
+              paragraphs: [
+                "Non c'è alcuna prova che Quinten stesso abbia mai lavorato come fabbro; suo padre sì. Gli storici considerano la storia una leggenda cresciuta nel tempo. È però antica: il verso latino sotto il suo ritratto, stampato ad Anversa nel 1572 e riprodotto in cima a questa scheda, gli fa già dire che l'amore trasformò il fabbro in pittore.",
+              ],
+            },
+          ],
+          didYouKnow: [
+            "Proprio accanto alla cattedrale, sulla Handschoenmarkt, si trova un pozzo con una gabbia gotica in ferro battuto coronata da un piccolo Brabo. La tradizione attribuisce la lavorazione del ferro a Matsijs, ma non è provato. A pochi metri di distanza, sulla facciata ovest della cattedrale, una lapide commemorativa con il suo ritratto reca il verso latino «Connubialis amor de Mulcibre fecit Apellem»: l'amore coniugale trasformò il fabbro in pittore.",
           ],
         },
-      ],
-      didYouKnow: [
-        "Il Nieuwerck non fu mai costruito, ma non è scomparso del tutto. Le sue fondamenta e i suoi pilastri sopravvivono nella fila di case intorno al coro, tra la Lijnwaadmarkt e la Groenplaats. Alcune di quelle case poggiano letteralmente sull'inizio di una cattedrale mai terminata.",
-        "La prima pietra di Carlo V recava un'iscrizione latina secondo cui l'imperatore la posò alle Idi di luglio del 1521.",
-      ],
+        "nello-patrasche": {
+          title: "Nello e Patrasche",
+          subtitle: "Un romanzo inglese, un classico giapponese e una statua di marmo",
+          sections: [
+            {
+              heading: "La storia",
+              kind: "fiction",
+              paragraphs: [
+                "Nello è un povero ragazzo orfano che vive in un villaggio «a una lega da Anversa». Con il suo cane Patrasche, che tira il carretto, porta ogni giorno il latte in città. Nello sogna di diventare pittore e desidera ardentemente vedere i due dipinti di Rubens nella cattedrale, ma sono coperti, e solo chi paga può vederli.",
+                "Partecipa a un concorso di disegno, non vince e perde tutto. La vigilia di Natale trova la chiesa aperta e finalmente vede «L'innalzamento della Croce» e «La deposizione dalla Croce». La mattina dopo Nello e Patrasche vengono trovati insieme davanti ai dipinti, morti di freddo.",
+              ],
+            },
+            {
+              heading: "Un libro dall'Inghilterra, un classico in Giappone",
+              kind: "history",
+              paragraphs: [
+                "«Il cane delle Fiandre» (A Dog of Flanders) fu scritto dall'autrice inglese Ouida (Marie Louise de la Ramée). Apparve su una rivista alla fine del 1871 e in volume nel 1872. I due dipinti sono reali: sono ancora appesi in questa cattedrale. Nel romanzo rappresentano l'arte a cui Nello anela, che resta nascosta a chi non può pagare.",
+                "Per molto tempo la storia fu poco conosciuta nelle Fiandre stesse. All'estero divenne un classico: fu portata sullo schermo più volte negli Stati Uniti, a partire dal 1935, e in Giappone la serie anime del 1975 ne fece un classico per bambini. Un documentario del 2007 si intitolava, non a caso, Patrasche, a Dog of Flanders – Made in Japan.",
+              ],
+            },
+            {
+              heading: "La statua",
+              kind: "history",
+              paragraphs: [
+                "Nel 2016 una statua di Batist Vermeulen fu collocata sulla Handschoenmarkt, davanti alla cattedrale. Sostituì una lapide commemorativa del 2003. Nello e Patrasche dormono abbracciati, sotto una coperta fatta degli stessi ciottoli della piazza. Da novembre 2022 di notte è illuminata.",
+              ],
+            },
+          ],
+          didYouKnow: [
+            "Ouida non nomina mai il villaggio di Nello. Il collegamento con Hoboken, oggi un distretto di Anversa, fu fatto in seguito.",
+          ],
+        },
+      },
       lookAt: [
         {
           title: "Una torre e mezza",
-          body: "Osservate la facciata della cattedrale. La torre di sinistra (nord) sale fino alla sua elegante guglia; quella di destra (sud) si ferma a circa un terzo di quell'altezza. Il progetto prevedeva due grandi torri, ma ne fu completata solo una. Guardate l'acquaforte del 1649 in questa pagina: la sagoma asimmetrica era già la stessa allora.",
+          body: "Osservate la facciata della cattedrale. La torre di sinistra (nord) sale fino alla sua elegante guglia; quella di destra (sud) si ferma a circa metà di quell'altezza. Il progetto prevedeva due grandi torri, ma ne fu completata solo una. Guardate l'acquaforte del 1649 in questa pagina: la sagoma asimmetrica era già la stessa allora.",
         },
       ],
       transitionToNext:
         "Girate intorno alla cattedrale fino alla Oude Koornmarkt. Cercate con attenzione uno stretto ingresso tra le case: conduce a un vicolo nascosto che il tempo sembra aver dimenticato.",
     },
 
-    // ── 9 ────────────────────────────────────────────────────────────────
+    // ── 10 ───────────────────────────────────────────────────────────────
     "classics-vlaeykensgang": {
       name: "Vlaeykensgang",
       subtitle: "Un passaggio segreto nell'Anversa di un tempo",
       introduction: [
         "Varcate lo stretto ingresso e il rumore della città svanisce. Siete nel Vlaeykensgang, un vicolo tortuoso tra vecchi muri di mattoni, cortiletti e piccole case. Per un momento è facile immaginare l'Anversa di secoli fa.",
+        "Il Vlaeykensgang viene spesso definito uno dei vicoli più antichi e più stretti di Anversa. L'inventario del patrimonio non stila una simile classifica, ma conferma ciò che rende speciale questo luogo: un passaggio acciottolato a forma di L, fiancheggiato da undici piccole retrocase, che ha conservato quasi del tutto il suo aspetto antico.",
       ],
       sections: [
         {
@@ -342,7 +554,7 @@ export const classicsContentIt: ClassicsContent = {
         "Seguite il vicolo e le strade laterali fino alla grande piazza del mercato. Preparatevi ad alzare gli occhi: le facciate tutt'intorno sono piene d'oro.",
     },
 
-    // ── 10 ───────────────────────────────────────────────────────────────
+    // ── 11 ───────────────────────────────────────────────────────────────
     "classics-grote-markt": {
       name: "Grote Markt e le case delle corporazioni",
       subtitle: "La piazza dorata più giovane di quanto sembri",
@@ -380,7 +592,7 @@ export const classicsContentIt: ClassicsContent = {
         "Al centro della piazza una figura di bronzo sta per lanciare qualcosa in aria. Avvicinatevi alla fontana: racconta la storia più famosa di Anversa.",
     },
 
-    // ── 11 ───────────────────────────────────────────────────────────────
+    // ── 12 ───────────────────────────────────────────────────────────────
     "classics-brabo": {
       name: "La fontana di Brabo",
       subtitle: "Un gigante, una mano e il nome di una città",
@@ -418,7 +630,7 @@ export const classicsContentIt: ClassicsContent = {
         "Voltatevi verso il lungo edificio chiaro alle spalle di Brabo. È sopravvissuto a una delle notti più terribili della storia della città.",
     },
 
-    // ── 12 ───────────────────────────────────────────────────────────────
+    // ── 13 ───────────────────────────────────────────────────────────────
     "classics-stadhuis": {
       name: "Il municipio (Stadhuis)",
       subtitle: "Costruito con orgoglio, bruciato nella furia",
@@ -433,15 +645,6 @@ export const classicsContentIt: ClassicsContent = {
             "Il municipio fu costruito tra il 1561 e il 1565 su progetto di Cornelis Floris de Vriendt, insieme ad altri architetti e artisti. Anversa era allora una delle città più ricche d'Europa e voleva che il suo governo avesse sede in un edificio che lo dimostrasse.",
           ],
         },
-        {
-          heading: "La Furia spagnola, 4 novembre 1576",
-          kind: "history",
-          paragraphs: [
-            "Appena dieci anni dopo, questo edificio fu testimone di una catastrofe. I Paesi Bassi erano in rivolta contro il re di Spagna, e i suoi soldati nella regione non ricevevano la paga da molto tempo. Il 4 novembre 1576 truppe spagnole ammutinate presero d'assalto Anversa e cominciarono a saccheggiarla.",
-            "Il governo cittadino organizzò un contrattacco proprio da questo municipio, qui sulla Grote Markt. I soldati diedero fuoco all'edificio. Le fiamme si estesero alle case circostanti, centinaia delle quali andarono distrutte. Del municipio rimasero in piedi soltanto i muri perimetrali.",
-            "Quante persone morirono non si sa con precisione. Le stime vanno da alcune centinaia a circa 8.000; molti storici ritengono che persero la vita più di 7.000 persone. L'evento passò alla storia come la Furia spagnola e scosse la fiducia di quella che era stata la grande città commerciale d'Europa.",
-          ],
-        },
       ],
       didYouKnow: [
         "L'edificio che vedete fu restaurato dopo l'incendio del 1576. Guardate la fotografia in questa pagina, scattata a metà degli anni Sessanta dell'Ottocento: vista dalla piazza, il municipio appariva allora molto simile a oggi.",
@@ -452,11 +655,53 @@ export const classicsContentIt: ClassicsContent = {
           body: "Confrontate le sobrie ali della facciata con la parte centrale, fitta di colonne, nicchie e statue, che si innalza oltre la linea del tetto. Quel contrasto, calma e ordine con un'esplosione di decorazioni al centro, è tipico del Rinascimento che Floris portò ad Anversa.",
         },
       ],
+      // The Spanish Fury, as slides: the approved section, paragraph by paragraph, each with its images.
+      cards: {
+        "fury-attack": {
+          title: "La Furia spagnola, 4 novembre 1576",
+          sections: [
+            {
+              kind: "history",
+              paragraphs: [
+                "Appena dieci anni dopo, questo edificio fu testimone di una catastrofe. I Paesi Bassi erano in rivolta contro il re di Spagna, e i suoi soldati nella regione non ricevevano la paga da molto tempo. Il 4 novembre 1576 truppe spagnole ammutinate uscirono dalla cittadella a sud della città, si unirono agli ammutinati provenienti da Aalst, presero d'assalto Anversa e cominciarono a saccheggiarla.",
+              ],
+            },
+          ],
+        },
+        "fury-city-hall": {
+          title: "Il municipio in fiamme",
+          sections: [
+            {
+              kind: "history",
+              paragraphs: [
+                "Il governo cittadino organizzò un contrattacco proprio da questo municipio, qui sulla Grote Markt. I cittadini di Anversa si difesero sulla piazza e all'interno dell'edificio, e dalle finestre del municipio facevano fuoco sui cavalieri spagnoli che caricavano attraverso la piazza. I cavalieri subirono pesanti perdite, finché alcuni di loro riuscirono a farsi strada all'interno e appiccarono il fuoco all'edificio con fasci di paglia che avevano portato con sé.",
+              ],
+            },
+          ],
+        },
+        "fury-city": {
+          title: "La città nel caos",
+          sections: [
+            {
+              kind: "history",
+              paragraphs: [
+                "Le fiamme si estesero alle case circostanti: ne bruciarono circa seicento, per lo più dietro e accanto al municipio. Del municipio stesso rimasero in piedi soltanto i muri perimetrali.",
+              ],
+            },
+            {
+              kind: "history",
+              paragraphs: [
+                "Quante persone morirono non si sa con precisione. Le stime vanno da alcune centinaia a circa 8.000; molti storici ritengono che persero la vita più di 7.000 persone. L'evento passò alla storia come la Furia spagnola e scosse la fiducia di quella che era stata la grande città commerciale d'Europa.",
+              ],
+            },
+          ],
+        },
+      },
       transitionToNext:
         "Lasciate la Grote Markt e dirigetevi verso est, per strade tranquille, fino a una piccola piazza che molti visitatori considerano la più bella di Anversa.",
     },
 
-    // ── 13 ───────────────────────────────────────────────────────────────
+    // ── 14 ───────────────────────────────────────────────────────────────
     "classics-conscienceplein": {
       name: "Hendrik Conscienceplein",
       subtitle: "L'uomo che insegnò al suo popolo a leggere",
@@ -480,7 +725,7 @@ export const classicsContentIt: ClassicsContent = {
         "Ora voltatevi. La chiesa riccamente decorata alle vostre spalle è la prossima tappa, e il luogo in cui entriamo nell'epoca di Rubens.",
     },
 
-    // ── 14 ───────────────────────────────────────────────────────────────
+    // ── 15 ───────────────────────────────────────────────────────────────
     "classics-carolus-borromeus": {
       name: "Chiesa di San Carlo Borromeo",
       subtitle: "Il capolavoro perduto di Rubens",
@@ -512,7 +757,7 @@ export const classicsContentIt: ClassicsContent = {
         "Dal Barocco torniamo ancora più indietro, nel tardo Medioevo. Camminate verso nord in direzione del fiume, fino a un edificio sorprendente a strisce rosse e bianche.",
     },
 
-    // ── 15 ───────────────────────────────────────────────────────────────
+    // ── 16 ───────────────────────────────────────────────────────────────
     "classics-vleeshuis": {
       name: "Il Vleeshuis",
       subtitle: "Un palazzo per i macellai",
@@ -539,11 +784,25 @@ export const classicsContentIt: ClassicsContent = {
           body: "Osservate i muri: file di mattoni rossi si alternano a fasce di arenaria chiara. Ora che ne conoscete il nome, riconoscerete questi speklagen su molti edifici antichi di Anversa e di altre città delle Fiandre.",
         },
       ],
+      galleries: {
+        "vleeshuis-postcards": {
+          title: "Il Vleeshuis in vecchie cartoline",
+          intro: "Tre vecchie cartoline del Museum Vleeshuis mostrano le sue sale, arredate con camini, mobili e oggetti della collezione.",
+        },
+      },
+      // Spooky's task on arrival (a detail to find); the walker says when they found it.
+      quest: {
+        title: "Trovate l'antica cinta del burcht",
+        task: [
+          "Trovate l'antico muro che dall'inizio del XIII secolo proteggeva il burcht.",
+          "La foto è il vostro indizio: cercate intorno al Vleeshuis un tratto di muro come questo. Trovato? Toccate il pulsante qui sotto.",
+        ],
+      },
       transitionToNext:
         "Proseguite per qualche strada verso nord, nel vecchio quartiere portuale. Qui si trova una chiesa la cui storia è legata al fiume, e al fuoco.",
     },
 
-    // ── 16 ───────────────────────────────────────────────────────────────
+    // ── 17 ───────────────────────────────────────────────────────────────
     "classics-sint-paulus": {
       name: "Chiesa di San Paolo (Sint-Pauluskerk)",
       subtitle: "Gotica, barocca e salvata dalle fiamme",
@@ -575,7 +834,7 @@ export const classicsContentIt: ClassicsContent = {
         "Andate verso il fiume. In riva all'acqua si trova l'edificio più antico di Anversa, l'ultimo resto del castello da cui la città ebbe inizio.",
     },
 
-    // ── 17 ───────────────────────────────────────────────────────────────
+    // ── 18 ───────────────────────────────────────────────────────────────
     "classics-het-steen": {
       name: "Het Steen",
       subtitle: "L'ultimo frammento del castello dove nacque Anversa",
@@ -589,6 +848,15 @@ export const classicsContentIt: ClassicsContent = {
           paragraphs: [
             "Intorno all'850 qui sorgeva una fortezza di rifugio, protetta da un terrapieno contro le incursioni vichinghe. Alla fine del X secolo il terreno fu rialzato e probabilmente fu scavato un fossato. Intorno al 1200–1225 fu costruito il castello di pietra, Het Steen, insieme a una cinta muraria intorno al burcht.",
             "Dall'inizio del XIV secolo l'edificio fu usato come prigione, funzione che mantenne per più di cinque secoli, fino al 1823.",
+          ],
+        },
+        {
+          heading: "Il boia di Anversa",
+          kind: "history",
+          paragraphs: [
+            "In quanto prigione cittadina, Het Steen faceva parte della giustizia di Anversa. Lo schout, lo sceriffo della città, sosteneva l'accusa; gli scabini giudicavano; e il boia eseguiva la sentenza. Qui, in una camera sotterranea, i sospetti venivano interrogati, talvolta sotto tortura.",
+            "Tra il 1405 e il 1550 il boia di Anversa eseguì almeno 336 decapitazioni con la spada, la maggior parte sulla Grote Markt davanti al municipio. Altre sentenze venivano eseguite sulla Meir, sulla riva della Schelda e al campo delle forche. Tra il 1558 e il 1562 più di cinquanta condannati furono annegati, di preferenza in segreto all'interno di Het Steen: i roghi pubblici degli eretici avevano provocato troppi disordini.",
+            "Ai boia stessi non andava sempre bene. Nel 1508 un nuovo boia, un ex garzone calzolaio, sbagliò la sua prima decapitazione, e alcuni bambini lo presero a sassate. E il 17 gennaio 1565 mastro Geleyn, boia della città dal 1542, fu a sua volta decapitato sulla Meir, condannato per omicidio, furto e violenze.",
           ],
         },
         {
@@ -610,6 +878,7 @@ export const classicsContentIt: ClassicsContent = {
       didYouKnow: [
         "Quello che vedete come «il castello» è solo una piccola parte del burcht medievale. La maggior parte fu demolita negli anni Ottanta dell'Ottocento per far posto alle banchine.",
         "Het Steen fu usato come prigione dall'inizio del XIV secolo fino al 1823: più di 500 anni.",
+        "Sono pochi i veri strumenti di tortura o di esecuzione giunti fino a noi: nel 1794 i francesi ne bruciarono la maggior parte.",
       ],
       lookAt: [
         {
@@ -625,7 +894,7 @@ export const classicsContentIt: ClassicsContent = {
         "Percorrete gli ultimi passi fino all'acqua. Il nostro viaggio a ritroso nel tempo termina dove la storia di Anversa ebbe inizio.",
     },
 
-    // ── 18 ───────────────────────────────────────────────────────────────
+    // ── 19 ───────────────────────────────────────────────────────────────
     "classics-scheldt": {
       name: "La Schelda",
       subtitle: "Dove tutto ebbe inizio",
@@ -653,6 +922,12 @@ export const classicsContentIt: ClassicsContent = {
       didYouKnow: [
         "Per circa duecento anni, dal blocco successivo al 1585 fino al 1795, Anversa fu un grande porto senza libero accesso al mare. È uno dei motivi per cui il secolo d'oro della città giunse al termine.",
       ],
+      galleries: {
+        "siege-of-antwerp": {
+          title: "L'assedio di Anversa, 1584–1585",
+          intro: "La caduta di Anversa nel 1585 arrivò dopo un assedio di oltre un anno condotto da Alessandro Farnese, duca di Parma. Queste stampe mostrano come chiuse il fiume e come la città cercò di sfondare.",
+        },
+      },
       closing: {
         timeline: [
           "Antwerpen-Centraal: inizia il XX secolo",
@@ -688,6 +963,12 @@ export const classicsContentIt: ClassicsContent = {
       caption: "La galleria dei binari oggi, con l'orologio, la scritta ANTWERPEN e lo stemma della città sopra l'ingresso.",
       alt: "Foto moderna della galleria dei binari in ferro e vetro con la facciata decorata in pietra dell'edificio della stazione",
       approximateYear: "2023",
+    },
+    // Clue of Spooky's task at the station: says where it was taken, not what to find.
+    "central-station-hall-clue-today": {
+      caption: "L'indizio di Spooky: una foto scattata nella stazione.",
+      alt: "Foto di una parete riccamente decorata sotto un tetto di vetro e ferro, con un orologio, decorazioni dorate e un nome in lettere d'oro",
+      approximateYear: "2006",
     },
     "diamond-pelikaanstraat": {
       caption: "La Pelikaanstraat, ai margini dell'attuale quartiere dei diamanti, intorno al 1900.",
@@ -774,6 +1055,41 @@ export const classicsContentIt: ClassicsContent = {
       alt: "Vecchia cartolina di un alto edificio in mattoni con un arco e bambini per strada",
       approximateYear: "ca. 1901",
     },
+    "vleeshuis-wall-clue": {
+      caption: "L'indizio di Spooky: una vecchia foto di un angolo vicino al Vleeshuis.",
+      alt: "Foto in bianco e nero di un muro grezzo di pietre irregolari accanto a un alto edificio in mattoni",
+      approximateYear: "data sconosciuta",
+    },
+    "vleeshuis-postcard-kitchen": {
+      caption: "Una sala arredata come un'antica cucina, con un grande focolare, paioli di rame e una pompa dell'acqua decorata con la sua vasca (cartolina del Museum Vleeshuis, data sconosciuta; collezione del MAS).",
+      alt: "Cartolina seppia di una sala con un grande camino, paioli di rame davanti al focolare, pareti piastrellate, due sedie e una pompa decorata con una vasca di pietra",
+      approximateYear: "data sconosciuta",
+    },
+    "vleeshuis-postcard-panelled-room": {
+      caption: "Una stanza con un camino, armadi intagliati, pannelli decorati alle pareti e una statua su un mobile (cartolina del Museum Vleeshuis, data sconosciuta; collezione del MAS).",
+      alt: "Cartolina seppia di una stanza con le pareti rivestite di pannelli decorati, un camino, armadi intagliati, un tavolo e una statua",
+      approximateYear: "data sconosciuta",
+    },
+    "vleeshuis-postcard-hall": {
+      caption: "Una sala con un lungo tavolo e sedie, un lampadario di vetro, un orologio a pendolo e un camino riccamente intagliato sormontato da una figura seduta (cartolina del Museum Vleeshuis, data sconosciuta; collezione del MAS).",
+      alt: "Cartolina seppia di una sala con un lungo tavolo circondato da sedie, un lampadario di vetro, vetrate colorate, un orologio a pendolo e un grande camino intagliato",
+      approximateYear: "data sconosciuta",
+    },
+    "siege-parma-bridge": {
+      caption: "Il ponte di barche di Parma sulla Schelda, terminato nel febbraio 1585 per tagliare alla città ogni aiuto via acqua; Anversa è all'orizzonte. Stampa di Lamberecht Causé da Romeyn de Hooghe, 1670–1699 (Rijksmuseum).",
+      alt: "Incisione di un lungo ponte costruito su barche attraverso un ampio fiume, con soldati e carrozze sopra, navi da guerra intorno e il profilo di una città in lontananza",
+      approximateYear: "1670–1699",
+    },
+    "siege-bridge-attack": {
+      caption: "Aprile 1585: Anversa lancia navi incendiarie contro il ponte. Secondo il titolo lo stesso Alessandro di Parma rischiò di morire, ma il ponte resse e l'attacco fallì. Stampa di Lamberecht Causé da Romeyn de Hooghe, 1670–1699 (Rijksmuseum).",
+      alt: "Incisione di un'enorme esplosione su un ponte di barche, con assi, barche e soldati scagliati in aria e fumo sopra il fiume",
+      approximateYear: "1670–1699",
+    },
+    "siege-map-luyken": {
+      caption: "Tutto l'assedio in una mappa di Jan Luyken (1680–1684): Anversa in alto a sinistra, il ponte di barche al centro, le terre allagate e, a destra, i combattimenti sulla diga di Kouwenstein nel maggio 1585, un altro tentativo fallito di sfondare (Rijksmuseum).",
+      alt: "Mappa incisa della Schelda a valle di Anversa con forti, un ponte sul fiume, campi allagati, navi e truppe che combattono lungo una diga",
+      approximateYear: "1680–1684",
+    },
     "sint-paulus-1901": {
       caption: "La Sint-Pauluskerk e i caffè intorno, su una cartolina datata 1901.",
       alt: "Vecchia cartolina di una chiesa gotica con torre barocca sopra piccole case e caffè",
@@ -798,6 +1114,137 @@ export const classicsContentIt: ClassicsContent = {
       caption: "Le banchine della Schelda intorno al 1900, fiancheggiate da navi e capannoni.",
       alt: "Vecchia cartolina illustrata di piroscafi e velieri lungo la banchina",
       approximateYear: "ca. 1900",
+    },
+    "diamond-bourse-today": {
+      caption: "La Beurs voor Diamanthandel nella Pelikaanstraat, una delle borse dei diamanti del quartiere e monumento tutelato.",
+      alt: "Foto moderna di un alto edificio per uffici in pietra con una fascia scolpita con il nome e bandiere sopra l'ingresso",
+      approximateYear: "2010",
+    },
+    "flatow-expulsion-card-1941": {
+      caption: "Scheda del 1941 di Siegfried Flatow, un tedesco nato a Berlino nel 1921 che abitava in Zurenborgstraat 17 ad Anversa. Riporta che il 1° febbraio 1941 fu trasferito con la forza a Beverloo, Leysestraat 25.",
+      alt: "Modulo ingiallito bilingue tedesco-olandese compilato a macchina, con un'impronta digitale nel riquadro in basso e uno spazio vuoto per una foto",
+      approximateYear: "1941",
+    },
+    "dossin-courtyard-1942": {
+      caption: "Il cortile della caserma Dossin a Malines, 1942: bagagli sparsi a terra, camion e gruppi di persone.",
+      alt: "Foto in bianco e nero di un cortile chiuso di una caserma, con file di valigie e fagotti a terra, due camion e gruppi di persone ai lati",
+      approximateYear: "1942",
+    },
+    "paleis-op-de-meir-today": {
+      caption: "Il Paleis op de Meir oggi: il palazzo mercantile settecentesco che Napoleone acquistò.",
+      alt: "Foto moderna di una chiara facciata di palazzo rococò con un balcone e un ornato stemma sul tetto",
+      approximateYear: "2023",
+    },
+    "rex-ruins": {
+      caption: "Il Cinema Rex in rovina dopo l'impatto della V2 del 16 dicembre 1944.",
+      alt: "Foto seppia di un cinema bombardato con muri crollati e il tetto a cupola scoperto, con un'auto degli anni Quaranta davanti",
+      approximateYear: "1944–1947",
+    },
+    // The clue of Spooky's quest: shown before the place is found, so it must not name it.
+    "paleis-op-de-meir-drawing": {
+      caption: "L'indizio di Spooky: un vecchio prospetto di una lunga facciata.",
+      alt: "Vecchio disegno di una facciata lunga e simmetrica con alte finestre, piccoli balconi, vasi sul tetto e un grande stemma ornato al centro",
+      approximateYear: "data sconosciuta",
+    },
+    "rubens-self-portrait-1623": {
+      caption: "Peter Paul Rubens, autoritratto, 1623 (Royal Collection, Londra).",
+      alt: "Ritratto dipinto di un uomo barbuto con un ampio cappello nero e un mantello scuro",
+      approximateYear: "1623",
+    },
+    "rubenshuis-garden-today": {
+      caption: "Il giardino della Casa di Rubens oggi, con la casa e, a destra, il portico dell'epoca di Rubens.",
+      alt: "Foto moderna di un giardino con una fontana davanti a una casa rinascimentale e un portale in pietra sormontato da statue",
+      approximateYear: "2025",
+    },
+    "rubens-honeysuckle-bower": {
+      caption: "Rubens e Isabella Brant sotto il pergolato di caprifoglio, 1609–1610 circa (Alte Pinakothek, Monaco di Baviera).",
+      alt: "Dipinto di una giovane coppia riccamente vestita seduta mano nella mano sotto un pergolato di caprifoglio",
+      approximateYear: "ca. 1609–1610",
+    },
+    "handelsbeurs-open-courtyard-1613": {
+      caption: "La borsa del 1531 con il suo cortile aperto, pieno di mercanti: un'incisione pubblicata nel 1613.",
+      alt: "Incisione in bianco e nero di un cortile rettangolare circondato da gallerie, con piccoli gruppi di persone e due torri",
+      approximateYear: "1613",
+    },
+    "groenkerkhof-1597": {
+      caption: "Un corteo funebre presso il cimitero della cattedrale, l'attuale Groenplaats: un dipinto anonimo del 1597 (Museum Vleeshuis).",
+      alt: "Antico dipinto di persone in lutto vestite di nero che passano accanto a un cimitero, con l'alta torre della cattedrale sullo sfondo",
+      approximateYear: "1597",
+    },
+    "groenplaats-rubens-statue-1840s": {
+      caption: "La cattedrale vista dalla Groenplaats, con la nuova statua di Rubens: una litografia di Jules Alexandre Monthelier, anni Quaranta dell'Ottocento.",
+      alt: "Litografia di una statua di bronzo su un alto piedistallo tra gli alberi, con la cattedrale e la sua guglia sullo sfondo",
+      approximateYear: "anni Quaranta dell'Ottocento",
+    },
+    "matsijs-portrait-1572": {
+      caption: "Quinten Matsijs in un ritratto a stampa pubblicato ad Anversa nel 1572. Il verso latino sottostante racconta come l'amore lo rese pittore.",
+      alt: "Ritratto inciso di profilo di un uomo con berretto e mantello che tiene dei fogli arrotolati, con versi latini sotto",
+      approximateYear: "1572",
+    },
+    "matsijs-altarpiece-1511": {
+      caption: "La pala d'altare di Quinten Matsijs per la corporazione dei falegnami, dipinta nel 1508–1511 per questa cattedrale (KMSKA, Anversa).",
+      alt: "Trittico dipinto con un Compianto sul Cristo morto nel pannello centrale e due pannelli laterali",
+      approximateYear: "1511",
+    },
+    "matsijs-well": {
+      caption: "Il pozzo accanto alla cattedrale, fotografato intorno al 1875–1900. La sua gabbia in ferro battuto è tradizionalmente attribuita a Matsijs.",
+      alt: "Antica fotografia di un'ornata gabbia di pozzo in ferro battuto su una base di pietra davanti a un muro gotico",
+      approximateYear: "ca. 1875–1900",
+    },
+    "nello-patrasche-today": {
+      caption: "Nello e Patrasche di Batist Vermeulen (2016), addormentati sotto una coperta di ciottoli davanti alla cattedrale.",
+      alt: "Foto moderna di una statua in marmo bianco di un ragazzo e un cane distesi sotto una coperta di ciottoli, con la torre della cattedrale sullo sfondo",
+      approximateYear: "2023",
+    },
+    "vlaeykensgang-today": {
+      caption: "Il Vlaeykensgang oggi: ciottoli, muri di mattoni e un passaggio coperto.",
+      alt: "Foto moderna di uno stretto vicolo acciottolato tra muri di mattoni, visto attraverso un basso passaggio coperto",
+      approximateYear: "2022",
+    },
+    "stadhuis-spanish-fury-hogenberg": {
+      caption: "Il municipio in fiamme durante la Furia spagnola, con combattimenti sulla Grote Markt: un'acquaforte di Frans Hogenberg, realizzata prima del 1585.",
+      alt: "Acquaforte di un grande municipio rinascimentale da cui si levano fiamme e fumo, con soldati che combattono sulla piazza antistante",
+      approximateYear: "prima del 1585",
+    },
+    "handelsbeurs-vandennest": {
+      caption: "Le gallerie decorate con lampadari, drappeggi e alberelli, in una stampa di J.B.J. Vandennest realizzata tra il 1842 e il 1851: ancora prima che il cortile avesse il suo primo tetto (Università di Anversa, Collezioni speciali).",
+      alt: "Stampa di lunghe gallerie a volta con colonne scolpite, lampadari appesi, drappeggi e file di alberelli, con due uomini in uniforme in primo piano",
+      approximateYear: "1842–1851",
+    },
+    "handelsbeurs-lebrun-liedel": {
+      caption: "La Borsa dopo la ricostruzione: colonne scolpite, gallerie a volta e alcuni mercanti, in una stampa di Lebrun-Liedel successiva al 1872 (Università di Anversa, Collezioni speciali).",
+      alt: "Stampa in bianco e nero di una sala con colonne riccamente scolpite e volte a sesto acuto, con in primo piano un uomo con il cilindro che legge",
+      approximateYear: "dopo il 1872",
+    },
+    "spanish-fury-overview-1577": {
+      caption: "La Furia spagnola in un solo foglio: una stampa anonima del 1577 con al centro una pianta di Anversa e della sua cittadella, circondata da scene dell'attacco, dei combattimenti e del municipio in fiamme (Rijksmuseum).",
+      alt: "Stampa con al centro una veduta a volo d'uccello di Anversa e della sua cittadella a stella, circondata da piccole scene di soldati che attaccano, combattono e saccheggiano",
+      approximateYear: "1577",
+    },
+    "spanish-fury-de-braekeleer": {
+      caption: "La Furia spagnola ad Anversa come la dipinse Ferdinand de Braekeleer il Vecchio nel 1836: un'immagine romantica ottocentesca di cittadini armati e feriti tra fumo e fuoco, con la torre della cattedrale sullo sfondo (KMSKA, Anversa).",
+      alt: "Dipinto di una folla di cittadini armati, uomini feriti e una donna inginocchiata accanto a un moribondo, con fumo, fuoco e la torre di una cattedrale sullo sfondo",
+      approximateYear: "1836",
+    },
+    "spanish-fury-mas": {
+      caption: "Una strada piena di vittime, con case in fiamme in lontananza: un dipinto anonimo della Furia spagnola, realizzato tra il 1576 e il 1585 circa (MAS, Anversa).",
+      alt: "Dipinto di una strada affollata di soldati, cavalieri e molti morti, con case in fiamme e fumo nero in lontananza e un campanile a sinistra",
+      approximateYear: "1576–1585",
+    },
+    "spanish-fury-hogenberg-plunder": {
+      caption: "Saccheggio e tortura nelle case di Anversa durante la Furia spagnola, in una stampa di Frans Hogenberg (XVI secolo; Rijksmuseum).",
+      alt: "Incisione di soldati che torturano persone appese a corde dentro le case, con corpi a terra e una strada con case a timpano sullo sfondo",
+      approximateYear: "XVI secolo",
+    },
+    "spanish-fury-print-1618": {
+      caption: "«Spaensche Furie tot Antwerpen»: una stampa del 1618–1624 circa che riprende la scena, con una poesia che piange la sorte della città (anonimo; Rijksmuseum).",
+      alt: "Incisione della stessa scena di tortura e saccheggio, con il titolo «Spaensche Furie tot Antwerpen» e sotto due colonne di versi in olandese",
+      approximateYear: "1618–1624 circa",
+    },
+    "execution-hogenberg-1568": {
+      caption: "Un'esecuzione nei Paesi Bassi dell'epoca: la decapitazione dei conti di Egmont e di Horne sulla Grote Markt di Bruxelles nel 1568, in un'acquaforte di Frans Hogenberg. Non è Anversa, ma è la stessa epoca e lo stesso tipo di giustizia.",
+      alt: "Acquaforte di un patibolo circondato da soldati armati di picche, con un boia armato di spada accanto a un uomo inginocchiato",
+      approximateYear: "1568–1570",
     },
     "scheldt-photochrom": {
       caption: "Anversa vista dal fiume negli anni Novanta dell'Ottocento: Het Steen a sinistra, la cattedrale che si innalza sopra la città.",

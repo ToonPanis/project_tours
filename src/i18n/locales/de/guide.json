@@ -21,7 +21,8 @@
     "history": "Belegt",
     "legend": "Legende",
     "interpretation": "Deutung",
-    "context": "Hintergrund"
+    "context": "Hintergrund",
+    "fiction": "Fiktion"
   },
   "whatYouSee": "Was du siehst",
   "didYouKnow": "Wusstest du schon?",
@@ -59,6 +60,9 @@
   "checkedOn": "Geprüft am {date}",
   "moreInfo": "Mehr Infos",
   "cardOf": "{card} von {total}",
+  "moreStories": "Weitere Geschichten entdecken",
+  "moreStoriesHide": "Zusätzliche Geschichten ausblenden",
+  "moreStoriesNote": "Optional: mehr Hintergrund für alle, die mehr lesen möchten. Du kannst es überspringen und einfach weitergehen.",
   "searchTask": "Suchaufgabe",
   "showHint": "Tipp anzeigen",
   "showNextHint": "Noch ein Tipp",
@@ -83,5 +87,17 @@
   "viewRoute": "Route ansehen",
   "discoverAnotherWalk": "Weiteren Rundgang entdecken",
   "unknownArtist": "Unbekannt",
-  "stopUnavailable": "Die Geschichte zu dieser Station ist gerade nicht verfügbar. Du kannst den Rundgang einfach fortsetzen."
+  "sourceToVerify": "Quelle noch zu prüfen",
+  "rightsToVerify": "Rechte noch zu prüfen",
+  "stopUnavailable": "Die Geschichte zu dieser Station ist gerade nicht verfügbar. Du kannst den Rundgang einfach fortsetzen.",
+  "gallery": {
+    "eyebrow": "Historische Bilder",
+    "roleDescription": "Galerie",
+    "slide": "Bild",
+    "trackLabel": "{title}: wischen oder Pfeiltasten benutzen",
+    "position": "Bild {current} von {total}",
+    "enlarge": "Größer ansehen",
+    "previous": "Vorheriges Bild",
+    "next": "Nächstes Bild"
+  }
 }
