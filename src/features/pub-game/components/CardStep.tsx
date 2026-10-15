@@ -10,7 +10,7 @@ import type { PubGameHandle } from "../client/usePubGame";
 import { MAX_RULE_LENGTH } from "../config";
 import { parseCard } from "../logic/cards";
 import type { PlayerView } from "../logic/player-view";
-import { allTeams, playerName, teammates } from "../logic/view-helpers";
+import { allTeams, currentCafeId, playerName, teammates } from "../logic/view-helpers";
 import { CardBack, PlayingCard } from "./PlayingCard";
 import { FormError } from "./FormError";
 import { TextField } from "./TextField";
@@ -54,7 +54,7 @@ export function CardStep({ game, onRoundSeen }: CardStepProps) {
     <PlayScreen
       eyebrow={t("pubgame.cards.eyebrow", { current: team.cafeIndex + 1, total: team.route.length })}
       title={t("pubgame.cards.title")}
-      screenId={`pub-game-cards-${team.route[team.cafeIndex]}`}
+      screenId={`pub-game-cards-${currentCafeId(view)}`}
     >
       {/* Always mounted, so the first card is announced too (not only later ones). */}
       <div aria-live="polite">{current && <DrawnCard view={view} card={current} />}</div>

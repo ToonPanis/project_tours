@@ -24,6 +24,7 @@ import { DrinkStep } from "./DrinkStep";
 import { EffectsBar } from "./EffectsBar";
 import { EventPopup } from "./EventPopup";
 import { NextCafeScreen } from "./NextCafeScreen";
+import { currentCafeId } from "../logic/view-helpers";
 
 interface PubGameProps {
   code: string;
@@ -125,7 +126,7 @@ export function PubGame({ code, invite, initialView, initialVersion, texts, uplo
     screen = <CardStep key={view.team.cafeIndex} game={game} onRoundSeen={() => setSeenLastCard(lastCard)} />;
   } else if (view.team.step === "pubtask") {
     screen = <PubtaskStep key={view.team.cafeIndex} game={game} />;
-  } else if (hasPubtask(view.team.route[view.team.cafeIndex]) && seenPubtask !== view.team.cafeIndex) {
+  } else if (hasPubtask(currentCafeId(view)) && seenPubtask !== view.team.cafeIndex) {
     // The pubtask just ended: keep its answers and explanations until this player continues.
     screen = <PubtaskStep key={view.team.cafeIndex} game={game} onDone={() => setSeenPubtask(view.team.cafeIndex)} />;
   } else if (view.team.step === "bonus") {

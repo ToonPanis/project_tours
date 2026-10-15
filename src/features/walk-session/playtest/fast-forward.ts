@@ -9,7 +9,7 @@ import type { Walk } from "@/types/walk";
 import { getOrderedLocations } from "@/lib/walk-locations";
 
 /** Takes the current stop from any status to "solved". */
-export function getSolveCurrentStopActions(): SessionAction[] {
+function getSolveCurrentStopActions(): SessionAction[] {
   return [{ type: "ARRIVE" }, { type: "COMPLETE_VISIT" }];
 }
 

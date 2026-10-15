@@ -9,6 +9,7 @@ import type { PubGameHandle } from "../client/usePubGame";
 import { Beery } from "./Beery";
 import { BeeryPopup } from "./BeeryPopup";
 import { FormError } from "./FormError";
+import { currentCafeId } from "../logic/view-helpers";
 
 // The map, GPS and the walking routes are big: load them only when a team is on its way.
 const CafeNavigation = dynamic(() => import("./CafeNavigation"), {
@@ -37,7 +38,7 @@ interface NextCafeScreenProps {
 export function NextCafeScreen({ game, gpsEnabled, onGpsEnabled }: NextCafeScreenProps) {
   const t = useT();
   const { view, act } = game;
-  const cafeId = view.team.route[view.team.cafeIndex];
+  const cafeId = currentCafeId(view);
   // Keyed by café: a new café shows the popup again; a re-render (poll) doesn't.
   const [dismissedCafe, setDismissedCafe] = useState<string | null>(null);
   const [arriveError, setArriveError] = useState<string | null>(null);

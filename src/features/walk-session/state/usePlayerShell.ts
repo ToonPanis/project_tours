@@ -15,7 +15,7 @@ export interface PlayerShell extends WalkSessionControls {
   /** Changing this key restarts the navigation screen (playtest "reset navigation"). */
   navigationKey: number;
   resetNavigation: () => void;
-  /** Deletes the saved walk and closes the route panel. Each player adds its own resets. */
+  /** Deletes the saved walk and closes the route panel (the guide player adds its own resets). */
   restartBase: () => void;
 }
 

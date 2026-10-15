@@ -12,6 +12,7 @@ import { useCafeReveal } from "../client/useCafeReveal";
 import { pointsForAttempt } from "../logic/scoring";
 import { FormError } from "./FormError";
 import { TaskCard } from "./TaskCard";
+import { currentCafeId } from "../logic/view-helpers";
 
 const EMPTY_PROGRESS: QuestionProgress = { wrongOptionIds: [], status: "open", correctOptionId: null, points: 0 };
 
@@ -35,7 +36,7 @@ export function PubtaskStep({ game, onDone }: PubtaskStepProps) {
   const t = useT();
   const texts = usePubGameTexts();
   const { view } = game;
-  const cafeId = view.team.route[view.team.cafeIndex];
+  const cafeId = currentCafeId(view);
   const cafe = playablePubGameDefinition.cafes.find((candidate) => candidate.id === cafeId);
   const cafeTexts = texts.cafes[cafeId];
   const questions = cafe?.questions ?? [];

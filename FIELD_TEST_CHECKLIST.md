@@ -4,7 +4,7 @@ Items that **cannot be resolved from code**. Someone has to go to Antwerp. None 
 
 Status values: `OPEN` · `IN PROGRESS` · `DONE (evidence: …)` · `CHANGED (see finding)`
 
-Finding IDs refer to `AUDIT.md`.
+Finding IDs refer to `docs/archive/AUDIT.md` (the audit of 2026-09-29).
 
 ---
 

@@ -27,7 +27,7 @@ npm run build          # production build (prebuild copies the worker too)
 npm start              # serve the build (use e.g. `npx next start -p 3200` if 3000 is taken)
 npm run typecheck      # = next typegen (PageProps/LayoutProps types) + tsc --noEmit
 npm run lint
-npm run test:run       # = npx vitest run, all unit/component tests once (~1,450, 60–90 s); `npm test` = watch mode
+npm run test:run       # = npx vitest run, all unit/component tests once (~1,030, 90–120 s); `npm test` = watch mode
 npm run test:coverage  # the same, plus coverage of the logic folders (fails under the thresholds)
 npm run test:e2e       # browser tests (Playwright); run `npm run build` first. First time: `npx playwright install chromium`
 npm run i18n:check     # every language has every UI text (en = master)
@@ -69,6 +69,9 @@ public/images/classics|poortjes/   walk images (committed). public/maplibre/<ver
 I18N.md                       full i18n guide (how to add texts / translate a stop / add a 9th language)
 HIDDEN_PUBS_CONCEPT.txt       the owner's Hidden Pubs concept: the single source of truth for the game's rules (don't redesign it)
 HIDDEN_PUBS_DATA_AUDIT.md     decisions D1–D34 taken on that concept, and what is still open
+AUDIT_REPORT.md               technical audit of 2026-10-15 (performance, reliability, security); PERFORMANCE_BASELINE.md
+                              (how it was measured) and OPTIMIZATION_PLAN.md (batches 0–7, what was done and measured)
+docs/archive/                 the audit and plans from before Hidden Pubs 2.0 (history only)
 ```
 
 ## Architecture
@@ -122,7 +125,7 @@ Pattern: **technical data exists once** (ids, coordinates, addresses, images, an
 
 - 8 locales: **en** (default + fallback, master), nl, fr, es, it, de, ru, uk (`src/i18n/config.ts`). Custom lightweight layer on `Intl`, **no package**.
 - Language choice: cookie `ha-locale` (1 year) → else browser `Accept-Language` (`nl-BE`→nl, unsupported→en). Also saved in localStorage `hidden-antwerp:locale`; `<LocaleSync>` restores it if the cookie is gone. **URLs never contain the locale.** Reading cookies makes all routes dynamic (intended). Switching = save + `router.refresh()`, which keeps client state (game, GPS).
-- Server: `const t = await getTranslator()` (`src/i18n/server.ts`). Client: `const t = useT()` (`src/i18n/client.tsx`). `t("key", { value })`, `t.plural("key", n)` (Intl.PluralRules; ru/uk have one/few/many). Keys are typed from the English JSON. Missing → English + dev console warning, never `undefined`.
+- Server: `const t = await getTranslator()` (`src/i18n/server.ts`, cached per request). Client: `const t = useT()` (`src/i18n/client.tsx`). The browser only gets English (bundled, the fallback) and the visitor's own language (passed by the root layout to `<LocaleProvider messages>`): Client Components never import `createTranslator`/`messages.ts` (that is all 8 languages; `i18n-client.test.tsx` checks it). `t("key", { value })`, `t.plural("key", n)` (Intl.PluralRules; ru/uk have one/few/many). Keys are typed from the English JSON. Missing → English + dev console warning, never `undefined`.
 - UI texts: `src/i18n/locales/<lang>/{common,navigation,meta,home,errors,walks,game,guide,gps,pubgame}.json`, semantic keys only (`pubgame.json` = everything in Hidden Pubs). Formatting helpers in `format-walk.ts` (`formatDate`, `formatPrice` with `${locale}-BE`, `formatDistance`, `formatDuration`, `formatLanguages`).
 - Walk content: `LocalizedContent<T> = { en: T; nl?: …}`; `pickContent` deep-merges a translation over English (arrays replaced whole). `walk.languages` = languages that have content. **All 3 walks + upcoming walks are fully translated in all 8 languages.**
 - Checks: `npm run i18n:check` (UI), `src/__tests__/i18n-walk-content.test.ts` (each translation must have exactly the English structure; technical values unchanged), `walk-data.test.ts` runs every walk in every language.
@@ -141,11 +144,11 @@ Security headers for every response come from `src/lib/security-headers.ts` via 
 
 ## Status
 
-**Works:** home, walk list, detail pages (stats, practical info, collection, story teaser, how-it-works), both guide walks and the Hidden Pubs multiplayer game playable end to end (in memory; not yet tested against a real database and Blob store), save/continue/restart, GPS navigation with map, arrival detection, off-route handling, simulated GPS, full 8-language UI + content, language selector with persistence, translated metadata/OG, tests + build green.
+**Works:** home, walk list, detail pages (stats, practical info, collection, story teaser, how-it-works), both guide walks and the Hidden Pubs multiplayer game playable end to end (the MongoDB store passes its tests against the Atlas test database, `npm run test:db`, 2026-10-15; not yet played on Vercel with the real Blob store), save/continue/restart, GPS navigation with map, arrival detection, off-route handling, simulated GPS, full 8-language UI + content, language selector with persistence, translated metadata/OG, tests + build green.
 
 **In progress / open:**
 - Content is `contentStatus: "placeholder"`: many stops are `partially-verified`/`research-required`; not reviewed by a historian; Poortjes gates need on-site checks (`[To be verified on site]` markers).
-- Hidden Pubs: open points are listed in `HIDDEN_PUBS_DATA_AUDIT.md`: real MongoDB/Blob test (`.env.local`, `npm run db:setup`, `db:check`, `test:db`), field test of all 12 cafés (coordinates `to-verify`), the owner's approval of the proposed Rococo and De Kat answer options, the savings-box photo, price/duration/team size (D32), fun facts marked research-required, drink spellings `to-verify`.
+- Hidden Pubs: open points are listed in `HIDDEN_PUBS_DATA_AUDIT.md`: a real game on Vercel with MongoDB and the Blob store (incl. `CRON_SECRET` for the daily photo cleanup), field test of all 12 cafés (coordinates `to-verify`), the owner's approval of the proposed Rococo and De Kat answer options, the savings-box photo, price/duration/team size (D32), fun facts marked research-required, drink spellings `to-verify`.
 - Smekens drawing rights, see Images.
 - Translations were made by AI and are not reviewed by native speakers (ru/uk name transliterations and some glossary terms were flagged as worth checking). Italian UI uses "tu" in a few labels, content addresses the group with "voi".
 - Not built yet: payments (prices are display only), accounts, analytics. (Hidden Pubs checks answers on the server; answers never ship to the browser.)

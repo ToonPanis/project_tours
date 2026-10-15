@@ -8,7 +8,7 @@ interface PlayScreenProps {
   eyebrow?: string;
   title: string;
   /**
-   * Identifies the screen, e.g. "challenge-pubs-rococo". When it changes, the page
+   * Identifies the screen, e.g. "pub-game-bonus-pubs-rococo". When it changes, the page
    * scrolls to the top and focuses the title. Defaults to the title, but the title is
    * translated: a stable id means switching language doesn't jump back to the top.
    */

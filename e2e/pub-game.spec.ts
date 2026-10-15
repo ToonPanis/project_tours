@@ -405,3 +405,59 @@ test.describe("test point 15: GPS in the pub game", () => {
     }
   });
 });
+
+test("a bonus photo: sent from the phone, approved by the host, and only then worth its points", async ({ browser }) => {
+  test.setTimeout(8 * 60_000);
+  const solo = await newPhone(browser);
+  const problems = watchForProblems(solo);
+  const code = await startSoloGame(solo, "Solo");
+
+  // Play cafés (the route is random) until one has a bonus photo task.
+  let answered = 0;
+  for (let cafe = 0; cafe < 12; cafe++) {
+    const cafeId = await arrive(solo);
+    await solo.getByRole("button", { name: en("pubgame.drinks.ready") }).click();
+    await cardRound([solo]);
+    const definition = pubGameDefinition.cafes.find((candidate) => candidate.id === cafeId)!;
+    const photoTask = definition.tasks.find((task) => task.presentedAs === "bonus" && task.evidence === "photo");
+    if (!photoTask) {
+      answered += definition.questions.length;
+      await pubtaskToFunFact(solo, cafeId);
+      await solo.getByRole("button", { name: en("pubgame.funFact.next") }).click();
+      continue;
+    }
+
+    // The pubtask first (right answers), then Beery's bonus task.
+    for (const question of definition.questions) {
+      await solo.getByRole("button", { name: texts[cafeId].questions[question.id].options[pubGameAnswerKey[question.id]], exact: true }).click();
+      await expect(solo.getByText(en("pubgame.pubtask.correct", { points: 100 })).first()).toBeVisible();
+    }
+    answered += definition.questions.length;
+    await solo.getByRole("button", { name: en("pubgame.pubtask.continue") }).click();
+    await solo.getByRole("button", { name: en("pubgame.beery.letsGo") }).click();
+
+    const task = solo.locator("section", { hasText: texts[cafeId].tasks[photoTask.id].title });
+    await task.getByLabel(en("pubgame.evidence.takePhoto")).setInputFiles({
+      name: "evidence.jpg",
+      mimeType: "image/jpeg",
+      buffer: Buffer.from([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3, 4]),
+    });
+    await expect(task.getByRole("img", { name: en("pubgame.evidence.previewPhoto") })).toBeVisible();
+    await task.getByRole("button", { name: en("pubgame.evidence.send") }).click();
+    // Sent: the bonus step is done, the team reads the fun fact. No points yet.
+    await expect(solo.getByRole("heading", { name: pubGameReveals.en.cafes[cafeId].funFact.title })).toBeVisible();
+
+    // The host (this phone) reviews it.
+    await solo.goto(`/games/${code}/host`);
+    await solo.getByRole("button", { name: en("pubgame.host.approve") }).click();
+    await expect(solo.getByText(en("pubgame.host.noPendingEvidence"))).toBeVisible();
+
+    // Back in the game: the approved photo counts.
+    await solo.goto(`/games/${code}`);
+    await tapPastPopups(solo, en("pubgame.menu.scores"));
+    await expect(solo.getByRole("dialog").getByText(en.plural("pubgame.leaderboard.points", answered * 100 + photoTask.points))).toBeVisible();
+    expect(problems).toEqual([]);
+    return;
+  }
+  throw new Error("No café with a bonus photo task on the route");
+});

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { PlayScreen } from "@/features/walk-session/components/PlayScreen";
 import { useT } from "@/i18n/client";
+import { shareOrCopy } from "../client/share";
 import type { PlayerView } from "../logic/player-view";
 import { bestAt, leaderboardRows, winners } from "../logic/view-helpers";
 import { Beery } from "./Beery";
@@ -39,20 +40,8 @@ export function ResultsScreen({ view }: { view: PlayerView }) {
       t("pubgame.results.shareTitle"),
       ...rows.map((row) => t("pubgame.results.shareLine", { position: row.position, name: row.name, points: row.total })),
     ].join("\n");
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: t("pubgame.results.shareTitle"), text });
-        return;
-      } catch {
-        // Cancelled or not allowed: copy instead.
-      }
-    }
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-    } catch {
-      setCopied(false);
-    }
+    const result = await shareOrCopy({ title: t("pubgame.results.shareTitle"), text }, text);
+    if (result !== "shared") setCopied(result === "copied");
   }
 
   return (

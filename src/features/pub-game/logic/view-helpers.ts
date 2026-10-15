@@ -21,6 +21,11 @@ export function allTeams(view: PlayerView): TeamSummary[] {
   return [own, ...view.otherTeams].sort((a, b) => order(a.id) - order(b.id));
 }
 
+/** The café the viewer's team is at, or walking to. */
+export function currentCafeId(view: PlayerView): string {
+  return view.team.route[view.team.cafeIndex];
+}
+
 /** A player's name from the view (the id when unknown: never crashes a screen). */
 export function playerName(view: PlayerView, playerId: string | null | undefined): string {
   return view.players.find((player) => player.id === playerId)?.name ?? playerId ?? "";
