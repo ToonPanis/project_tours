@@ -2,7 +2,7 @@
 
 # Hidden Antwerp (repo: project_tours)
 
-A mobile-first web app for **self-guided city walks in Antwerp**, played in the phone browser (no app). Two kinds of experience: narrated **guide walks** (history, images, then/now) and **Hidden Pubs**, a multiplayer pub game (teams, each player on their own phone, a live leaderboard). Built in-browser GPS navigation between stops. 8 languages. Status: **prototype / playtest phase**. Only Hidden Pubs has a backend (Postgres for games, Vercel Blob for evidence photos); no payments, no accounts yet. The site is `noindex` (`robots` in `src/app/layout.tsx`) while it contains placeholder content.
+A mobile-first web app for **self-guided city walks in Antwerp**, played in the phone browser (no app). Two kinds of experience: narrated **guide walks** (history, images, then/now) and **Hidden Pubs**, a multiplayer pub game (teams, each player on their own phone, a live leaderboard). Built in-browser GPS navigation between stops. 8 languages. Status: **prototype / playtest phase**. Only Hidden Pubs has a backend (MongoDB Atlas for games, Vercel Blob for evidence photos); no payments, no accounts yet. The site is `noindex` (`robots` in `src/app/layout.tsx`) while it contains placeholder content.
 
 ## About the developer
 
@@ -13,7 +13,7 @@ I'm a programming student. I'm comfortable with TypeScript, JavaScript, React, N
 
 - Next.js **16.3** (App Router, `src/app/`, Turbopack), React 19.2, TypeScript strict. Path alias `@/*` → `./src/*`.
 - Tailwind CSS v4 (`@tailwindcss/postcss`); design tokens + walk themes in `src/app/globals.css`. Fonts via `next/font/google`: Cormorant Garamond (display) + Source Sans 3 (body), only `latin` is preloaded (`subsets`); Cyrillic and Latin-extended still load on demand via `unicode-range`.
-- **Runtime dependencies besides Next/React:** `maplibre-gl` 6 (maps), and for Hidden Pubs `postgres` 3 (database), `@vercel/blob` 2 (evidence photos/videos) and `qrcode-generator` (join QR code). No i18n library, no state library, no UI kit.
+- **Runtime dependencies besides Next/React:** `maplibre-gl` 6 (maps), and for Hidden Pubs `mongodb` 6 (the official MongoDB driver; 7.x needs Node ≥ 20.19), `@vercel/blob` 2 (evidence photos/videos) and `qrcode-generator` (join QR code). No i18n library, no state library, no UI kit.
 - ESLint 9 (`eslint-config-next`). Vitest 4 + React Testing Library (jsdom), tests in `src/__tests__/`. Shared setup in `src/__tests__/setup.ts` (cleanup, empty storage, `<dialog>` stand-in); mocks and global stubs are restored between tests. Tests take content from the data and texts from the translations (never type café names, answers or UI text literally); `fixtures/fake-maplibre.ts` stands in for MapLibre.
 - Node 20 locally (end-of-life; upgrade planned). CI uses the version in `.nvmrc` (22); `engines` allows Next's minimum (≥ 20.9). Windows machine (use Git Bash / PowerShell syntax accordingly).
 - Playwright (dev) for browser tests in `e2e/` (a 390 px Chromium phone against the production build); `@vitest/coverage-v8` for coverage of the logic folders (thresholds in `vitest.config.mts`).
@@ -31,8 +31,9 @@ npm run test:run       # = npx vitest run, all unit/component tests once (~1,450
 npm run test:coverage  # the same, plus coverage of the logic folders (fails under the thresholds)
 npm run test:e2e       # browser tests (Playwright); run `npm run build` first. First time: `npx playwright install chromium`
 npm run i18n:check     # every language has every UI text (en = master)
-npm run db:migrate     # Hidden Pubs: create/update the tables (db/migrations/*.sql) in DATABASE_URL from .env.local
-npm run test:db        # Hidden Pubs: the Postgres store tests against TEST_DATABASE_URL (a SEPARATE database; skipped without it)
+npm run db:setup       # Hidden Pubs: create the MongoDB collections, validation and indexes (db/mongo-schema.mjs) in MONGODB_URI; only adds, safe to rerun
+npm run db:check       # Hidden Pubs: database health check (ping, collections/indexes, active games); read only, prints no secrets
+npm run test:db        # Hidden Pubs: the MongoDB store tests against TEST_MONGODB_URI (a SEPARATE database whose name contains "test"; skipped without it)
 node scripts/generate-walking-routes.mjs <walk-folder>   # after changing coordinates.json
 node scripts/download-commons-images.mjs <walk-folder>   # after changing image-sources.json
 ```
@@ -61,7 +62,7 @@ src/lib/                      repositories/ (walkRepository, cached getWalk), ro
 src/types/                    shared models (walk, location, guide, navigation, session, pub-game, …)
 src/data/walks/               ALL walk data (see "Walks")
 scripts/                      route generator, Commons image downloader, MapLibre worker copy, translation check
-db/migrations/                Hidden Pubs SQL migrations (run with npm run db:migrate)
+db/mongo-schema.mjs           Hidden Pubs MongoDB collections, $jsonSchema validation, indexes (TTL) (used by db:setup, db:check, tests)
 e2e/                          Playwright browser tests: pages, GPS walk + privacy, Hidden Pubs multiplayer (pub-game.spec.ts), languages, layout at 390 px, data use
 public/images/classics|poortjes/   walk images (committed). public/maplibre/<version>/ is generated + git-ignored.
 I18N.md                       full i18n guide (how to add texts / translate a stop / add a 9th language)
@@ -97,7 +98,7 @@ Pattern: **technical data exists once** (ids, coordinates, addresses, images, an
 
 - Flow: the detail page's start button → `/walks/hidden-pubs/play` → redirect to `/games/new` (organiser creates a game, becomes host) → `/games/<CODE>` lobby (share link/QR, teams) → per café: Beery's announcement + navigation (shared `NavigationScreen`) → drink choice (stays on the phone) → Drunken Bastard card round → pubtask (multiple choice, 100/80/60/0) → bonus task (photo/video, host approves in `/games/<CODE>/host`) → fun fact → next café; leaderboard any time; results when the host ends the game.
 - **Pure rules** in `logic/`: `applyPubGameAction(definition, answerKey, state, actorId, action)` → `{ ok, state, events }` or `{ ok: false, error }`. Tested without a server or browser.
-- **Server** (`server/game-service.ts`): loads the game, applies the action, saves with an optimistic version check (retries on a conflict). Actions carry an `actionId`, so a retried request is applied once. Stores behind interfaces: `GameStore` (memory | Postgres `FOR UPDATE`) and `MediaStore` (memory | private Vercel Blob, client uploads with tokens from `handleUpload`). `context.ts` picks memory in development, the real stores in production.
+- **Server** (`server/game-service.ts`): loads the game, applies the action, saves with an optimistic version check (retries on a conflict). Actions carry an `actionId`, so a retried request is applied once. Stores behind interfaces: `GameStore` (memory | MongoDB: `mongo-store.ts`, one transaction per action, unique (game, actionId), TTL index deletes games after 7 days; one `MongoClient` per server instance from `mongo.ts`, kept on `globalThis`) and `MediaStore` (memory | private Vercel Blob, client uploads with tokens from `handleUpload`). `context.ts` picks memory in development, the real stores in production.
 - **Phones poll** `/api/games/<CODE>/state?since=<version>` every 2 s while visible (`client/usePubGame.ts`); versioned events give each phone its popups once.
 - Joining: a cookie per game; after the first card nobody can join freely, the host's personal link (`/games/<CODE>/claim#token`) lets a late player in or moves a player to a new phone. Games expire after `GAME_LIFETIME_DAYS`.
 
@@ -134,8 +135,8 @@ Pattern: **technical data exists once** (ids, coordinates, addresses, images, an
 
 ## Environment & external services
 
-Only Hidden Pubs needs secrets (server only, never `NEXT_PUBLIC_`). `.env.example` (committed, no values) documents every variable: `DATABASE_URL` (Neon Postgres, pooled; required in production, development keeps games in memory), `BLOB_READ_WRITE_TOKEN` (Vercel Blob, private files; required in production, development keeps uploads in memory), `TEST_DATABASE_URL` (optional, a separate database for `npm run test:db`), `PUB_GAME_MEMORY_STORES=true` (**tests only**: lets the production build used by Playwright keep games in memory; set in `playwright.config.ts`, never on Vercel), `NEXT_PUBLIC_MAP_STYLE_URL` (optional tile style), `NEXT_PUBLIC_PLAYTEST_TOOLS=true` (playtest tools in production; the build prints a warning) and `DEV_ALLOWED_ORIGINS` (dev only: your computer's exact LAN IP, e.g. `192.168.1.23`, **needed to open the dev server from a phone**; no wildcards).
-Security headers for every response come from `src/lib/security-headers.ts` via `next.config.ts` (nosniff, Referrer-Policy, Permissions-Policy `geolocation=(self)`, `X-Frame-Options: DENY`, no `X-Powered-By`). The Content Security Policy is **Report-Only**: check the browser console on real phones with a production build, then switch the key to `Content-Security-Policy`. A custom map style on other hosts needs those hosts added to the CSP. `.env*` except `.env.example` is git-ignored. External services: OpenFreeMap tiles (runtime, keyless), Neon Postgres + Vercel Blob (runtime, Hidden Pubs only), OSRM at routing.openstreetmap.de and the Wikimedia Commons API (only from the scripts), Google Fonts (build time). Git remote: `github.com/ToonPanis/project_tours`, branch `main`.
+Only Hidden Pubs needs secrets (server only, never `NEXT_PUBLIC_`). `.env.example` (committed, no values) documents every variable: `MONGODB_URI` (MongoDB Atlas, must name the database, which is `HiddenAntwerpGeneral` (case-sensitive); required in production, development keeps games in memory; Atlas Network Access must allow the server), `BLOB_READ_WRITE_TOKEN` (Vercel Blob, private files; required in production, development keeps uploads in memory), `TEST_MONGODB_URI` (optional, a separate database `HiddenAntwerpGeneral_test` for `npm run test:db`), `PUB_GAME_MEMORY_STORES=true` (**tests only**: lets the production build used by Playwright keep games in memory; set in `playwright.config.ts`, never on Vercel), `NEXT_PUBLIC_MAP_STYLE_URL` (optional tile style), `NEXT_PUBLIC_PLAYTEST_TOOLS=true` (playtest tools in production; the build prints a warning) and `DEV_ALLOWED_ORIGINS` (dev only: your computer's exact LAN IP, e.g. `192.168.1.23`, **needed to open the dev server from a phone**; no wildcards).
+Security headers for every response come from `src/lib/security-headers.ts` via `next.config.ts` (nosniff, Referrer-Policy, Permissions-Policy `geolocation=(self)`, `X-Frame-Options: DENY`, no `X-Powered-By`). The Content Security Policy is **Report-Only**: check the browser console on real phones with a production build, then switch the key to `Content-Security-Policy`. A custom map style on other hosts needs those hosts added to the CSP. `.env*` except `.env.example` is git-ignored. External services: OpenFreeMap tiles (runtime, keyless), MongoDB Atlas + Vercel Blob (runtime, Hidden Pubs only), OSRM at routing.openstreetmap.de and the Wikimedia Commons API (only from the scripts), Google Fonts (build time). Git remote: `github.com/ToonPanis/project_tours`, branch `main`.
 
 ## Status
 
@@ -143,7 +144,7 @@ Security headers for every response come from `src/lib/security-headers.ts` via 
 
 **In progress / open:**
 - Content is `contentStatus: "placeholder"`: many stops are `partially-verified`/`research-required`; not reviewed by a historian; Poortjes gates need on-site checks (`[To be verified on site]` markers).
-- Hidden Pubs: open points are listed in `HIDDEN_PUBS_DATA_AUDIT.md`: real Postgres/Blob test (`.env.local`), field test of all 12 cafés (coordinates `to-verify`), the owner's approval of the proposed Rococo and De Kat answer options, the savings-box photo, price/duration/team size (D32), fun facts marked research-required, drink spellings `to-verify`.
+- Hidden Pubs: open points are listed in `HIDDEN_PUBS_DATA_AUDIT.md`: real MongoDB/Blob test (`.env.local`, `npm run db:setup`, `db:check`, `test:db`), field test of all 12 cafés (coordinates `to-verify`), the owner's approval of the proposed Rococo and De Kat answer options, the savings-box photo, price/duration/team size (D32), fun facts marked research-required, drink spellings `to-verify`.
 - Smekens drawing rights, see Images.
 - Translations were made by AI and are not reviewed by native speakers (ru/uk name transliterations and some glossary terms were flagged as worth checking). Italian UI uses "tu" in a few labels, content addresses the group with "voi".
 - Not built yet: payments (prices are display only), accounts, analytics. (Hidden Pubs checks answers on the server; answers never ship to the browser.)

@@ -1,6 +1,5 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-import { afterAll, beforeAll, describe, expect, test } from "vitest";
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
+import { COLLECTIONS, ensureSchema } from "../../db/mongo-schema.mjs";
 import { pubGameAnswerKey } from "@/data/walks/hidden-pubs/game/answers.server";
 import { pubGameDefinition } from "@/data/walks/hidden-pubs/game/definition";
 import { createPubGame } from "@/features/pub-game/logic/create-game";
@@ -8,18 +7,21 @@ import type { CommitInput, GameStore, StoredGame } from "@/features/pub-game/ser
 import { createGame, getGameUpdate, joinGame, performAction } from "@/features/pub-game/server/game-service";
 import { MemoryMediaStore } from "@/features/pub-game/server/media-store";
 import { MemoryGameStore } from "@/features/pub-game/server/memory-store";
-import { createSql, PostgresGameStore } from "@/features/pub-game/server/postgres-store";
+import { MongoClient } from "mongodb";
+import { createMongoClient, databaseOf, MONGO_CLIENT_OPTIONS } from "@/features/pub-game/server/mongo";
+import { GameStoreUnavailableError, MongoGameStore } from "@/features/pub-game/server/mongo-store";
 
 /**
- * The same tests for every GameStore, so the Postgres store is proven to behave
+ * The same tests for every GameStore, so the MongoDB store is proven to behave
  * exactly like the memory store the other tests use.
  *
- * Postgres only runs when TEST_DATABASE_URL points to a test database:
- *   npm run test:db        (reads TEST_DATABASE_URL from .env.local)
- * It creates the tables if they don't exist and deletes only its own games.
+ * MongoDB only runs when TEST_MONGODB_URI points to a TEST database (its name must
+ * contain "test", e.g. hiddenantwerp_test, so it can never be the real one):
+ *   npm run test:db        (reads TEST_MONGODB_URI from .env.local)
+ * It creates the collections and indexes if they're missing and deletes only its own games.
  */
 
-const testDatabaseUrl = process.env.TEST_DATABASE_URL;
+const testMongoUri = process.env.TEST_MONGODB_URI;
 const runId = Math.random().toString(36).slice(2, 8).toUpperCase();
 let codeCounter = 0;
 /** Codes no real game can have (real codes have no "_"), so cleanup can't touch real games. */
@@ -59,20 +61,32 @@ type StoreFactory = { name: string; create: () => GameStore; cleanup?: () => Pro
 
 const factories: StoreFactory[] = [{ name: "memory", create: () => new MemoryGameStore() }];
 
-if (testDatabaseUrl) {
-  const sql = createSql(testDatabaseUrl);
+const mongoClient = testMongoUri ? createMongoClient(testMongoUri) : null;
+
+/** Deletes everything of these games (test games only). */
+async function deleteGames(codes: { $regex: string } | string) {
+  if (!mongoClient) return;
+  const db = databaseOf(mongoClient);
+  await db.collection<{ _id: string }>(COLLECTIONS.games).deleteMany({ _id: codes });
+  for (const name of [COLLECTIONS.actions, COLLECTIONS.events, COLLECTIONS.players]) {
+    await db.collection(name).deleteMany({ gameCode: codes });
+  }
+}
+
+if (mongoClient) {
+  const db = databaseOf(mongoClient);
+  if (!db.databaseName.includes("test")) {
+    throw new Error(`TEST_MONGODB_URI must point to a test database (name with "test"), not "${db.databaseName}".`);
+  }
   beforeAll(async () => {
-    const [{ exists }] = await sql<{ exists: boolean }[]>`SELECT to_regclass('pub_games') IS NOT NULL AS exists`;
-    if (!exists) {
-      await sql.unsafe(readFileSync(join(process.cwd(), "db", "migrations", "001_pub_games.sql"), "utf8"));
-    }
+    await ensureSchema(db);
   });
   factories.push({
-    name: "postgres",
-    create: () => new PostgresGameStore(sql),
+    name: "mongodb",
+    create: () => new MongoGameStore(mongoClient, db),
     cleanup: async () => {
-      await sql`DELETE FROM pub_games WHERE code LIKE ${`T\\_${runId}\\_%`}`;
-      await sql.end();
+      await deleteGames({ $regex: `^T_${runId}_` });
+      await mongoClient.close();
     },
   });
 }
@@ -136,6 +150,32 @@ describe.each(factories)("$name store", ({ create, cleanup }) => {
     expect((await store.getGame(game.code))?.version).toBe(1);
   });
 
+  test("two games at the same time don't touch each other", async () => {
+    const first = storedGame(newCode());
+    const second = storedGame(newCode());
+    await store.createGame(first);
+    await store.createGame(second);
+    const changed = { ...first.state, phase: "playing" as const };
+    await Promise.all([
+      store.commitAction(commit(first.code, 0, "shared-action-id", changed)),
+      store.commitAction(commit(second.code, 0, "shared-action-id", second.state)),
+    ]);
+    // The same action id in two games is two different actions.
+    expect(await store.getGame(first.code)).toMatchObject({ version: 1, state: { phase: "playing" } });
+    expect(await store.getGame(second.code)).toMatchObject({ version: 1, state: { phase: second.state.phase } });
+    expect(await store.eventsSince(second.code, 0, 10)).toHaveLength(2);
+  });
+
+  test("a code can be used again once its game has expired", async () => {
+    const old = storedGame(newCode(), -1000);
+    await store.createGame(old);
+    await store.commitAction(commit(old.code, 0, "old-action", old.state));
+    const fresh = storedGame(old.code);
+    expect(await store.createGame(fresh)).toBe(true);
+    expect(await store.getGame(old.code)).toEqual(fresh);
+    expect(await store.eventsSince(old.code, 0, 10)).toEqual([]);
+  });
+
   test("player tokens: found by hash, only in their own game", async () => {
     const game = storedGame(newCode());
     const other = storedGame(newCode());
@@ -194,15 +234,47 @@ describe.each(factories)("$name store", ({ create, cleanup }) => {
     if (!update.ok || !update.data.changed) throw new Error("expected changes");
     expect(update.data.events.map((item) => item.event.type)).toContain("card-drawn");
 
-    // The service's cleanup can't happen here (real-looking code), so remove it ourselves.
-    if (store instanceof PostgresGameStore) {
-      const sql = createSql(testDatabaseUrl!);
-      await sql`DELETE FROM pub_games WHERE code = ${code}`;
-      await sql.end();
-    }
+    // This game has a real-looking code, so the cleanup by prefix misses it: remove it here.
+    if (store instanceof MongoGameStore) await deleteGames(code);
   });
 });
 
-test.skipIf(Boolean(testDatabaseUrl))("Postgres store tests are skipped: set TEST_DATABASE_URL to run them", () => {
-  expect(testDatabaseUrl).toBeUndefined();
+test.skipIf(Boolean(testMongoUri))("MongoDB store tests are skipped: set TEST_MONGODB_URI to run them", () => {
+  expect(testMongoUri).toBeUndefined();
+});
+
+/** These need no database: nothing listens on port 1, so every query fails. */
+describe("MongoDB store without a database", () => {
+  const unreachableUri = "mongodb://127.0.0.1:1/hiddenantwerp_test";
+
+  test("an unreachable database: a fixed error, and only its name in the log", async () => {
+    // The real settings, but give up after 0.3 s instead of 5.
+    const client = new MongoClient(unreachableUri, { ...MONGO_CLIENT_OPTIONS, serverSelectionTimeoutMS: 300 });
+    const store = new MongoGameStore(client, databaseOf(client));
+    const log = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    const error = await store.getGame("ABCD").catch((caught: unknown) => caught);
+    expect(error).toBeInstanceOf(GameStoreUnavailableError);
+    expect((error as Error).message).not.toContain("127.0.0.1");
+    expect(log).toHaveBeenCalledWith("[Hidden Pubs] database getGame failed: MongoServerSelectionError");
+    for (const call of log.mock.calls) expect(String(call)).not.toContain("127.0.0.1");
+    await client.close();
+  });
+
+  test("NoSQL injection: an object where a code belongs is refused before any query", async () => {
+    const client = createMongoClient(unreachableUri);
+    const store = new MongoGameStore(client, databaseOf(client));
+    const attack = { $ne: "" } as unknown as string;
+    // A TypeError straight away: the query is never sent (an unreachable database would give a different error).
+    expect(() => store.getGame(attack)).toThrow(TypeError);
+    expect(() => store.findPlayerByToken("ABCD", attack)).toThrow(TypeError);
+    expect(() => store.findAction(attack, "action-1")).toThrow(TypeError);
+    expect(() => store.eventsSince("ABCD", -1, 10)).toThrow(TypeError);
+    await client.close();
+  });
+
+  test("a connection string without a database name is refused", () => {
+    expect(() => databaseOf(createMongoClient("mongodb://127.0.0.1:1/"))).toThrow(/must name the database/);
+    expect(databaseOf(createMongoClient(unreachableUri)).databaseName).toBe("hiddenantwerp_test");
+  });
 });

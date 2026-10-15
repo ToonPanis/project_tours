@@ -25,6 +25,7 @@ Legend: ✅ complete · ⚠️ needs a decision or a check · ❌ missing
 | **D3** | Bonus tasks that reward drinking: **Barok** (shot, 100 per drinking player), **Boer van Tienen** (loser drinks), **Den Engel** (beer from the clog, 300, video). Your concept also says drinking must never be required to win. Proposal: same task and points, **any drink counts** (an alcohol-free "shot" or water from the clog earns the same). Barok: 100 per participating player. Your original wording stays visible in this audit. | Any drink counts |
 | **D4** | 18+ confirmation when creating and joining a game (shots = spirits = 18+ in Belgium)? | Yes |
 | **D29** | Privacy: photos/videos and player names are deleted automatically **7 days** after the game; visible only to players of that game; consent reminder on upload screens. | Yes, 7 days |
+| **D35** | (2026-10-15, after the rebuild) Replace the Postgres store of D1 with **MongoDB Atlas** (cluster `hiddenantwerp`, database `HiddenAntwerpGeneral`, package `mongodb`), behind the same `GameStore` interface, so the game rules don't change. Only the Hidden Pubs games go into MongoDB; the walks stay data in the repo, guide progress stays on the phone, no user accounts (there are none to connect to). | Accepted by you |
 
 ### B. Structure of the game
 

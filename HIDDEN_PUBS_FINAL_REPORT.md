@@ -19,7 +19,7 @@ Hidden Pubs is now the multiplayer party game from your concept:
 - **Live leaderboard** during the game and **results** at the end.
 - **8 languages** (en, nl, fr, es, it, de, ru, uk).
 
-Everything works end to end in automated tests (980 unit/component/API tests, 28 browser tests, including one player playing all 12 cafés and a team of 10 phones). It has **not yet** run against a real Postgres database or Vercel Blob store, on real phones, or in the cafés.
+Everything works end to end in automated tests (980 unit/component/API tests, 28 browser tests, including one player playing all 12 cafés and a team of 10 phones). It has **not yet** run against a real database (since 2026-10-15 MongoDB Atlas, see section 11) or Vercel Blob store, on real phones, or in the cafés.
 
 ## 2. What was changed
 
@@ -48,7 +48,7 @@ New in the app:
 - **API:** `/api/games/…` (create, join, state, actions, claim, reveal, media upload/file).
 - **Code:** `src/features/pub-game/` (logic, server, client, components) and `src/types/pub-game.ts`.
 - **Data:** `src/data/walks/hidden-pubs/` (`game/` + the detail-page texts).
-- **Database:** `db/migrations/001_pub_games.sql`, run by `npm run db:migrate`.
+- **Database:** MongoDB Atlas since 2026-10-15 (section 11): `db/mongo-schema.mjs`, set up by `npm run db:setup`. (The rebuild used Postgres, `db/migrations/001_pub_games.sql`.)
 
 What was removed: the old 8-café game ("The Lost Tavern Ledger") and the one-phone game engine behind it (challenges, team drink votes, clues, finale). The guide walks (Poortjes, Classics) keep working: their saved progress is migrated (storage version 4).
 
@@ -69,7 +69,7 @@ Nothing in the shared parts was rewritten for the game. The game adds its own fo
 
 ## 4. Database models
 
-One migration, `db/migrations/001_pub_games.sql`, with four tables:
+**Since 2026-10-15 these are four MongoDB collections with the same names and keys (section 11).** As built in the rebuild, one Postgres migration, `db/migrations/001_pub_games.sql`, with four tables:
 
 | Table | What | Key |
 |---|---|---|
@@ -93,7 +93,7 @@ phone ◀─GET /state?since=<version> (every 2 s while visible)── server: "
 
 1. **The rules are one pure function**, `applyPubGameAction(definition, answerKey, state, actorId, action)` in `logic/apply-action.ts`. It gets the state and an action, and returns the new state plus what happened (events), or a refusal with a reason. It never reads the clock or random numbers, so it's fully tested without a server or browser.
 2. **The server decides everything that has to be fair:** each team's random route, the 10 face-down cards a player chooses from, all times and ids. Phones only send what the player tapped ("pick card 4", "answer B").
-3. **Saving is safe when two phones tap at the same moment:** the server saves only on the expected version (Postgres: `SELECT … FOR UPDATE`) and retries on a conflict, so both actions are applied one after the other. An action carries an `actionId`: a retry after a bad connection is recognised and applied once.
+3. **Saving is safe when two phones tap at the same moment:** the server saves only on the expected version (one database transaction per action) and retries on a conflict, so both actions are applied one after the other. An action carries an `actionId`: a retry after a bad connection is recognised and applied once.
 4. **Phones poll** every 2 seconds while the screen is visible (not in a pocket), asking "what changed since version X". The answer is the phone's own **player view** (`toPlayerView`), which never contains another team's route, the answers, or the face-down cards. Events are numbered, so every popup shows once per phone even when a poll and an action cross.
 5. **Who is who:** joining sets an httpOnly cookie `hp_<CODE>` with a secret; the server keeps only its hash. A reload or a lost connection brings the phone back as the same player. After the first card nobody can join freely; the host makes a **personal link** (`/games/<CODE>/claim#secret`) for a late player or a player with a new phone.
 6. **Answers stay on the server:** the answer key (`answers.server.ts`) and the explanations and fun facts (`reveals/`) are imported only by `src/features/pub-game/server/`, which a test enforces. A browser test checks they never reach the phone before they're earned.
@@ -195,7 +195,7 @@ Each of your 20 test points is covered; the full table, with how each one is pro
 
 **Not tested (needs keys, devices or a visit):**
 
-- the Postgres store against a real database (`npm run test:db`, skipped without `TEST_DATABASE_URL`)
+- the MongoDB store against a real database (`npm run test:db`, skipped without `TEST_MONGODB_URI`)
 - uploads to a real Blob store
 - one real multi-phone game on the LAN
 - the field test in the 12 cafés
@@ -207,7 +207,7 @@ Each of your 20 test points is covered; the full table, with how each one is pro
 
 **Before the first real game:**
 
-1. **Database and photo storage:** create the Neon database and the Vercel Blob store and fill `DATABASE_URL`, `BLOB_READ_WRITE_TOKEN` (and optionally `TEST_DATABASE_URL`) in `.env.local` and on Vercel. Then run `npm run db:migrate` and `npm run test:db`. Production refuses to start the game without them.
+1. **Database and photo storage:** fill `MONGODB_URI` (and `TEST_MONGODB_URI`) in `.env.local` and `MONGODB_URI` on Vercel, create the Vercel Blob store (`BLOB_READ_WRITE_TOKEN`). Then run `npm run db:setup`, `npm run db:check` and `npm run test:db`. Production refuses to start the game without them.
 2. **Answer options I proposed** (your concept gave only the answer, D20): Rococo gates **25 / 33 / 41** and De Kat cats **2 / 3 / 5**. Quinten Matsijs Q1 uses painter / smith / both. OK as they are?
 3. **Café Barries' savings box:** a photo of the box, or keep "look for it in the café"?
 4. **Addresses to confirm:** Barok (Melkmarkt 11), Billie's Bier Kafétaria (Kammenstraat 12) and Cabron (Kaasrui 1) were looked up, not given by you. All 12 positions are still "to verify" on site.
@@ -227,3 +227,21 @@ Each of your 20 test points is covered; the full table, with how each one is pro
 12. **Merging to `main`** (= production): after items 1–2, open a PR from `feature/hidden-pubs-2`. PR #2 (Classics audio and quests) should go in first or right after; the merge will need small fixes (the `team` argument in its quest test, `content: []` on its stops, `StopNavigation`, `location.ts`, `validate-walk.ts`).
 13. **Security update:** `npm audit` reports an advisory for `next` ≤ 16.3.7; updating Next is worth a separate small PR.
 14. **Native-speaker review** of the 8 languages (all translations are AI-made).
+
+## 11. After the report: MongoDB Atlas (2026-10-15)
+
+The games moved from Postgres to **MongoDB Atlas** (decision D35), database `HiddenAntwerpGeneral` on the cluster `hiddenantwerp` (tests: `HiddenAntwerpGeneral_test`). Checked against Atlas on 2026-10-15: `db:setup`, `db:check`, the 8 store tests (`test:db`) and a game through the production server (create, join, start with a double tap, refresh). The game rules, the API and the screens did not change: the new `MongoGameStore` (`src/features/pub-game/server/mongo-store.ts`) implements the same `GameStore` interface and passes the same store tests as the memory store.
+
+| Collection | What | Indexes |
+|---|---|---|
+| `pub_games` | One document per game, `_id` = the game code: the whole game state, `version`, `createdAt`, `expiresAt` | TTL on `expiresAt` |
+| `pub_game_actions` | Every accepted action and the version it produced | unique `(gameCode, actionId)`, TTL |
+| `pub_game_events` | The popups per version | unique `(gameCode, version, position)`, TTL |
+| `pub_game_players` | Phone ↔ player, only the SHA-256 hash of the cookie secret | unique `(gameCode, tokenHash)`, TTL |
+
+- **Connection** (`server/mongo.ts`, `server/context.ts`): one `MongoClient` per server instance, kept on `globalThis`, pool of 5, gives up after 5 s when Atlas can't be reached. Errors are logged by name and code only; the phones then show "offline" and keep trying.
+- **Saving an action** is one transaction (game + action + events). A second phone saving at the same moment gets a write conflict, the driver runs it again, sees the new version and the service retries. The unique index makes a double tap count once.
+- **Validation:** MongoDB checks every document against a `$jsonSchema` (`db/mongo-schema.mjs`); the store checks the shape of what it reads and accepts only short strings as keys (no NoSQL injection).
+- **7-day deletion (D29):** every document carries its game's `expiresAt`; MongoDB's TTL job deletes it.
+- **Tools:** `npm run db:setup` (creates what's missing, safe to rerun), `npm run db:check` (health check, read only), `npm run test:db` (the store tests against a separate `…_test` database).
+- **Not moved to MongoDB:** the walks (typed, translated and validated data in the repo), guide progress (on the phone), photos and videos (Vercel Blob), and user accounts (the site has none).

@@ -38,7 +38,7 @@ export type CommitResult =
 
 /**
  * Where games are saved. Two implementations: `MemoryGameStore` (development
- * and tests, lost on restart) and, from stage 3, a Postgres store. The game
+ * and tests, lost on restart) and `MongoGameStore` (MongoDB Atlas). The game
  * service only talks to this interface, so it doesn't know which one it uses
  * (the same idea as `walkRepository` for walks).
  *
