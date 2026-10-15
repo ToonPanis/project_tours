@@ -166,9 +166,8 @@ describe("bonus task", () => {
     state = apply(state, "b", { type: "ANSWER", questionId: deKat.questions[0].id, optionId: pubGameAnswerKey[deKat.questions[0].id] });
     expect(state.teams[0].step).toBe("bonus");
     const fetchMock = fakeServer(() => ({ explanations: {}, funFact: null }), "b", apply(state, "b", { type: "CONTINUE", at: AT }));
+    // Opened at the bonus: straight to Beery's popup (no finished pubtask to put away).
     show(state);
-    // Past the finished pubtask first.
-    fireEvent.click(screen.getByRole("button", { name: t("pubgame.pubtask.continue") }));
 
     const task = texts.cafes["pubs-de-kat"].tasks["pubs-de-kat-tap"];
     const popup = screen.getByRole("dialog", { name: t("pubgame.beery.bonusTask") });
@@ -194,7 +193,6 @@ describe("the end of the route", () => {
     const funFact = pubGameReveals.en.cafes["pubs-den-engel"].funFact;
     fakeServer(() => ({ explanations: {}, funFact }), "b", apply(state, "b", { type: "CONTINUE", at: AT }));
     show(state);
-    fireEvent.click(screen.getByRole("button", { name: t("pubgame.pubtask.continue") }));
 
     expect(await screen.findByText(t("pubgame.funFact.cafeStory"))).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: t("pubgame.funFact.finish") }));

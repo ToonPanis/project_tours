@@ -1,6 +1,6 @@
 # Hidden Pubs 2.0: rebuild plan
 
-Status: **approved on 2026-10-14** (all recommendations D1–D34 accepted). Stages 1–9 done (stage 3 still to be tested against a real database; stage 8 against a real Blob store); stage 10 (translations review) and 11 (QA) next.
+Status: **approved on 2026-10-14** (all recommendations D1–D34 accepted). Stages 1–13 done (stage 3 still to be tested against a real database; stage 8 against a real Blob store; translations not yet reviewed by native speakers). Stage 12 removed the old game; stage 13 (testing, the prompt's phase 13) is reported in `HIDDEN_PUBS_TEST_PLAN.md` section 5.
 Source of truth for the game: `HIDDEN_PUBS_CONCEPT.txt` (your document, copied unchanged from `Downloads/Geplakte tekst.txt`).
 Companion documents: `HIDDEN_PUBS_GAME_RULES.md` (the rules as the app will run them), `HIDDEN_PUBS_DATA_AUDIT.md` (per café: what is there, what is missing, what is wrong), `HIDDEN_PUBS_TEST_PLAN.md`.
 

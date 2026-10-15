@@ -174,18 +174,36 @@ describe("Drunken Bastard", () => {
     }
   });
 
-  test("the round's last card stays visible after the round (even a card without a choice)", () => {
-    let state = drawn(gameAt("cards"), "5"); // Host
-    state = drawn(state, "6"); // Bea
-    state = drawn(state, "3"); // Cas: the last one, nothing to choose
-    expect(state.teams[0].step).toBe("pubtask");
-    show(state, "b");
+  test("the round's last card stays visible after the round (even a card without a choice)", async () => {
+    let before = drawn(gameAt("cards"), "5"); // Host
+    before = drawn(before, "6"); // Bea
+    const after = drawn(before, "3"); // Cas: the last one, nothing to choose
+    expect(after.teams[0].step).toBe("pubtask");
+    vi.useFakeTimers();
+    try {
+      // Bea watches Cas's turn; the next poll brings the end of the round.
+      fakeFetch({ changed: true, version: 11, view: toPlayerView(pubGameDefinition, after, "b"), events: [] });
+      show(before, "b");
+      await act(async () => vi.advanceTimersByTimeAsync(POLL_INTERVAL_MS));
 
-    expect(screen.getByText(t("pubgame.cards.drew", { name: "Cas" }))).toBeTruthy();
-    expect(screen.getByRole("heading", { name: CARD_NAMES["3"] })).toBeTruthy();
-    expect(screen.getByText(t("pubgame.cards.done"))).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: t("pubgame.cards.toPubtask") }));
-    expect(screen.queryByRole("heading", { name: CARD_NAMES["3"] })).toBeNull();
+      expect(screen.getByText(t("pubgame.cards.drew", { name: "Cas" }))).toBeTruthy();
+      expect(screen.getByRole("heading", { name: CARD_NAMES["3"] })).toBeTruthy();
+      expect(screen.getByText(t("pubgame.cards.done"))).toBeTruthy();
+      fireEvent.click(screen.getByRole("button", { name: t("pubgame.cards.toPubtask") }));
+      expect(screen.queryByRole("heading", { name: CARD_NAMES["3"] })).toBeNull();
+      expect(screen.getByRole("heading", { level: 1, name: t("pubgame.pubtask.title") })).toBeTruthy();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  test("opening (or reloading) the game after the round goes straight to the pubtask", () => {
+    let state = drawn(gameAt("cards"), "5");
+    state = drawn(state, "6");
+    state = drawn(state, "3");
+    show(state, "b");
+    expect(screen.queryByRole("button", { name: t("pubgame.cards.toPubtask") })).toBeNull();
+    expect(screen.getByRole("heading", { level: 1, name: t("pubgame.pubtask.title") })).toBeTruthy();
   });
 
   test("2: only teammates can get the sip; 8: anyone in the game, also another team", () => {
@@ -226,7 +244,13 @@ describe("powers, buddies and rules", () => {
     state = apply(state, "b", { type: "CHOOSE_BUDDY", buddyId: "d" });
     state = drawn(state, "J"); // Cas
     state = apply(state, "c", { type: "WRITE_RULE", ruleId: "r1", text: "No pointing" });
-    const fetchMock = fakeFetch({ version: 11, view: toPlayerView(pubGameDefinition, state, "b"), events: [] });
+    // The round is over, so this phone is at the pubtask, which also asks for the café's explanations.
+    const actionResponse = { version: 11, view: toPlayerView(pubGameDefinition, state, "b"), events: [] };
+    const fetchMock = fakeFetch();
+    fetchMock.mockImplementation(async (url: string) => {
+      const body = url.includes("/reveal") ? { explanations: {}, funFact: null } : url.includes("/actions") ? actionResponse : { changed: false, version: 11 };
+      return new Response(JSON.stringify(body), { status: 200 });
+    });
     show(state, "b");
 
     const bar = screen.getByRole("region", { name: t("pubgame.effects.label") });
@@ -240,7 +264,8 @@ describe("powers, buddies and rules", () => {
     expect(within(dialog).getByText(/Bea & Dirk/)).toBeTruthy();
     fireEvent.click(within(dialog).getByRole("button", { name: "Cas" }));
     await waitFor(() => expect(within(dialog).getByText(t("pubgame.effects.reported"))).toBeTruthy());
-    expect(sentAction(fetchMock)).toEqual({ type: "REPORT_DRINK", playerId: "c" });
+    const actionCall = fetchMock.mock.calls.findIndex(([url]) => url.includes("/actions"));
+    expect(sentAction(fetchMock, actionCall)).toEqual({ type: "REPORT_DRINK", playerId: "c" });
   });
 
   test("popups: new buddies and buddy sips reach every phone, also in another team", async () => {

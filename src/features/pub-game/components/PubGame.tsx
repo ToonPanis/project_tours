@@ -36,6 +36,11 @@ interface PubGameProps {
   uploadMode?: UploadMode;
 }
 
+/** The round's last card as "café:card" (after a reshuffle the same card can come up at a later café). */
+function lastCardOf(view: PlayerView): string | null {
+  return view.team.currentCard ? `${view.team.cafeIndex}:${view.team.currentCard.cardId}` : null;
+}
+
 /** True when the café has playable questions or a pubtask photo task (else the team skips the pubtask). */
 function hasPubtask(cafeId: string): boolean {
   const cafe = playablePubGameDefinition.cafes.find((candidate) => candidate.id === cafeId);
@@ -74,10 +79,15 @@ export function PubGame({ code, invite, initialView, initialVersion, texts, uplo
   const [gpsEnabled, setGpsEnabled] = useState(false);
   // What this phone has already looked at after the team moved on: the round's last
   // card ("On to the pubtask") and the finished pubtask with its explanations ("Continue").
-  const [seenLastCard, setSeenLastCard] = useState<string | null>(null);
-  const [seenPubtask, setSeenPubtask] = useState<number | null>(null);
-  // Café + card: after a reshuffle the same card can come up again at a later café.
-  const lastCard = view.team.currentCard ? `${view.team.cafeIndex}:${view.team.currentCard.cardId}` : null;
+  // Only a step change this phone SEES is held: a phone that opens the game (or reloads)
+  // after the round or the pubtask is over goes straight to where the team is.
+  const [seenLastCard, setSeenLastCard] = useState<string | null>(() =>
+    initialView.team.step === "cards" ? null : lastCardOf(initialView),
+  );
+  const [seenPubtask, setSeenPubtask] = useState<number | null>(() =>
+    initialView.team.step === "bonus" || initialView.team.step === "fun-fact" ? initialView.team.cafeIndex : null,
+  );
+  const lastCard = lastCardOf(view);
 
   function finishIntro() {
     try {

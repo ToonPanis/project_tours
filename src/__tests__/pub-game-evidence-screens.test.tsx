@@ -78,9 +78,8 @@ function show(state: PubGameState, playerId: string) {
   toBonus();
 }
 
-/** Past the café's finished pubtask ("Continue") and Beery's bonus popup. */
+/** Past Beery's bonus popup. (A phone that opens the game at the bonus goes straight there.) */
 function toBonus() {
-  fireEvent.click(screen.getByRole("button", { name: t("pubgame.pubtask.continue") }));
   fireEvent.click(screen.getByRole("button", { name: t("pubgame.beery.letsGo") }));
 }
 

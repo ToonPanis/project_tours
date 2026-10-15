@@ -3,6 +3,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import { useEffect } from "react";
 import { getWalks } from "@/data/walks";
 import { classicsOfAntwerpWalk } from "@/data/walks/classics-of-antwerp";
+import { englishLeaksIn, RAW_KEY } from "./fixtures/english-leaks";
 import { NavigationScreen } from "@/features/navigation/components/NavigationScreen";
 import { NAVIGATION_CONFIG } from "@/features/navigation/config";
 import { getRouteLegTo } from "@/features/navigation/logic/route-legs";
@@ -11,9 +12,7 @@ import { PositionSimulationProvider, usePositionSimulation } from "@/features/na
 import { WalkPlayer } from "@/features/walk-session/components/WalkPlayer";
 import { LocaleProvider } from "@/i18n/client";
 import { locales } from "@/i18n/config";
-import { messagesByLocale as messages } from "@/i18n/messages";
 import { createTranslator, englishTranslator as t } from "@/i18n/translate";
-import { SITE_NAME } from "@/lib/site";
 import type { GeoCoordinates } from "@/types/common";
 
 // The real map needs WebGL, which jsdom doesn't have.
@@ -25,36 +24,6 @@ vi.mock("@/features/walk-session/playtest/PlaytestControls", async (importOrigin
 }));
 
 // ── Locale smoke test: every language, every walk ─────────────────────────
-
-/** "game.header.route", "gps.mapControls.zoomIn"… : a raw key shown instead of its text. */
-const RAW_KEY = /\b(common|navigation|meta|home|errors|walks|game|guide|gps)\.[a-z][A-Za-z]+(\.[A-Za-z]+)*\b/;
-
-/**
- * English interface texts that must not appear on a page in another language. Each
- * text is split at its {placeholders} ("Stop {current} / {total}" → "Stop"), and every
- * piece of at least 6 characters that the language translates differently counts
- * (shorter words and names can legitimately be the same in both languages).
- */
-function englishLeaksIn(locale: (typeof locales)[number], pageText: string): string[] {
-  const english: string[] = [];
-  const translated = new Set<string>();
-  const collect = (node: unknown, into: (text: string) => void) => {
-    if (typeof node === "string") into(node);
-    else if (node && typeof node === "object") for (const value of Object.values(node)) collect(value, into);
-  };
-  collect(messages.en, (text) => english.push(text));
-  collect(messages[locale], (text) => translated.add(text));
-  return english
-    .filter((text) => !translated.has(text))
-    .flatMap((text) => text.split(/\{\w+\}/).map((piece) => piece.trim()))
-    // Whole words only ("Antwerp" is not a leak inside "Antwerpen"), and never the brand name.
-    .filter((piece) => piece.length >= 6 && !SITE_NAME.includes(piece))
-    .filter((piece) => new RegExp(`(?<![\\p{L}\\p{N}])${escapeRegExp(piece)}(?![\\p{L}\\p{N}])`, "u").test(pageText));
-}
-
-function escapeRegExp(text: string): string {
-  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
 
 describe.each(locales)("smoke test in %s", (locale) => {
   const tr = createTranslator(locale);

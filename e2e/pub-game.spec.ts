@@ -3,8 +3,10 @@ import { pubGameAnswerKey } from "../src/data/walks/hidden-pubs/game/answers.ser
 import { pubGameCafes } from "../src/data/walks/hidden-pubs/game/cafes";
 import { pubGameTexts } from "../src/data/walks/hidden-pubs/game/content";
 import { pubGameDefinition } from "../src/data/walks/hidden-pubs/game/definition";
+import { cafeDestination } from "../src/data/walks/hidden-pubs/game/navigation";
 import { pubGameReveals } from "../src/data/walks/hidden-pubs/game/reveals/index.server";
-import { en, tr, watchForProblems } from "./helpers";
+import type { Translator } from "../src/i18n/translate";
+import { coordinateTexts, en, everythingStored, tr, watchForProblems } from "./helpers";
 
 /**
  * Hidden Pubs 2.0 in a real browser, several phones at once, against the
@@ -15,6 +17,7 @@ import { en, tr, watchForProblems } from "./helpers";
 
 const PHONE = { viewport: { width: 390, height: 844 }, locale: "en-GB" };
 const texts = pubGameTexts.en.cafes;
+const firstCafeId = pubGameDefinition.route[0].cafeIds[0];
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -24,13 +27,17 @@ async function newPhone(browser: Browser, locale = "en-GB"): Promise<Page> {
 }
 
 /** The organiser creates a game; returns the game code. */
-async function createGame(page: Page, hostName: string, teamCount: number): Promise<string> {
+async function createGame(page: Page, hostName: string, teamCount: number, playersPerTeam?: number, t: Translator = en): Promise<string> {
   await page.goto("/games/new");
-  const teams = page.getByRole("group", { name: en("pubgame.create.teamCount") });
+  const teams = page.getByRole("group", { name: t("pubgame.create.teamCount") });
   await teams.getByRole("button", { name: String(teamCount), exact: true }).click();
-  await page.getByLabel(en("pubgame.create.yourName")).fill(hostName);
+  if (playersPerTeam) {
+    const players = page.getByRole("group", { name: t("pubgame.create.playersPerTeam") });
+    await players.getByRole("button", { name: String(playersPerTeam), exact: true }).click();
+  }
+  await page.getByLabel(t("pubgame.create.yourName")).fill(hostName);
   await page.getByRole("checkbox").check();
-  await page.getByRole("button", { name: en("pubgame.create.submit") }).click();
+  await page.getByRole("button", { name: t("pubgame.create.submit") }).click();
   await page.waitForURL(/\/games\/[A-Z0-9]{6}$/);
   return page.url().split("/").pop()!;
 }
@@ -53,65 +60,84 @@ const visible = (page: Page, name: string) =>
   page.getByRole("button", { name, exact: true }).isVisible().catch(() => false);
 
 /** Beery's popup → (location explainer) → "I've arrived". Returns the café's id. */
-async function arrive(page: Page): Promise<string> {
-  await page.getByRole("button", { name: en("pubgame.beery.letsGo") }).click();
-  const withoutGps = page.getByRole("button", { name: en("gps.continueWithoutGps") });
-  await withoutGps.or(page.getByRole("button", { name: en("gps.arrived") })).first().waitFor();
+async function arrive(page: Page, t: Translator = en): Promise<string> {
+  await page.getByRole("button", { name: t("pubgame.beery.letsGo") }).click();
+  const withoutGps = page.getByRole("button", { name: t("gps.continueWithoutGps") });
+  await withoutGps.or(page.getByRole("button", { name: t("gps.arrived") })).first().waitFor();
   if (await withoutGps.isVisible()) await withoutGps.click();
-  await page.getByRole("button", { name: en("gps.arrived") }).click();
+  await page.getByRole("button", { name: t("gps.arrived") }).click();
   const heading = await page.getByRole("heading", { level: 1 }).innerText();
   const cafe = Object.entries(pubGameCafes).find(([, info]) => heading.includes(info.name));
   if (!cafe) throw new Error(`Unknown café in "${heading}"`);
   return cafe[0];
 }
 
+/** Closes the popups a card sends to every phone (new buddies, buddy sips), so the game behind them can be used. */
+async function closePopups(page: Page, t: Translator = en) {
+  const ok = page.getByRole("button", { name: t("pubgame.popups.ok") });
+  for (let popup = 0; popup < 5 && (await ok.first().isVisible().catch(() => false)); popup++) await ok.first().click();
+}
+
 /** Every phone of the team draws when it's their turn, answering whatever the card asks. */
-async function cardRound(pages: Page[]) {
-  const done = en("pubgame.cards.toPubtask");
+async function cardRound(pages: Page[], t: Translator = en) {
+  const done = t("pubgame.cards.toPubtask");
   for (let turn = 0; turn < 30; turn++) {
     const finished = await Promise.all(pages.map((page) => visible(page, done)));
     if (finished.every(Boolean)) break;
     for (const page of pages) {
-      if (await visible(page, en("pubgame.cards.draw"))) {
-        await page.getByRole("button", { name: en("pubgame.cards.draw") }).click();
-        await page.getByRole("button", { name: /face down/ }).first().click();
+      await closePopups(page, t);
+      if (await visible(page, t("pubgame.cards.draw"))) {
+        await page.getByRole("button", { name: t("pubgame.cards.draw") }).click();
+        await page.getByRole("button", { name: t("pubgame.cards.faceDown", { number: 1, total: 10 }) }).click();
       }
-      if (await page.getByRole("heading", { name: en("pubgame.cards.chooseTarget") }).isVisible().catch(() => false)) {
-        await page.locator("section", { hasText: en("pubgame.cards.chooseTarget") }).getByRole("button").first().click();
+      if (await page.getByRole("heading", { name: t("pubgame.cards.chooseTarget") }).isVisible().catch(() => false)) {
+        await page.locator("section", { hasText: t("pubgame.cards.chooseTarget") }).getByRole("button").first().click();
       }
-      if (await page.getByRole("heading", { name: en("pubgame.cards.chooseBuddy") }).isVisible().catch(() => false)) {
-        await page.locator("section", { hasText: en("pubgame.cards.chooseBuddy") }).getByRole("button").first().click();
+      if (await page.getByRole("heading", { name: t("pubgame.cards.chooseBuddy") }).isVisible().catch(() => false)) {
+        await page.locator("section", { hasText: t("pubgame.cards.chooseBuddy") }).getByRole("button").first().click();
       }
-      if (await page.getByLabel(en("pubgame.cards.writeRule")).isVisible().catch(() => false)) {
-        await page.getByLabel(en("pubgame.cards.writeRule")).fill("Left hand only");
-        await page.getByRole("button", { name: en("pubgame.cards.ruleSubmit") }).click();
+      if (await page.getByLabel(t("pubgame.cards.writeRule")).isVisible().catch(() => false)) {
+        await page.getByLabel(t("pubgame.cards.writeRule")).fill("Left hand only");
+        await page.getByRole("button", { name: t("pubgame.cards.ruleSubmit") }).click();
       }
-      if (await page.getByRole("heading", { name: en("pubgame.cards.reportLoser") }).isVisible().catch(() => false)) {
-        await page.getByRole("button", { name: en("pubgame.cards.nobody") }).click();
+      if (await page.getByRole("heading", { name: t("pubgame.cards.reportLoser") }).isVisible().catch(() => false)) {
+        await page.getByRole("button", { name: t("pubgame.cards.nobody") }).click();
       }
     }
     await pages[0].waitForTimeout(400);
   }
-  for (const page of pages) await page.getByRole("button", { name: done }).click();
+  for (const page of pages) {
+    await closePopups(page, t);
+    await page.getByRole("button", { name: done }).click();
+  }
 }
 
 /** Answers every question right (first try), skips photo tasks and the bonus, reads the fun fact. */
-async function pubtaskToFunFact(page: Page, cafeId: string) {
+async function pubtaskToFunFact(page: Page, cafeId: string, t: Translator = en) {
   const cafe = pubGameDefinition.cafes.find((candidate) => candidate.id === cafeId)!;
+  const cafeTexts = pubGameTexts[t.locale].cafes[cafeId];
   for (const question of cafe.questions) {
-    const option = texts[cafeId].questions[question.id].options[pubGameAnswerKey[question.id]];
+    const option = cafeTexts.questions[question.id].options[pubGameAnswerKey[question.id]];
     await page.getByRole("button", { name: option, exact: true }).click();
-    await expect(page.getByText(en("pubgame.pubtask.correct", { points: 100 })).first()).toBeVisible();
+    await expect(page.getByText(t("pubgame.pubtask.correct", { points: 100 })).first()).toBeVisible();
   }
   for (const task of cafe.tasks.filter((candidate) => candidate.presentedAs === "pubtask")) {
-    await page.locator("section", { hasText: texts[cafeId].tasks[task.id].title }).getByRole("button", { name: en("pubgame.tasks.skip") }).click();
+    await page.locator("section", { hasText: cafeTexts.tasks[task.id].title }).getByRole("button", { name: t("pubgame.tasks.skip") }).click();
   }
-  await page.getByRole("button", { name: en("pubgame.pubtask.continue") }).click();
+  await page.getByRole("button", { name: t("pubgame.pubtask.continue") }).click();
   if (cafe.tasks.some((task) => task.presentedAs === "bonus")) {
-    await page.getByRole("button", { name: en("pubgame.beery.letsGo") }).click();
-    await page.getByRole("button", { name: en("pubgame.bonus.skip") }).click();
+    await page.getByRole("button", { name: t("pubgame.beery.letsGo") }).click();
+    await page.getByRole("button", { name: t("pubgame.bonus.skip") }).click();
   }
-  await expect(page.getByRole("heading", { name: pubGameReveals.en.cafes[cafeId].funFact.title })).toBeVisible();
+  await expect(page.getByRole("heading", { name: pubGameReveals[t.locale].cafes[cafeId].funFact.title })).toBeVisible();
+}
+
+/** The organiser alone: create, start, skip the rules. Returns the game code. */
+async function startSoloGame(page: Page, name: string, t: Translator = en): Promise<string> {
+  const code = await createGame(page, name, 1, undefined, t);
+  await page.getByRole("button", { name: t("pubgame.lobby.start") }).click();
+  await page.getByRole("button", { name: t("pubgame.beery.intro.skip") }).click();
+  return code;
 }
 
 // ─── Tests ──────────────────────────────────────────────────────────────────
@@ -249,4 +275,113 @@ test("answers, explanations and fun facts never reach the phone before they're e
     for (const explanation of Object.values(cafe.explanations)) expect(everything).not.toContain(explanation);
     expect(everything).not.toContain(cafe.funFact.paragraphs[0]);
   }
+});
+
+// ─── Stage 13: the remaining test points (HIDDEN_PUBS_TEST_PLAN.md) ─────────
+
+test("test point 3 + 7: a full team of 10 phones joins, an 11th can't, and all 10 draw (2 decks)", async ({ browser }) => {
+  test.setTimeout(6 * 60_000);
+  const host = await newPhone(browser);
+  const code = await createGame(host, "Player 1", 1, 10);
+  const phones = [host];
+  for (let number = 2; number <= 10; number++) {
+    const phone = await newPhone(browser);
+    await join(phone, code, `Player ${number}`, "Team 1");
+    phones.push(phone);
+  }
+
+  // The 11th phone: the only team is full.
+  const eleventh = await newPhone(browser);
+  await eleventh.goto(`/games/${code}`);
+  await expect(eleventh.getByRole("button", { name: new RegExp(en("pubgame.join.full")) })).toBeDisabled();
+
+  // The host sees all ten; the game starts on every phone.
+  for (let number = 2; number <= 10; number++) await expect(host.getByText(`Player ${number}`, { exact: true })).toBeVisible();
+  await host.getByRole("button", { name: en("pubgame.lobby.start") }).click();
+  for (const phone of phones) await phone.getByRole("button", { name: en("pubgame.beery.intro.skip") }).click();
+
+  await arrive(host);
+  await host.getByRole("button", { name: en("pubgame.drinks.ready") }).click();
+  // Ten players, one card each, from two decks; every phone ends on the pubtask.
+  await cardRound(phones);
+  for (const phone of phones) await expect(phone.getByRole("heading", { name: en("pubgame.pubtask.title") })).toBeVisible();
+  await noSidewaysScroll(host);
+});
+
+test("test point 16 + 9: a reload in the middle of a question, and a lost connection, keep the game", async ({ browser }) => {
+  const phone = await newPhone(browser);
+  await startSoloGame(phone, "Toon");
+  const cafeId = await arrive(phone);
+  await phone.getByRole("button", { name: en("pubgame.drinks.ready") }).click();
+  await cardRound([phone]);
+  const rulesBefore = await phone.getByText("Left hand only").count();
+
+  // One wrong answer…
+  const question = pubGameDefinition.cafes.find((cafe) => cafe.id === cafeId)!.questions[0];
+  const wrong = question.optionIds.find((id) => id !== pubGameAnswerKey[question.id])!;
+  const wrongText = texts[cafeId].questions[question.id].options[wrong];
+  await phone.getByRole("button", { name: wrongText, exact: true }).click();
+  await expect(phone.getByText(en.plural("pubgame.pubtask.wrong", 1))).toBeVisible();
+
+  // …survives a reload: the same question, the wrong option struck, the next try worth 80.
+  await phone.reload();
+  await expect(phone.getByRole("heading", { name: texts[cafeId].questions[question.id].question })).toBeVisible();
+  await expect(phone.getByRole("button", { name: new RegExp(wrongText) })).toBeDisabled();
+  await expect(phone.getByText(en("pubgame.pubtask.worth", { attempt: 2, points: 80 }))).toBeVisible();
+  // A rule written with a jack (if one was drawn) is still there too.
+  expect(await phone.getByText("Left hand only").count()).toBe(rulesBefore);
+
+  // No network: the phone says so; back online: the notice goes and the game goes on.
+  await phone.context().setOffline(true);
+  await expect(phone.getByText(en("pubgame.connection.offline"))).toBeVisible({ timeout: 10_000 });
+  await phone.context().setOffline(false);
+  await expect(phone.getByText(en("pubgame.connection.offline"))).toHaveCount(0, { timeout: 10_000 });
+  const right = texts[cafeId].questions[question.id].options[pubGameAnswerKey[question.id]];
+  await phone.getByRole("button", { name: right, exact: true }).click();
+  await expect(phone.getByText(en("pubgame.pubtask.correct", { points: 80 }))).toBeVisible();
+});
+
+test("test point 20: a German phone plays a café at 390 px without sideways scrolling", async ({ browser }) => {
+  const de = tr("de");
+  const phone = await newPhone(browser, "de-DE");
+  await startSoloGame(phone, "Jürgen", de);
+  const cafeId = await arrive(phone, de);
+  await noSidewaysScroll(phone);
+  await phone.getByRole("button", { name: de("pubgame.drinks.ready") }).click();
+  await cardRound([phone], de);
+  await noSidewaysScroll(phone);
+  await pubtaskToFunFact(phone, cafeId, de);
+  await noSidewaysScroll(phone);
+});
+
+test.describe("test point 15: GPS in the pub game", () => {
+  const cafe = cafeDestination(firstCafeId, 1).coordinates!;
+  // Distinctive readings a few metres from the café, with digits that can't occur by chance.
+  const readings = [0.0000123, 0.0000131, 0.0000147].map((offset) => ({ latitude: cafe.latitude + offset, longitude: cafe.longitude + offset }));
+  test.use({ ...PHONE, permissions: ["geolocation"], geolocation: { latitude: cafe.latitude + 0.003, longitude: cafe.longitude, accuracy: 6 } });
+
+  test("arrives at the first café by GPS, and no position reaches the game server or the phone's storage", async ({ page, context }) => {
+    const sent: string[] = [];
+    page.on("request", (request) => sent.push(`${request.url()}\n${request.postData() ?? ""}`));
+    await startSoloGame(page, "Toon");
+    await page.getByRole("button", { name: en("pubgame.beery.letsGo") }).click();
+    const enable = page.getByRole("button", { name: en("gps.enableLocation") });
+    if (await enable.isVisible().catch(() => false)) await enable.click();
+
+    for (const reading of readings) {
+      await context.setGeolocation({ ...reading, accuracy: 6 });
+      await page.waitForTimeout(800);
+    }
+    // Arrived without tapping "I've arrived": the whole team is at the café.
+    await expect(page.getByRole("heading", { name: en("pubgame.drinks.welcome", { cafe: pubGameCafes[firstCafeId].name }) })).toBeVisible({ timeout: 15_000 });
+
+    const requests = sent.join("\n");
+    const stored = await everythingStored(page, context);
+    for (const reading of readings) {
+      for (const text of [String(reading.latitude), String(reading.longitude), ...coordinateTexts(reading.latitude, reading.longitude)]) {
+        expect(requests).not.toContain(text);
+        expect(stored).not.toContain(text);
+      }
+    }
+  });
 });
