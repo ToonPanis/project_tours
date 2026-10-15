@@ -250,6 +250,14 @@ export class MemoryCommerceStore implements CommerceStore {
     return device && device.expiresAt > now ? { grantId: device.grantId, walkSlug: device.walkSlug } : null;
   }
 
+  async swapGrantGame(grantId: string, from: string | null, to: string | null) {
+    const grant = this.grants.get(grantId);
+    // A ticket from before P3 has no gameCode at all: the same as null.
+    if (!grant || grant.status !== "active" || (grant.gameCode ?? null) !== from) return false;
+    grant.gameCode = to;
+    return true;
+  }
+
   async deleteTicketDevices(grantId: string) {
     for (const [hash, device] of this.devices) if (device.grantId === grantId) this.devices.delete(hash);
   }

@@ -36,6 +36,8 @@ interface PubGameProps {
   texts: PubGameTexts;
   /** How photos and videos are uploaded here ("blob" in production). */
   uploadMode?: UploadMode;
+  /** Places paid for (P3: tickets bought), the organiser included; null = no limit. */
+  seatLimit?: number | null;
 }
 
 /** The round's last card as "café:card" (after a reshuffle the same card can come up at a later café). */
@@ -67,7 +69,7 @@ function readIntroSeen(code: string): boolean {
  * One phone's Hidden Pubs game. Picks the screen from the live game state:
  * lobby → Beery's rules → the team's current café step → the end.
  */
-export function PubGame({ code, invite, initialView, initialVersion, texts, uploadMode = "direct" }: PubGameProps) {
+export function PubGame({ code, invite, initialView, initialVersion, texts, uploadMode = "direct", seatLimit = null }: PubGameProps) {
   const t = useT();
   const game = usePubGame(code, initialView, initialVersion);
   const { view, connection } = game;
@@ -105,7 +107,7 @@ export function PubGame({ code, invite, initialView, initialVersion, texts, uplo
 
   let screen;
   if (view.phase === "lobby") {
-    screen = <LobbyScreen code={code} invite={invite} game={game} />;
+    screen = <LobbyScreen code={code} invite={invite} game={game} seatLimit={seatLimit} />;
   } else if (view.phase === "finished") {
     screen = <ResultsScreen view={view} />;
   } else if (introSeen === null) {

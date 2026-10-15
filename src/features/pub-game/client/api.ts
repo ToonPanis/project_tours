@@ -120,6 +120,13 @@ const ERROR_KEYS: Record<string, MessageKey> = {
   "too-large": "pubgame.errors.tooLarge",
   "upload-failed": "pubgame.errors.uploadFailed",
   offline: "pubgame.connection.offline",
+  // Tickets (commercial platform P3): only when ticket sales are open.
+  "game-full": "pubgame.errors.gameFull",
+  "ticket-required": "commerce.paywall.body",
+  "ticket-used": "commerce.errors.ticket-used",
+  "invalid-ticket": "commerce.errors.invalid-ticket",
+  "ticket-revoked": "commerce.errors.ticket-revoked",
+  "ticket-expired": "commerce.errors.ticket-expired",
 };
 
 export function errorMessageKey(error: string): MessageKey {

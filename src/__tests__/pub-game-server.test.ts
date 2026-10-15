@@ -107,6 +107,8 @@ describe("creating a game", () => {
         { id: "t1", name: "Red", playerCount: 1 },
         { id: "t2", name: "Blue", playerCount: 0 },
       ],
+      // No ticket, no limit (P3).
+      seats: null,
     });
     expect(await getLobby(ctx, "AAAAAA")).toMatchObject({ ok: false, status: 404 });
     expect(await getLobby(ctx, "not a code")).toMatchObject({ ok: false, status: 404 });

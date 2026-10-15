@@ -79,6 +79,8 @@ const VALIDATORS = {
       version: whole,
       createdAt: date,
       expiresAt: date,
+      // Optional (P3): the number of tickets bought, the organiser included.
+      seatLimit: { bsonType: ["int", "long"], minimum: 1, maximum: 1000 },
     },
   },
   [COLLECTIONS.actions]: {
@@ -245,6 +247,8 @@ const VALIDATORS = {
       status: { enum: ["active", "revoked"] },
       createdAt: date,
       validUntil: date,
+      // Hidden Pubs (P3): the game this ticket was used for.
+      gameCode: optionalText(100),
     },
   },
   [COLLECTIONS.ticketDevices]: {

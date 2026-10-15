@@ -119,7 +119,14 @@ describe("join form", () => {
       { id: "t1", name: "Red", playerCount: 2 },
       { id: "t2", name: "Blue", playerCount: 1 },
     ],
+    seats: null,
   };
+
+  test("a game whose paid places are all taken says so (not 'already started')", () => {
+    render(<JoinGameForm code={CODE} lobby={{ ...lobby, joiningOpen: false, seats: { taken: 3, limit: 3 } }} />);
+    expect(screen.getByText(t("pubgame.errors.gameFull"))).toBeTruthy();
+    expect(screen.queryByText(t("pubgame.join.closed"))).toBeNull();
+  });
 
   test("a full team can't be chosen; joining refreshes the page into the game", async () => {
     const fetchMock = fakeFetch({ body: { playerId: "b" } });
@@ -177,6 +184,26 @@ describe("the game screen", () => {
     expect(screen.queryByRole("button", { name: t("pubgame.lobby.start") })).toBeNull();
     expect(screen.getByText(t("pubgame.lobby.waitingForHost"))).toBeTruthy();
     expect(screen.queryByRole("link", { name: t("pubgame.menu.host") })).toBeNull();
+  });
+
+  test("lobby: share on WhatsApp opens WhatsApp's own link with the join link in the message", () => {
+    render(<PubGame texts={pubGameTexts.en} code={CODE} invite={INVITE} initialView={viewOf(lobbyState(true), "h")} initialVersion={1} />);
+    const whatsapp = screen.getByRole("link", { name: t("pubgame.lobby.whatsapp") });
+    const href = whatsapp.getAttribute("href") ?? "";
+    expect(href.startsWith("https://wa.me/?text=")).toBe(true);
+    expect(decodeURIComponent(href.slice("https://wa.me/?text=".length))).toBe(`${t("pubgame.lobby.shareText")} ${INVITE.joinUrl}`);
+    expect(whatsapp.getAttribute("rel")).toContain("noopener");
+  });
+
+  test("lobby with a ticket (P3): the places paid for, then 'all places taken'; no counter without a ticket", () => {
+    const { unmount } = render(<PubGame texts={pubGameTexts.en} code={CODE} invite={INVITE} initialView={viewOf(lobbyState(true), "h")} initialVersion={1} seatLimit={4} />);
+    expect(screen.getByText(t("pubgame.lobby.seats", { taken: 2, total: 4 }))).toBeTruthy();
+    unmount();
+    const full = render(<PubGame texts={pubGameTexts.en} code={CODE} invite={INVITE} initialView={viewOf(lobbyState(true), "h")} initialVersion={1} seatLimit={2} />);
+    expect(screen.getByText(t("pubgame.lobby.full", { total: 2 }))).toBeTruthy();
+    full.unmount();
+    render(<PubGame texts={pubGameTexts.en} code={CODE} invite={INVITE} initialView={viewOf(lobbyState(true), "h")} initialVersion={1} />);
+    expect(screen.queryByText(t("pubgame.lobby.seats", { taken: 2, total: 4 }))).toBeNull();
   });
 
   test("start → Beery's rules → Beery announces the first café", async () => {

@@ -13,6 +13,8 @@ export interface Lobby {
   joiningOpen: boolean;
   playersPerTeam: number;
   teams: { id: string; name: string; playerCount: number }[];
+  /** Places paid for and taken (P3), the organiser included; null = no limit. */
+  seats: { taken: number; limit: number } | null;
 }
 
 /** An event with the game version its action created: phones use it to show each popup once. */

@@ -107,6 +107,18 @@ describe.each(factories)("$name store", ({ create, cleanup }) => {
     expect(await store.getVersion(newCode())).toBeNull();
   });
 
+  test("a game's seat limit (P3: tickets bought) is kept, also after actions change the state", async () => {
+    const game = { ...storedGame(newCode()), seatLimit: 4 };
+    await store.createGame(game);
+    expect((await store.getGame(game.code))?.seatLimit).toBe(4);
+    await store.commitAction(commit(game.code, 0, "seat-limit-action-1", game.state));
+    expect((await store.getGame(game.code))?.seatLimit).toBe(4);
+    // A game without a limit has none (not 0, not null).
+    const plain = storedGame(newCode());
+    await store.createGame(plain);
+    expect(await store.getGame(plain.code)).not.toHaveProperty("seatLimit");
+  });
+
   test("an action is saved once, only on the expected version, with its events in order", async () => {
     const game = storedGame(newCode());
     await store.createGame(game);

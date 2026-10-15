@@ -28,7 +28,8 @@
     "ticket-expired": "Dieses Ticket ist abgelaufen.",
     "ticket-full": "Dieses Ticket ist bereits auf so vielen Handys geöffnet, wie es Personen umfasst.",
     "offline": "Keine Verbindung. Prüfe deine Internetverbindung und versuche es erneut.",
-    "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
+    "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+    "ticket-used": "Mit diesem Ticket wurde bereits ein Spiel erstellt."
   },
   "success": {
     "title": "Danke!",
@@ -81,5 +82,10 @@
       "ticketRevoked": "Dein Ticket-Link funktioniert nicht mehr.",
       "bankTime": "Je nach Bank kann es ein paar Tage dauern, bis du die Erstattung siehst."
     }
+  },
+  "groups": {
+    "title": "Dein Hidden-Pubs-Ticket",
+    "usedBody": "Dieses Ticket gehört bereits zu einem Spiel. Kehr dorthin zurück oder bitte den Organisator um den Link.",
+    "backToGame": "Zum Spiel"
   }
 }

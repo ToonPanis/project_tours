@@ -222,6 +222,12 @@ export interface TicketGrant {
   status: "active" | "revoked";
   createdAt: string;
   validUntil: string;
+  /**
+   * Hidden Pubs (P3): the game this ticket was used for (one ticket, one game;
+   * its seats become the game's places). "pending:…" for a moment while the
+   * game is being created. Null for walks and unused tickets.
+   */
+  gameCode: string | null;
 }
 
 export interface Discount {

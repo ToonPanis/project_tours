@@ -28,7 +28,8 @@
     "ticket-expired": "Questo biglietto è scaduto.",
     "ticket-full": "Questo biglietto è già aperto su tanti telefoni quante sono le persone che include.",
     "offline": "Nessuna connessione. Controlla la connessione internet e riprova.",
-    "generic": "Qualcosa è andato storto. Riprova."
+    "generic": "Qualcosa è andato storto. Riprova.",
+    "ticket-used": "Questo biglietto è già stato usato per creare una partita."
   },
   "success": {
     "title": "Grazie!",
@@ -81,5 +82,10 @@
       "ticketRevoked": "Il link del tuo biglietto non funziona più.",
       "bankTime": "A seconda della tua banca, possono volerci alcuni giorni prima che il rimborso sia visibile."
     }
+  },
+  "groups": {
+    "title": "Il tuo biglietto Hidden Pubs",
+    "usedBody": "Questo biglietto appartiene già a una partita. Torna alla partita o chiedi il link all'organizzatore.",
+    "backToGame": "Vai alla partita"
   }
 }

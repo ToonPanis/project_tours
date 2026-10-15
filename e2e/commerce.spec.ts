@@ -39,6 +39,13 @@ test("a broken ticket link gives a clear message and no ticket cookie", async ({
   expect((await context.cookies()).some((cookie) => cookie.name.startsWith("ha_ticket_"))).toBe(false);
 });
 
+test("with sales closed, organisers create a Hidden Pubs game without a ticket, as before", async ({ page }) => {
+  await page.goto("/games/new");
+  await expect(page.getByRole("heading", { level: 1, name: en("commerce.paywall.title") })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: en("pubgame.create.submit") })).toBeVisible();
+  await expect(page.getByText(en("pubgame.create.ticketSeats", { players: "" }).split(",")[0])).toHaveCount(0);
+});
+
 test("the new admin pages need a session", async ({ page }) => {
   for (const path of ["/admin/orders", "/admin/tax", "/admin/discounts"]) {
     await page.goto(path);

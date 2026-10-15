@@ -27,6 +27,7 @@ export default async function GamePage({ params }: PageProps<"/games/[code]">) {
       // The texts in the visitor's language; a language switch re-renders the page with new ones.
       texts={getPubGameTexts(await getLocale())}
       uploadMode={uploadModeForPages()}
+      seatLimit={page.lobby.seats?.limit ?? null}
     />
   );
 }

@@ -10,7 +10,8 @@
     "yourTeam": "Jouw team",
     "hostNote": "Jij bent de host: jij start het spel en keurt de bonusfoto's goed. Je speelt zelf ook mee in je eigen team.",
     "submit": "Spel aanmaken",
-    "creating": "Bezig met aanmaken…"
+    "creating": "Bezig met aanmaken…",
+    "ticketSeats": "Je ticket is voor {players}, jij inbegrepen."
   },
   "adults": {
     "confirm": "Iedereen die meespeelt is 18 jaar of ouder",
@@ -50,7 +51,10 @@
     "host": "host",
     "start": "Start het spel",
     "startHint": "Elk team heeft minstens één speler nodig.",
-    "waitingForHost": "De host start het spel zodra iedereen er is."
+    "waitingForHost": "De host start het spel zodra iedereen er is.",
+    "whatsapp": "Delen via WhatsApp",
+    "seats": "{taken} van de {total} plaatsen bezet",
+    "full": "Alle {total} plaatsen zijn bezet."
   },
   "beery": {
     "portrait": "Beery, de mascotte van Hidden Pubs: een vrolijke bierpot",
@@ -141,7 +145,8 @@
     "chooseTeam": "Kies een team.",
     "invalidMedia": "Dit soort bestand werkt niet. Gebruik een gewone foto of video van je gsm.",
     "tooLarge": "Dit bestand is te groot. Een kortere video werkt beter.",
-    "uploadFailed": "Versturen lukte niet. Controleer de verbinding en probeer opnieuw."
+    "uploadFailed": "Versturen lukte niet. Controleer de verbinding en probeer opnieuw.",
+    "gameFull": "Dit spel is vol: elke plaats waarvoor de groep betaald heeft, is bezet. Vraag het aan de organisator."
   },
   "claim": {
     "title": "Je spel wordt geopend…",

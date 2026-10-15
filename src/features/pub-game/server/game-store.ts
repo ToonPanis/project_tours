@@ -9,6 +9,12 @@ export interface StoredGame {
   createdAt: string;
   /** Games (and their photos) are deleted 7 days after creation (D29). */
   expiresAt: string;
+  /**
+   * At most this many players, the organiser included: the number of tickets
+   * bought (commercial platform P3). Not part of the game state: the game rules
+   * don't know about it; joining and adding players check it. Absent = no limit.
+   */
+  seatLimit?: number;
 }
 
 /** An event, with the game version its action created (phones ask for "events since version X"). */

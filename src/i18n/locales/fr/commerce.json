@@ -28,7 +28,8 @@
     "ticket-expired": "Ce billet a expiré.",
     "ticket-full": "Ce billet est déjà ouvert sur autant de téléphones qu'il compte de personnes.",
     "offline": "Pas de connexion. Vérifiez votre connexion internet et réessayez.",
-    "generic": "Un problème est survenu. Veuillez réessayer."
+    "generic": "Un problème est survenu. Veuillez réessayer.",
+    "ticket-used": "Ce billet a déjà servi à créer une partie."
   },
   "success": {
     "title": "Merci !",
@@ -81,5 +82,10 @@
       "ticketRevoked": "Votre lien de billet ne fonctionne plus.",
       "bankTime": "Selon votre banque, il peut falloir quelques jours avant que le remboursement apparaisse."
     }
+  },
+  "groups": {
+    "title": "Votre billet Hidden Pubs",
+    "usedBody": "Ce billet appartient déjà à une partie. Retournez-y, ou demandez le lien à l'organisateur.",
+    "backToGame": "Aller à la partie"
   }
 }

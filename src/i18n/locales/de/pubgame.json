@@ -10,7 +10,8 @@
     "yourTeam": "Dein Team",
     "hostNote": "Du bist der Host: Du startest das Spiel und bestätigst die Bonusfotos. Du spielst auch selbst in deinem Team mit.",
     "submit": "Spiel erstellen",
-    "creating": "Wird erstellt…"
+    "creating": "Wird erstellt…",
+    "ticketSeats": "Dein Ticket gilt für {players}, dich eingeschlossen."
   },
   "adults": {
     "confirm": "Alle Mitspielenden sind 18 Jahre oder älter",
@@ -50,7 +51,10 @@
     "host": "Host",
     "start": "Spiel starten",
     "startHint": "Jedes Team braucht mindestens einen Spieler.",
-    "waitingForHost": "Der Host startet das Spiel, sobald alle da sind."
+    "waitingForHost": "Der Host startet das Spiel, sobald alle da sind.",
+    "whatsapp": "Über WhatsApp teilen",
+    "seats": "{taken} von {total} Plätzen belegt",
+    "full": "Alle {total} Plätze sind belegt."
   },
   "beery": {
     "portrait": "Beery, das Maskottchen von Hidden Pubs: ein fröhlicher Bierkrug",
@@ -141,7 +145,8 @@
     "chooseTeam": "Bitte wähle ein Team.",
     "invalidMedia": "Diese Dateiart wird nicht unterstützt. Nimm ein normales Foto oder Video vom Handy.",
     "tooLarge": "Diese Datei ist zu groß. Ein kürzeres Video klappt besser.",
-    "uploadFailed": "Senden hat nicht geklappt. Prüfe die Verbindung und versuch es noch einmal."
+    "uploadFailed": "Senden hat nicht geklappt. Prüfe die Verbindung und versuch es noch einmal.",
+    "gameFull": "Dieses Spiel ist voll: Alle Plätze, für die die Gruppe bezahlt hat, sind belegt. Frag den Organisator."
   },
   "claim": {
     "title": "Dein Spiel wird geöffnet…",

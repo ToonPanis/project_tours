@@ -12,6 +12,8 @@ interface GameDoc {
   version: number;
   createdAt: Date;
   expiresAt: Date;
+  /** Tickets bought (P3); missing = no limit. */
+  seatLimit?: number;
 }
 interface ActionDoc {
   gameCode: string;
@@ -153,6 +155,7 @@ export class MongoGameStore implements GameStore {
           version: wholeNumber(game.version),
           createdAt: new Date(game.createdAt),
           expiresAt: new Date(game.expiresAt),
+          ...(game.seatLimit === undefined ? {} : { seatLimit: wholeNumber(game.seatLimit) }),
         });
         return true;
       } catch (error) {
@@ -175,6 +178,7 @@ export class MongoGameStore implements GameStore {
         version: doc.version,
         createdAt: doc.createdAt.toISOString(),
         expiresAt: doc.expiresAt.toISOString(),
+        ...(typeof doc.seatLimit === "number" ? { seatLimit: doc.seatLimit } : {}),
       };
     });
   }

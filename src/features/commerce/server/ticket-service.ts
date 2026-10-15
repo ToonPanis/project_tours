@@ -35,6 +35,7 @@ export async function ensureTicket(ctx: CommerceContext, order: Order): Promise<
     status: "active",
     createdAt: now.toISOString(),
     validUntil: new Date(now.getTime() + TICKET_VALIDITY_MS).toISOString(),
+    gameCode: null,
   });
 }
 
@@ -80,6 +81,69 @@ export async function activateTicket(
     expiresAt: new Date(grant.validUntil),
   });
   return ok({ walkSlug: grant.walkSlug, deviceSecret, validUntil: grant.validUntil });
+}
+
+// ─── Hidden Pubs: one ticket, one game (P3) ─────────────────────────────────
+
+const PENDING = "pending:";
+/** A reservation older than this is from a request that crashed: the ticket may be used again. */
+const RESERVATION_TIMEOUT_MS = 2 * 60 * 1000;
+
+function isStaleReservation(gameCode: string, now: Date): boolean {
+  const startedAt = Number(gameCode.slice(PENDING.length).split(":")[0]);
+  return !Number.isFinite(startedAt) || now.getTime() - startedAt > RESERVATION_TIMEOUT_MS;
+}
+
+export type NewGameAccess =
+  /** Sales closed or this game not on sale: create games as before, without a limit. */
+  | { status: "open" }
+  /** On sale, and this phone has no (valid) ticket for it. */
+  | { status: "ticket-required" }
+  /** This phone's ticket was already used for a game (shown so the organiser can go back to it). */
+  | { status: "used"; gameCode: string | null }
+  /**
+   * A valid, unused ticket: a game with `seats` places can be created.
+   * `current`: what the ticket holds now (null, or a stale reservation to replace).
+   */
+  | { status: "ready"; grantId: string; seats: number; current: string | null };
+
+/**
+ * Before /games/new and POST /api/games: may this phone create a game of
+ * this walk? The ticket is the one opened on this phone (its ticket cookie).
+ */
+export async function newGameAccess(ctx: CommerceContext, walkSlug: string, deviceSecret: string | undefined): Promise<NewGameAccess> {
+  const access = await playAccess(ctx, walkSlug, deviceSecret);
+  if (access === "open") return { status: "open" };
+  if (access === "ticket-required") return { status: "ticket-required" };
+  const device = await ctx.store.findTicketDevice(hashSecret(deviceSecret ?? ""), ctx.now());
+  const grant = device ? await ctx.store.getGrant(device.grantId) : null;
+  if (!grant) return { status: "ticket-required" };
+  const gameCode = grant.gameCode ?? null;
+  if (gameCode === null || (gameCode.startsWith(PENDING) && isStaleReservation(gameCode, ctx.now()))) {
+    return { status: "ready", grantId: grant.id, seats: grant.seats, current: gameCode };
+  }
+  return { status: "used", gameCode: gameCode.startsWith(PENDING) ? null : gameCode };
+}
+
+/**
+ * Reserves the ticket for the game being created (atomic: of two phones with
+ * the same ticket creating a game at the same moment, one gets it). `current`
+ * comes from newGameAccess. Returns the reservation, or null when the ticket
+ * was just used.
+ */
+export async function reserveTicketForGame(ctx: CommerceContext, grantId: string, current: string | null): Promise<string | null> {
+  const reservation = `${PENDING}${ctx.now().getTime()}:${ctx.newId()}`;
+  return (await ctx.store.swapGrantGame(grantId, current, reservation)) ? reservation : null;
+}
+
+/** The game exists: the ticket now belongs to it. */
+export async function confirmTicketGame(ctx: CommerceContext, grantId: string, reservation: string, gameCode: string): Promise<void> {
+  await ctx.store.swapGrantGame(grantId, reservation, gameCode);
+}
+
+/** Creating the game failed: the ticket can be used again. */
+export async function releaseTicketGame(ctx: CommerceContext, grantId: string, reservation: string): Promise<void> {
+  await ctx.store.swapGrantGame(grantId, reservation, null);
 }
 
 /**
