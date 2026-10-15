@@ -1,13 +1,18 @@
 /**
- * Hidden Pubs in MongoDB: the collections, their validation and their indexes.
+ * Hidden Antwerp in MongoDB: the collections, their validation and their indexes.
  * The single source for `npm run db:setup`, `npm run db:check` and the database tests.
  * (Plain JavaScript so the scripts can use it without a build step.)
  *
- * Four collections, one per kind of record. Everything of one game is found by
- * its code, and everything disappears 7 days after the game was created (D29):
- * every document carries the game's `expiresAt`, and a TTL index on it lets
- * MongoDB delete it by itself (the TTL job runs about once a minute, so the
+ * Hidden Pubs (`pub_*`): four collections, one per kind of record. Everything of one
+ * game is found by its code, and everything disappears 7 days after the game was
+ * created (D29): every document carries the game's `expiresAt`, and a TTL index on it
+ * lets MongoDB delete it by itself (the TTL job runs about once a minute, so the
  * app also checks `expiresAt` when it reads a game).
+ *
+ * Commercial platform (`com_*`, docs/commercial/DATABASE_DESIGN.md): admin accounts,
+ * sign-in links, sessions, rate limits, the audit log, the product catalogue and the
+ * email outbox. Short-lived records (links, sessions, counters, sent emails) have a
+ * TTL index too; the audit log and the catalogue are kept.
  */
 
 /** @typedef {import("mongodb").Db} Db */
@@ -21,11 +26,30 @@ export const COLLECTIONS = {
   events: "pub_game_events",
   /** Which phone is which player: only a SHA-256 hash of the cookie secret. */
   players: "pub_game_players",
+
+  /** Admins (later partners). `_id` = user id; unique email. */
+  users: "com_users",
+  /** One-time sign-in links: `_id` = SHA-256 hash of the link's secret. */
+  loginTokens: "com_login_tokens",
+  /** Signed-in admins: `_id` = SHA-256 hash of the session cookie's secret. */
+  sessions: "com_sessions",
+  /** Rate-limit counters: `_id` = "<scope>:<hashed subject>:<window start>". */
+  rateLimits: "com_rate_limits",
+  /** Who changed what (append only). */
+  auditLog: "com_audit_log",
+  /** What can be sold. `_id` = product id. */
+  products: "com_products",
+  /** Price history: a change adds a price, never overwrites one. */
+  prices: "com_prices",
+  /** Emails to send. `_id` = idempotency key: the same id is sent once. */
+  emailOutbox: "com_email_outbox",
 };
 
 const text = (maxLength) => ({ bsonType: "string", minLength: 1, maxLength });
 const whole = { bsonType: ["int", "long"], minimum: 0 };
 const date = { bsonType: "date" };
+const optionalDate = { bsonType: ["date", "null"] };
+const optionalText = (maxLength) => ({ bsonType: ["string", "null"], maxLength });
 
 /** The shape MongoDB itself checks on every insert and update ($jsonSchema validation). */
 const VALIDATORS = {
@@ -71,6 +95,83 @@ const VALIDATORS = {
       expiresAt: date,
     },
   },
+
+  [COLLECTIONS.users]: {
+    required: ["_id", "email", "roles", "active", "createdAt"],
+    properties: {
+      _id: text(100),
+      email: text(254),
+      roles: { bsonType: "array", items: { enum: ["ADMIN"] } },
+      active: { bsonType: "bool" },
+      createdAt: date,
+      lastLoginAt: optionalDate,
+    },
+  },
+  [COLLECTIONS.loginTokens]: {
+    required: ["_id", "userId", "expiresAt"],
+    properties: { _id: text(100), userId: text(100), expiresAt: date, usedAt: optionalDate },
+  },
+  [COLLECTIONS.sessions]: {
+    required: ["_id", "userId", "createdAt", "expiresAt"],
+    properties: { _id: text(100), userId: text(100), createdAt: date, expiresAt: date },
+  },
+  [COLLECTIONS.rateLimits]: {
+    required: ["_id", "count", "expiresAt"],
+    properties: { _id: text(200), count: whole, expiresAt: date },
+  },
+  [COLLECTIONS.auditLog]: {
+    required: ["_id", "action", "target", "details", "at"],
+    properties: {
+      _id: text(100),
+      actorId: optionalText(100),
+      actorEmail: optionalText(254),
+      action: text(50),
+      target: text(200),
+      details: { bsonType: "object" },
+      at: date,
+    },
+  },
+  [COLLECTIONS.products]: {
+    required: ["_id", "walkSlug", "name", "unit", "active", "vatRateBasisPoints", "sortOrder", "createdAt", "updatedAt"],
+    properties: {
+      _id: text(100),
+      walkSlug: text(100),
+      name: text(80),
+      unit: { enum: ["person"] },
+      active: { bsonType: "bool" },
+      vatRateBasisPoints: { bsonType: ["int", "long", "null"], minimum: 0, maximum: 10000 },
+      sortOrder: whole,
+      createdAt: date,
+      updatedAt: date,
+    },
+  },
+  [COLLECTIONS.prices]: {
+    required: ["_id", "productId", "amountCents", "currency", "validFrom", "createdBy"],
+    properties: {
+      _id: text(100),
+      productId: text(100),
+      amountCents: { bsonType: ["int", "long"], minimum: 1, maximum: 1000000 },
+      currency: { enum: ["EUR"] },
+      validFrom: date,
+      createdBy: text(254),
+    },
+  },
+  [COLLECTIONS.emailOutbox]: {
+    required: ["_id", "to", "subject", "status", "attempts", "nextAttemptAt", "createdAt", "expiresAt"],
+    properties: {
+      _id: text(200),
+      to: text(254),
+      subject: text(200),
+      text: optionalText(20000),
+      status: { enum: ["pending", "sent", "failed"] },
+      attempts: whole,
+      nextAttemptAt: date,
+      lastError: optionalText(100),
+      createdAt: date,
+      sentAt: optionalDate,
+      expiresAt: date,
+    },
+  },
 };
 
 /** TTL: delete a document as soon as its `expiresAt` has passed. */
@@ -85,6 +186,15 @@ export const INDEXES = {
     expiry,
   ],
   [COLLECTIONS.players]: [{ key: { gameCode: 1, tokenHash: 1 }, name: "gameCode_tokenHash", unique: true }, expiry],
+
+  [COLLECTIONS.users]: [{ key: { email: 1 }, name: "email_unique", unique: true }],
+  [COLLECTIONS.loginTokens]: [expiry],
+  [COLLECTIONS.sessions]: [expiry],
+  [COLLECTIONS.rateLimits]: [expiry],
+  [COLLECTIONS.auditLog]: [{ key: { at: -1 }, name: "at_desc" }],
+  [COLLECTIONS.products]: [],
+  [COLLECTIONS.prices]: [{ key: { productId: 1, validFrom: -1 }, name: "productId_validFrom" }],
+  [COLLECTIONS.emailOutbox]: [{ key: { status: 1, nextAttemptAt: 1 }, name: "status_nextAttemptAt" }, expiry],
 };
 
 /**

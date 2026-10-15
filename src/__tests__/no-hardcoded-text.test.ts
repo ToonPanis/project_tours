@@ -14,11 +14,12 @@ import { describe, expect, test } from "vitest";
  * - text attributes:                   aria-label="Close"
  * - strings shown as children:         {isOpen ? "Hide" : "Show"}
  * Symbols (★ ✓ · → ?) are fine. The playtest tools are English on purpose
- * (the playtest/ folder and files named *Playtest*).
+ * (the playtest/ folder and files named *Playtest*), and so is the owner's admin
+ * area (every folder named admin/: src/app/admin, src/features/commerce/admin).
  */
 
 const SRC = join(process.cwd(), "src");
-const SKIPPED_FOLDERS = ["__tests__", "playtest"];
+const SKIPPED_FOLDERS = ["__tests__", "playtest", "admin"];
 const TEXT_ATTRIBUTES = new Set(["aria-label", "alt", "title", "placeholder", "aria-description", "aria-roledescription"]);
 /** Our own components' text props: label, eyebrow, heading, confirmLabel, loadErrorText, subtitle… */
 const TEXT_PROP = /^(label|eyebrow|heading|message)$|(Label|Text|Title|Message)$/;
