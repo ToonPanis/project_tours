@@ -43,6 +43,23 @@ export const COLLECTIONS = {
   prices: "com_prices",
   /** Emails to send. `_id` = idempotency key: the same id is sent once. */
   emailOutbox: "com_email_outbox",
+
+  /** Tax settings, one document per saved version (unique `version`). */
+  taxSettings: "com_tax_settings",
+  /** Orders: `_id` = order id. Kept (accounting); no TTL. */
+  orders: "com_orders",
+  /** Stripe webhook events seen: `_id` = Stripe event id (a second delivery is recognised). */
+  stripeEvents: "com_stripe_events",
+  /** Tickets: one per paid order (unique `orderId`). */
+  ticketGrants: "com_ticket_grants",
+  /** Phones that opened a ticket: `_id` = SHA-256 hash of the phone's cookie secret. */
+  ticketDevices: "com_ticket_devices",
+  /** Discount codes (unique `code`). */
+  discounts: "com_discounts",
+  /** Number series for receipts and credit notes: `_id` = series, `value` = last number used. */
+  counters: "com_counters",
+  /** Receipts, invoices and credit notes: `_id` = e.g. "receipt:<orderId>". */
+  documents: "com_documents",
 };
 
 const text = (maxLength) => ({ bsonType: "string", minLength: 1, maxLength });
@@ -132,14 +149,14 @@ const VALIDATORS = {
     },
   },
   [COLLECTIONS.products]: {
-    required: ["_id", "walkSlug", "name", "unit", "active", "vatRateBasisPoints", "sortOrder", "createdAt", "updatedAt"],
+    required: ["_id", "walkSlug", "name", "unit", "active", "taxCategoryId", "sortOrder", "createdAt", "updatedAt"],
     properties: {
       _id: text(100),
       walkSlug: text(100),
       name: text(80),
       unit: { enum: ["person"] },
       active: { bsonType: "bool" },
-      vatRateBasisPoints: { bsonType: ["int", "long", "null"], minimum: 0, maximum: 10000 },
+      taxCategoryId: optionalText(30),
       sortOrder: whole,
       createdAt: date,
       updatedAt: date,
@@ -172,6 +189,102 @@ const VALIDATORS = {
       expiresAt: date,
     },
   },
+
+  [COLLECTIONS.taxSettings]: {
+    required: ["_id", "version", "regime", "homeCountry", "categories", "ossEnabled", "ossRates", "confirmedByAccountant", "updatedAt"],
+    properties: {
+      _id: text(40),
+      version: whole,
+      regime: { enum: ["not-configured", "exempt", "vat-registered"] },
+      homeCountry: text(2),
+      categories: { bsonType: "array", maxItems: 10 },
+      ossEnabled: { bsonType: "bool" },
+      ossRates: { bsonType: "array", maxItems: 200 },
+      exemptionNote: optionalText(300),
+      confirmedByAccountant: { bsonType: "bool" },
+      updatedAt: date,
+      updatedBy: optionalText(254),
+    },
+  },
+  [COLLECTIONS.orders]: {
+    required: ["_id", "status", "lines", "subtotalCents", "totalCents", "currency", "locale", "buyerTokenHash", "taxBasis", "stripe", "refundedCents", "createdAt", "updatedAt"],
+    properties: {
+      _id: text(100),
+      status: { enum: ["pending", "paid", "failed", "canceled", "refunded"] },
+      lines: { bsonType: "array", minItems: 1, maxItems: 10 },
+      subtotalCents: whole,
+      discount: { bsonType: ["object", "null"] },
+      totalCents: whole,
+      currency: { enum: ["EUR"] },
+      locale: text(10),
+      buyerTokenHash: text(100),
+      email: optionalText(254),
+      customer: { bsonType: ["object", "null"] },
+      taxBasis: { bsonType: "object" },
+      tax: { bsonType: ["object", "null"] },
+      stripe: { bsonType: "object" },
+      refundedCents: whole,
+      createdAt: date,
+      updatedAt: date,
+      paidAt: optionalDate,
+    },
+  },
+  [COLLECTIONS.stripeEvents]: {
+    required: ["_id", "type", "done", "receivedAt", "expiresAt"],
+    properties: { _id: text(255), type: text(100), done: { bsonType: "bool" }, receivedAt: date, processedAt: optionalDate, expiresAt: date },
+  },
+  [COLLECTIONS.ticketGrants]: {
+    required: ["_id", "orderId", "productId", "walkSlug", "seats", "devicesUsed", "status", "createdAt", "validUntil"],
+    properties: {
+      _id: text(100),
+      orderId: text(100),
+      productId: text(100),
+      walkSlug: text(100),
+      seats: { bsonType: ["int", "long"], minimum: 1, maximum: 1000 },
+      devicesUsed: whole,
+      status: { enum: ["active", "revoked"] },
+      createdAt: date,
+      validUntil: date,
+    },
+  },
+  [COLLECTIONS.ticketDevices]: {
+    required: ["_id", "grantId", "walkSlug", "createdAt", "expiresAt"],
+    properties: { _id: text(100), grantId: text(100), walkSlug: text(100), createdAt: date, expiresAt: date },
+  },
+  [COLLECTIONS.discounts]: {
+    required: ["_id", "code", "kind", "value", "productIds", "redemptions", "active", "createdAt", "createdBy"],
+    properties: {
+      _id: text(100),
+      code: text(30),
+      kind: { enum: ["percent", "fixed"] },
+      value: { bsonType: ["int", "long"], minimum: 1, maximum: 1000000 },
+      productIds: { bsonType: "array", items: { bsonType: "string" } },
+      validFrom: optionalDate,
+      validUntil: optionalDate,
+      maxRedemptions: { bsonType: ["int", "long", "null"], minimum: 1 },
+      redemptions: whole,
+      active: { bsonType: "bool" },
+      createdAt: date,
+      createdBy: text(254),
+    },
+  },
+  [COLLECTIONS.counters]: {
+    required: ["_id", "value"],
+    properties: { _id: text(100), value: whole },
+  },
+  [COLLECTIONS.documents]: {
+    required: ["_id", "kind", "orderId", "provider", "status", "amountCents", "createdAt"],
+    properties: {
+      _id: text(200),
+      number: optionalText(40),
+      kind: { enum: ["receipt", "invoice", "credit-note"] },
+      orderId: text(100),
+      provider: { enum: ["internal", "billit"] },
+      status: { enum: ["issued", "awaiting-provider"] },
+      amountCents: whole,
+      createdAt: date,
+    },
+  },
 };
 
 /** TTL: delete a document as soon as its `expiresAt` has passed. */
@@ -195,6 +308,23 @@ export const INDEXES = {
   [COLLECTIONS.products]: [],
   [COLLECTIONS.prices]: [{ key: { productId: 1, validFrom: -1 }, name: "productId_validFrom" }],
   [COLLECTIONS.emailOutbox]: [{ key: { status: 1, nextAttemptAt: 1 }, name: "status_nextAttemptAt" }, expiry],
+
+  [COLLECTIONS.taxSettings]: [{ key: { version: -1 }, name: "version_unique", unique: true }],
+  [COLLECTIONS.orders]: [
+    { key: { createdAt: -1 }, name: "createdAt_desc" },
+    { key: { status: 1, createdAt: -1 }, name: "status_createdAt" },
+    {
+      key: { "stripe.paymentIntentId": 1 },
+      name: "paymentIntentId",
+      partialFilterExpression: { "stripe.paymentIntentId": { $type: "string" } },
+    },
+  ],
+  [COLLECTIONS.stripeEvents]: [expiry],
+  [COLLECTIONS.ticketGrants]: [{ key: { orderId: 1 }, name: "orderId_unique", unique: true }],
+  [COLLECTIONS.ticketDevices]: [{ key: { grantId: 1 }, name: "grantId" }, expiry],
+  [COLLECTIONS.discounts]: [{ key: { code: 1 }, name: "code_unique", unique: true }],
+  [COLLECTIONS.counters]: [],
+  [COLLECTIONS.documents]: [{ key: { orderId: 1 }, name: "orderId" }],
 };
 
 /**

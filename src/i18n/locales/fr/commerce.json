@@ -1,0 +1,85 @@
+{
+  "persons": { "one": "{count} personne", "other": "{count} personnes" },
+  "buy": {
+    "title": "Billets",
+    "perPerson": "par personne, TVA comprise",
+    "persons": "Nombre de personnes",
+    "decrease": "Une personne de moins",
+    "increase": "Une personne de plus",
+    "total": "Total",
+    "discountCode": "Code de réduction (facultatif)",
+    "button": "Payer en toute sécurité",
+    "busy": "Ouverture de la page de paiement…",
+    "note": "Vous payez sur la page de paiement sécurisée de Stripe. Ensuite, vous recevez par e-mail un lien vers votre billet : chaque membre de votre groupe l'ouvre sur son propre téléphone."
+  },
+  "errors": {
+    "sales-closed": "Les billets ne peuvent pas encore être achetés en ligne.",
+    "unknown-product": "Cette balade ne peut pas être achetée en ligne pour le moment.",
+    "invalid-quantity": "Choisissez entre 1 et 30 personnes. Pour les groupes plus grands, veuillez nous contacter.",
+    "total-too-low": "Cette commande est trop petite pour être payée en ligne.",
+    "unknown-discount": "Ce code de réduction n'existe pas.",
+    "discount-not-valid-yet": "Ce code de réduction ne peut pas encore être utilisé.",
+    "discount-expired": "Ce code de réduction a expiré.",
+    "discount-not-for-product": "Ce code de réduction n'est pas valable pour cette balade.",
+    "discount-used-up": "Ce code de réduction a atteint son nombre maximal d'utilisations.",
+    "payments-unavailable": "Les paiements sont temporairement indisponibles. Rien n'a été débité. Veuillez réessayer dans quelques minutes.",
+    "invalid-ticket": "Ce lien de billet n'est pas valable. Vérifiez que vous avez copié le lien complet depuis l'e-mail.",
+    "ticket-revoked": "Ce billet n'est plus valable (il a été remboursé ou retiré).",
+    "ticket-expired": "Ce billet a expiré.",
+    "ticket-full": "Ce billet est déjà ouvert sur autant de téléphones qu'il compte de personnes.",
+    "offline": "Pas de connexion. Vérifiez votre connexion internet et réessayez.",
+    "generic": "Un problème est survenu. Veuillez réessayer."
+  },
+  "success": {
+    "title": "Merci !",
+    "paid": "Votre paiement a bien été reçu.",
+    "pending": "Nous attendons la confirmation du paiement. Cette page se met à jour automatiquement.",
+    "failed": "Le paiement n'a pas abouti. Rien n'a été débité.",
+    "canceled": "Cette commande a été annulée. Rien n'a été débité.",
+    "unknown": "Nous ne trouvons pas cette commande sur cet appareil. Votre lien de billet se trouve dans l'e-mail que nous vous avons envoyé.",
+    "openTicket": "Ouvrir le billet sur ce téléphone",
+    "emailSent": "Nous avons aussi envoyé votre lien de billet à {email}.",
+    "share": "Partagez le lien avec votre groupe : chacun l'ouvre sur son propre téléphone. Le billet est valable pour {seats}.",
+    "receipt": "Numéro de reçu : {number}",
+    "invoiceSoon": "Votre facture pour {business} suivra séparément.",
+    "backToWalks": "Retour aux balades"
+  },
+  "canceled": {
+    "title": "Paiement annulé",
+    "body": "Vous n'avez rien payé. Vous pouvez réessayer quand vous voulez.",
+    "back": "Retour à la balade"
+  },
+  "ticket": {
+    "title": "Votre billet",
+    "opening": "Ouverture de votre billet…",
+    "ready": "Votre billet est prêt sur ce téléphone.",
+    "start": "Commencer la balade",
+    "missing": "Le lien du billet est incomplet. Ouvrez à nouveau le lien de votre e-mail."
+  },
+  "paywall": {
+    "title": "Cette balade nécessite un billet",
+    "body": "Achetez un billet sur la page de la balade, ou ouvrez sur ce téléphone le lien de billet reçu par e-mail.",
+    "buy": "Acheter un billet"
+  },
+  "email": {
+    "confirmation": {
+      "subject": "Votre billet pour {product}",
+      "greeting": "Bonjour,",
+      "thanks": "Merci pour votre commande chez Hidden Antwerp.",
+      "line": "{product} : {persons}",
+      "total": "Total payé : {amount}",
+      "vat": "Dont TVA ({rate}) : {vat}",
+      "receipt": "Numéro de reçu : {number}",
+      "invoice": "Votre facture suivra séparément.",
+      "linkIntro": "Votre lien de billet. Chaque membre de votre groupe l'ouvre sur son propre téléphone (le billet est valable pour {seats}) :",
+      "validUntil": "Le billet est valable jusqu'au {date}.",
+      "signoff": "Profitez bien d'Anvers !"
+    },
+    "refund": {
+      "subject": "Votre remboursement de Hidden Antwerp",
+      "body": "Nous avons remboursé {amount} pour votre commande de {product}.",
+      "ticketRevoked": "Votre lien de billet ne fonctionne plus.",
+      "bankTime": "Selon votre banque, il peut falloir quelques jours avant que le remboursement apparaisse."
+    }
+  }
+}

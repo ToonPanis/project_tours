@@ -1,0 +1,85 @@
+{
+  "persons": { "one": "{count} person", "other": "{count} persons" },
+  "buy": {
+    "title": "Tickets",
+    "perPerson": "per person, VAT included",
+    "persons": "Number of persons",
+    "decrease": "One person fewer",
+    "increase": "One person more",
+    "total": "Total",
+    "discountCode": "Discount code (optional)",
+    "button": "Pay securely",
+    "busy": "Opening the payment page…",
+    "note": "You pay on Stripe's secure payment page. Afterwards you get a ticket link by email: everyone in your group opens it on their own phone."
+  },
+  "errors": {
+    "sales-closed": "Tickets can't be bought online yet.",
+    "unknown-product": "This walk can't be bought online at the moment.",
+    "invalid-quantity": "Choose between 1 and 30 persons. For bigger groups, please contact us.",
+    "total-too-low": "This order is too small to pay online.",
+    "unknown-discount": "This discount code doesn't exist.",
+    "discount-not-valid-yet": "This discount code can't be used yet.",
+    "discount-expired": "This discount code has expired.",
+    "discount-not-for-product": "This discount code isn't valid for this walk.",
+    "discount-used-up": "This discount code has been used up.",
+    "payments-unavailable": "Payments are temporarily unavailable. Nothing was charged. Please try again in a few minutes.",
+    "invalid-ticket": "This ticket link isn't valid. Check that you copied the whole link from the email.",
+    "ticket-revoked": "This ticket is no longer valid (it was refunded or withdrawn).",
+    "ticket-expired": "This ticket has expired.",
+    "ticket-full": "This ticket is already open on as many phones as it has persons.",
+    "offline": "No connection. Check your internet and try again.",
+    "generic": "Something went wrong. Please try again."
+  },
+  "success": {
+    "title": "Thank you!",
+    "paid": "Your payment has been received.",
+    "pending": "We're waiting for the payment confirmation. This page updates by itself.",
+    "failed": "The payment didn't go through. Nothing was charged.",
+    "canceled": "This order was canceled. Nothing was charged.",
+    "unknown": "We can't find this order on this device. Your ticket link is in the email we sent you.",
+    "openTicket": "Open the ticket on this phone",
+    "emailSent": "We also emailed your ticket link to {email}.",
+    "share": "Share the link with your group: each person opens it on their own phone. The ticket works on {seats}.",
+    "receipt": "Receipt number: {number}",
+    "invoiceSoon": "Your invoice for {business} will follow separately.",
+    "backToWalks": "Back to the walks"
+  },
+  "canceled": {
+    "title": "Payment canceled",
+    "body": "You haven't paid anything. You can try again whenever you like.",
+    "back": "Back to the walk"
+  },
+  "ticket": {
+    "title": "Your ticket",
+    "opening": "Opening your ticket…",
+    "ready": "Your ticket is ready on this phone.",
+    "start": "Start the walk",
+    "missing": "The ticket link is incomplete. Open the link from your email again."
+  },
+  "paywall": {
+    "title": "This walk needs a ticket",
+    "body": "Buy a ticket on the walk page, or open the ticket link from your email on this phone.",
+    "buy": "Buy a ticket"
+  },
+  "email": {
+    "confirmation": {
+      "subject": "Your ticket for {product}",
+      "greeting": "Hello,",
+      "thanks": "Thank you for your order with Hidden Antwerp.",
+      "line": "{product}: {persons}",
+      "total": "Total paid: {amount}",
+      "vat": "Of which VAT ({rate}): {vat}",
+      "receipt": "Receipt number: {number}",
+      "invoice": "Your invoice will follow separately.",
+      "linkIntro": "Your ticket link. Everyone in your group opens it on their own phone (the ticket works on {seats}):",
+      "validUntil": "The ticket is valid until {date}.",
+      "signoff": "Enjoy Antwerp!"
+    },
+    "refund": {
+      "subject": "Your refund from Hidden Antwerp",
+      "body": "We have refunded {amount} for your order of {product}.",
+      "ticketRevoked": "Your ticket link no longer works.",
+      "bankTime": "Depending on your bank, it can take a few days before you see the refund."
+    }
+  }
+}

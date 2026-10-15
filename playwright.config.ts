@@ -57,6 +57,10 @@ export default defineConfig({
       BREVO_API_KEY: "",
       EMAIL_FROM: "",
       APP_BASE_URL: `http://localhost:${PORT}`,
+      // P2: sales closed and NO Stripe keys, so the tests can never reach Stripe (test or live).
+      COMMERCE_SALES_ENABLED: "",
+      STRIPE_SECRET_KEY: "",
+      STRIPE_WEBHOOK_SECRET: "",
     },
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,

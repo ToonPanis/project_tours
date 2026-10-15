@@ -6,7 +6,7 @@ import { CommerceStoreUnavailableError } from "@/features/commerce/server/commer
 import { MemoryCommerceStore } from "@/features/commerce/server/memory-store";
 import { MongoCommerceStore } from "@/features/commerce/server/mongo-store";
 import { createMongoClient, databaseOf, MONGO_CLIENT_OPTIONS } from "@/features/pub-game/server/mongo";
-import type { OutboxEmail, Product } from "@/types/commerce";
+import type { Discount, Order, OutboxEmail, Product, TicketGrant } from "@/types/commerce";
 
 /**
  * The same tests for every CommerceStore, so the MongoDB store is proven to
@@ -33,7 +33,7 @@ function product(id: string, sortOrder = 0): Product {
     name: "Hidden Pubs",
     unit: "person",
     active: false,
-    vatRateBasisPoints: null,
+    taxCategoryId: null,
     sortOrder,
     createdAt: NOW.toISOString(),
     updatedAt: NOW.toISOString(),
@@ -54,6 +54,38 @@ function email(id: string, overrides: Partial<OutboxEmail> = {}): OutboxEmail {
     sentAt: null,
     ...overrides,
   };
+}
+
+/** Tax versions far above any real one, unique per run (so the real settings are never touched). */
+const taxVersionBase = 1_000_000_000 + Math.floor(Math.random() * 1_000_000) * 100;
+const taxVersionsUsed: number[] = [];
+
+function order(id: string, overrides: Partial<Order> = {}): Order {
+  return {
+    id,
+    status: "pending",
+    lines: [{ productId: "classics-of-antwerp", productName: "Classics", walkSlug: "classics-of-antwerp", quantity: 2, unitPriceCents: 795, totalCents: 1590 }],
+    subtotalCents: 1590,
+    discount: null,
+    totalCents: 1590,
+    currency: "EUR",
+    locale: "nl",
+    buyerTokenHash: "hash",
+    email: null,
+    customer: null,
+    taxBasis: { settingsVersion: 1, regime: "exempt", homeCountry: "BE", categoryId: null, homeRateBasisPoints: 0, ossEnabled: false, ossRates: [], exemptionNote: "note" },
+    tax: null,
+    stripe: { checkoutSessionId: `cs_${id}`, paymentIntentId: null },
+    refundedCents: 0,
+    createdAt: NOW.toISOString(),
+    updatedAt: NOW.toISOString(),
+    paidAt: null,
+    ...overrides,
+  };
+}
+
+function grant(id: string, orderId: string, seats = 2): TicketGrant {
+  return { id, orderId, productId: "classics-of-antwerp", walkSlug: "classics-of-antwerp", seats, devicesUsed: 0, status: "active", createdAt: NOW.toISOString(), validUntil: LATER.toISOString() };
 }
 
 type StoreFactory = { name: string; create: () => CommerceStore; cleanup?: () => Promise<void> };
@@ -82,8 +114,17 @@ if (mongoClient) {
         COLLECTIONS.products,
         COLLECTIONS.prices,
         COLLECTIONS.emailOutbox,
+        COLLECTIONS.orders,
+        COLLECTIONS.stripeEvents,
+        COLLECTIONS.ticketGrants,
+        COLLECTIONS.ticketDevices,
+        COLLECTIONS.discounts,
+        COLLECTIONS.counters,
+        COLLECTIONS.documents,
       ];
       for (const name of names) await db.collection<{ _id: string }>(name).deleteMany({ _id: ours });
+      // Tax settings are found by version number: this run used its own, very high ones.
+      await db.collection(COLLECTIONS.taxSettings).deleteMany({ version: { $in: taxVersionsUsed } });
       await mongoClient.close();
     },
   });
@@ -156,8 +197,8 @@ describe.each(factories)("$name commerce store", ({ create, cleanup }) => {
     expect(await store.insertProductIfMissing(product(id))).toBe(true);
     expect(await store.insertProductIfMissing({ ...product(id), name: "Other" })).toBe(false);
     expect((await store.getProduct(id))?.name).toBe("Hidden Pubs");
-    await store.saveProduct({ ...product(id), active: true, vatRateBasisPoints: 2100, name: "Renamed" });
-    expect(await store.getProduct(id)).toMatchObject({ active: true, vatRateBasisPoints: 2100, name: "Renamed" });
+    await store.saveProduct({ ...product(id), active: true, taxCategoryId: "experience", name: "Renamed" });
+    expect(await store.getProduct(id)).toMatchObject({ active: true, taxCategoryId: "experience", name: "Renamed" });
     expect((await store.listProducts()).some((candidate) => candidate.id === id)).toBe(true);
     expect(await store.getProduct(unique("missing"))).toBeNull();
   });
@@ -190,6 +231,117 @@ describe.each(factories)("$name commerce store", ({ create, cleanup }) => {
     await store.updateEmail(id, { status: "sent", attempts: 1, text: null, sentAt: NOW.toISOString() });
     const sentLater = (await store.listDueEmails(LATER, 1000)).some((candidate) => candidate.id === id);
     expect(sentLater).toBe(false);
+  });
+
+  // ── P2 ──
+
+  test("tax settings: the newest version wins; a version number can't be saved twice", async () => {
+    const base = taxVersionBase + (store instanceof MemoryCommerceStore ? 0 : 50);
+    taxVersionsUsed.push(base + 1, base + 2);
+    const settings = {
+      version: base + 1,
+      regime: "vat-registered" as const,
+      homeCountry: "BE",
+      categories: [{ id: "experience", label: "Experiences", rateBasisPoints: 1 }],
+      ossEnabled: false,
+      ossRates: [],
+      exemptionNote: null,
+      confirmedByAccountant: false,
+      updatedAt: NOW.toISOString(),
+      updatedBy: "a@b.c",
+    };
+    expect(await store.insertTaxSettings(settings)).toBe(true);
+    expect(await store.insertTaxSettings({ ...settings, version: base + 2, confirmedByAccountant: true })).toBe(true);
+    expect(await store.insertTaxSettings({ ...settings, version: base + 2 })).toBe(false);
+    expect(await store.getTaxSettings()).toEqual({ ...settings, version: base + 2, confirmedByAccountant: true });
+  });
+
+  test("orders: saved with nested data, found by id and payment, changed only from the expected status (once)", async () => {
+    const id = unique("order");
+    await store.insertOrder(order(id));
+    expect(await store.getOrder(id)).toEqual(order(id));
+    const paidChanges = { status: "paid" as const, paidAt: LATER.toISOString(), stripe: { checkoutSessionId: `cs_${id}`, paymentIntentId: `pi_${id}` } };
+    const results = await Promise.all([store.transitionOrder(id, ["pending"], paidChanges), store.transitionOrder(id, ["pending"], paidChanges)]);
+    expect(results.filter(Boolean)).toHaveLength(1);
+    expect(await store.findOrderByPaymentIntent(`pi_${id}`)).toMatchObject({ id, status: "paid", paidAt: LATER.toISOString() });
+    await store.updateOrder(id, { refundedCents: 500 });
+    expect((await store.getOrder(id))?.refundedCents).toBe(500);
+    expect(await store.getOrder(unique("missing"))).toBeNull();
+    const page = await store.listOrders({ skip: 0, limit: 500, status: "paid" });
+    expect(page.orders.some((candidate) => candidate.id === id)).toBe(true);
+    expect(page.orders.every((candidate) => candidate.status === "paid")).toBe(true);
+  });
+
+  test("Stripe events: new the first time, duplicate after; done once marked", async () => {
+    const id = unique("evt");
+    expect(await store.recordStripeEvent({ id, type: "checkout.completed", receivedAt: NOW, expiresAt: LATER })).toBe("new");
+    expect(await store.recordStripeEvent({ id, type: "checkout.completed", receivedAt: NOW, expiresAt: LATER })).toBe("duplicate");
+    expect(await store.isStripeEventDone(id)).toBe(false);
+    await store.markStripeEventDone(id, NOW);
+    expect(await store.isStripeEventDone(id)).toBe(true);
+  });
+
+  test("tickets: one per order, seats never overbooked (also at once), devices found until they expire", async () => {
+    const orderId = unique("order");
+    const first = await store.insertGrantIfMissing(grant(unique("grant"), orderId, 2));
+    const second = await store.insertGrantIfMissing(grant(unique("grant"), orderId, 9));
+    expect(second.id).toBe(first.id);
+    expect(await store.getGrantByOrder(orderId)).toEqual(first);
+
+    const claims = await Promise.all([1, 2, 3, 4].map(() => store.claimTicketSeat(first.id)));
+    expect(claims.filter(Boolean)).toHaveLength(2);
+    expect((await store.getGrant(first.id))?.devicesUsed).toBe(2);
+
+    const device = unique("device");
+    await store.saveTicketDevice({ tokenHash: device, grantId: first.id, walkSlug: "classics-of-antwerp", createdAt: NOW, expiresAt: LATER });
+    expect(await store.findTicketDevice(device, NOW)).toEqual({ grantId: first.id, walkSlug: "classics-of-antwerp" });
+    expect(await store.findTicketDevice(device, LATER)).toBeNull();
+    await store.deleteTicketDevices(first.id);
+    expect(await store.findTicketDevice(device, NOW)).toBeNull();
+
+    await store.updateGrant(first.id, { status: "revoked", devicesUsed: 0 });
+    expect(await store.claimTicketSeat(first.id)).toBe(false);
+  });
+
+  test("discounts: unique codes, uses reserved atomically up to the maximum, given back", async () => {
+    const id = unique("discount");
+    const code = `${runId}CODE${counter}`.slice(0, 30);
+    const discount: Discount = {
+      id,
+      code,
+      kind: "percent",
+      value: 10,
+      productIds: [],
+      validFrom: null,
+      validUntil: LATER.toISOString(),
+      maxRedemptions: 2,
+      redemptions: 0,
+      active: true,
+      createdAt: NOW.toISOString(),
+      createdBy: "a@b.c",
+    };
+    expect(await store.insertDiscount(discount)).toBe(true);
+    expect(await store.insertDiscount({ ...discount, id: unique("discount") })).toBe(false);
+    expect(await store.getDiscountByCode(code)).toEqual(discount);
+    const reservations = await Promise.all([1, 2, 3].map(() => store.reserveDiscount(id)));
+    expect(reservations.filter(Boolean)).toHaveLength(2);
+    await store.releaseDiscount(id);
+    expect((await store.getDiscount(id))?.redemptions).toBe(1);
+    await store.updateDiscount(id, { active: false });
+    expect(await store.reserveDiscount(id)).toBe(false);
+    expect((await store.listDiscounts()).some((candidate) => candidate.id === id)).toBe(true);
+  });
+
+  test("numbers and documents: a series counts up without gaps at once; a document id is stored once", async () => {
+    const series = unique("series");
+    const numbers = await Promise.all([1, 2, 3, 4, 5].map(() => store.nextNumber(series)));
+    expect([...numbers].sort()).toEqual([1, 2, 3, 4, 5]);
+    const orderId = unique("order");
+    const document = { id: unique("receipt"), number: "R2099-000001", kind: "receipt" as const, orderId, provider: "internal" as const, status: "issued" as const, amountCents: 1590, createdAt: NOW.toISOString() };
+    expect(await store.insertDocumentIfMissing(document)).toEqual(document);
+    expect(await store.insertDocumentIfMissing({ ...document, number: "other" })).toEqual(document);
+    expect(await store.getDocument(document.id)).toEqual(document);
+    expect(await store.listDocumentsForOrder(orderId)).toEqual([document]);
   });
 });
 

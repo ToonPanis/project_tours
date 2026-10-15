@@ -2,9 +2,11 @@ import { createMongoClient, databaseOf } from "@/features/pub-game/server/mongo"
 import { hashToken, newId, newPlayerToken } from "@/features/pub-game/server/identity";
 import { parseEmailList } from "../logic/email";
 import type { CommerceStore } from "./commerce-store";
+import { PendingBillitProvider, type InvoiceProvider } from "./invoicing";
 import { BrevoMailer, MemoryMailer, type Mailer } from "./mailer";
 import { MemoryCommerceStore } from "./memory-store";
 import { MongoCommerceStore } from "./mongo-store";
+import { PaymentProviderError, StripeGateway, type PaymentGateway } from "./payment-gateway";
 
 /**
  * Everything a commerce service needs from the outside world, passed in as one
@@ -20,6 +22,20 @@ export interface CommerceContext {
   newId(): string;
   /** A long random secret (32 bytes) for links and cookies. Only its hash is stored. */
   newSecret(): string;
+
+  // ── P2 ──
+  /** Stripe (or a fake in tests). Throws PaymentProviderError("not-configured") when used without keys. */
+  readonly payments: PaymentGateway;
+  /** B2B invoices (Billit, not connected yet: requests wait). */
+  readonly invoices: InvoiceProvider;
+  /** Signs ticket links (HMAC). */
+  readonly ticketSigningKey: string;
+  /**
+   * COMMERCE_SALES_ENABLED=true: tickets are sold and the play pages ask for one.
+   * Off by default: the site works exactly as before (decision B8: no real sales
+   * before the VAT treatment is confirmed).
+   */
+  readonly salesEnabled: boolean;
 }
 
 /** Hashes for secrets and for rate-limit subjects (emails, IP addresses): SHA-256, hex. */
@@ -31,7 +47,41 @@ export { hashToken as hashSecret };
 const globalForCommerce = globalThis as typeof globalThis & {
   commerceStore?: CommerceStore;
   commerceMailer?: Mailer;
+  commercePayments?: PaymentGateway;
 };
+
+export function salesEnabled(): boolean {
+  return process.env.COMMERCE_SALES_ENABLED === "true";
+}
+
+/**
+ * Stripe with STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET. A LIVE key is refused
+ * while sales are closed: real money can only move after the owner opened sales
+ * (and the VAT treatment is confirmed). Without keys every payment call fails
+ * with "not-configured" (the pages then say payments are unavailable).
+ */
+function getPayments(): PaymentGateway {
+  if (globalForCommerce.commercePayments) return globalForCommerce.commercePayments;
+  const secretKey = process.env.STRIPE_SECRET_KEY;
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!secretKey || !webhookSecret) throw new PaymentProviderError("not-configured");
+  const gateway = new StripeGateway(secretKey, webhookSecret);
+  if (gateway.mode === "live" && !salesEnabled()) throw new PaymentProviderError("live-key-while-sales-closed");
+  globalForCommerce.commercePayments = gateway;
+  return gateway;
+}
+
+/**
+ * TICKET_SIGNING_SECRET (at least 32 characters) signs ticket links. Required in
+ * production; development and tests use a fixed key so links keep working
+ * across dev-server restarts (they're worthless outside your own computer).
+ */
+function getTicketSigningKey(): string {
+  const key = process.env.TICKET_SIGNING_SECRET;
+  if (key && key.length >= 32) return key;
+  if (memoryAllowed()) return "development-only-ticket-signing-key-not-secret";
+  throw new Error("Tickets need TICKET_SIGNING_SECRET (at least 32 characters) in production (see .env.example).");
+}
 
 /**
  * Memory stores are for development, and for the browser tests' production build
@@ -92,6 +142,14 @@ export function getCommerceContext(): CommerceContext {
     now: () => new Date(),
     newId,
     newSecret: newPlayerToken,
+    get payments() {
+      return getPayments();
+    },
+    invoices: new PendingBillitProvider(),
+    get ticketSigningKey() {
+      return getTicketSigningKey();
+    },
+    salesEnabled: salesEnabled(),
   };
 }
 
@@ -102,5 +160,9 @@ export function configurationStatus() {
     email: process.env.BREVO_API_KEY && process.env.EMAIL_FROM ? "brevo" : "memory",
     adminCount: parseEmailList(process.env.ADMIN_EMAILS).length,
     baseUrlSet: Boolean(process.env.APP_BASE_URL),
+    stripe: !process.env.STRIPE_SECRET_KEY ? "not-configured" : process.env.STRIPE_SECRET_KEY.startsWith("sk_live_") ? "live" : "test",
+    stripeWebhookSet: Boolean(process.env.STRIPE_WEBHOOK_SECRET),
+    ticketKeySet: (process.env.TICKET_SIGNING_SECRET?.length ?? 0) >= 32,
+    salesEnabled: salesEnabled(),
   } as const;
 }

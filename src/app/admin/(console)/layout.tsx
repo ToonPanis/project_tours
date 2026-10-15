@@ -14,12 +14,19 @@ export default function AdminConsoleLayout({ children }: LayoutProps<"/admin">) 
         <Link href="/admin" className="min-h-11 content-center font-semibold text-gold">
           Admin
         </Link>
-        <Link href="/admin/products" className="min-h-11 content-center text-parchment underline-offset-4 hover:underline">
-          Products
-        </Link>
-        <Link href="/admin/audit" className="min-h-11 content-center text-parchment underline-offset-4 hover:underline">
-          Audit log
-        </Link>
+        {(
+          [
+            ["/admin/orders", "Orders"],
+            ["/admin/products", "Products"],
+            ["/admin/discounts", "Discounts"],
+            ["/admin/tax", "Tax"],
+            ["/admin/audit", "Audit log"],
+          ] as const
+        ).map(([href, label]) => (
+          <Link key={href} href={href} className="min-h-11 content-center text-parchment underline-offset-4 hover:underline">
+            {label}
+          </Link>
+        ))}
         <span className="ml-auto">
           <SignOutButton />
         </span>

@@ -150,9 +150,9 @@ describe("product routes", () => {
   test("an admin changes a product and its price", async () => {
     await ensureStarterCatalog(getCommerceContext());
     const cookie = await signIn();
-    const renamed = await productRoute(post(`/api/admin/products/${id}`, { name: "Classics", vatRateBasisPoints: 2100 }, { cookie }), params(id));
+    const renamed = await productRoute(post(`/api/admin/products/${id}`, { name: "Classics" }, { cookie }), params(id));
     expect(renamed.status).toBe(200);
-    expect(await renamed.json()).toMatchObject({ id, name: "Classics", vatRateBasisPoints: 2100 });
+    expect(await renamed.json()).toMatchObject({ id, name: "Classics" });
 
     const priced = await priceRoute(post(`/api/admin/products/${id}/price`, { amount: "8,50" }, { cookie }), params(id));
     expect(priced.status).toBe(200);

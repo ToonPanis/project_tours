@@ -4,6 +4,7 @@ import { STARTER_PRODUCTS } from "../logic/starter-catalog";
 import type { CommerceContext } from "./context";
 import { fail, ok, type ServiceResult } from "./result";
 import { recordAudit, type Actor } from "./support";
+import { getTaxSettings } from "./tax-service";
 
 /**
  * The product catalogue: what can be sold and at what price, managed in
@@ -24,7 +25,7 @@ export async function ensureStarterCatalog(ctx: CommerceContext): Promise<void> 
       name: starter.name,
       unit: "person",
       active: false,
-      vatRateBasisPoints: null,
+      taxCategoryId: null,
       sortOrder: index,
       createdAt: now,
       updatedAt: now,
@@ -54,7 +55,7 @@ export async function listCatalog(ctx: CommerceContext): Promise<CatalogEntry[]>
   );
 }
 
-/** Changes a product's name, VAT rate or active state. */
+/** Changes a product's name, tax category or active state. */
 export async function updateProduct(ctx: CommerceContext, admin: Actor, productId: string, body: unknown): Promise<ServiceResult<Product>> {
   const parsed = parseProductUpdate(body);
   if (!parsed.ok) return fail(400, parsed.error);
@@ -62,14 +63,19 @@ export async function updateProduct(ctx: CommerceContext, admin: Actor, productI
   if (!product) return fail(404, "unknown-product");
 
   const updated: Product = { ...product, ...parsed.value, updatedAt: ctx.now().toISOString() };
-  // A product can only be sold with a known VAT rate and a price (decision B8: the accountant sets the rate).
-  if (updated.active && updated.vatRateBasisPoints === null) return fail(409, "vat-rate-required");
+  // The category must exist in the tax settings (decision B8: rates live there, never in code).
+  if (parsed.value.taxCategoryId) {
+    const settings = await getTaxSettings(ctx);
+    if (!settings.categories.some((category) => category.id === parsed.value.taxCategoryId)) return fail(400, "unknown-tax-category");
+  }
+  // A product can only be on sale with a tax category and a price.
+  if (updated.active && updated.taxCategoryId === null) return fail(409, "tax-category-required");
   if (updated.active && !currentPrice(await ctx.store.listPrices(productId), ctx.now())) return fail(409, "price-required");
 
   await ctx.store.saveProduct(updated);
   // Only what changed, as "old → new", so the log reads like a history.
   const changes: Record<string, string> = {};
-  for (const field of ["name", "active", "vatRateBasisPoints"] as const) {
+  for (const field of ["name", "active", "taxCategoryId"] as const) {
     if (product[field] !== updated[field]) changes[field] = `${String(product[field])} → ${String(updated[field])}`;
   }
   if (Object.keys(changes).length > 0) await recordAudit(ctx, admin, "product-updated", `product:${productId}`, changes);

@@ -5,6 +5,9 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { PlaceholderNotice } from "@/components/ui/PlaceholderNotice";
+import { BuyBox } from "@/features/commerce/components/BuyBox";
+import { saleOfferForWalk } from "@/features/commerce/server/checkout-service";
+import { getCommerceContext } from "@/features/commerce/server/context";
 import { CollectionList } from "@/features/guide/components/CollectionList";
 import { HowItWorksSteps } from "@/features/walks/components/HowItWorksSteps";
 import { LocationPreviewList } from "@/features/walks/components/LocationPreviewList";
@@ -45,6 +48,10 @@ export default async function WalkDetailPage({ params }: PageProps<"/walks/[slug
 
   // Renders the nearest not-found.tsx (./not-found.tsx).
   if (!walk) notFound();
+
+  // Tickets (P2): only when sales are open and this walk is on sale. With sales closed this
+  // returns null at once (no database call) and the page looks exactly as before.
+  const offer = await saleOfferForWalk(getCommerceContext(), walk.slug);
 
   const descriptionParagraphs = walk.description.split("\n\n");
   const mainLocationCount = walk.locations.filter((location) => !location.isBonus).length;
@@ -105,15 +112,27 @@ export default async function WalkDetailPage({ params }: PageProps<"/walks/[slug
             <h2 id="start-heading" className="font-display text-2xl font-semibold">
               {t("walks.detail.readyTitle")}
             </h2>
-            <p className="text-parchment/80">
-              <span className="font-display text-2xl font-semibold text-gold">
-                {formatPrice(walk.price, `${t.locale}-BE`)}
-              </span>{" "}
-              {t("walks.detail.perTeam")}
-            </p>
+            {/* With tickets on sale the price per person is in the ticket box below. */}
+            {!offer && (
+              <p className="text-parchment/80">
+                <span className="font-display text-2xl font-semibold text-gold">
+                  {formatPrice(walk.price, `${t.locale}-BE`)}
+                </span>{" "}
+                {t("walks.detail.perTeam")}
+              </p>
+            )}
           </div>
           <ButtonLink href={`/walks/${walk.slug}/play`}>{getWalkCopy(walk, t).startLabel}</ButtonLink>
         </section>
+
+        {offer && (
+          <section id="buy" aria-labelledby="buy-heading" className="bg-night-map flex flex-col gap-4 rounded-sm p-6 text-parchment">
+            <h2 id="buy-heading" className="font-display text-2xl font-semibold">
+              {t("commerce.buy.title")}
+            </h2>
+            <BuyBox walkSlug={walk.slug} unitPriceCents={offer.price.amountCents} />
+          </section>
+        )}
 
         {walk.highlights && walk.highlights.length > 0 && (
           <DetailSection id="expect" title={t("walks.detail.whatToExpect")}>

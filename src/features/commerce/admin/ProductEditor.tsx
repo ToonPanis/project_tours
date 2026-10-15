@@ -3,8 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
-import type { CatalogEntry } from "@/types/commerce";
-import { ALLOWED_VAT_RATES_BASIS_POINTS } from "../config";
+import type { CatalogEntry, TaxCategory } from "@/types/commerce";
 import { splitGrossAmount } from "../logic/money";
 import { adminErrorMessage, formatEuros, postJson } from "./admin-api";
 import { AdminStatus } from "./AdminStatus";
@@ -13,11 +12,12 @@ const fieldClasses =
   "min-h-11 rounded-sm border border-parchment/30 bg-ink/40 px-3 text-parchment focus:border-gold focus:outline-none";
 
 /**
- * One product in /admin/products: name, VAT rate, price per person and whether
- * it's on sale. Each change is a separate request (and a separate line in the
- * audit log); the page reloads its data from the server afterwards.
+ * One product in /admin/products: name, tax category, price per person and
+ * whether it's on sale. Each change is a separate request (and a separate line
+ * in the audit log); the page reloads its data from the server afterwards.
+ * `categories` and their rates come from /admin/tax (decision B8).
  */
-export function ProductEditor({ entry }: { entry: CatalogEntry }) {
+export function ProductEditor({ entry, categories }: { entry: CatalogEntry; categories: TaxCategory[] }) {
   const { product, currentPrice } = entry;
   const router = useRouter();
   const [name, setName] = useState(product.name);
@@ -53,8 +53,9 @@ export function ProductEditor({ entry }: { entry: CatalogEntry }) {
     if (await send(`${productUrl}/price`, { amount }, "New price saved. It applies from now on.")) setAmount("");
   }
 
-  const split =
-    currentPrice && product.vatRateBasisPoints !== null ? splitGrossAmount(currentPrice.amountCents, product.vatRateBasisPoints) : null;
+  const category = categories.find((candidate) => candidate.id === product.taxCategoryId) ?? null;
+  // At the home rate; with OSS the split of an order can differ (it's worked out per order).
+  const split = currentPrice && category ? splitGrossAmount(currentPrice.amountCents, category.rateBasisPoints) : null;
 
   return (
     <article className="flex flex-col gap-4 rounded-sm border border-parchment/20 bg-ink/30 p-4">
@@ -71,9 +72,11 @@ export function ProductEditor({ entry }: { entry: CatalogEntry }) {
       <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-parchment">
         <dt className="text-parchment/70">Price per person</dt>
         <dd className="font-semibold tabular-nums">{currentPrice ? formatEuros(currentPrice.amountCents) : "none"}</dd>
-        <dt className="text-parchment/70">Of which VAT</dt>
+        <dt className="text-parchment/70">Of which VAT (home rate)</dt>
         <dd className="tabular-nums">
-          {split ? `${formatEuros(split.vatCents)} (net ${formatEuros(split.netCents)})` : "VAT rate not set"}
+          {split && category
+            ? `${formatEuros(split.vatCents)} at ${category.rateBasisPoints / 100} % (net ${formatEuros(split.netCents)})`
+            : "Tax category not set"}
         </dd>
       </dl>
 
@@ -105,19 +108,17 @@ export function ProductEditor({ entry }: { entry: CatalogEntry }) {
       </form>
 
       <label className="flex flex-col gap-1">
-        <span className="text-xs font-semibold uppercase tracking-wider text-gold">VAT rate (ask the accountant)</span>
+        <span className="text-xs font-semibold uppercase tracking-wider text-gold">Tax category (rates in Tax settings)</span>
         <select
-          value={product.vatRateBasisPoints ?? ""}
+          value={product.taxCategoryId ?? ""}
           disabled={isBusy}
-          onChange={(event) =>
-            send(productUrl, { vatRateBasisPoints: event.target.value === "" ? null : Number(event.target.value) }, "VAT rate saved.")
-          }
+          onChange={(event) => send(productUrl, { taxCategoryId: event.target.value || null }, "Tax category saved.")}
           className={fieldClasses}
         >
           <option value="">Not set</option>
-          {ALLOWED_VAT_RATES_BASIS_POINTS.map((rate) => (
-            <option key={rate} value={rate}>
-              {`${rate / 100} %`}
+          {categories.map((option) => (
+            <option key={option.id} value={option.id}>
+              {`${option.label} (${option.rateBasisPoints / 100} %)`}
             </option>
           ))}
         </select>
