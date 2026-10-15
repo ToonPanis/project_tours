@@ -78,6 +78,25 @@ async function closePopups(page: Page, t: Translator = en) {
   for (let popup = 0; popup < 5 && (await ok.first().isVisible().catch(() => false)); popup++) await ok.first().click();
 }
 
+/**
+ * Taps a button on a phone that may get popups from other players' random cards at any
+ * moment (they arrive with the next poll). A popup in the way: close it and tap again.
+ */
+async function tapPastPopups(page: Page, name: string, t: Translator = en) {
+  const button = page.getByRole("button", { name });
+  for (let attempt = 0; attempt < 4; attempt++) {
+    await closePopups(page, t);
+    try {
+      await button.click({ timeout: 5_000 });
+      return;
+    } catch {
+      // Blocked by a popup that arrived in between (or the screen isn't there yet): try again.
+    }
+  }
+  await closePopups(page, t);
+  await button.click();
+}
+
 /** Every phone of the team draws when it's their turn, answering whatever the card asks. */
 async function cardRound(pages: Page[], t: Translator = en) {
   const done = t("pubgame.cards.toPubtask");
@@ -174,10 +193,11 @@ test("three phones, two teams: lobby, a café round, live scores, the host ends 
   await noSidewaysScroll(bea);
   await pubtaskToFunFact(bea, cafeId);
 
-  // The other team sees Team 1's points live.
-  await cas.getByRole("button", { name: tr("ru")("pubgame.beery.intro.skip") }).click();
-  await cas.getByRole("button", { name: tr("ru")("pubgame.beery.letsGo") }).click();
-  await cas.getByRole("button", { name: tr("ru")("pubgame.menu.scores") }).click();
+  // The other team sees Team 1's points live. Cas first closes the popups the random
+  // cards may have sent (e.g. Cas became someone's drinking buddy).
+  for (const key of ["pubgame.beery.intro.skip", "pubgame.beery.letsGo", "pubgame.menu.scores"] as const) {
+    await tapPastPopups(cas, tr("ru")(key), tr("ru"));
+  }
   await expect(cas.getByRole("dialog").getByText(tr("ru").plural("pubgame.leaderboard.points", 100))).toBeVisible();
 
   // The host ends the game: results on every phone.
