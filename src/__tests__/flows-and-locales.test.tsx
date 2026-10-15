@@ -11,6 +11,7 @@ import { pointAlongRoute, projectOntoRoute } from "@/features/navigation/logic/r
 import { PositionSimulationProvider, usePositionSimulation } from "@/features/navigation/simulation/PositionSimulation";
 import { WalkPlayer } from "@/features/walk-session/components/WalkPlayer";
 import { LocaleProvider } from "@/i18n/client";
+import { messagesByLocale } from "@/i18n/messages";
 import { locales } from "@/i18n/config";
 import { createTranslator, englishTranslator as t } from "@/i18n/translate";
 import type { GeoCoordinates } from "@/types/common";
@@ -34,7 +35,7 @@ describe.each(locales)("smoke test in %s", (locale) => {
     "%s: start screen and the first step, fully in the language",
     async (_slug, walk) => {
       render(
-        <LocaleProvider locale={locale}>
+        <LocaleProvider locale={locale} messages={messagesByLocale[locale]}>
           <WalkPlayer walk={walk} />
         </LocaleProvider>,
       );

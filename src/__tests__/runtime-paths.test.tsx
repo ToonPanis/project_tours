@@ -19,6 +19,7 @@ import {
   usePositionSimulation,
 } from "@/features/navigation/simulation/PositionSimulation";
 import { LocaleProvider, LocaleSync } from "@/i18n/client";
+import { messagesByLocale } from "@/i18n/messages";
 import { LOCALE_COOKIE, LOCALE_STORAGE_KEY, localeNames } from "@/i18n/config";
 import type { GpsFix } from "@/types/navigation";
 
@@ -327,7 +328,7 @@ describe("switching and restoring the language (browser)", () => {
     document.cookie = `${LOCALE_COOKIE}=fr; path=/`;
     window.localStorage.setItem(LOCALE_STORAGE_KEY, "ru");
     render(
-      <LocaleProvider locale="fr">
+      <LocaleProvider locale="fr" messages={messagesByLocale.fr}>
         <LocaleSync />
       </LocaleProvider>,
     );

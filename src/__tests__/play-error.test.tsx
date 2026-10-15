@@ -3,6 +3,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import PlayError from "@/app/walks/[slug]/play/error";
 import { storageKey } from "@/features/walk-session/storage/session-storage";
 import { LocaleProvider } from "@/i18n/client";
+import { messagesByLocale } from "@/i18n/messages";
 import { LOCALE_STORAGE_KEY } from "@/i18n/config";
 import { reloadPage } from "@/lib/reload-page";
 
@@ -60,7 +61,7 @@ describe("Play error page (M-02)", () => {
 
   test("is shown in the visitor's language", () => {
     render(
-      <LocaleProvider locale="uk">
+      <LocaleProvider locale="uk" messages={messagesByLocale.uk}>
         <PlayError error={crash} />
       </LocaleProvider>,
     );

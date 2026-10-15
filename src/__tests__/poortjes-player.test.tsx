@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { getPoortjesWalk } from "@/data/walks/poortjes-van-antwerpen";
 import { LocaleProvider } from "@/i18n/client";
+import { messagesByLocale } from "@/i18n/messages";
 import { createTranslator } from "@/i18n/translate";
 import { getPreviousVisitedLocation, getRouteLegToCurrent } from "@/features/navigation/logic/route-legs";
 import { WalkPlayer } from "@/features/walk-session/components/WalkPlayer";
@@ -33,7 +34,7 @@ const t = createTranslator("nl");
 
 function renderPlayer() {
   return render(
-    <LocaleProvider locale="nl">
+    <LocaleProvider locale="nl" messages={messagesByLocale.nl}>
       <WalkPlayer walk={walk} />
     </LocaleProvider>,
   );
