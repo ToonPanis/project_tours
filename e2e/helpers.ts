@@ -58,3 +58,13 @@ export async function everythingStored(page: Page, context: BrowserContext): Pro
 export function coordinateTexts(latitude: number, longitude: number): string[] {
   return [latitude.toFixed(4), longitude.toFixed(4)];
 }
+
+/**
+ * Does Spooky's "find a detail" task at a stop the way a visitor would: open the
+ * popup, look at the task, say it was found, and go on to the story.
+ */
+export async function completeSpookyTask(page: Page) {
+  await page.getByRole("button", { name: en("quest.viewTask") }).click();
+  await page.getByRole("button", { name: en("quest.foundIt") }).click();
+  await page.getByRole("button", { name: en("quest.discoverStory") }).click();
+}

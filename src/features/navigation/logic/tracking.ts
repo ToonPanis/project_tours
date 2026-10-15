@@ -91,6 +91,8 @@ export function trackFix(
   reading: GpsFix,
   route: WalkingRoute | null,
   destination: GeoCoordinates | null,
+  /** How close counts as arrived; by default NAVIGATION_CONFIG.ARRIVAL_RADIUS_METERS. */
+  arrivalRadiusMeters?: number,
 ): NavigationTracking {
   // The very same (cached) reading again adds no information and must not count
   // twice, towards arrival or to confirm a jump. (Only exact repeats are dropped:
@@ -120,8 +122,8 @@ export function trackFix(
   const arrivalCount = !destination
     ? 0
     : isNewMoment
-      ? nextArrivalCount(state.arrivalCount, reading, destination)
-      : Math.min(state.arrivalCount, nextArrivalCount(state.arrivalCount, reading, destination));
+      ? nextArrivalCount(state.arrivalCount, reading, destination, arrivalRadiusMeters)
+      : Math.min(state.arrivalCount, nextArrivalCount(state.arrivalCount, reading, destination, arrivalRadiusMeters));
   const distanceFromRouteMeters = route
     ? projectOntoRoute(reading.coordinates, route.geometry).distanceFromRouteMeters
     : null;

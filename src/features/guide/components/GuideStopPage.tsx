@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { AudioGuidePlayer } from "@/features/audio/components/AudioGuidePlayer";
 import { useScreenFocus } from "@/hooks/useScreenFocus";
 import { formatWalkingDistance, formatWalkingTime } from "@/features/navigation/logic/maneuver-display";
 import type { DetourCost } from "@/features/navigation/logic/route-legs";
@@ -14,7 +15,9 @@ import { CardDeck } from "./CardDeck";
 import { CollectionItemCard } from "./CollectionItemCard";
 import { GlossaryList } from "./GlossaryList";
 import { GuideImageFigure } from "./GuideImageFigure";
+import { ImageGallery } from "./ImageGallery";
 import { InfoBoxView } from "./InfoBoxView";
+import { MoreStories } from "./MoreStories";
 import { SearchTaskView } from "./SearchTaskView";
 import { StatusBadge } from "./StatusBadge";
 import { StorySection } from "./StorySection";
@@ -47,9 +50,10 @@ interface GuideStopPageProps {
  * One stop of a guide walk, as a long, calm reading page on "paper". Every
  * block below is optional and only shown when the stop has data for it:
  *
- *   header (drawing or photo, status) → what you see → pause → search task →
- *   story → slides → terms → then & now → look at this → did you know? →
- *   vanished gates nearby → practical info → sources → the way on.
+ *   header (drawing or photo, status) → audio guide → what you see → pause → search task →
+ *   story → image galleries → slides → terms → then & now → look at this → did you know? →
+ *   more stories (optional, closed) → vanished gates nearby → practical info →
+ *   sources → the way on.
  */
 export function GuideStopPage({
   location,
@@ -115,6 +119,11 @@ export function GuideStopPage({
       </header>
 
       <div className="flex flex-col gap-8 px-4 pb-10">
+        {/* The audio guide reads this page (once its story may be shown: never a search task's answer). */}
+        {guide.audio && isStoryVisible && (
+          <AudioGuidePlayer key={guide.audio.src} track={guide.audio} title={location.name} t={t} />
+        )}
+
         {/* What you see */}
         <div className="space-y-4 text-lg leading-relaxed">
           {featuredItems.length > 0 && (
@@ -160,6 +169,8 @@ export function GuideStopPage({
             {otherImages.slice(guide.sections.length).map((image) => (
               <GuideImageFigure key={image.id} image={image} />
             ))}
+
+            {guide.galleries?.map((gallery) => <ImageGallery key={gallery.id} gallery={gallery} t={t} />)}
 
             {guide.cards && guide.cards.length > 0 && <CardDeck cards={guide.cards} t={t} />}
 
@@ -212,6 +223,8 @@ export function GuideStopPage({
                 </ul>
               </aside>
             )}
+
+            {guide.moreStories && guide.moreStories.length > 0 && <MoreStories stories={guide.moreStories} t={t} />}
 
             {guide.vanishedNearby && guide.vanishedNearby.length > 0 && (
               <section aria-labelledby={`${location.id}-vanished`} className="flex flex-col gap-4">

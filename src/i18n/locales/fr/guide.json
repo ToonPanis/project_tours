@@ -21,7 +21,8 @@
     "history": "Documenté",
     "legend": "Légende",
     "interpretation": "Interprétation",
-    "context": "Contexte"
+    "context": "Contexte",
+    "fiction": "Fiction"
   },
   "whatYouSee": "Ce que vous voyez",
   "didYouKnow": "Le saviez-vous ?",
@@ -59,6 +60,9 @@
   "checkedOn": "Vérifié le {date}",
   "moreInfo": "Plus d'infos",
   "cardOf": "{card} sur {total}",
+  "moreStories": "Découvrir d’autres histoires",
+  "moreStoriesHide": "Masquer les histoires supplémentaires",
+  "moreStoriesNote": "Facultatif : un approfondissement pour celles et ceux qui veulent en lire davantage. Vous pouvez le passer et simplement poursuivre la balade.",
   "searchTask": "Mission d'observation",
   "showHint": "Voir un indice",
   "showNextHint": "Un autre indice",
@@ -83,5 +87,17 @@
   "viewRoute": "Voir le parcours",
   "discoverAnotherWalk": "Découvrir une autre balade",
   "unknownArtist": "Inconnu",
-  "stopUnavailable": "Le récit de cette étape n'est pas disponible pour le moment. Vous pouvez simplement continuer la balade."
+  "sourceToVerify": "Source encore à vérifier",
+  "rightsToVerify": "Droits encore à vérifier",
+  "stopUnavailable": "Le récit de cette étape n'est pas disponible pour le moment. Vous pouvez simplement continuer la balade.",
+  "gallery": {
+    "eyebrow": "Images historiques",
+    "roleDescription": "galerie",
+    "slide": "image",
+    "trackLabel": "{title} : balayez ou utilisez les flèches du clavier",
+    "position": "Image {current} sur {total}",
+    "enlarge": "Agrandir",
+    "previous": "Image précédente",
+    "next": "Image suivante"
+  }
 }

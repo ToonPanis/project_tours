@@ -1,0 +1,7 @@
+# Free local voices for the Voice Studio (installed by setup-local-tts.ps1 into .tts/venv).
+# piper-tts: GPL-3.0 program (we only run it; the audio it makes is ours to use).
+# kokoro-onnx: MIT wrapper around the Kokoro-82M model (Apache-2.0).
+# lameenc: LGPL-3.0 MP3 encoder (the audio guide files).
+piper-tts==1.8.0
+kokoro-onnx==0.4.7
+lameenc==1.8.4

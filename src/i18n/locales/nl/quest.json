@@ -1,0 +1,17 @@
+{
+  "eyebrow": "Een opdracht van Spooky",
+  "taskForYou": "Spooky heeft een opdracht voor jou!",
+  "viewTask": "Bekijk de opdracht",
+  "startSearching": "Start zoeken",
+  "showClue": "Toon de aanwijzing",
+  "spookyAlt": "Spooky, een vriendelijk spookje met een lantaarn",
+  "inZoneTitle": "Je bent in de zoekzone!",
+  "inZoneBody": "Kijk goed rond en vergelijk wat je ziet met de aanwijzing. Hidden Antwerp merkt vanzelf wanneer je het gevonden hebt.",
+  "distanceToZone": "Afstand tot de zoekzone",
+  "foundIt": "Ik heb het gevonden",
+  "withoutGpsHint": "Geen GPS? Gebruik de aanwijzing en de kaart, en tik op de knop hieronder zodra je het gevonden hebt.",
+  "foundTitle": "Je hebt de locatie gevonden!",
+  "foundBody": "Bekijk welke informatie we voor je gevonden hebben!",
+  "discoveryFoundTitle": "Goed gevonden!",
+  "discoverStory": "Ontdek het verhaal"
+}

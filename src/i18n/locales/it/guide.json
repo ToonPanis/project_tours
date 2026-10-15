@@ -21,7 +21,8 @@
     "history": "Documentato",
     "legend": "Leggenda",
     "interpretation": "Interpretazione",
-    "context": "Contesto"
+    "context": "Contesto",
+    "fiction": "Finzione"
   },
   "whatYouSee": "Cosa vedi",
   "didYouKnow": "Lo sapevi?",
@@ -59,6 +60,9 @@
   "checkedOn": "Verificato il {date}",
   "moreInfo": "Maggiori informazioni",
   "cardOf": "{card} di {total}",
+  "moreStories": "Scopri altre storie",
+  "moreStoriesHide": "Nascondi le storie in più",
+  "moreStoriesNote": "Facoltativo: un approfondimento per chi vuole leggere di più. Puoi saltarlo e continuare semplicemente la passeggiata.",
   "searchTask": "Missione di ricerca",
   "showHint": "Mostra un indizio",
   "showNextHint": "Un altro indizio",
@@ -83,5 +87,17 @@
   "viewRoute": "Vedi il percorso",
   "discoverAnotherWalk": "Scopri un'altra passeggiata",
   "unknownArtist": "Sconosciuto",
-  "stopUnavailable": "Il racconto di questa tappa non è disponibile al momento. Puoi semplicemente continuare la passeggiata."
+  "sourceToVerify": "Fonte ancora da verificare",
+  "rightsToVerify": "Diritti ancora da verificare",
+  "stopUnavailable": "Il racconto di questa tappa non è disponibile al momento. Puoi semplicemente continuare la passeggiata.",
+  "gallery": {
+    "eyebrow": "Immagini storiche",
+    "roleDescription": "galleria",
+    "slide": "immagine",
+    "trackLabel": "{title}: scorri o usa i tasti freccia",
+    "position": "Immagine {current} di {total}",
+    "enlarge": "Ingrandisci",
+    "previous": "Immagine precedente",
+    "next": "Immagine successiva"
+  }
 }

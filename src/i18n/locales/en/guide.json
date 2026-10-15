@@ -21,7 +21,8 @@
     "history": "Documented",
     "legend": "Legend",
     "interpretation": "What historians think",
-    "context": "Background"
+    "context": "Background",
+    "fiction": "Fiction"
   },
   "whatYouSee": "What you see",
   "didYouKnow": "Did you know?",
@@ -59,6 +60,9 @@
   "checkedOn": "Checked on {date}",
   "moreInfo": "More info",
   "cardOf": "{card} of {total}",
+  "moreStories": "Discover more stories",
+  "moreStoriesHide": "Hide the extra stories",
+  "moreStoriesNote": "Optional: extra background for anyone who wants to read more. You can skip it and simply continue the walk.",
   "searchTask": "Search task",
   "showHint": "Show a hint",
   "showNextHint": "Another hint",
@@ -83,5 +87,17 @@
   "viewRoute": "View the route",
   "discoverAnotherWalk": "Discover another walk",
   "unknownArtist": "Unknown",
-  "stopUnavailable": "The story for this stop isn't available right now. You can simply continue the walk."
+  "sourceToVerify": "Source still to be verified",
+  "rightsToVerify": "Rights still to be verified",
+  "stopUnavailable": "The story for this stop isn't available right now. You can simply continue the walk.",
+  "gallery": {
+    "eyebrow": "Historical images",
+    "roleDescription": "gallery",
+    "slide": "image",
+    "trackLabel": "{title}: swipe or use the arrow keys",
+    "position": "Image {current} of {total}",
+    "enlarge": "View larger",
+    "previous": "Previous image",
+    "next": "Next image"
+  }
 }

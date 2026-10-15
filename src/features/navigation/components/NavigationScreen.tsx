@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useScreenFocus } from "@/hooks/useScreenFocus";
@@ -9,6 +9,8 @@ import { useT } from "@/i18n/client";
 import { distanceInMeters } from "@/lib/geo";
 import type { WalkLocation } from "@/types/location";
 import type { GpsFix, WalkingRoute } from "@/types/navigation";
+import type { ZoneSearch } from "@/types/quest";
+import { distanceToZone, isInsideZone, routeToZone } from "@/features/quests/logic/search-zone";
 import { useGeolocation } from "../hooks/useGeolocation";
 import { usePositionSimulation } from "../simulation/PositionSimulation";
 import { useWakeLock } from "../hooks/useWakeLock";
@@ -43,6 +45,14 @@ interface NavigationScreenProps {
   onArrive: () => void;
   /** Opens the list of all stops. Left out by Hidden Pubs, whose route stays private per team. */
   onShowRoute?: () => void;
+  /**
+   * A quest: guide to a search zone instead of the stop itself. The map shows the
+   * circle (no pin), the route and directions stop at its edge, and the stop is
+   * still "found" automatically near its real coordinates.
+   */
+  zoneSearch?: ZoneSearch;
+  /** Extra buttons in the bottom bar, e.g. "Show the clue" during a quest. */
+  extraActions?: ReactNode;
 }
 
 export function NavigationScreen({
@@ -52,9 +62,17 @@ export function NavigationScreen({
   onGpsEnabled,
   onArrive,
   onShowRoute,
+  zoneSearch,
+  extraActions,
 }: NavigationScreenProps) {
   const t = useT();
   const destinationCoordinates = destination.coordinates;
+  const zone = zoneSearch?.zone ?? null;
+  const arrivalRadiusMeters = zoneSearch?.arrivalRadiusMeters;
+  // During a quest the line and the directions end where the route enters the zone.
+  const guidedRoute = useMemo(() => (zone && route ? routeToZone(route, zone) : route), [route, zone]);
+  // Where the directions point: the zone's centre during a quest, otherwise the stop itself.
+  const targetCoordinates = zone ? zone.center : destinationCoordinates;
   const [chosenPhase, setPhase] = useState<Phase>(
     !destinationCoordinates ? "manual" : gpsAlreadyEnabled ? "gps" : "intro",
   );
@@ -98,7 +116,8 @@ export function NavigationScreen({
   const handleFix = useCallback(
     (fix: GpsFix) => {
       if (trackingRef.current.arrived) return;
-      const next = trackFix(trackingRef.current, fix, route, destinationCoordinates);
+      // Arrival is always measured from the real place, also during a quest.
+      const next = trackFix(trackingRef.current, fix, guidedRoute, destinationCoordinates, arrivalRadiusMeters);
       trackingRef.current = next;
       setTracking(next);
       if (next.arrived) {
@@ -106,7 +125,7 @@ export function NavigationScreen({
         onArrive();
       }
     },
-    [route, destinationCoordinates, onArrive],
+    [guidedRoute, destinationCoordinates, arrivalRadiusMeters, onArrive],
   );
 
   // Bumped by "Try again": restarts the GPS watch, so the browser can ask again.
@@ -114,8 +133,9 @@ export function NavigationScreen({
   const { status } = useGeolocation({ enabled: phase === "gps", onFix: handleFix, restartKey: gpsRestartKey });
   useWakeLock(phase === "gps");
 
+  // During a quest the external map opens on the zone's centre, never on the place itself.
   const externalMapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    `${destination.name}, ${destination.address}`,
+    zone ? `${zone.center.latitude},${zone.center.longitude}` : `${destination.name}, ${destination.address}`,
   )}`;
 
   // ── Explain before the browser asks for permission ───────────────────
@@ -127,9 +147,9 @@ export function NavigationScreen({
           {destination.name}
         </h1>
         <p className="text-parchment/80">{destination.address}</p>
-        {route && (
+        {guidedRoute && (
           <p className="text-lg text-parchment">
-            {formatWalkingDistance(route.distanceMeters, t)} · {t("gps.minWalk", { minutes: Math.max(1, Math.round(route.durationSeconds / 60)) })}
+            {formatWalkingDistance(guidedRoute.distanceMeters, t)} · {t("gps.minWalk", { minutes: Math.max(1, Math.round(guidedRoute.durationSeconds / 60)) })}
           </p>
         )}
         <div className="rounded-sm border border-gold/40 bg-ink/40 p-4 text-parchment/90">
@@ -163,7 +183,16 @@ export function NavigationScreen({
 
   // ── Navigation (live GPS, or a map without GPS) ───────────────────────
   const fix = phase === "gps" ? tracking.fix : null;
-  const view = getNavigationView(fix, route, destination.name, destinationCoordinates, tracking);
+  const view = getNavigationView(fix, guidedRoute, destination.name, targetCoordinates, tracking);
+  const isInZone = zone !== null && fix !== null && isInsideZone(fix.coordinates, zone);
+  // During a quest: the distance to the zone (none inside it), never the distance to the place.
+  const remainingMeters = !zone
+    ? view.remainingMeters
+    : isInZone
+      ? null
+      : fix && view.instruction.kind === "head-to-destination"
+        ? distanceToZone(fix.coordinates, zone)
+        : view.remainingMeters;
   // Refused permission doesn't end navigation: the map stays, with a clear message.
   const isPermissionDenied = phase === "gps" && status === "permission-denied";
   const gpsProblem = phase === "gps" && (status === "unavailable" || (status === "searching" && !tracking.fix) || isPermissionDenied || hasWeakSignal(tracking));
@@ -178,10 +207,16 @@ export function NavigationScreen({
   const isManualArrivalPrimary = phase === "manual" || gpsProblem || !destinationCoordinates;
   // A good GPS fix that is still far away: ask before moving on (an accidental tap
   // can't be undone). With weak or no GPS the position can't be trusted, so no question.
+  // During a quest: ask when still outside the zone (and say how far the zone is, not the place).
   const manualArrivalDistance =
-    fix && destinationCoordinates && !gpsProblem ? distanceInMeters(fix.coordinates, destinationCoordinates) : null;
+    fix && destinationCoordinates && !gpsProblem
+      ? zone
+        ? distanceToZone(fix.coordinates, zone)
+        : distanceInMeters(fix.coordinates, destinationCoordinates)
+      : null;
+  const confirmAboveMeters = zone ? 0 : NAVIGATION_CONFIG.MANUAL_ARRIVAL_CONFIRM_METERS;
   function handleManualArrival() {
-    if (manualArrivalDistance !== null && manualArrivalDistance > NAVIGATION_CONFIG.MANUAL_ARRIVAL_CONFIRM_METERS) {
+    if (manualArrivalDistance !== null && manualArrivalDistance > confirmAboveMeters) {
       setConfirmArrivalDistance(manualArrivalDistance);
     } else {
       onArrive();
@@ -203,14 +238,27 @@ export function NavigationScreen({
           <span aria-hidden="true" className="text-gold">★ </span>
           {destination.name}
         </h1>
-        {view.remainingMeters !== null && (
+        {remainingMeters !== null && (
           <p className="shrink-0 text-lg font-semibold tabular-nums text-parchment">
-            {formatWalkingDistance(view.remainingMeters, t)}
+            {zone && <span className="sr-only">{t("quest.distanceToZone")}: </span>}
+            {formatWalkingDistance(remainingMeters, t)}
           </p>
         )}
       </div>
 
-      {phase === "gps" && !isPermissionDenied && (
+      {zone && (
+        // Always mounted, so screen readers hear it the moment the walker enters the zone.
+        <p role="status" className="sr-only">
+          {isInZone ? t("quest.inZoneTitle") : ""}
+        </p>
+      )}
+      {isInZone ? (
+        // Inside the search zone the directions stop: from here the walker searches.
+        <div className="bg-umber px-4 py-3 text-parchment">
+          <p className="font-display text-2xl font-semibold leading-tight">{t("quest.inZoneTitle")}</p>
+          <p className="mt-1 text-parchment/85">{t("quest.inZoneBody")}</p>
+        </div>
+      ) : phase === "gps" && !isPermissionDenied && (
         <DirectionPanel
           instruction={view.instruction}
           thenManeuver={view.thenManeuver}
@@ -224,8 +272,9 @@ export function NavigationScreen({
         {/* absolute inset-0 gives the map a definite size inside the growing flex area. */}
         <div className="absolute inset-0">
           <WalkingMap
-            destination={{ name: destination.name, coordinates: destinationCoordinates }}
-            routeGeometry={route?.geometry ?? null}
+            destination={{ name: destination.name, coordinates: targetCoordinates }}
+            searchZone={zone}
+            routeGeometry={guidedRoute?.geometry ?? null}
             userPosition={fix?.coordinates ?? null}
             userAccuracyMeters={fix?.accuracyMeters ?? null}
             isFollowing={isFollowing}
@@ -245,6 +294,14 @@ export function NavigationScreen({
             tilesFailingText={t("gps.mapTilesFailing")}
           />
         </div>
+        {zoneSearch && (
+          // Says what the circle means; top left, clear of the round map buttons (top right)
+          // and of the map credits, which open as a wide bar at the bottom.
+          <p className="absolute left-3 right-20 top-3 rounded-sm bg-ink/90 px-3 py-2 text-sm text-parchment shadow-lg">
+            <span aria-hidden="true" className="text-gold">◌ </span>
+            {zoneSearch.hint}
+          </p>
+        )}
         {destinationCoordinates ? (
           <>
             <div className="absolute right-3 top-3 flex flex-col gap-2">
@@ -298,8 +355,13 @@ export function NavigationScreen({
             <strong>{t("gps.gpsWeak")}</strong> {t("gps.gpsWeakDetail")}
           </p>
         )}
+        {extraActions}
+        {zone && isManualArrivalPrimary && (
+          // Without (good) GPS the quest can't notice the walker found it: they say so themselves.
+          <p className="text-sm text-parchment/70">{t("quest.withoutGpsHint")}</p>
+        )}
         <Button onClick={handleManualArrival} variant={isManualArrivalPrimary ? "primary" : "outline"} fullWidth>
-          {phase === "manual" || !destinationCoordinates ? t("gps.arrived") : t("gps.imHere")}
+          {zone ? t("quest.foundIt") : phase === "manual" || !destinationCoordinates ? t("gps.arrived") : t("gps.imHere")}
         </Button>
         <div className={`flex text-sm ${onShowRoute ? "justify-between" : "justify-end"}`}>
           {onShowRoute && (

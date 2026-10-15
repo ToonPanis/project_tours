@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220" width="200" height="220">
+  <!-- PLACEHOLDER for Spooky, Hidden Antwerp's guide ghost. Replace this file (or the path in
+       src/features/quests/spooky.ts) with the final artwork; nothing else needs to change. -->
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#f3d58f" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#f3d58f" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fffaf0"/>
+      <stop offset="100%" stop-color="#efe3c8"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="100" cy="105" rx="98" ry="104" fill="url(#glow)"/>
+  <!-- Body with a wavy hem -->
+  <path d="M100 22c-38 0-62 30-62 70v86c0 6 6 9 11 5l11-9 12 11c4 4 9 4 13 0l11-11 11 11c4 4 9 4 13 0l12-11 11 9c5 4 11 1 11-5V92c0-40-24-70-62-70z"
+        fill="url(#body)" stroke="#8a5a14" stroke-width="4" stroke-linejoin="round"/>
+  <!-- Little arm holding a lantern -->
+  <path d="M146 112c12 2 20 8 24 16" fill="none" stroke="#8a5a14" stroke-width="4" stroke-linecap="round"/>
+  <line x1="170" y1="128" x2="170" y2="138" stroke="#8a5a14" stroke-width="3"/>
+  <rect x="160" y="138" width="20" height="26" rx="4" fill="#d9a54e" stroke="#8a5a14" stroke-width="3"/>
+  <circle cx="170" cy="151" r="5" fill="#fff4cf"/>
+  <!-- Face -->
+  <ellipse cx="82" cy="88" rx="9" ry="12" fill="#17120e"/>
+  <ellipse cx="118" cy="88" rx="9" ry="12" fill="#17120e"/>
+  <circle cx="85" cy="84" r="3" fill="#fffaf0"/>
+  <circle cx="121" cy="84" r="3" fill="#fffaf0"/>
+  <ellipse cx="70" cy="106" rx="8" ry="5" fill="#e8a7a0" opacity="0.6"/>
+  <ellipse cx="130" cy="106" rx="8" ry="5" fill="#e8a7a0" opacity="0.6"/>
+  <path d="M90 108c6 7 14 7 20 0" fill="none" stroke="#17120e" stroke-width="4" stroke-linecap="round"/>
+</svg>

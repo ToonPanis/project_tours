@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { getDetourCost } from "@/features/navigation/logic/route-legs";
 import { usePreloadMap } from "@/features/navigation/preload-map";
+import { QuestBriefing } from "@/features/quests/components/QuestBriefing";
+import { QuestFoundScreen } from "@/features/quests/components/QuestFoundScreen";
 import { PlayHeader } from "@/features/walk-session/components/PlayHeader";
 import { PlayScreen } from "@/features/walk-session/components/PlayScreen";
 import { RoutePanel } from "@/features/walk-session/components/RoutePanel";
@@ -28,6 +30,12 @@ import { GuideStopPage, type DetourOption } from "./GuideStopPage";
  *
  *   (chapter card) → travelling → (navigation) → arrived → stop page → next stop …
  *
+ * A stop with a quest adds Spooky, the same in look and steps for every kind of task:
+ *   find the place:  briefing (popup + clue) → navigation to a search zone → found by
+ *                    GPS → "you found it" popup → stop page (its real name only then)
+ *   find a detail:   navigation → arrived → briefing → "I've found it" (the stop moves
+ *                    on to "story", saved with the walk) → "well found" popup → stop page
+ *
  * Optional (bonus) stops are offered as a choice on the stop page before
  * them; skipping one navigates straight to the stop after it.
  */
@@ -38,6 +46,12 @@ export function GuideWalkPlayer({ walk }: { walk: Walk }) {
   const [isPlaying, setIsPlaying] = useState(false);
   // Chapter cards seen in this visit (not saved: after a reload the card simply shows again).
   const [seenChapterIds, setSeenChapterIds] = useState<string[]>([]);
+  // Quests whose briefing was read in this visit (like chapter cards: after a reload it shows again).
+  const [briefedQuestIds, setBriefedQuestIds] = useState<string[]>([]);
+  // The quest done just now: its congratulations show once. Being done itself is saved
+  // with the walk (the stop is "arrived", or "story" after a detail was found), so after a
+  // reload the story is simply open.
+  const [justFoundQuestId, setJustFoundQuestId] = useState<string | null>(null);
 
   const t = useT();
   // While the start screen or a stop is read, the map code downloads in the background.
@@ -49,6 +63,8 @@ export function GuideWalkPlayer({ walk }: { walk: Walk }) {
     shell.restartBase();
     setIsPlaying(false);
     setSeenChapterIds([]);
+    setBriefedQuestIds([]);
+    setJustFoundQuestId(null);
   }
 
   if (!session || !isPlaying) {
@@ -85,6 +101,24 @@ export function GuideWalkPlayer({ walk }: { walk: Walk }) {
   const chapterStartingHere = chapters.find((chapter) => chapter.firstLocationId === location.id);
   const isTravelling = progress.status === "travelling" || progress.status === "locked";
   const showChapterCard = isTravelling && chapterStartingHere && !seenChapterIds.includes(chapterStartingHere.id);
+  const quest = location.quest;
+  const searchQuest = quest?.type === "location" ? quest : undefined;
+  // Find the place: the briefing comes before the navigation (once per visit).
+  const showSearchBriefing = isTravelling && searchQuest && !briefedQuestIds.includes(location.id);
+  // Find a detail: the task comes right after arriving, until the walker has found it.
+  const showDiscoveryTask = quest?.type === "discovery" && progress.status === "arrived";
+  const showQuestFound = !isTravelling && quest && justFoundQuestId === location.id;
+
+  function arrive() {
+    if (searchQuest) setJustFoundQuestId(location.id);
+    dispatch({ type: "ARRIVE" });
+  }
+
+  /** "I've found it": remembered with the walk (the stop moves on to its story). */
+  function completeDiscovery() {
+    setJustFoundQuestId(location.id);
+    dispatch({ type: "SHOW_STORY" });
+  }
 
   /** Marks this stop as visited and moves on (or finishes the walk after the last stop). */
   function completeStop(skipBonus = false) {
@@ -144,12 +178,30 @@ export function GuideWalkPlayer({ walk }: { walk: Walk }) {
           t={t}
           onContinue={() => setSeenChapterIds((ids) => [...ids, chapterStartingHere.id])}
         />
+      ) : showSearchBriefing ? (
+        <QuestBriefing
+          stopId={location.id}
+          quest={searchQuest}
+          t={t}
+          actionLabel={t("quest.startSearching")}
+          onAction={() => setBriefedQuestIds((ids) => [...ids, location.id])}
+        />
       ) : isTravelling ? (
-        <StopNavigation shell={shell} stop={stop} onArrive={() => dispatch({ type: "ARRIVE" })} />
+        <StopNavigation shell={shell} stop={stop} onArrive={arrive} />
+      ) : showQuestFound ? (
+        <QuestFoundScreen
+          t={t}
+          title={quest.type === "location" ? t("quest.foundTitle") : t("quest.discoveryFoundTitle")}
+          body={quest.type === "location" ? t("quest.foundBody") : undefined}
+          onDiscover={() => setJustFoundQuestId(null)}
+        />
+      ) : showDiscoveryTask ? (
+        <QuestBriefing stopId={location.id} quest={quest} t={t} actionLabel={t("quest.foundIt")} onAction={completeDiscovery} />
       ) : location.guide ? (
         <GuideStopPage
           key={location.id}
-          location={location}
+          // Found: now the stop's real name and address may show.
+          location={searchQuest ? { ...location, name: searchQuest.revealedName, address: searchQuest.revealedAddress } : location}
           guide={location.guide}
           stopLabel={stats.isAtBonusStop ? t("guide.extraStop") : t("guide.stopOf", { stop: stats.currentStopNumber, total: stats.totalStops })}
           t={t}

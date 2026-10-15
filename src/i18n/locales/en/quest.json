@@ -1,0 +1,17 @@
+{
+  "eyebrow": "A task from Spooky",
+  "taskForYou": "Spooky has a task for you!",
+  "viewTask": "View the task",
+  "startSearching": "Start searching",
+  "showClue": "Show the clue",
+  "spookyAlt": "Spooky, a friendly little ghost with a lantern",
+  "inZoneTitle": "You're in the search zone!",
+  "inZoneBody": "Look around and compare what you see with the clue. Hidden Antwerp notices by itself when you've found it.",
+  "distanceToZone": "Distance to the search zone",
+  "foundIt": "I've found it",
+  "withoutGpsHint": "No GPS? Use the clue and the map, and tap the button below as soon as you've found it.",
+  "foundTitle": "You found the location!",
+  "foundBody": "See what we found out for you!",
+  "discoveryFoundTitle": "Well found!",
+  "discoverStory": "Discover the story"
+}
