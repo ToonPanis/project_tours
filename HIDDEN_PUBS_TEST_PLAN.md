@@ -89,4 +89,4 @@ Stage 13 checked every point below against the tests that really exist and close
 
 Safety and privacy (section 2): ✅ alcohol-free + skip everywhere, no drink counts on any screen, 18+ check, no GPS position sent (navigation unchanged), answers/explanations/fun facts absent from what the phone downloads (e2e + build scan), media of another game or team refused (API).
 
-**Still open (needs you or real devices, can't be automated here):** the Postgres store against a real database (`npm run test:db`, needs `TEST_DATABASE_URL`), uploads to a real Blob store, one real multi-phone run on the LAN (section 4), the field test in Antwerp (`FIELD_TEST_CHECKLIST.md`), and the native-speaker review.
+**Still open (needs you or real devices, can't be automated here):** the MongoDB store against a real database (`npm run test:db`, needs `TEST_MONGODB_URI`), uploads to a real Blob store, one real multi-phone run on the LAN (section 4), the field test in Antwerp (`FIELD_TEST_CHECKLIST.md`), and the native-speaker review.

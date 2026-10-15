@@ -6,7 +6,8 @@ import type { GameStore } from "./game-store";
 import { newId, secureRandom } from "./identity";
 import { BlobMediaStore, MemoryMediaStore, type MediaStore } from "./media-store";
 import { MemoryGameStore } from "./memory-store";
-import { createSql, PostgresGameStore } from "./postgres-store";
+import { createMongoClient, databaseOf } from "./mongo";
+import { MongoGameStore } from "./mongo-store";
 
 /** Which walks are multiplayer pub games, and their (server-only) data. */
 function getGameData(walkSlug: string): GameData | null {
@@ -41,7 +42,9 @@ function memoryStoresAllowed(): boolean {
 }
 
 /**
- * - DATABASE_URL set (production, or development with a Neon database): Postgres.
+ * - MONGODB_URI set (production, or development with the Atlas database): MongoDB.
+ *   One client per server instance, kept on globalThis: its connection pool is
+ *   reused by every request (no new connection per request).
  * - Not set, in development: games in memory (lost when the dev server stops).
  * - Not set, in production: an error. On Vercel every server instance has its
  *   own memory, so phones would end up in different "games".
@@ -49,13 +52,14 @@ function memoryStoresAllowed(): boolean {
 function getStore(): GameStore {
   if (globalForGames.pubGameStore) return globalForGames.pubGameStore;
 
-  const url = process.env.DATABASE_URL;
-  if (url) {
-    globalForGames.pubGameStore = new PostgresGameStore(createSql(url));
+  const uri = process.env.MONGODB_URI;
+  if (uri) {
+    const client = createMongoClient(uri);
+    globalForGames.pubGameStore = new MongoGameStore(client, databaseOf(client));
   } else if (memoryStoresAllowed()) {
     globalForGames.pubGameStore = new MemoryGameStore();
   } else {
-    throw new Error("Hidden Pubs multiplayer needs DATABASE_URL in production (see .env.example).");
+    throw new Error("Hidden Pubs multiplayer needs MONGODB_URI in production (see .env.example).");
   }
   return globalForGames.pubGameStore;
 }

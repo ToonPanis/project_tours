@@ -12,7 +12,7 @@ interface MemoryGame {
 /**
  * Games in memory: for development and tests. Everything is lost when the
  * server restarts, and on Vercel every server instance would have its own
- * memory, so production needs the Postgres store (stage 3).
+ * memory, so production needs the MongoDB store (mongo-store.ts).
  *
  * `commitAction` is atomic here for free: JavaScript runs one piece of code at
  * a time, and the check + save happen without an `await` in between.

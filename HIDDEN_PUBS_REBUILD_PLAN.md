@@ -1,6 +1,6 @@
 # Hidden Pubs 2.0: rebuild plan
 
-Status: **approved on 2026-10-14** (all recommendations D1–D34 accepted). Stages 1–13 done (stage 3 still to be tested against a real database; stage 8 against a real Blob store; translations not yet reviewed by native speakers). Stage 12 removed the old game; stage 13 (testing, the prompt's phase 13) is reported in `HIDDEN_PUBS_TEST_PLAN.md` section 5.
+Status: **approved on 2026-10-14** (all recommendations D1–D34 accepted). Stages 1–13 done (stage 3 still to be tested against a real database; stage 8 against a real Blob store; translations not yet reviewed by native speakers). Stage 12 removed the old game; stage 13 (testing, the prompt's phase 13) is reported in `HIDDEN_PUBS_TEST_PLAN.md` section 5. **Since 2026-10-15 the database is MongoDB Atlas instead of Postgres (D35, `HIDDEN_PUBS_FINAL_REPORT.md` section 11); the Postgres parts of this plan are history.**
 Source of truth for the game: `HIDDEN_PUBS_CONCEPT.txt` (your document, copied unchanged from `Downloads/Geplakte tekst.txt`).
 Companion documents: `HIDDEN_PUBS_GAME_RULES.md` (the rules as the app will run them), `HIDDEN_PUBS_DATA_AUDIT.md` (per café: what is there, what is missing, what is wrong), `HIDDEN_PUBS_TEST_PLAN.md`.
 

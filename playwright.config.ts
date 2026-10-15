@@ -43,7 +43,10 @@ export default defineConfig({
     url: `http://localhost:${PORT}`,
     // Hidden Pubs games and photos in memory: the tests need no database or Blob store
     // (see memoryStoresAllowed in src/features/pub-game/server/context.ts). Tests only.
-    env: { PUB_GAME_MEMORY_STORES: "true" },
+    // The empty values matter: `next start` also reads .env.local, and without them the
+    // tests would play their games in the REAL database from there. (Next.js never
+    // overwrites a variable that is already set, even when it's empty.)
+    env: { PUB_GAME_MEMORY_STORES: "true", MONGODB_URI: "", BLOB_READ_WRITE_TOKEN: "" },
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,
     // NEXT_PUBLIC_* values are fixed at BUILD time, so they can't be switched off here. A build
