@@ -18,6 +18,9 @@ const eslintConfig = defineConfig([
     "coverage/**",
     "playwright-report/**",
     "test-results/**",
+    // Local text-to-speech tools (Python venv, voice models), git-ignored.
+    ".tts/**",
+    ".cache/**",
   ]),
 ]);
 
