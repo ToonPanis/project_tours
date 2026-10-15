@@ -692,6 +692,46 @@ export class MongoCommerceStore implements CommerceStore {
     });
   }
 
+  countQuotes(statuses: QuoteStatus[]) {
+    return this.run(async () => this.collection(COLLECTIONS.quotes).countDocuments({ status: { $in: statuses.map((status) => key(status, 20)) } }));
+  }
+
+  listPaidOrdersUntil(to: Date, limit: number) {
+    return this.run(async () => {
+      const docs = await this.collection(COLLECTIONS.orders)
+        .find({ status: { $in: ["paid", "refunded"] }, paidAt: { $lt: to } })
+        .sort({ paidAt: 1 })
+        .limit(limit)
+        .toArray();
+      return docs.map((doc) => datesFromDb<Order>(doc, ORDER_DATES) as Order);
+    });
+  }
+
+  listDocuments({ skip, limit, status }: { skip: number; limit: number; status?: BillingDocument["status"] }) {
+    return this.run(async () => {
+      const filter = status ? { status: key(status, 30) } : {};
+      const collection = this.collection(COLLECTIONS.documents);
+      const [docs, total] = await Promise.all([
+        collection.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).toArray(),
+        collection.countDocuments(filter),
+      ]);
+      return { documents: docs.map((doc) => datesFromDb<BillingDocument>(doc, DOCUMENT_DATES) as BillingDocument), total };
+    });
+  }
+
+  listGrantsWithGame({ skip, limit }: { skip: number; limit: number }) {
+    return this.run(async () => {
+      // A real game code (a string that isn't a "pending:" reservation).
+      const filter = { gameCode: { $type: "string", $not: /^pending:/ } };
+      const collection = this.collection(COLLECTIONS.ticketGrants);
+      const [docs, total] = await Promise.all([
+        collection.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).toArray(),
+        collection.countDocuments(filter),
+      ]);
+      return { grants: docs.map((doc) => datesFromDb<TicketGrant>(doc, GRANT_DATES) as TicketGrant), total };
+    });
+  }
+
   getCorporatePricing() {
     return this.run(async () => {
       const doc = await this.collection(COLLECTIONS.settings).findOne({ _id: CORPORATE_PRICING_ID });

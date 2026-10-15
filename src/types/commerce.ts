@@ -81,7 +81,8 @@ export type AuditAction =
   | "ticket-devices-reset"
   | "order-email-resent"
   | "quote-status-changed"
-  | "corporate-pricing-updated";
+  | "corporate-pricing-updated"
+  | "report-exported";
 
 // ─── Tax (decision B8) ──────────────────────────────────────────────────────
 

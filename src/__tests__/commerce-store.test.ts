@@ -381,6 +381,29 @@ describe.each(factories)("$name commerce store", ({ create, cleanup }) => {
     expect(listed.quotes.some((candidate) => candidate.id === id)).toBe(true);
   });
 
+  test("reports (P5): paid orders before a date (oldest first), open quotes count, documents and groups lists", async () => {
+    const early = unique("order");
+    const late = unique("order");
+    await store.insertOrder(order(early, { status: "paid", paidAt: "2099-01-02T10:00:00.000Z" }));
+    await store.insertOrder(order(late, { status: "refunded", paidAt: "2099-01-01T10:00:00.000Z" }));
+    await store.insertOrder(order(unique("order"), { status: "pending", paidAt: null }));
+    const ours = (orders: Order[]) => orders.map((candidate) => candidate.id).filter((id) => id === early || id === late);
+    expect(ours(await store.listPaidOrdersUntil(new Date("2099-01-03T00:00:00.000Z"), 100_000))).toEqual([late, early]);
+    expect(ours(await store.listPaidOrdersUntil(new Date("2099-01-02T00:00:00.000Z"), 100_000))).toEqual([late]);
+
+    expect(typeof (await store.countQuotes(["NEW", "CONTACTED", "QUOTED"]))).toBe("number");
+
+    const documentId = unique("invoice");
+    await store.insertDocumentIfMissing({ id: documentId, number: null, kind: "invoice", orderId: early, provider: "billit", status: "awaiting-provider", amountCents: 1, createdAt: "2099-01-05T10:00:00.000Z" });
+    const waiting = await store.listDocuments({ skip: 0, limit: 5, status: "awaiting-provider" });
+    expect(waiting.documents[0].id).toBe(documentId);
+
+    const withGame = await store.insertGrantIfMissing({ ...grant(unique("grant"), unique("order")), gameCode: "QWERTY", createdAt: "2099-01-06T10:00:00.000Z" });
+    await store.insertGrantIfMissing({ ...grant(unique("grant"), unique("order")), gameCode: "pending:1:x", createdAt: "2099-01-07T10:00:00.000Z" });
+    const groups = await store.listGrantsWithGame({ skip: 0, limit: 5 });
+    expect(groups.grants[0].id).toBe(withGame.id);
+  });
+
   test("settings: the corporate price table is saved and read back", async () => {
     const pricing = {
       tiers: [{ persons: 12, selfGuidedCents: 18_000, guidedCents: null, guidedFrom: false }],
