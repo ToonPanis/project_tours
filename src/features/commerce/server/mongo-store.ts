@@ -3,7 +3,11 @@ import type {
   AuditEntry,
   BillingDocument,
   CommerceUser,
+  CommissionEntry,
+  CommissionStatus,
   CorporatePricing,
+  Partner,
+  PartnerClickDay,
   QuoteRequest,
   QuoteStatus,
   Discount,
@@ -16,7 +20,7 @@ import type {
   TicketGrant,
 } from "@/types/commerce";
 import { COLLECTIONS, errorLabel } from "../../../../db/mongo-schema.mjs";
-import { CommerceStoreUnavailableError, type CommerceStore } from "./commerce-store";
+import { CommerceStoreUnavailableError, type CommerceStore, type CommissionChange, type CommissionQuery } from "./commerce-store";
 
 /**
  * The commerce data in MongoDB Atlas (collections, validation and indexes:
@@ -53,10 +57,12 @@ function toUser(doc: Document | null): CommerceUser | null {
   return {
     id: doc._id,
     email: doc.email,
-    roles: doc.roles.filter((role: unknown) => role === "ADMIN"),
+    roles: doc.roles.filter((role: unknown) => role === "ADMIN" || role === "PARTNER"),
     active: doc.active === true,
     createdAt: iso(doc.createdAt) ?? new Date(0).toISOString(),
     lastLoginAt: iso(doc.lastLoginAt),
+    // Only partner users have one (admins keep the same shape as before P7).
+    ...(typeof doc.partnerId === "string" ? { partnerId: doc.partnerId } : {}),
   };
 }
 
@@ -144,6 +150,19 @@ const GRANT_DATES = ["createdAt", "validUntil"] as const;
 const DISCOUNT_DATES = ["validFrom", "validUntil", "createdAt"] as const;
 const DOCUMENT_DATES = ["createdAt"] as const;
 const TAX_DATES = ["updatedAt"] as const;
+const PARTNER_DATES = ["createdAt", "updatedAt"] as const;
+/** Top-level dates only; the history lines keep their ISO strings. */
+const COMMISSION_DATES = ["orderPaidAt", "createdAt", "updatedAt"] as const;
+/** Click counters are kept 3 years (docs/commercial/DATABASE_DESIGN.md). */
+const CLICK_RETENTION_MS = 3 * 365 * 24 * 60 * 60 * 1000;
+/** The fields of a ledger line that a status change touches. */
+interface CommissionStatusDocument {
+  _id: string;
+  status: CommissionStatus;
+  updatedAt: Date;
+  payoutReference?: string | null;
+  history: CommissionEntry["history"];
+}
 /** Top-level dates only; the history lines keep their ISO strings. */
 const QUOTE_DATES = ["createdAt", "updatedAt"] as const;
 /** The fields of a quote document that a status change touches. */
@@ -216,6 +235,7 @@ export class MongoCommerceStore implements CommerceStore {
           active: user.active,
           createdAt: toDate(user.createdAt),
           lastLoginAt: user.lastLoginAt ? toDate(user.lastLoginAt) : null,
+          partnerId: user.partnerId ?? null,
         },
         { upsert: true },
       );
@@ -752,6 +772,134 @@ export class MongoCommerceStore implements CommerceStore {
         { tiers: pricing.tiers, pricesIncludeVat: pricing.pricesIncludeVat, updatedAt: pricing.updatedAt ? toDate(pricing.updatedAt) : null, updatedBy: pricing.updatedBy },
         { upsert: true },
       );
+    });
+  }
+
+  insertPartner(partner: Partner) {
+    return this.run(async () => {
+      try {
+        await this.collection(COLLECTIONS.partners).insertOne({ _id: key(partner.id, 100), ...datesToDb(partner, PARTNER_DATES) });
+        return true;
+      } catch (error) {
+        // The unique index on code.
+        if (isDuplicateKey(error)) return false;
+        throw error;
+      }
+    });
+  }
+
+  getPartner(id: string) {
+    return this.run(async () => datesFromDb<Partner>(await this.collection(COLLECTIONS.partners).findOne({ _id: key(id, 100) }), PARTNER_DATES));
+  }
+
+  getPartnerByCode(code: string) {
+    return this.run(async () => datesFromDb<Partner>(await this.collection(COLLECTIONS.partners).findOne({ code: key(code, 30) }), PARTNER_DATES));
+  }
+
+  listPartners() {
+    return this.run(async () => {
+      const docs = await this.collection(COLLECTIONS.partners).find({}).sort({ name: 1 }).toArray();
+      return docs.map((doc) => datesFromDb<Partner>(doc, PARTNER_DATES) as Partner);
+    });
+  }
+
+  updatePartner(id: string, changes: Partial<Omit<Partner, "id" | "code" | "createdAt">>) {
+    return this.run(async () => {
+      await this.collection(COLLECTIONS.partners).updateOne({ _id: key(id, 100) }, { $set: datesToDb(changes, PARTNER_DATES) });
+    });
+  }
+
+  listPartnerUsers(partnerId: string) {
+    return this.run(async () => {
+      const docs = await this.collection(COLLECTIONS.users).find({ partnerId: key(partnerId, 100) }).sort({ email: 1 }).toArray();
+      return docs.map(toUser).filter((user): user is CommerceUser => user !== null);
+    });
+  }
+
+  incrementPartnerClicks(partnerId: string, day: string, campaign: string) {
+    return this.run(async () => {
+      const expiresAt = new Date(Date.parse(`${key(day, 10)}T00:00:00Z`) + CLICK_RETENTION_MS);
+      // One atomic upsert: two clicks at the same moment both count.
+      await this.collection(COLLECTIONS.partnerClicks).updateOne(
+        { _id: `${key(partnerId, 100)}:${day}:${campaign}` },
+        { $inc: { clicks: 1 }, $setOnInsert: { partnerId, day, campaign, expiresAt } },
+        { upsert: true },
+      );
+    });
+  }
+
+  listPartnerClicks({ partnerId, fromDay, toDay }: { partnerId?: string; fromDay: string; toDay: string }) {
+    return this.run(async () => {
+      const filter: Document = { day: { $gte: key(fromDay, 10), $lte: key(toDay, 10) } };
+      if (partnerId) filter.partnerId = key(partnerId, 100);
+      const docs = await this.collection(COLLECTIONS.partnerClicks).find(filter).toArray();
+      return docs.map(
+        (doc): PartnerClickDay => ({ partnerId: String(doc.partnerId), day: String(doc.day), campaign: String(doc.campaign ?? ""), clicks: Number(doc.clicks) }),
+      );
+    });
+  }
+
+  listPartnerOrders(partnerId: string, from: Date, to: Date, limit: number) {
+    return this.run(async () => {
+      const docs = await this.collection(COLLECTIONS.orders)
+        .find({ "partner.partnerId": key(partnerId, 100), status: { $in: ["paid", "refunded"] }, paidAt: { $gte: from, $lt: to } })
+        .sort({ paidAt: 1 })
+        .limit(limit)
+        .toArray();
+      return docs.map((doc) => datesFromDb<Order>(doc, ORDER_DATES) as Order);
+    });
+  }
+
+  insertCommissionIfMissing(entry: CommissionEntry) {
+    return this.run(async () => {
+      try {
+        await this.collection(COLLECTIONS.commissions).insertOne({ _id: key(entry.id, 200), ...datesToDb(entry, COMMISSION_DATES) });
+        return true;
+      } catch (error) {
+        // Same id = the same accrual or adjustment, already booked.
+        if (isDuplicateKey(error)) return false;
+        throw error;
+      }
+    });
+  }
+
+  listCommissionsForOrder(orderId: string) {
+    return this.run(async () => {
+      const docs = await this.collection(COLLECTIONS.commissions).find({ orderId: key(orderId, 100) }).toArray();
+      return docs.map((doc) => datesFromDb<CommissionEntry>(doc, COMMISSION_DATES) as CommissionEntry);
+    });
+  }
+
+  listCommissions(query: CommissionQuery) {
+    return this.run(async () => {
+      const filter: Document = {};
+      if (query.partnerId) filter.partnerId = key(query.partnerId, 100);
+      if (query.status) filter.status = key(query.status, 20);
+      if (query.orderPaidFrom || query.orderPaidTo) {
+        filter.orderPaidAt = {
+          ...(query.orderPaidFrom ? { $gte: query.orderPaidFrom } : {}),
+          ...(query.orderPaidTo ? { $lt: query.orderPaidTo } : {}),
+        };
+      }
+      const collection = this.collection(COLLECTIONS.commissions);
+      const [docs, total] = await Promise.all([
+        collection.find(filter).sort({ orderPaidAt: -1, _id: -1 }).skip(query.skip).limit(query.limit).toArray(),
+        collection.countDocuments(filter),
+      ]);
+      return { entries: docs.map((doc) => datesFromDb<CommissionEntry>(doc, COMMISSION_DATES) as CommissionEntry), total };
+    });
+  }
+
+  transitionCommission(id: string, from: CommissionStatus[], change: CommissionChange) {
+    return this.run(async () => {
+      const set: Partial<CommissionStatusDocument> = { status: change.status, updatedAt: toDate(change.at) };
+      if (change.payoutReference !== undefined) set.payoutReference = change.payoutReference;
+      // "Only while it is still one of these" and the change are one atomic step.
+      const result = await this.db.collection<CommissionStatusDocument>(COLLECTIONS.commissions).updateOne(
+        { _id: key(id, 200), status: { $in: from } },
+        { $set: set, $push: { history: { status: change.status, at: change.at, by: change.by } } },
+      );
+      return result.modifiedCount === 1;
     });
   }
 }

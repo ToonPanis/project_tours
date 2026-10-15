@@ -1,0 +1,134 @@
+{
+  "meta": {
+    "title": "Portale partner",
+    "loginTitle": "Accesso partner"
+  },
+  "login": {
+    "title": "Accesso partner",
+    "intro": "Inserisca l'indirizzo e-mail che Hidden Antwerp ha registrato per la Sua attività. Riceverà un link per accedere; non serve alcuna password.",
+    "email": "Indirizzo e-mail",
+    "submit": "Inviatemi un link di accesso",
+    "sending": "Invio in corso…",
+    "sent": "Se {email} ha accesso a un portale partner, un link di accesso è in arrivo. Funziona una sola volta, per 15 minuti.",
+    "noAccess": "Non è ancora partner? Contatti Hidden Antwerp.",
+    "verifyTitle": "Accedere al portale partner",
+    "verifyIntro": "Prema il pulsante per accedere da questo dispositivo.",
+    "verifyButton": "Accedi",
+    "verifying": "Accesso in corso…"
+  },
+  "errors": {
+    "invalid-email": "Questo non sembra un indirizzo e-mail.",
+    "too-many-requests": "Troppi tentativi. Attenda un quarto d'ora e riprovi.",
+    "invalid-link": "Questo link di accesso non è più valido (già usato, scaduto o incompleto). Ne richieda uno nuovo.",
+    "not-allowed": "Questo indirizzo non ha più accesso a un portale partner.",
+    "not-configured": "L'accesso non è ancora disponibile su questo server.",
+    "offline": "Nessuna connessione al server. Controlli la connessione internet e riprovi.",
+    "unknown": "Qualcosa è andato storto. Riprovi."
+  },
+  "email": {
+    "greeting": "Buongiorno,",
+    "loginSubject": "Il Suo link di accesso al portale partner di Hidden Antwerp",
+    "loginBody": "Utilizzi questo link per accedere al Suo portale partner di Hidden Antwerp:",
+    "loginValid": "Il link funziona una sola volta, per {minutes} minuti.",
+    "loginIgnore": "Non l'ha richiesto? Allora può ignorare questa e-mail: nessuno può accedere senza il link.",
+    "inviteSubject": "Il Suo accesso al portale partner di Hidden Antwerp",
+    "inviteBody": "Ora ha accesso al portale partner di {name} presso Hidden Antwerp. Lì può seguire i visitatori, le vendite e le commissioni del Suo link partner:",
+    "inviteHow": "Acceda con questo indirizzo e-mail: riceverà un link di accesso monouso (senza password)."
+  },
+  "portal": {
+    "title": "Portale partner",
+    "signedInAs": "Accesso effettuato come {email}",
+    "signOut": "Esci",
+    "linkTitle": "Il Suo link partner",
+    "linkIntro": "Condivida questo link o il codice QR con i Suoi ospiti. Gli acquisti effettuati entro {days} giorni dall'apertura vengono attribuiti a Lei.",
+    "linkLabel": "Link partner",
+    "campaignHint": "Desidera confrontare luoghi o materiali? Aggiunga una campagna al link, ad esempio {example}.",
+    "downloadQr": "Scarica il codice QR (SVG)",
+    "qrLabel": "Codice QR del Suo link partner",
+    "rule": "La Sua commissione: {rule}",
+    "ruleNote": "Le modifiche alla commissione valgono solo per gli acquisti effettuati dopo la modifica."
+  },
+  "rules": {
+    "percent-net": "{percent} % del prezzo del biglietto IVA esclusa",
+    "fixed-per-ticket": "{amount} per biglietto",
+    "fixed-per-booking": "{amount} per prenotazione",
+    "none": "nessuna commissione (solo statistiche)"
+  },
+  "filters": {
+    "title": "Periodo e filtri",
+    "period": "Periodo",
+    "today": "Oggi",
+    "last7": "Ultimi 7 giorni",
+    "last30": "Ultimi 30 giorni",
+    "thisMonth": "Questo mese",
+    "lastMonth": "Mese scorso",
+    "thisYear": "Quest'anno",
+    "custom": "Date personalizzate",
+    "from": "Dal",
+    "to": "Al",
+    "per": "Per",
+    "day": "Giorno",
+    "week": "Settimana",
+    "month": "Mese",
+    "product": "Prodotto",
+    "allProducts": "Tutti i prodotti",
+    "campaign": "Campagna",
+    "allCampaigns": "Tutte le campagne",
+    "noCampaign": "Nessuna campagna",
+    "apply": "Applica"
+  },
+  "stats": {
+    "title": "{from} – {to}",
+    "visitors": "Visitatori tramite il Suo link",
+    "visitorsNote": "Contati per link, senza dati personali.",
+    "sales": "Vendite",
+    "conversion": "Conversione",
+    "conversionNote": "Vendite per visitatore.",
+    "revenue": "Fatturato IVA esclusa",
+    "commission": "Commissione in questo periodo",
+    "outstanding": "Commissione da pagare",
+    "outstandingNote": "Maturata, non ancora pagata (tutti i periodi).",
+    "pendingNote": "Di cui {amount} ancora nel periodo di verifica di 14 giorni.",
+    "paid": "Commissione pagata",
+    "paidNote": "Tutti i periodi."
+  },
+  "chart": {
+    "revenue": "Fatturato IVA esclusa per {unit}",
+    "commission": "Commissione per {unit}",
+    "table": "Mostra come tabella",
+    "empty": "Nessuna vendita in questo periodo.",
+    "units": {
+      "day": "giorno",
+      "week": "settimana",
+      "month": "mese"
+    }
+  },
+  "sales": {
+    "title": "Vendite",
+    "empty": "Nessuna vendita tramite il Suo link in questo periodo.",
+    "date": "Data",
+    "product": "Prodotto",
+    "persons": "Persone",
+    "revenue": "Fatturato IVA esclusa",
+    "commission": "Commissione",
+    "status": "Stato",
+    "refunded": "rimborsato (in parte)",
+    "limited": "Sono mostrate le ultime {count} vendite; i totali qui sopra riguardano l'intero periodo."
+  },
+  "status": {
+    "pending": "In verifica",
+    "approved": "Approvata",
+    "payable": "Pronta per il pagamento",
+    "paid": "Pagata",
+    "reversed": "Annullata (rimborso)",
+    "none": "–"
+  },
+  "how": {
+    "title": "Come funziona",
+    "attribution": "Un visitatore che apre il Suo link viene ricordato per {days} giorni su quel dispositivo. Se in seguito apre il link di un altro partner, conta quest'ultimo link.",
+    "paidOnly": "La commissione matura solo sugli acquisti effettivamente pagati e viene calcolata sul prezzo IVA esclusa.",
+    "refunds": "Se un acquisto viene rimborsato, la commissione viene annullata o ridotta in proporzione.",
+    "statuses": "Ogni commissione viene prima verificata (periodo di recesso di 14 giorni), poi approvata, preparata per il pagamento e pagata tramite bonifico bancario.",
+    "privacy": "Non vede mai chi ha acquistato: nessun nome o indirizzo e-mail, solo numeri."
+  }
+}

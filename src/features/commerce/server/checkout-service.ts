@@ -7,6 +7,7 @@ import { discountProblem, normalizeDiscountCode, priceOrder } from "../logic/pri
 import { taxAllowsSales, taxBasisFor } from "../logic/tax";
 import { hashSecret, type CommerceContext } from "./context";
 import { PaymentProviderError } from "./payment-gateway";
+import { resolveReferral } from "./referral-service";
 import { fail, ok, type ServiceResult } from "./result";
 import { getTaxSettings } from "./tax-service";
 
@@ -84,7 +85,16 @@ export interface StartedCheckout {
   buyerSecret: string;
 }
 
-export async function startCheckout(ctx: CommerceContext, body: unknown, baseUrl: string): Promise<ServiceResult<StartedCheckout>> {
+/**
+ * `referralCookie`: the visitor's partner cookie (P7), if any. The order then
+ * remembers the partner and its commission rule (see referral-service.ts).
+ */
+export async function startCheckout(
+  ctx: CommerceContext,
+  body: unknown,
+  baseUrl: string,
+  referralCookie?: string,
+): Promise<ServiceResult<StartedCheckout>> {
   const input = (typeof body === "object" && body !== null ? body : {}) as Record<string, unknown>;
   if (typeof input.walkSlug !== "string" || input.walkSlug.length > 100) return fail(400, "unknown-product");
 
@@ -108,6 +118,7 @@ export async function startCheckout(ctx: CommerceContext, body: unknown, baseUrl
   if (discount && !(await ctx.store.reserveDiscount(discount.id))) return fail(409, "discount-used-up");
 
   const settings = await getTaxSettings(ctx);
+  const partner = await resolveReferral(ctx, referralCookie);
   const locale = isLocale(input.locale) ? input.locale : "en";
   const buyerSecret = ctx.newSecret();
   const order: Order = {
@@ -130,6 +141,7 @@ export async function startCheckout(ctx: CommerceContext, body: unknown, baseUrl
     createdAt: now.toISOString(),
     updatedAt: now.toISOString(),
     paidAt: null,
+    partner,
   };
   await ctx.store.insertOrder(order);
 

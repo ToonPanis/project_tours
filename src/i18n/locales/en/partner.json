@@ -1,0 +1,134 @@
+{
+  "meta": {
+    "title": "Partner portal",
+    "loginTitle": "Partner sign-in"
+  },
+  "login": {
+    "title": "Partner sign-in",
+    "intro": "Type the email address Hidden Antwerp registered for your business. You'll get a link that signs you in; no password needed.",
+    "email": "Email address",
+    "submit": "Email me a sign-in link",
+    "sending": "Sending…",
+    "sent": "If {email} has access to a partner portal, a sign-in link is on its way. It works once, for 15 minutes.",
+    "noAccess": "Not a partner yet? Get in touch with Hidden Antwerp.",
+    "verifyTitle": "Sign in to the partner portal",
+    "verifyIntro": "Press the button to sign in on this device.",
+    "verifyButton": "Sign in",
+    "verifying": "Signing in…"
+  },
+  "errors": {
+    "invalid-email": "That doesn't look like an email address.",
+    "too-many-requests": "Too many attempts. Wait a quarter of an hour and try again.",
+    "invalid-link": "This sign-in link is not valid anymore (used, expired or incomplete). Ask for a new one.",
+    "not-allowed": "This address no longer has access to a partner portal.",
+    "not-configured": "Sign-in is not available on this server yet.",
+    "offline": "No connection to the server. Check your internet and try again.",
+    "unknown": "Something went wrong. Please try again."
+  },
+  "email": {
+    "greeting": "Hello,",
+    "loginSubject": "Your Hidden Antwerp partner sign-in link",
+    "loginBody": "Use this link to sign in to your Hidden Antwerp partner portal:",
+    "loginValid": "The link works once, for {minutes} minutes.",
+    "loginIgnore": "Didn't ask for it? Then you can ignore this email: nobody can sign in without the link.",
+    "inviteSubject": "Your access to the Hidden Antwerp partner portal",
+    "inviteBody": "You now have access to the partner portal of {name} at Hidden Antwerp. There you can follow the visitors, sales and commissions of your partner link:",
+    "inviteHow": "Sign in with this email address: you'll receive a one-time sign-in link (no password)."
+  },
+  "portal": {
+    "title": "Partner portal",
+    "signedInAs": "Signed in as {email}",
+    "signOut": "Sign out",
+    "linkTitle": "Your partner link",
+    "linkIntro": "Share this link or the QR code with your guests. Purchases made within {days} days after opening it count for you.",
+    "linkLabel": "Partner link",
+    "campaignHint": "Want to compare places or materials? Add a campaign to the link, e.g. {example}.",
+    "downloadQr": "Download QR code (SVG)",
+    "qrLabel": "QR code of your partner link",
+    "rule": "Your commission: {rule}",
+    "ruleNote": "Changes to the commission only apply to purchases made after the change."
+  },
+  "rules": {
+    "percent-net": "{percent} % of the ticket price excluding VAT",
+    "fixed-per-ticket": "{amount} per ticket",
+    "fixed-per-booking": "{amount} per booking",
+    "none": "no commission (statistics only)"
+  },
+  "filters": {
+    "title": "Period and filters",
+    "period": "Period",
+    "today": "Today",
+    "last7": "Last 7 days",
+    "last30": "Last 30 days",
+    "thisMonth": "This month",
+    "lastMonth": "Last month",
+    "thisYear": "This year",
+    "custom": "Custom dates",
+    "from": "From",
+    "to": "To",
+    "per": "Per",
+    "day": "Day",
+    "week": "Week",
+    "month": "Month",
+    "product": "Product",
+    "allProducts": "All products",
+    "campaign": "Campaign",
+    "allCampaigns": "All campaigns",
+    "noCampaign": "No campaign",
+    "apply": "Apply"
+  },
+  "stats": {
+    "title": "{from} – {to}",
+    "visitors": "Visitors via your link",
+    "visitorsNote": "Counted per link, without personal data.",
+    "sales": "Sales",
+    "conversion": "Conversion",
+    "conversionNote": "Sales per visitor.",
+    "revenue": "Revenue excl. VAT",
+    "commission": "Commission in this period",
+    "outstanding": "Outstanding commission",
+    "outstandingNote": "Earned, not paid out yet (all periods).",
+    "pendingNote": "Of which {amount} is still in the 14-day checking period.",
+    "paid": "Commission paid out",
+    "paidNote": "All periods."
+  },
+  "chart": {
+    "revenue": "Revenue excl. VAT per {unit}",
+    "commission": "Commission per {unit}",
+    "table": "Show as a table",
+    "empty": "No sales in this period.",
+    "units": {
+      "day": "day",
+      "week": "week",
+      "month": "month"
+    }
+  },
+  "sales": {
+    "title": "Sales",
+    "empty": "No sales through your link in this period.",
+    "date": "Date",
+    "product": "Product",
+    "persons": "Persons",
+    "revenue": "Revenue excl. VAT",
+    "commission": "Commission",
+    "status": "Status",
+    "refunded": "(partly) refunded",
+    "limited": "Showing the latest {count} sales; the totals above cover the whole period."
+  },
+  "status": {
+    "pending": "Being checked",
+    "approved": "Approved",
+    "payable": "Ready for payout",
+    "paid": "Paid out",
+    "reversed": "Cancelled (refunded)",
+    "none": "–"
+  },
+  "how": {
+    "title": "How it works",
+    "attribution": "A visitor who opens your link is remembered for {days} days on that device. If they open another partner's link afterwards, that last link counts.",
+    "paidOnly": "Commission is only earned on purchases that are actually paid, and is calculated on the price excluding VAT.",
+    "refunds": "If a purchase is refunded, the commission is cancelled or reduced accordingly.",
+    "statuses": "Each commission is first checked (14-day withdrawal period), then approved, made ready for payout and paid out by bank transfer.",
+    "privacy": "You never see who bought: no names or email addresses, only numbers."
+  }
+}

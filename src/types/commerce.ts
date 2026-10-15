@@ -7,8 +7,8 @@
  * Money is always a whole number of euro cents, never a decimal.
  */
 
-/** What a signed-in user may do. Partners get their own roles later (P7). */
-export type CommerceRole = "ADMIN";
+/** What a signed-in user may do: run the admin area, or see one partner's own figures (P7). */
+export type CommerceRole = "ADMIN" | "PARTNER";
 
 export interface CommerceUser {
   id: string;
@@ -18,6 +18,8 @@ export interface CommerceUser {
   active: boolean;
   createdAt: string;
   lastLoginAt: string | null;
+  /** PARTNER users only: the one partner whose figures they may see. */
+  partnerId?: string | null;
 }
 
 /**
@@ -82,7 +84,12 @@ export type AuditAction =
   | "order-email-resent"
   | "quote-status-changed"
   | "corporate-pricing-updated"
-  | "report-exported";
+  | "report-exported"
+  | "partner-created"
+  | "partner-updated"
+  | "partner-user-invited"
+  | "partner-user-deactivated"
+  | "commission-status-changed";
 
 // ─── Tax (decision B8) ──────────────────────────────────────────────────────
 
@@ -209,6 +216,23 @@ export interface Order {
   createdAt: string;
   updatedAt: string;
   paidAt: string | null;
+  /**
+   * P7: the partner whose link brought the buyer (last click within the
+   * attribution window), copied when the order was created, with the commission
+   * rule of that moment. Missing on orders from before P7.
+   */
+  partner?: OrderPartner | null;
+}
+
+/** The referral of one order (see Order.partner). */
+export interface OrderPartner {
+  partnerId: string;
+  code: string;
+  /** The `c=` of the link, e.g. "summer-flyer"; null without one. */
+  campaign: string | null;
+  /** When the partner link was opened. */
+  clickedAt: string;
+  rule: CommissionRule;
 }
 
 /**
@@ -360,4 +384,83 @@ export interface CorporatePricing {
   pricesIncludeVat: boolean;
   updatedAt: string | null;
   updatedBy: string | null;
+}
+
+// ─── Partners and commissions (P7) ──────────────────────────────────────────
+
+export type PartnerType = "HOTEL_PARTNER" | "HORECA_PARTNER" | "TOURISM_PARTNER" | "CORPORATE_PARTNER";
+
+/**
+ * How a partner earns, always on what was really paid (brief 3.3):
+ * - "percent-net": basis points of the order's net amount excluding VAT (1500 = 15 %);
+ * - "fixed-per-ticket": cents per person on the order;
+ * - "fixed-per-booking": cents per order;
+ * - "none": statistics only.
+ */
+export type CommissionRule =
+  | { kind: "percent-net"; basisPoints: number }
+  | { kind: "fixed-per-ticket"; cents: number }
+  | { kind: "fixed-per-booking"; cents: number }
+  | { kind: "none" };
+
+/** A hotel, café, tourism office or company that refers customers. */
+export interface Partner {
+  id: string;
+  /** Upper case letters, digits and dashes, unique: the `?ref=` of the partner's link. Never changes. */
+  code: string;
+  name: string;
+  type: PartnerType;
+  /** Inactive: its link no longer attributes anything, its users can't sign in. Past figures stay. */
+  active: boolean;
+  /** The rule for NEW orders; every order keeps a copy of the rule it was made with. */
+  commission: CommissionRule;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Clicks on a partner link per Brussels day and campaign (no IP address, no visitor id). */
+export interface PartnerClickDay {
+  partnerId: string;
+  /** "2026-10-16". */
+  day: string;
+  /** "" without a campaign. */
+  campaign: string;
+  clicks: number;
+}
+
+/**
+ * pending (order paid; can still be refunded) → approved (checked by an admin)
+ * → payable (ready to be paid, e.g. the partner's invoice is in) → paid (the
+ * admin recorded the bank transfer). "reversed": cancelled before it was paid
+ * (the order was refunded in full). Nothing is ever deleted.
+ */
+export type CommissionStatus = "pending" | "approved" | "payable" | "paid" | "reversed";
+
+/**
+ * One line of the commission ledger. An order gets an "accrual" when it is
+ * paid; a refund adds an "adjustment" (negative) for what the partner no
+ * longer earns, or reverses the accrual when nothing was paid out yet.
+ */
+export interface CommissionEntry {
+  /** "accrual:<orderId>" or "adjustment:<orderId>:<refunded total>": fixed ids, so nothing is booked twice. */
+  id: string;
+  partnerId: string;
+  orderId: string;
+  kind: "accrual" | "adjustment";
+  /** Signed: an adjustment is negative. */
+  amountCents: number;
+  /** The amount the commission was computed on (net excl. VAT, after refunds for an adjustment). */
+  basisCents: number;
+  rule: CommissionRule;
+  status: CommissionStatus;
+  /** The order's product and campaign, for the partner's filters. */
+  productId: string;
+  campaign: string | null;
+  /** When the order was paid (reports count by this date). */
+  orderPaidAt: string;
+  createdAt: string;
+  updatedAt: string;
+  /** The admin's reference of the bank transfer, once paid. */
+  payoutReference: string | null;
+  history: { status: CommissionStatus; at: string; by: string | null }[];
 }

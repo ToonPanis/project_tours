@@ -8,10 +8,11 @@ import guide from "./guide.json";
 import home from "./home.json";
 import meta from "./meta.json";
 import navigation from "./navigation.json";
+import partner from "./partner.json";
 import pubgame from "./pubgame.json";
 import walks from "./walks.json";
 
 /** English: the master language. Every other language is checked against these keys. */
-const en = { common, navigation, meta, home, errors, walks, game, guide, gps, pubgame, commerce, corporate };
+const en = { common, navigation, meta, home, errors, walks, game, guide, gps, pubgame, commerce, corporate, partner };
 
 export default en;

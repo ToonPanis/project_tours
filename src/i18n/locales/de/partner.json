@@ -1,0 +1,134 @@
+{
+  "meta": {
+    "title": "Partnerportal",
+    "loginTitle": "Partner-Anmeldung"
+  },
+  "login": {
+    "title": "Partner-Anmeldung",
+    "intro": "Geben Sie die E-Mail-Adresse ein, die Hidden Antwerp für Ihr Unternehmen registriert hat. Sie erhalten einen Link, mit dem Sie sich anmelden; ein Passwort ist nicht nötig.",
+    "email": "E-Mail-Adresse",
+    "submit": "Anmeldelink per E-Mail senden",
+    "sending": "Wird gesendet…",
+    "sent": "Falls {email} Zugang zu einem Partnerportal hat, ist ein Anmeldelink unterwegs. Er funktioniert einmal, 15 Minuten lang.",
+    "noAccess": "Noch kein Partner? Nehmen Sie Kontakt mit Hidden Antwerp auf.",
+    "verifyTitle": "Beim Partnerportal anmelden",
+    "verifyIntro": "Drücken Sie die Schaltfläche, um sich auf diesem Gerät anzumelden.",
+    "verifyButton": "Anmelden",
+    "verifying": "Anmeldung läuft…"
+  },
+  "errors": {
+    "invalid-email": "Das sieht nicht wie eine E-Mail-Adresse aus.",
+    "too-many-requests": "Zu viele Versuche. Warten Sie eine Viertelstunde und versuchen Sie es erneut.",
+    "invalid-link": "Dieser Anmeldelink ist nicht mehr gültig (bereits verwendet, abgelaufen oder unvollständig). Fordern Sie einen neuen an.",
+    "not-allowed": "Diese Adresse hat keinen Zugang mehr zu einem Partnerportal.",
+    "not-configured": "Die Anmeldung ist auf diesem Server noch nicht verfügbar.",
+    "offline": "Keine Verbindung zum Server. Prüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.",
+    "unknown": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+  },
+  "email": {
+    "greeting": "Guten Tag,",
+    "loginSubject": "Ihr Anmeldelink für das Partnerportal von Hidden Antwerp",
+    "loginBody": "Verwenden Sie diesen Link, um sich bei Ihrem Partnerportal von Hidden Antwerp anzumelden:",
+    "loginValid": "Der Link funktioniert einmal, {minutes} Minuten lang.",
+    "loginIgnore": "Nicht angefordert? Dann können Sie diese E-Mail ignorieren: Ohne den Link kann sich niemand anmelden.",
+    "inviteSubject": "Ihr Zugang zum Partnerportal von Hidden Antwerp",
+    "inviteBody": "Sie haben jetzt Zugang zum Partnerportal von {name} bei Hidden Antwerp. Dort verfolgen Sie die Besucher, Verkäufe und Provisionen Ihres Partnerlinks:",
+    "inviteHow": "Melden Sie sich mit dieser E-Mail-Adresse an: Sie erhalten einen einmaligen Anmeldelink (kein Passwort)."
+  },
+  "portal": {
+    "title": "Partnerportal",
+    "signedInAs": "Angemeldet als {email}",
+    "signOut": "Abmelden",
+    "linkTitle": "Ihr Partnerlink",
+    "linkIntro": "Teilen Sie diesen Link oder den QR-Code mit Ihren Gästen. Käufe innerhalb von {days} Tagen nach dem Öffnen werden Ihnen zugerechnet.",
+    "linkLabel": "Partnerlink",
+    "campaignHint": "Möchten Sie Standorte oder Materialien vergleichen? Ergänzen Sie den Link um eine Kampagne, z. B. {example}.",
+    "downloadQr": "QR-Code herunterladen (SVG)",
+    "qrLabel": "QR-Code Ihres Partnerlinks",
+    "rule": "Ihre Provision: {rule}",
+    "ruleNote": "Änderungen der Provision gelten nur für Käufe nach der Änderung."
+  },
+  "rules": {
+    "percent-net": "{percent} % des Ticketpreises ohne MwSt.",
+    "fixed-per-ticket": "{amount} pro Ticket",
+    "fixed-per-booking": "{amount} pro Buchung",
+    "none": "keine Provision (nur Statistiken)"
+  },
+  "filters": {
+    "title": "Zeitraum und Filter",
+    "period": "Zeitraum",
+    "today": "Heute",
+    "last7": "Letzte 7 Tage",
+    "last30": "Letzte 30 Tage",
+    "thisMonth": "Dieser Monat",
+    "lastMonth": "Letzter Monat",
+    "thisYear": "Dieses Jahr",
+    "custom": "Eigene Daten",
+    "from": "Von",
+    "to": "Bis",
+    "per": "Pro",
+    "day": "Tag",
+    "week": "Woche",
+    "month": "Monat",
+    "product": "Produkt",
+    "allProducts": "Alle Produkte",
+    "campaign": "Kampagne",
+    "allCampaigns": "Alle Kampagnen",
+    "noCampaign": "Keine Kampagne",
+    "apply": "Anwenden"
+  },
+  "stats": {
+    "title": "{from} – {to}",
+    "visitors": "Besucher über Ihren Link",
+    "visitorsNote": "Pro Link gezählt, ohne personenbezogene Daten.",
+    "sales": "Verkäufe",
+    "conversion": "Konversion",
+    "conversionNote": "Verkäufe pro Besucher.",
+    "revenue": "Umsatz ohne MwSt.",
+    "commission": "Provision in diesem Zeitraum",
+    "outstanding": "Offene Provision",
+    "outstandingNote": "Verdient, noch nicht ausgezahlt (alle Zeiträume).",
+    "pendingNote": "Davon befinden sich {amount} noch in der 14-tägigen Prüfphase.",
+    "paid": "Ausgezahlte Provision",
+    "paidNote": "Alle Zeiträume."
+  },
+  "chart": {
+    "revenue": "Umsatz ohne MwSt. pro {unit}",
+    "commission": "Provision pro {unit}",
+    "table": "Als Tabelle anzeigen",
+    "empty": "Keine Verkäufe in diesem Zeitraum.",
+    "units": {
+      "day": "Tag",
+      "week": "Woche",
+      "month": "Monat"
+    }
+  },
+  "sales": {
+    "title": "Verkäufe",
+    "empty": "Keine Verkäufe über Ihren Link in diesem Zeitraum.",
+    "date": "Datum",
+    "product": "Produkt",
+    "persons": "Personen",
+    "revenue": "Umsatz ohne MwSt.",
+    "commission": "Provision",
+    "status": "Status",
+    "refunded": "(teilweise) erstattet",
+    "limited": "Angezeigt werden die letzten {count} Verkäufe; die Summen oben gelten für den gesamten Zeitraum."
+  },
+  "status": {
+    "pending": "In Prüfung",
+    "approved": "Genehmigt",
+    "payable": "Bereit zur Auszahlung",
+    "paid": "Ausgezahlt",
+    "reversed": "Storniert (erstattet)",
+    "none": "–"
+  },
+  "how": {
+    "title": "So funktioniert es",
+    "attribution": "Ein Besucher, der Ihren Link öffnet, wird {days} Tage lang auf diesem Gerät gespeichert. Öffnet er danach den Link eines anderen Partners, zählt dieser letzte Link.",
+    "paidOnly": "Provision wird nur für tatsächlich bezahlte Käufe verdient und auf den Preis ohne MwSt. berechnet.",
+    "refunds": "Wird ein Kauf erstattet, wird die Provision storniert oder entsprechend gekürzt.",
+    "statuses": "Jede Provision wird zunächst geprüft (14-tägige Widerrufsfrist), dann genehmigt, zur Auszahlung freigegeben und per Banküberweisung ausgezahlt.",
+    "privacy": "Sie sehen nie, wer gekauft hat: keine Namen oder E-Mail-Adressen, nur Zahlen."
+  }
+}

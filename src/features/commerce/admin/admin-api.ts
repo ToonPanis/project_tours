@@ -71,6 +71,16 @@ const MESSAGES: Record<string, string> = {
   "invalid-vat-flag": "Tick or untick 'prices include VAT'.",
   "price-required": "Set a price before activating this product.",
   "unknown-product": "This product doesn't exist (anymore).",
+  // Partners and commissions (P7)
+  "invalid-type": "Choose the kind of partner.",
+  "invalid-commission": "Check the commission: a percentage from 0,01 to 100, or an amount in euros (at most €1,000).",
+  "unknown-partner": "This partner doesn't exist (anymore).",
+  "admin-address": "This address is an admin address (ADMIN_EMAILS); use another address for the partner portal.",
+  "email-in-use": "This address already has access to another partner's portal.",
+  "unknown-user": "This user doesn't exist or doesn't belong to this partner.",
+  "invalid-action": "Unknown action.",
+  "invalid-selection": "Select at least one line (at most 200).",
+  "payout-reference-required": "Type the reference of the bank transfer (2 to 100 characters).",
   offline: "No connection to the server. Check your internet and try again.",
 };
 

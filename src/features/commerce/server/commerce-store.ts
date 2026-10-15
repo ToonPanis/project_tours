@@ -2,6 +2,10 @@ import type {
   AuditEntry,
   BillingDocument,
   CommerceUser,
+  CommissionEntry,
+  CommissionStatus,
+  Partner,
+  PartnerClickDay,
   CorporatePricing,
   QuoteRequest,
   QuoteStatus,
@@ -169,10 +173,60 @@ export interface CommerceStore {
   /** Tickets used for a Hidden Pubs game (a real game code, not a reservation), newest first. */
   listGrantsWithGame(query: { skip: number; limit: number }): Promise<{ grants: TicketGrant[]; total: number }>;
 
+  // ── Partners (P7) ────────────────────────────────────────────────────
+  /** False when a partner with this code exists (codes are unique). */
+  insertPartner(partner: Partner): Promise<boolean>;
+  getPartner(id: string): Promise<Partner | null>;
+  getPartnerByCode(code: string): Promise<Partner | null>;
+  /** Every partner, by name. */
+  listPartners(): Promise<Partner[]>;
+  /** The code and the creation date never change. */
+  updatePartner(id: string, changes: Partial<Omit<Partner, "id" | "code" | "createdAt">>): Promise<void>;
+  /** The users who may see this partner's portal. */
+  listPartnerUsers(partnerId: string): Promise<CommerceUser[]>;
+  /** Adds one click for a partner, day and campaign ("" for none); the counter is created at 0. */
+  incrementPartnerClicks(partnerId: string, day: string, campaign: string): Promise<void>;
+  /** Click counters from `fromDay` to `toDay` (both included, "YYYY-MM-DD"), optionally one partner. */
+  listPartnerClicks(query: { partnerId?: string; fromDay: string; toDay: string }): Promise<PartnerClickDay[]>;
+  /** A partner's paid orders (status "paid" or "refunded") paid in [from, to), oldest first, at most `limit`. */
+  listPartnerOrders(partnerId: string, from: Date, to: Date, limit: number): Promise<Order[]>;
+
+  // ── Commission ledger (P7, nothing is ever deleted) ──────────────────
+  /** Inserts the line unless one with its id exists (accruals and adjustments have fixed ids). True when inserted. */
+  insertCommissionIfMissing(entry: CommissionEntry): Promise<boolean>;
+  listCommissionsForOrder(orderId: string): Promise<CommissionEntry[]>;
+  /**
+   * Ledger lines, newest order payment first. Filters: one partner, one status,
+   * the order's payment date in [orderPaidFrom, orderPaidTo).
+   */
+  listCommissions(query: CommissionQuery): Promise<{ entries: CommissionEntry[]; total: number }>;
+  /**
+   * Moves a line to a new status only while it is one of `from` (atomic), adding
+   * the history line; `payoutReference` is saved with "paid".
+   */
+  transitionCommission(id: string, from: CommissionStatus[], change: CommissionChange): Promise<boolean>;
+
   // ── Settings ─────────────────────────────────────────────────────────
   /** The corporate price table, or null when an admin never saved one (the defaults are used). */
   getCorporatePricing(): Promise<CorporatePricing | null>;
   saveCorporatePricing(pricing: CorporatePricing): Promise<void>;
+}
+
+export interface CommissionQuery {
+  partnerId?: string;
+  status?: CommissionStatus;
+  orderPaidFrom?: Date;
+  orderPaidTo?: Date;
+  skip: number;
+  limit: number;
+}
+
+export interface CommissionChange {
+  status: CommissionStatus;
+  at: string;
+  /** The admin's email, or null for the system (a refund). */
+  by: string | null;
+  payoutReference?: string | null;
 }
 
 /**

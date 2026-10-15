@@ -1,0 +1,134 @@
+{
+  "meta": {
+    "title": "Partnerportaal",
+    "loginTitle": "Aanmelden als partner"
+  },
+  "login": {
+    "title": "Aanmelden als partner",
+    "intro": "Vul het e-mailadres in dat Hidden Antwerp voor uw zaak heeft geregistreerd. U ontvangt een link waarmee u zich aanmeldt; een wachtwoord is niet nodig.",
+    "email": "E-mailadres",
+    "submit": "Stuur mij een aanmeldlink",
+    "sending": "Bezig met verzenden…",
+    "sent": "Als {email} toegang heeft tot een partnerportaal, is er een aanmeldlink onderweg. Die werkt één keer, gedurende 15 minuten.",
+    "noAccess": "Nog geen partner? Neem contact op met Hidden Antwerp.",
+    "verifyTitle": "Aanmelden bij het partnerportaal",
+    "verifyIntro": "Druk op de knop om u op dit toestel aan te melden.",
+    "verifyButton": "Aanmelden",
+    "verifying": "Bezig met aanmelden…"
+  },
+  "errors": {
+    "invalid-email": "Dat lijkt geen e-mailadres te zijn.",
+    "too-many-requests": "Te veel pogingen. Wacht een kwartier en probeer het opnieuw.",
+    "invalid-link": "Deze aanmeldlink is niet meer geldig (gebruikt, verlopen of onvolledig). Vraag een nieuwe aan.",
+    "not-allowed": "Dit adres heeft geen toegang meer tot een partnerportaal.",
+    "not-configured": "Aanmelden is op deze server nog niet beschikbaar.",
+    "offline": "Geen verbinding met de server. Controleer uw internetverbinding en probeer het opnieuw.",
+    "unknown": "Er ging iets mis. Probeer het opnieuw."
+  },
+  "email": {
+    "greeting": "Goeddag,",
+    "loginSubject": "Uw aanmeldlink voor het partnerportaal van Hidden Antwerp",
+    "loginBody": "Gebruik deze link om u aan te melden bij uw partnerportaal van Hidden Antwerp:",
+    "loginValid": "De link werkt één keer, gedurende {minutes} minuten.",
+    "loginIgnore": "Niet aangevraagd? Dan kunt u deze e-mail negeren: zonder de link kan niemand zich aanmelden.",
+    "inviteSubject": "Uw toegang tot het partnerportaal van Hidden Antwerp",
+    "inviteBody": "U hebt nu toegang tot het partnerportaal van {name} bij Hidden Antwerp. Daar volgt u de bezoekers, verkopen en commissies van uw partnerlink:",
+    "inviteHow": "Meld u aan met dit e-mailadres: u ontvangt een eenmalige aanmeldlink (geen wachtwoord)."
+  },
+  "portal": {
+    "title": "Partnerportaal",
+    "signedInAs": "Aangemeld als {email}",
+    "signOut": "Afmelden",
+    "linkTitle": "Uw partnerlink",
+    "linkIntro": "Deel deze link of de QR-code met uw gasten. Aankopen die binnen {days} dagen na het openen worden gedaan, tellen voor u.",
+    "linkLabel": "Partnerlink",
+    "campaignHint": "Wilt u plaatsen of materialen vergelijken? Voeg een campagne toe aan de link, bijvoorbeeld {example}.",
+    "downloadQr": "QR-code downloaden (SVG)",
+    "qrLabel": "QR-code van uw partnerlink",
+    "rule": "Uw commissie: {rule}",
+    "ruleNote": "Wijzigingen aan de commissie gelden alleen voor aankopen die na de wijziging worden gedaan."
+  },
+  "rules": {
+    "percent-net": "{percent} % van de ticketprijs exclusief btw",
+    "fixed-per-ticket": "{amount} per ticket",
+    "fixed-per-booking": "{amount} per boeking",
+    "none": "geen commissie (alleen statistieken)"
+  },
+  "filters": {
+    "title": "Periode en filters",
+    "period": "Periode",
+    "today": "Vandaag",
+    "last7": "Laatste 7 dagen",
+    "last30": "Laatste 30 dagen",
+    "thisMonth": "Deze maand",
+    "lastMonth": "Vorige maand",
+    "thisYear": "Dit jaar",
+    "custom": "Eigen data",
+    "from": "Van",
+    "to": "Tot",
+    "per": "Per",
+    "day": "Dag",
+    "week": "Week",
+    "month": "Maand",
+    "product": "Product",
+    "allProducts": "Alle producten",
+    "campaign": "Campagne",
+    "allCampaigns": "Alle campagnes",
+    "noCampaign": "Geen campagne",
+    "apply": "Toepassen"
+  },
+  "stats": {
+    "title": "{from} – {to}",
+    "visitors": "Bezoekers via uw link",
+    "visitorsNote": "Geteld per link, zonder persoonsgegevens.",
+    "sales": "Verkopen",
+    "conversion": "Conversie",
+    "conversionNote": "Verkopen per bezoeker.",
+    "revenue": "Omzet excl. btw",
+    "commission": "Commissie in deze periode",
+    "outstanding": "Openstaande commissie",
+    "outstandingNote": "Verdiend, nog niet uitbetaald (alle periodes).",
+    "pendingNote": "Waarvan {amount} nog in de controleperiode van 14 dagen.",
+    "paid": "Uitbetaalde commissie",
+    "paidNote": "Alle periodes."
+  },
+  "chart": {
+    "revenue": "Omzet excl. btw per {unit}",
+    "commission": "Commissie per {unit}",
+    "table": "Als tabel tonen",
+    "empty": "Geen verkopen in deze periode.",
+    "units": {
+      "day": "dag",
+      "week": "week",
+      "month": "maand"
+    }
+  },
+  "sales": {
+    "title": "Verkopen",
+    "empty": "Geen verkopen via uw link in deze periode.",
+    "date": "Datum",
+    "product": "Product",
+    "persons": "Personen",
+    "revenue": "Omzet excl. btw",
+    "commission": "Commissie",
+    "status": "Status",
+    "refunded": "(gedeeltelijk) terugbetaald",
+    "limited": "De laatste {count} verkopen worden getoond; de totalen hierboven gelden voor de hele periode."
+  },
+  "status": {
+    "pending": "In controle",
+    "approved": "Goedgekeurd",
+    "payable": "Klaar voor uitbetaling",
+    "paid": "Uitbetaald",
+    "reversed": "Geannuleerd (terugbetaald)",
+    "none": "–"
+  },
+  "how": {
+    "title": "Hoe het werkt",
+    "attribution": "Een bezoeker die uw link opent, wordt {days} dagen onthouden op dat toestel. Opent die daarna de link van een andere partner, dan telt die laatste link.",
+    "paidOnly": "Commissie wordt alleen verdiend op aankopen die effectief betaald zijn, en wordt berekend op de prijs exclusief btw.",
+    "refunds": "Wordt een aankoop terugbetaald, dan wordt de commissie geannuleerd of evenredig verminderd.",
+    "statuses": "Elke commissie wordt eerst gecontroleerd (herroepingstermijn van 14 dagen), daarna goedgekeurd, klaargezet voor uitbetaling en per overschrijving uitbetaald.",
+    "privacy": "U ziet nooit wie er kocht: geen namen of e-mailadressen, alleen cijfers."
+  }
+}

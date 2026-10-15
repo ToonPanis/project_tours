@@ -11,8 +11,9 @@
  *
  * Commercial platform (`com_*`, docs/commercial/DATABASE_DESIGN.md): admin accounts,
  * sign-in links, sessions, rate limits, the audit log, the product catalogue and the
- * email outbox. Short-lived records (links, sessions, counters, sent emails) have a
- * TTL index too; the audit log and the catalogue are kept.
+ * email outbox, orders, tickets, quotes, and (P7) partners, their click counters and
+ * the commission ledger. Short-lived records (links, sessions, counters, sent emails)
+ * have a TTL index too; the audit log, the catalogue and financial records are kept.
  */
 
 /** @typedef {import("mongodb").Db} Db */
@@ -65,6 +66,13 @@ export const COLLECTIONS = {
   quotes: "com_quote_requests",
   /** Small settings documents by key, e.g. "corporate-pricing". */
   settings: "com_settings",
+
+  /** Partners (P7): hotels, cafés, tourism, companies. `_id` = partner id; unique code. */
+  partners: "com_partners",
+  /** Clicks on partner links per day and campaign: `_id` = "<partnerId>:<day>:<campaign>". No IP, no visitor id. Kept 3 years (TTL). */
+  partnerClicks: "com_partner_clicks",
+  /** The commission ledger: `_id` = "accrual:<orderId>" or "adjustment:<orderId>:<refunded>". Never deleted. */
+  commissions: "com_commission_ledger",
 };
 
 const text = (maxLength) => ({ bsonType: "string", minLength: 1, maxLength });
@@ -125,10 +133,12 @@ const VALIDATORS = {
     properties: {
       _id: text(100),
       email: text(254),
-      roles: { bsonType: "array", items: { enum: ["ADMIN"] } },
+      roles: { bsonType: "array", items: { enum: ["ADMIN", "PARTNER"] } },
       active: { bsonType: "bool" },
       createdAt: date,
       lastLoginAt: optionalDate,
+      // P7: the partner a PARTNER user belongs to.
+      partnerId: optionalText(100),
     },
   },
   [COLLECTIONS.loginTokens]: {
@@ -234,6 +244,8 @@ const VALIDATORS = {
       createdAt: date,
       updatedAt: date,
       paidAt: optionalDate,
+      // P7: the referring partner and its commission rule at the time.
+      partner: { bsonType: ["object", "null"] },
     },
   },
   [COLLECTIONS.stripeEvents]: {
@@ -321,6 +333,52 @@ const VALIDATORS = {
     required: ["_id"],
     properties: { _id: text(100) },
   },
+
+  [COLLECTIONS.partners]: {
+    required: ["_id", "code", "name", "type", "active", "commission", "createdAt", "updatedAt"],
+    properties: {
+      _id: text(100),
+      code: text(30),
+      name: text(80),
+      type: { enum: ["HOTEL_PARTNER", "HORECA_PARTNER", "TOURISM_PARTNER", "CORPORATE_PARTNER"] },
+      active: { bsonType: "bool" },
+      commission: { bsonType: "object", required: ["kind"], properties: { kind: { enum: ["percent-net", "fixed-per-ticket", "fixed-per-booking", "none"] } } },
+      createdAt: date,
+      updatedAt: date,
+    },
+  },
+  [COLLECTIONS.partnerClicks]: {
+    required: ["_id", "partnerId", "day", "campaign", "clicks", "expiresAt"],
+    properties: {
+      _id: text(200),
+      partnerId: text(100),
+      day: text(10),
+      campaign: { bsonType: "string", maxLength: 40 },
+      clicks: whole,
+      expiresAt: date,
+    },
+  },
+  [COLLECTIONS.commissions]: {
+    required: ["_id", "partnerId", "orderId", "kind", "amountCents", "basisCents", "rule", "status", "productId", "orderPaidAt", "createdAt", "updatedAt", "history"],
+    properties: {
+      _id: text(200),
+      partnerId: text(100),
+      orderId: text(100),
+      kind: { enum: ["accrual", "adjustment"] },
+      // Signed: an adjustment after a refund is negative.
+      amountCents: { bsonType: ["int", "long"] },
+      basisCents: whole,
+      rule: { bsonType: "object" },
+      status: { enum: ["pending", "approved", "payable", "paid", "reversed"] },
+      productId: text(100),
+      campaign: optionalText(40),
+      orderPaidAt: date,
+      createdAt: date,
+      updatedAt: date,
+      payoutReference: optionalText(100),
+      history: { bsonType: "array", maxItems: 50 },
+    },
+  },
 };
 
 /** TTL: delete a document as soon as its `expiresAt` has passed. */
@@ -336,7 +394,11 @@ export const INDEXES = {
   ],
   [COLLECTIONS.players]: [{ key: { gameCode: 1, tokenHash: 1 }, name: "gameCode_tokenHash", unique: true }, expiry],
 
-  [COLLECTIONS.users]: [{ key: { email: 1 }, name: "email_unique", unique: true }],
+  [COLLECTIONS.users]: [
+    { key: { email: 1 }, name: "email_unique", unique: true },
+    // P7: the users of one partner.
+    { key: { partnerId: 1 }, name: "partnerId", partialFilterExpression: { partnerId: { $type: "string" } } },
+  ],
   [COLLECTIONS.loginTokens]: [expiry],
   [COLLECTIONS.sessions]: [expiry],
   [COLLECTIONS.rateLimits]: [expiry],
@@ -351,6 +413,12 @@ export const INDEXES = {
     { key: { status: 1, createdAt: -1 }, name: "status_createdAt" },
     // P5: the dashboard reads paid orders by payment date.
     { key: { status: 1, paidAt: 1 }, name: "status_paidAt" },
+    // P7: one partner's orders by payment date.
+    {
+      key: { "partner.partnerId": 1, paidAt: 1 },
+      name: "partnerId_paidAt",
+      partialFilterExpression: { "partner.partnerId": { $type: "string" } },
+    },
     {
       key: { "stripe.paymentIntentId": 1 },
       name: "paymentIntentId",
@@ -376,6 +444,14 @@ export const INDEXES = {
     expiry,
   ],
   [COLLECTIONS.settings]: [],
+  [COLLECTIONS.partners]: [{ key: { code: 1 }, name: "code_unique", unique: true }],
+  [COLLECTIONS.partnerClicks]: [{ key: { partnerId: 1, day: 1 }, name: "partnerId_day" }, expiry],
+  [COLLECTIONS.commissions]: [
+    { key: { orderId: 1 }, name: "orderId" },
+    { key: { partnerId: 1, orderPaidAt: -1 }, name: "partnerId_orderPaidAt" },
+    { key: { status: 1, orderPaidAt: -1 }, name: "status_orderPaidAt" },
+    { key: { orderPaidAt: -1 }, name: "orderPaidAt_desc" },
+  ],
 };
 
 /**

@@ -52,11 +52,14 @@ export function ColumnChart({
   title,
   points,
   formatAxis,
+  tableLabel = "Show as a table",
 }: {
   title: string;
   points: ChartPoint[];
   /** Compact axis labels, e.g. "€1K". */
   formatAxis: (value: number) => string;
+  /** The table toggle's text (the partner portal passes a translation; the admin area is English). */
+  tableLabel?: string;
 }) {
   // A narrow coordinate system: on a 390 px phone the text keeps about its real size
   // (a wide viewBox shrinks everything, labels included, when scaled down).
@@ -108,19 +111,19 @@ export function ColumnChart({
           );
         })}
       </svg>
-      <DataTable points={points} />
+      <DataTable points={points} label={tableLabel} />
     </figure>
   );
 }
 
 /** Values per category (revenue per product or language), largest first. */
-export function BarList({ title, points }: { title: string; points: ChartPoint[] }) {
+export function BarList({ title, points, emptyLabel = "No sales in this period." }: { title: string; points: ChartPoint[]; emptyLabel?: string }) {
   const max = Math.max(0, ...points.map((point) => point.value));
   return (
     <figure className="flex flex-col gap-2">
       <figcaption className="font-display text-xl font-semibold text-parchment">{title}</figcaption>
       {points.length === 0 ? (
-        <p className="text-sm text-parchment/70">No sales in this period.</p>
+        <p className="text-sm text-parchment/70">{emptyLabel}</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {points.map((point) => (
@@ -143,10 +146,10 @@ export function BarList({ title, points }: { title: string; points: ChartPoint[]
 }
 
 /** The same numbers as a table (screen readers, exact values, printing). */
-function DataTable({ points }: { points: ChartPoint[] }) {
+function DataTable({ points, label }: { points: ChartPoint[]; label: string }) {
   return (
     <details className="text-sm text-parchment/80">
-      <summary className="min-h-11 cursor-pointer content-center">Show as a table</summary>
+      <summary className="min-h-11 cursor-pointer content-center">{label}</summary>
       <table className="mt-2 w-full border-collapse">
         <tbody>
           {points.map((point) => (

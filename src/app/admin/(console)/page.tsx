@@ -69,7 +69,8 @@ export default async function AdminHomePage({ searchParams }: PageProps<"/admin"
               ["Net (after refunds, VAT included)", euros(totals.netCents)],
               ["VAT (after refunds)", euros(totals.vatCents)],
               ["Net excluding VAT", euros(totals.exVatCents)],
-              ["Partner commissions", "– (partners come in phase P7)"],
+              ["Partner commissions (on these orders)", euros(dashboard.commissionsCents)],
+              ["Net excluding VAT, after commissions", euros(totals.exVatCents - dashboard.commissionsCents)],
             ] as const
           ).map(([label, value]) => (
             <div key={label} className="contents">
@@ -79,7 +80,7 @@ export default async function AdminHomePage({ searchParams }: PageProps<"/admin"
           ))}
         </dl>
         <p className="text-xs text-parchment/60">
-          Orders count on the day they were paid; refunds count with their order. The VAT of a refunded part goes back in proportion.
+          Orders count on the day they were paid; refunds count with their order. The VAT of a refunded part goes back in proportion. Commissions are those of the period&apos;s orders, whatever their payout status (see Partners).
         </p>
       </div>
 
@@ -108,6 +109,16 @@ export default async function AdminHomePage({ searchParams }: PageProps<"/admin"
             display: euros(language.netCents),
           }))}
         />
+        <BarList
+          title="Per partner (orders through a partner link)"
+          emptyLabel="No orders through partner links in this period."
+          points={report.byPartner.map((partner) => ({
+            key: partner.partnerId,
+            label: partner.code,
+            value: partner.netCents,
+            display: `${euros(partner.netCents)} · commission ${euros(dashboard.commissionsByPartner[partner.partnerId] ?? 0)}`,
+          }))}
+        />
       </div>
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -131,8 +142,7 @@ export default async function AdminHomePage({ searchParams }: PageProps<"/admin"
         <ul className="list-inside list-disc text-sm text-parchment/80">
           <li>Completed walks and started vs completed: walks only save progress on the phone; needs decision B9 (a privacy-safe &quot;walk completed&quot; signal).</li>
           <li>Average rating: reviews come in phase P8.</li>
-          <li>Conversion from visit to purchase: the site has no analytics (by design); needs a privacy decision.</li>
-          <li>Revenue per partner: partners come in phase P7.</li>
+          <li>Conversion from visit to purchase for the whole site: no analytics (by design); needs a privacy decision. Partner links do have it (visitors without personal data), in each partner&apos;s portal.</li>
         </ul>
       </div>
 
