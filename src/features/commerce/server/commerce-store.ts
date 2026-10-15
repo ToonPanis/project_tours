@@ -115,6 +115,12 @@ export interface CommerceStore {
   findTicketDevice(tokenHash: string, now: Date): Promise<{ grantId: string; walkSlug: string } | null>;
   /** Forgets every phone of a ticket (admin "reset phones"). */
   deleteTicketDevices(grantId: string): Promise<void>;
+  /**
+   * Hidden Pubs (P3): sets the ticket's game code from `from` to `to`, only if it
+   * is still `from` and the ticket is active (atomic). Used to reserve an unused
+   * ticket (null → "pending:…"), then to confirm (→ code) or give it back (→ null).
+   */
+  swapGrantGame(grantId: string, from: string | null, to: string | null): Promise<boolean>;
 
   // ── Discounts ────────────────────────────────────────────────────────
   /** False when the code already exists. */

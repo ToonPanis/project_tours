@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { getButtonClasses } from "@/components/ui/ButtonLink";
 import { PlayScreen } from "@/features/walk-session/components/PlayScreen";
 import { useT } from "@/i18n/client";
 import { shareOrCopy } from "../client/share";
@@ -20,10 +21,12 @@ interface LobbyScreenProps {
    */
   invite: { joinUrl: string; qrCode: QrCode } | null;
   game: PubGameHandle;
+  /** Places paid for, the organiser included (P3: tickets bought); null = no limit. */
+  seatLimit?: number | null;
 }
 
 /** Before the start: invite the others, see who joined; the host starts the game. */
-export function LobbyScreen({ code, invite, game }: LobbyScreenProps) {
+export function LobbyScreen({ code, invite, game, seatLimit = null }: LobbyScreenProps) {
   const t = useT();
   const { view, act, busy } = game;
   const [copied, setCopied] = useState(false);
@@ -32,6 +35,9 @@ export function LobbyScreen({ code, invite, game }: LobbyScreenProps) {
   const joinUrl = invite?.joinUrl ?? `${typeof window === "undefined" ? "" : window.location.origin}/games/${code}`;
   const teams = allTeams(view);
   const everyTeamHasPlayers = teams.every((team) => view.players.some((player) => player.teamId === team.id));
+  // WhatsApp's own share link: opens WhatsApp (app or web) with the text ready to send to the group.
+  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`${t("pubgame.lobby.shareText")} ${joinUrl}`)}`;
+  const isFull = seatLimit !== null && view.players.length >= seatLimit;
 
   async function share() {
     const result = await shareOrCopy({ title: t("pubgame.lobby.shareText"), url: joinUrl }, joinUrl);
@@ -74,9 +80,17 @@ export function LobbyScreen({ code, invite, game }: LobbyScreenProps) {
         <Button variant="outline" onClick={share} fullWidth>
           {t("pubgame.lobby.share")}
         </Button>
+        <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className={`${getButtonClasses("outline")} w-full`}>
+          {t("pubgame.lobby.whatsapp")}
+        </a>
         <p role="status" className={copied ? "text-sm text-gold" : "sr-only"}>
           {copied ? t("pubgame.lobby.copied") : ""}
         </p>
+        {seatLimit !== null && (
+          <p className={isFull ? "text-sm font-semibold text-gold" : "text-sm text-parchment/80"}>
+            {isFull ? t("pubgame.lobby.full", { total: seatLimit }) : t("pubgame.lobby.seats", { taken: view.players.length, total: seatLimit })}
+          </p>
+        )}
       </section>
 
       <ul className="flex flex-col gap-3">

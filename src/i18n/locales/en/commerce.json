@@ -1,5 +1,8 @@
 {
-  "persons": { "one": "{count} person", "other": "{count} persons" },
+  "persons": {
+    "one": "{count} person",
+    "other": "{count} persons"
+  },
   "buy": {
     "title": "Tickets",
     "perPerson": "per person, VAT included",
@@ -28,7 +31,8 @@
     "ticket-expired": "This ticket has expired.",
     "ticket-full": "This ticket is already open on as many phones as it has persons.",
     "offline": "No connection. Check your internet and try again.",
-    "generic": "Something went wrong. Please try again."
+    "generic": "Something went wrong. Please try again.",
+    "ticket-used": "This ticket has already been used to create a game."
   },
   "success": {
     "title": "Thank you!",
@@ -81,5 +85,10 @@
       "ticketRevoked": "Your ticket link no longer works.",
       "bankTime": "Depending on your bank, it can take a few days before you see the refund."
     }
+  },
+  "groups": {
+    "title": "Your Hidden Pubs ticket",
+    "usedBody": "This ticket already belongs to a game. Go back to it, or ask the organiser for the link.",
+    "backToGame": "Go to the game"
   }
 }

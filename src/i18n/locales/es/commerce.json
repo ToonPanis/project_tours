@@ -28,7 +28,8 @@
     "ticket-expired": "Esta entrada ha caducado.",
     "ticket-full": "Esta entrada ya está abierta en tantos móviles como personas incluye.",
     "offline": "Sin conexión. Comprueba tu conexión a internet e inténtalo de nuevo.",
-    "generic": "Algo ha salido mal. Inténtalo de nuevo."
+    "generic": "Algo ha salido mal. Inténtalo de nuevo.",
+    "ticket-used": "Esta entrada ya se ha usado para crear una partida."
   },
   "success": {
     "title": "¡Gracias!",
@@ -81,5 +82,10 @@
       "ticketRevoked": "Tu enlace de entrada ya no funciona.",
       "bankTime": "Según tu banco, pueden pasar unos días antes de que veas el reembolso."
     }
+  },
+  "groups": {
+    "title": "Tu entrada de Hidden Pubs",
+    "usedBody": "Esta entrada ya pertenece a una partida. Vuelve a ella o pide el enlace al organizador.",
+    "backToGame": "Ir a la partida"
   }
 }

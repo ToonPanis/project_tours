@@ -74,8 +74,18 @@ export interface CreatedGame {
 /**
  * Body: { teamNames: string[], playersPerTeam, hostName, hostTeamIndex, adultsConfirmed: true }
  * The organiser becomes the host and a player of team `hostTeamIndex` (D33).
+ * `options.seatLimit`: at most this many players, the organiser included (the
+ * tickets bought, P3). Decided by the server (the route), never by the body.
  */
-export async function createGame(ctx: GameContext, walkSlug: string, body: unknown): Promise<ServiceResult<CreatedGame>> {
+export async function createGame(
+  ctx: GameContext,
+  walkSlug: string,
+  body: unknown,
+  options: { seatLimit?: number } = {},
+): Promise<ServiceResult<CreatedGame>> {
+  if (options.seatLimit !== undefined && (!Number.isInteger(options.seatLimit) || options.seatLimit < 1)) {
+    return fail(400, "invalid-settings");
+  }
   if (!ctx.getGameData(walkSlug)) return fail(404, "unknown-walk");
   if (!isRecord(body)) return fail(400, "invalid-settings");
   // 18+ (D4): shots are spirits.
@@ -120,6 +130,7 @@ export async function createGame(ctx: GameContext, walkSlug: string, body: unkno
       version: 0,
       createdAt: createdAt.toISOString(),
       expiresAt: expiresAt.toISOString(),
+      ...(options.seatLimit === undefined ? {} : { seatLimit: options.seatLimit }),
     });
     if (created) {
       const token = newPlayerToken();
@@ -175,14 +186,28 @@ export async function getLobby(ctx: GameContext, code: string): Promise<ServiceR
   const { state } = game;
   return ok({
     phase: state.phase,
-    joiningOpen: state.phase === "lobby" || (state.phase === "playing" && !state.firstCardDrawn),
+    joiningOpen: (state.phase === "lobby" || (state.phase === "playing" && !state.firstCardDrawn)) && !isFull(game, state),
     playersPerTeam: state.playersPerTeam,
     teams: state.teams.map((team) => ({
       id: team.id,
       name: team.name,
       playerCount: teamPlayers(state, team.id).length,
     })),
+    seats: seatsOf(game, state),
   });
+}
+
+/**
+ * The game's places, when it has a limit (the tickets bought, P3): taken = players
+ * so far, the organiser included. Null for a game without a limit.
+ */
+function seatsOf(game: StoredGame, state: PubGameState): { taken: number; limit: number } | null {
+  return game.seatLimit === undefined ? null : { taken: state.players.length, limit: game.seatLimit };
+}
+
+/** Every paid place is taken: nobody more can join or be added. */
+function isFull(game: StoredGame, state: PubGameState): boolean {
+  return game.seatLimit !== undefined && state.players.length >= game.seatLimit;
 }
 
 export interface JoinedGame {
@@ -215,8 +240,12 @@ export async function joinGame(
 
   const playerId = ctx.newId();
   const action: PubGameAction = { type: "JOIN", playerId, name: body.name, teamId: body.teamId };
-  // The join gets its own action id: it's only applied once.
-  const result = await commitWithRetry(ctx, code, playerId, `join-${playerId}`, () => action);
+  // The join gets its own action id: it's only applied once. The seat limit is checked
+  // against the state being saved: of two phones taking the last place at the same moment,
+  // the second one's save conflicts, is retried with the new state and finds the game full.
+  const result = await commitWithRetry(ctx, code, playerId, `join-${playerId}`, (state) =>
+    isFull(game, state) ? { refused: "game-full" } : action,
+  );
   if (!result.ok) return result;
 
   const token = newPlayerToken();
@@ -326,12 +355,17 @@ export async function performAction(
     if (!info || !isAllowedType(kind, info.contentType)) return fail(400, "invalid-media");
   }
 
+  // The host adding a player (late joiner) takes a place like joining does (seat limit, P3).
+  const limited = clientAction.type === "ADD_PLAYER" ? await loadGame(ctx, code) : null;
+
   const result = await commitWithRetry(ctx, code, playerId, body.actionId, (state, definition) =>
-    toGameAction(clientAction, definition, state, playerId, {
-      random: ctx.random,
-      newId: ctx.newId,
-      now: ctx.now().toISOString(),
-    }),
+    limited && isFull(limited, state)
+      ? { refused: "game-full" }
+      : toGameAction(clientAction, definition, state, playerId, {
+          random: ctx.random,
+          newId: ctx.newId,
+          now: ctx.now().toISOString(),
+        }),
   );
   if (!result.ok) return result;
 
@@ -536,7 +570,8 @@ async function commitWithRetry(
   code: string,
   playerId: string,
   actionId: string,
-  makeAction: (state: PubGameState, definition: PubGameDefinition) => PubGameAction | null,
+  /** The action for this state; null = not a valid action; { refused } = not allowed now, with the reason. */
+  makeAction: (state: PubGameState, definition: PubGameDefinition) => PubGameAction | null | { refused: string },
 ): Promise<ServiceResult<{ version: number; game: StoredGame | null }>> {
   for (let attempt = 0; attempt < MAX_COMMIT_ATTEMPTS; attempt++) {
     if (attempt > 0) await pause(RETRY_PAUSE_MS * attempt * (0.5 + Math.random()));
@@ -548,6 +583,7 @@ async function commitWithRetry(
     const { definition, answerKey } = gameDataOf(ctx, game);
     const action = makeAction(game.state, definition);
     if (!action) return fail(400, "invalid-action");
+    if ("refused" in action) return fail(409, action.refused);
 
     const result = applyPubGameAction(definition, answerKey, game.state, playerId, action);
     if (!result.ok) return fail(409, result.error);

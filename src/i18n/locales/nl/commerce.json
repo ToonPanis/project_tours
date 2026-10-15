@@ -28,7 +28,8 @@
     "ticket-expired": "Dit ticket is verlopen.",
     "ticket-full": "Dit ticket is al geopend op evenveel telefoons als het personen telt.",
     "offline": "Geen verbinding. Controleer je internet en probeer opnieuw.",
-    "generic": "Er ging iets mis. Probeer het opnieuw."
+    "generic": "Er ging iets mis. Probeer het opnieuw.",
+    "ticket-used": "Dit ticket is al gebruikt om een spel aan te maken."
   },
   "success": {
     "title": "Bedankt!",
@@ -81,5 +82,10 @@
       "ticketRevoked": "Je ticketlink werkt niet meer.",
       "bankTime": "Afhankelijk van je bank kan het een paar dagen duren voor je de terugbetaling ziet."
     }
+  },
+  "groups": {
+    "title": "Je Hidden Pubs-ticket",
+    "usedBody": "Dit ticket hoort al bij een spel. Ga ernaar terug, of vraag de organisator om de link.",
+    "backToGame": "Naar het spel"
   }
 }

@@ -85,7 +85,7 @@ function order(id: string, overrides: Partial<Order> = {}): Order {
 }
 
 function grant(id: string, orderId: string, seats = 2): TicketGrant {
-  return { id, orderId, productId: "classics-of-antwerp", walkSlug: "classics-of-antwerp", seats, devicesUsed: 0, status: "active", createdAt: NOW.toISOString(), validUntil: LATER.toISOString() };
+  return { id, orderId, productId: "classics-of-antwerp", walkSlug: "classics-of-antwerp", seats, devicesUsed: 0, status: "active", createdAt: NOW.toISOString(), validUntil: LATER.toISOString(), gameCode: null };
 }
 
 type StoreFactory = { name: string; create: () => CommerceStore; cleanup?: () => Promise<void> };
@@ -301,6 +301,19 @@ describe.each(factories)("$name commerce store", ({ create, cleanup }) => {
 
     await store.updateGrant(first.id, { status: "revoked", devicesUsed: 0 });
     expect(await store.claimTicketSeat(first.id)).toBe(false);
+  });
+
+  test("a ticket's game (P3): reserved by only one of two at once, then confirmed; never on a revoked ticket", async () => {
+    const ticket = await store.insertGrantIfMissing(grant(unique("grant"), unique("order"), 4));
+    const reservations = await Promise.all([store.swapGrantGame(ticket.id, null, "pending:1:a"), store.swapGrantGame(ticket.id, null, "pending:1:b")]);
+    expect(reservations.filter(Boolean)).toHaveLength(1);
+    const winner = reservations[0] ? "pending:1:a" : "pending:1:b";
+    expect(await store.swapGrantGame(ticket.id, "pending:1:wrong", "ABCDEF")).toBe(false);
+    expect(await store.swapGrantGame(ticket.id, winner, "ABCDEF")).toBe(true);
+    expect((await store.getGrant(ticket.id))?.gameCode).toBe("ABCDEF");
+
+    const revoked = await store.insertGrantIfMissing({ ...grant(unique("grant"), unique("order")), status: "revoked" });
+    expect(await store.swapGrantGame(revoked.id, null, "pending:1:c")).toBe(false);
   });
 
   test("discounts: unique codes, uses reserved atomically up to the maximum, given back", async () => {

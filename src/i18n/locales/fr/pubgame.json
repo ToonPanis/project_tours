@@ -10,7 +10,8 @@
     "yourTeam": "Ton équipe",
     "hostNote": "Tu es l'hôte : tu lances la partie et tu valides les photos bonus. Tu joues aussi dans ta propre équipe.",
     "submit": "Créer la partie",
-    "creating": "Création…"
+    "creating": "Création…",
+    "ticketSeats": "Ton billet est pour {players}, toi compris."
   },
   "adults": {
     "confirm": "Tous les joueurs ont 18 ans ou plus",
@@ -50,7 +51,10 @@
     "host": "hôte",
     "start": "Lancer la partie",
     "startHint": "Chaque équipe doit compter au moins un joueur.",
-    "waitingForHost": "L'hôte lance la partie dès que tout le monde est là."
+    "waitingForHost": "L'hôte lance la partie dès que tout le monde est là.",
+    "whatsapp": "Partager sur WhatsApp",
+    "seats": "{taken} places prises sur {total}",
+    "full": "Les {total} places sont toutes prises."
   },
   "beery": {
     "portrait": "Beery, la mascotte de Hidden Pubs : une chope de bière souriante",
@@ -141,7 +145,8 @@
     "chooseTeam": "Choisis une équipe.",
     "invalidMedia": "Ce type de fichier n'est pas pris en charge. Utilise une photo ou une vidéo normale de ton téléphone.",
     "tooLarge": "Ce fichier est trop lourd. Une vidéo plus courte marche mieux.",
-    "uploadFailed": "L'envoi n'a pas marché. Vérifie la connexion et réessaie."
+    "uploadFailed": "L'envoi n'a pas marché. Vérifie la connexion et réessaie.",
+    "gameFull": "Cette partie est complète : toutes les places payées par le groupe sont prises. Demande à l'organisateur."
   },
   "claim": {
     "title": "Ouverture de ta partie…",

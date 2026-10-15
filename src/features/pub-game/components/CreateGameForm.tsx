@@ -17,8 +17,9 @@ import { TextField } from "./TextField";
  * The organiser sets up a game: teams, team size, team names, their own name
  * and team. The server creates the game and puts the organiser's player cookie
  * on this phone; then we go to the game's own page (/games/CODE).
+ * `ticketSeats` (P3): the persons on the organiser's ticket, shown as the game's places.
  */
-export function CreateGameForm({ walkSlug }: { walkSlug: string }) {
+export function CreateGameForm({ walkSlug, ticketSeats = null }: { walkSlug: string; ticketSeats?: number | null }) {
   const t = useT();
   const router = useRouter();
   const [teamCount, setTeamCount] = useState(2);
@@ -75,6 +76,11 @@ export function CreateGameForm({ walkSlug }: { walkSlug: string }) {
         <Beery>
           <p className="text-sm">{t("pubgame.create.hostNote")}</p>
         </Beery>
+        {ticketSeats !== null && (
+          <p className="rounded-sm border border-gold/40 bg-ink/30 p-3 text-parchment">
+            {t("pubgame.create.ticketSeats", { players: t.plural("commerce.persons", ticketSeats) })}
+          </p>
+        )}
 
         <NumberPicker
           label={t("pubgame.create.teamCount")}

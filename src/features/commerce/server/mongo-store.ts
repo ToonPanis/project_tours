@@ -521,6 +521,19 @@ export class MongoCommerceStore implements CommerceStore {
     });
   }
 
+  swapGrantGame(grantId: string, from: string | null, to: string | null) {
+    return this.run(async () => {
+      if (from !== null) key(from, 100);
+      if (to !== null) key(to, 100);
+      // "Change it only if it is still `from`": two organisers with the same ticket can't both reserve it.
+      const result = await this.collection(COLLECTIONS.ticketGrants).updateOne(
+        { _id: key(grantId, 100), status: "active", gameCode: from },
+        { $set: { gameCode: to } },
+      );
+      return result.modifiedCount === 1;
+    });
+  }
+
   deleteTicketDevices(grantId: string) {
     return this.run(async () => {
       await this.collection(COLLECTIONS.ticketDevices).deleteMany({ grantId: key(grantId, 100) });

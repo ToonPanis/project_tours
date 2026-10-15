@@ -10,7 +10,8 @@
     "yourTeam": "Your team",
     "hostNote": "You're the host: you start the game and approve the bonus photos. You also play in your own team.",
     "submit": "Create game",
-    "creating": "Creating…"
+    "creating": "Creating…",
+    "ticketSeats": "Your ticket is for {players}, you included."
   },
   "adults": {
     "confirm": "Everyone playing is 18 or older",
@@ -50,7 +51,10 @@
     "host": "host",
     "start": "Start the game",
     "startHint": "Every team needs at least one player.",
-    "waitingForHost": "The host starts the game when everyone is in."
+    "waitingForHost": "The host starts the game when everyone is in.",
+    "whatsapp": "Share on WhatsApp",
+    "seats": "{taken} of {total} places taken",
+    "full": "All {total} places are taken."
   },
   "beery": {
     "portrait": "Beery, the Hidden Pubs mascot: a cheerful beer mug",
@@ -141,7 +145,8 @@
     "chooseTeam": "Please choose a team.",
     "invalidMedia": "This file type isn't supported. Use a normal photo or video from your phone.",
     "tooLarge": "This file is too big. A shorter video works better.",
-    "uploadFailed": "Sending didn't work. Check the connection and try again."
+    "uploadFailed": "Sending didn't work. Check the connection and try again.",
+    "gameFull": "This game is full: every place the group paid for is taken. Ask the organiser."
   },
   "claim": {
     "title": "Opening your game…",

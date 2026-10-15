@@ -47,7 +47,13 @@ export function JoinGameForm({ code, lobby }: { code: string; lobby: Lobby }) {
     return (
       <PlayScreen eyebrow={t("pubgame.join.eyebrow", { code })} title={t("pubgame.join.title")} screenId="pub-game-join">
         <Beery>
-          <p>{lobby.phase === "finished" ? t("pubgame.join.finished") : t("pubgame.join.closed")}</p>
+          <p>
+            {lobby.phase === "finished"
+              ? t("pubgame.join.finished")
+              : lobby.seats && lobby.seats.taken >= lobby.seats.limit
+                ? t("pubgame.errors.gameFull")
+                : t("pubgame.join.closed")}
+          </p>
         </Beery>
       </PlayScreen>
     );
