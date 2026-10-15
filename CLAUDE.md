@@ -33,6 +33,7 @@ npm run test:e2e       # browser tests (Playwright); run `npm run build` first. 
 npm run i18n:check     # every language has every UI text (en = master)
 npm run db:setup       # Hidden Pubs: create the MongoDB collections, validation and indexes (db/mongo-schema.mjs) in MONGODB_URI; only adds, safe to rerun
 npm run db:check       # Hidden Pubs: database health check (ping, collections/indexes, active games); read only, prints no secrets
+npm run media:download -- <CODE>   # Hidden Pubs: download a game's evidence photos/videos from the private Blob store to media-downloads/ (git-ignored); needs MEDIA_DOWNLOAD_TOKEN
 npm run test:db        # Hidden Pubs: the MongoDB store tests against TEST_MONGODB_URI (a SEPARATE database whose name contains "test"; skipped without it)
 node scripts/generate-walking-routes.mjs <walk-folder>   # after changing coordinates.json
 node scripts/download-commons-images.mjs <walk-folder>   # after changing image-sources.json

@@ -49,3 +49,6 @@ next-env.d.ts
 /test-results/
 /playwright-report/
 /coverage/
+
+# Hidden Pubs evidence downloaded by npm run media:download (players' photos: never commit)
+/media-downloads/
