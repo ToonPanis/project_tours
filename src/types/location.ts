@@ -1,5 +1,6 @@
 import type { GeoCoordinates, ImageAsset } from "./common";
 import type { GuideStopContent } from "./guide";
+import type { LocationQuest } from "./quest";
 
 /** What kind of place a location is. (Whether it's a bonus stop is a separate flag.) */
 export type LocationType =
@@ -75,6 +76,8 @@ export interface WalkLocation {
   observationPrompt?: string;
   /** The narrated stop page, for guide walks. */
   guide?: GuideStopContent;
+  /** A "find it yourself" task: navigation shows a search zone instead of the exact place. */
+  quest?: LocationQuest;
   /** Not used by the app yet (the reducer decides when a stop unlocks). Kept for future rules. */
   unlockCondition?: UnlockCondition;
   /** Not shown by the app yet. */

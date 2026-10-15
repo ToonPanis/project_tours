@@ -3,14 +3,15 @@ import type { GuideSection } from "@/types/guide";
 
 /**
  * One part of a stop's story. A small label says what kind of text it is
- * (documented, interpretation, background, legend), so history and legend
- * never get mixed up.
+ * (documented, interpretation, background, legend, fiction), so history and
+ * stories never get mixed up.
  */
 export function StorySection({ section, t }: { section: GuideSection; t: Translator }) {
   const kindLabel = t(`guide.sectionLabels.${section.kind}`);
   // Don't repeat the label when the heading already says the same thing.
   const label = kindLabel && kindLabel !== section.heading ? kindLabel : null;
-  const isLegend = section.kind === "legend";
+  // Legends and fiction get the same "this is a story" look.
+  const isLegend = section.kind === "legend" || section.kind === "fiction";
 
   return (
     <section className={isLegend ? "rounded-sm border border-dashed border-gold-deep/60 p-5" : ""}>

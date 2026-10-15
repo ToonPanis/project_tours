@@ -5,6 +5,7 @@ import { GeoJSONSource, getVersion, getWorkerUrl, LngLatBounds, Map as MapLibreM
 import "maplibre-gl/dist/maplibre-gl.css";
 import { circleAround, distanceInMeters } from "@/lib/geo";
 import type { GeoCoordinates } from "@/types/common";
+import type { SearchZone } from "@/types/quest";
 import { ANTWERP_CENTER, MAP_STYLE_URL, mapWorkerUrl, OVERVIEW_DISTANCE_METERS } from "../config";
 import { shouldMoveCamera, type CameraTarget } from "../logic/camera";
 import { getMapHealth, INITIAL_MAP_HEALTH, updateMapHealth, type MapHealth, type MapHealthEvent } from "../logic/map-health";
@@ -14,6 +15,11 @@ export type MapOrientation = "follow-direction" | "north-up";
 interface WalkingMapProps {
   /** `coordinates` is null for a stop that isn't on the map yet: the map then shows Antwerp. */
   destination: { name: string; coordinates: GeoCoordinates | null };
+  /**
+   * A quest: draw this circle instead of a destination pin (the place itself stays
+   * hidden). `destination.coordinates` should then be the zone's centre.
+   */
+  searchZone?: SearchZone | null;
   /** The walking route line, if there is one. */
   routeGeometry: GeoCoordinates[] | null;
   userPosition: GeoCoordinates | null;
@@ -50,7 +56,7 @@ const toLngLat = (coordinates: GeoCoordinates): [number, number] => [coordinates
  * Our own GeoJSON sources (GPS accuracy circle, route line). Their "tiles" are made in
  * the browser on every GPS reading, so they must not count as map tiles loading again.
  */
-const OWN_SOURCE_IDS = ["accuracy", "route"];
+const OWN_SOURCE_IDS = ["accuracy", "route", "zone"];
 
 /** True for an event about a tile of the street map itself (MapLibre sets `tile` and `sourceId`). */
 function isStreetMapTileEvent(event: object): boolean {
@@ -103,6 +109,40 @@ function drawAccuracyCircle(map: MapLibreMap, position: GeoCoordinates | null, a
   });
 }
 
+function drawSearchZone(map: MapLibreMap, zone: SearchZone | null) {
+  const source = map.getSource("zone") as GeoJSONSource | undefined;
+  if (!source) return; // style not loaded yet
+  void source.setData({
+    type: "FeatureCollection",
+    features: zone
+      ? [
+          {
+            type: "Feature",
+            properties: {},
+            geometry: { type: "Polygon", coordinates: [circleAround(zone.center, zone.radiusMeters).map(toLngLat)] },
+          },
+        ]
+      : [],
+  });
+}
+
+/**
+ * During a quest, the street map's own points of interest (monuments, shops, with
+ * their names) are hidden: the searched building could otherwise be labelled on the
+ * map. Streets and their names stay. The map is created anew for every leg, so the
+ * next stop has them again.
+ */
+function hidePointsOfInterest(map: MapLibreMap) {
+  for (const layer of map.getStyle().layers ?? []) {
+    if ("source-layer" in layer && layer["source-layer"] === "poi") map.setLayoutProperty(layer.id, "visibility", "none");
+  }
+}
+
+/** The points the camera keeps in view around a search zone (its outline, coarsely). */
+function zoneOutline(zone: SearchZone): GeoCoordinates[] {
+  return circleAround(zone.center, zone.radiusMeters, 8);
+}
+
 /** True when the visitor asked for less motion: the camera then jumps instead of gliding. */
 function prefersReducedMotion(): boolean {
   return typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true;
@@ -133,6 +173,7 @@ function boundsAround(points: GeoCoordinates[]): LngLatBounds {
  */
 export default function WalkingMap({
   destination,
+  searchZone = null,
   routeGeometry,
   userPosition,
   userAccuracyMeters,
@@ -151,6 +192,7 @@ export default function WalkingMap({
   const onUserMovedMapRef = useRef(onUserMovedMap);
   // The latest route and position, so the map can draw them as soon as its style has loaded.
   const routeGeometryRef = useRef(routeGeometry);
+  const searchZoneRef = useRef(searchZone);
   const accuracyRef = useRef({ position: userPosition, meters: userAccuracyMeters });
   // Where the camera was last pointed while following (null = move on the next update).
   const lastCameraRef = useRef<CameraTarget | null>(null);
@@ -215,6 +257,22 @@ export default function WalkingMap({
 
     map.on("load", () => {
       report({ type: "loaded" });
+      if (searchZoneRef.current) hidePointsOfInterest(map);
+      // Search zone of a quest, under everything else: a soft gold area with a dashed edge.
+      map.addSource("zone", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+      map.addLayer({
+        id: "zone-fill",
+        type: "fill",
+        source: "zone",
+        paint: { "fill-color": "#d9a54e", "fill-opacity": 0.18 },
+      });
+      map.addLayer({
+        id: "zone-outline",
+        type: "line",
+        source: "zone",
+        paint: { "line-color": "#8a5a14", "line-width": 3, "line-dasharray": [2, 1.5] },
+      });
+      drawSearchZone(map, searchZoneRef.current);
       // GPS accuracy circle, under the route line.
       map.addSource("accuracy", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
       map.addLayer({
@@ -258,17 +316,25 @@ export default function WalkingMap({
   }, []);
 
   // Destination marker (only the current destination: never future stops).
+  // A quest shows its search zone instead: no pin, so the place isn't given away.
   const destinationCoordinates = destination.coordinates;
+  const hasSearchZone = searchZone !== null;
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !destinationCoordinates) return;
+    if (!map || !destinationCoordinates || hasSearchZone) return;
     const marker = new Marker({ element: createMarkerElement("walking-map-destination", destination.name) })
       .setLngLat(toLngLat(destinationCoordinates))
       .addTo(map);
     return () => {
       marker.remove();
     };
-  }, [destination.name, destinationCoordinates]);
+  }, [destination.name, destinationCoordinates, hasSearchZone]);
+
+  // Search zone (drawn now if the map is ready, otherwise by the "load" handler).
+  useEffect(() => {
+    searchZoneRef.current = searchZone;
+    if (mapRef.current) drawSearchZone(mapRef.current, searchZone);
+  }, [searchZone]);
 
   // Route line (drawn now if the map is ready, otherwise by the "load" handler).
   useEffect(() => {
@@ -323,8 +389,9 @@ export default function WalkingMap({
       lastCameraRef.current = target;
 
       if (destinationCoordinates) {
-        // Walker and next stop always in view; the map zooms in as the walker gets closer.
-        map.fitBounds(boundsAround([userPosition, destinationCoordinates]), {
+        // Walker and next stop (or the whole search zone) always in view; the map zooms in as the walker gets closer.
+        const keepInView = searchZone ? zoneOutline(searchZone) : [destinationCoordinates];
+        map.fitBounds(boundsAround([userPosition, ...keepInView]), {
           padding: MARKER_PADDING,
           bearing: target.bearing,
           maxZoom: 18,
@@ -337,13 +404,16 @@ export default function WalkingMap({
       // No position (yet, or GPS switched off): once one arrives, the camera must move to it.
       lastCameraRef.current = null;
       if (routeGeometry && routeGeometry.length > 1) {
-        // Show the whole route.
-        map.fitBounds(boundsAround(routeGeometry), { padding: MARKER_PADDING, bearing: 0, duration: 0 });
+        // Show the whole route (and the search zone at its end).
+        const zonePoints = searchZone ? zoneOutline(searchZone) : [];
+        map.fitBounds(boundsAround([...routeGeometry, ...zonePoints]), { padding: MARKER_PADDING, bearing: 0, duration: 0 });
+      } else if (searchZone) {
+        map.fitBounds(boundsAround(zoneOutline(searchZone)), { padding: MARKER_PADDING, bearing: 0, duration: 0 });
       } else {
         map.easeTo({ center: toLngLat(destinationCoordinates ?? ANTWERP_CENTER), bearing: 0, duration: 0 });
       }
     }
-  }, [userPosition, isFollowing, orientation, travelBearing, routeGeometry, destinationCoordinates]);
+  }, [userPosition, isFollowing, orientation, travelBearing, routeGeometry, destinationCoordinates, searchZone]);
 
   return (
     <div className="relative h-full w-full">

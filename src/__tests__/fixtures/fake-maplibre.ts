@@ -23,6 +23,17 @@ export const fakeMap = {
   cameraMoves: [] as CameraMove[],
   isRemoved: false,
   workerUrl: "",
+  /** Markers on the map right now (added and not removed). */
+  markerCount: 0,
+  /** Our own sources and layers the app added. */
+  sourceIds: [] as string[],
+  /** Layers of the street-map style the app switched off. */
+  hiddenLayerIds: [] as string[],
+  /** The street-map style's layers (a point-of-interest layer and a street layer). */
+  styleLayers: [
+    { id: "poi_r1", type: "symbol", "source-layer": "poi" },
+    { id: "highway-name-major", type: "symbol", "source-layer": "transportation_name" },
+  ] as Array<Record<string, string>>,
   fire(type: string, event: object = {}) {
     for (const handler of this.handlers.get(type) ?? []) handler(event);
   },
@@ -34,6 +45,8 @@ class FakeMap {
     fakeMap.options = options;
     fakeMap.cameraMoves = [];
     fakeMap.isRemoved = false;
+    fakeMap.sourceIds = [];
+    fakeMap.hiddenLayerIds = [];
   }
   on(type: string, handler: Handler) {
     fakeMap.handlers.set(type, [...(fakeMap.handlers.get(type) ?? []), handler]);
@@ -45,8 +58,16 @@ class FakeMap {
     return false;
   }
   addImage() {}
-  addSource() {}
+  addSource(id: string) {
+    fakeMap.sourceIds.push(id);
+  }
   addLayer() {}
+  getStyle() {
+    return { layers: fakeMap.styleLayers };
+  }
+  setLayoutProperty(layerId: string, property: string, value: unknown) {
+    if (property === "visibility" && value === "none") fakeMap.hiddenLayerIds.push(layerId);
+  }
   getSource() {
     return undefined;
   }
@@ -69,9 +90,12 @@ class FakeMarker {
     return this;
   }
   addTo() {
+    fakeMap.markerCount += 1;
     return this;
   }
-  remove() {}
+  remove() {
+    fakeMap.markerCount -= 1;
+  }
 }
 
 class FakeLngLatBounds {
