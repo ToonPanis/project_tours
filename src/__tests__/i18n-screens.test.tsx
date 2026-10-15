@@ -8,6 +8,7 @@ import { createWalkSession } from "@/features/walk-session/logic/create-session"
 import { formatElapsedTime, getSessionStats } from "@/features/walk-session/logic/session-stats";
 import { getWalkCopy } from "@/features/walk-session/logic/walk-copy";
 import { LocaleProvider } from "@/i18n/client";
+import { messagesByLocale } from "@/i18n/messages";
 import { matchLocale } from "@/i18n/config";
 import { createTranslator } from "@/i18n/translate";
 
@@ -34,7 +35,7 @@ describe("M-05: the header and route panel in Dutch", () => {
 
   test("the header shows the stop counter and the route button in Dutch", () => {
     render(
-      <LocaleProvider locale="nl">
+      <LocaleProvider locale="nl" messages={messagesByLocale.nl}>
         <PlayHeader walk={walk} session={session} onOpenRoute={() => {}} />
       </LocaleProvider>,
     );
@@ -45,7 +46,7 @@ describe("M-05: the header and route panel in Dutch", () => {
 
   test("the route panel's headings are in Dutch", () => {
     render(
-      <LocaleProvider locale="nl">
+      <LocaleProvider locale="nl" messages={messagesByLocale.nl}>
         <RoutePanel walk={walk} session={session} copy={copy} open onClose={() => {}} />
       </LocaleProvider>,
     );

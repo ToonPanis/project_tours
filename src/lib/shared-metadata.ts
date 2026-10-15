@@ -24,7 +24,7 @@ const OPEN_GRAPH_LOCALES: Record<Locale, string> = {
   uk: "uk_UA",
 };
 
-export function toOpenGraphLocale(locale: Locale): string {
+function toOpenGraphLocale(locale: Locale): string {
   return OPEN_GRAPH_LOCALES[locale];
 }
 

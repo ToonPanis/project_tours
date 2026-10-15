@@ -11,6 +11,7 @@ import { useCafeReveal } from "../client/useCafeReveal";
 import type { PubGameHandle } from "../client/usePubGame";
 import { Beery } from "./Beery";
 import { FormError } from "./FormError";
+import { currentCafeId } from "../logic/view-helpers";
 
 /** History is labelled with its research status, legends as legends, a café's own story as such (CLAUDE.md). */
 function labelOf(funFact: FunFact): MessageKey {
@@ -28,7 +29,7 @@ function labelOf(funFact: FunFact): MessageKey {
 export function FunFactStep({ game }: { game: PubGameHandle }) {
   const t = useT();
   const { view, act, busy } = game;
-  const cafeId = view.team.route[view.team.cafeIndex];
+  const cafeId = currentCafeId(view);
   const funFact = useCafeReveal(game.code, cafeId, "fun-fact")?.funFact;
   const isLast = view.team.cafeIndex === view.team.route.length - 1;
   const [error, setError] = useState<string | null>(null);

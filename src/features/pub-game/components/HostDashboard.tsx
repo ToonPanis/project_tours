@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { PlayScreen } from "@/features/walk-session/components/PlayScreen";
 import { useT } from "@/i18n/client";
+import { shareOrCopy } from "../client/share";
 import { createPlayerLinkRequest } from "../client/api";
 import type { PubGameTexts } from "@/data/walks/hidden-pubs/game/content/types";
 import { PubGameTextsProvider } from "../client/texts-context";
@@ -26,8 +27,8 @@ interface HostDashboardProps {
 }
 
 /**
- * The organiser's overview (D33): every team's progress, evidence to review
- * (the review screen itself comes in stage 8), adding a late player, ending the game.
+ * The organiser's overview (D33): every team's progress, evidence to review,
+ * adding a late player, ending the game.
  * Shows only cafés completed, never where a team is (no positions are ever sent).
  */
 export function HostDashboard({ texts, ...props }: HostDashboardProps) {
@@ -66,20 +67,8 @@ function Dashboard({ code, initialView, initialVersion }: Omit<HostDashboardProp
   }
 
   async function shareLink(url: string, name: string) {
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: t("pubgame.host.playerLinkFor", { name }), url });
-        return;
-      } catch {
-        // Cancelled or not allowed: copy instead.
-      }
-    }
-    try {
-      await navigator.clipboard.writeText(url);
-      setLinkCopied(true);
-    } catch {
-      setLinkCopied(false);
-    }
+    const result = await shareOrCopy({ title: t("pubgame.host.playerLinkFor", { name }), url }, url);
+    if (result !== "shared") setLinkCopied(result === "copied");
   }
 
   async function addPlayer(event: FormEvent<HTMLFormElement>) {

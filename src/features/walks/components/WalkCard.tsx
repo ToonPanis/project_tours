@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
+import { LinkPendingHint } from "@/components/ui/LinkPendingHint";
 import type { WalkSummary } from "@/types/walk";
 import type { Translator } from "@/i18n/translate";
 import { formatDistance, formatDurationRange, formatPrice } from "../utils/format-walk";
@@ -11,9 +12,11 @@ interface WalkCardProps {
   headingLevel?: "h2" | "h3";
   /** Translator of the current language (English when omitted). */
   t: Translator;
+  /** Load the cover right away: for the first card, the biggest thing on a phone screen (LCP). */
+  preloadCover?: boolean;
 }
 
-export function WalkCard({ walk, headingLevel: Heading = "h3", t }: WalkCardProps) {
+export function WalkCard({ walk, headingLevel: Heading = "h3", t, preloadCover = false }: WalkCardProps) {
   const walkUrl = `/walks/${walk.slug}`;
 
   return (
@@ -24,7 +27,7 @@ export function WalkCard({ walk, headingLevel: Heading = "h3", t }: WalkCardProp
       className="group relative flex w-full flex-col overflow-hidden rounded-sm border border-gold-deep/25 bg-parchment shadow-sm transition-shadow hover:shadow-lg focus-within:ring-2 focus-within:ring-gold"
     >
       <div className="relative aspect-[16/9]">
-        <WalkCover image={walk.coverImage} sizes="(min-width: 640px) 50vw, 100vw" />
+        <WalkCover image={walk.coverImage} sizes="(min-width: 640px) 50vw, 100vw" preload={preloadCover} />
         <p className="absolute bottom-5 left-6 font-display text-sm uppercase tracking-[0.2em] text-gold">
           {walk.city}
         </p>
@@ -42,6 +45,8 @@ export function WalkCard({ walk, headingLevel: Heading = "h3", t }: WalkCardProp
             className="after:absolute after:inset-0 focus-visible:outline-none"
           >
             {walk.title}
+            {/* Covers the whole card (its nearest positioned box), like the link's click area. */}
+            <LinkPendingHint className="bg-gold-deep" />
           </Link>
         </Heading>
 

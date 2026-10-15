@@ -18,8 +18,6 @@ export type Maneuver =
 
 export interface NavigationStep {
   maneuver: Maneuver;
-  /** Short instruction, e.g. "Turn right". */
-  instruction: string;
   /** Street you walk on after this step, if known. */
   streetName?: string;
   /** Where the maneuver happens. */

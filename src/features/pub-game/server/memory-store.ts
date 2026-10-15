@@ -34,6 +34,10 @@ export class MemoryGameStore implements GameStore {
     return found ? structuredClone(found.game) : null;
   }
 
+  async getVersion(code: string): Promise<number | null> {
+    return this.find(code)?.game.version ?? null;
+  }
+
   async commitAction(input: CommitInput): Promise<CommitResult> {
     const found = this.find(input.code);
     if (!found) return { status: "conflict" };
@@ -53,11 +57,12 @@ export class MemoryGameStore implements GameStore {
     return this.find(code)?.actions.get(actionId) ?? null;
   }
 
-  async eventsSince(code: string, version: number, limit: number): Promise<StoredEvent[]> {
-    const events = this.find(code)?.events.filter((item) => item.version > version) ?? [];
+  async eventsSince(code: string, afterVersion: number, upToVersion: number, limit: number): Promise<StoredEvent[]> {
+    const events = this.find(code)?.events.filter((item) => item.version > afterVersion && item.version <= upToVersion) ?? [];
     return structuredClone(events.slice(0, limit));
   }
 
+  // (`expiresAt` isn't needed here: a token lives inside its game's memory and goes with it.)
   async savePlayerToken(code: string, tokenHash: string, playerId: string): Promise<void> {
     this.find(code)?.tokens.set(tokenHash, playerId);
   }

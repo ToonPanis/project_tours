@@ -5,7 +5,7 @@ import { pubGameDefinition } from "@/data/walks/hidden-pubs/game/definition";
 import { pubGameDrinks } from "@/data/walks/hidden-pubs/game/drinks";
 import { CARD_NAMES } from "@/features/pub-game/card-names";
 import { POLL_INTERVAL_MS } from "@/features/pub-game/client/usePubGame";
-import { isPopupEvent } from "@/features/pub-game/components/EventPopup";
+import { isPopupEvent } from "@/features/pub-game/logic/popups";
 import { PubGame } from "@/features/pub-game/components/PubGame";
 import { applyPubGameAction } from "@/features/pub-game/logic/apply-action";
 import { parseCard, RANKS } from "@/features/pub-game/logic/cards";

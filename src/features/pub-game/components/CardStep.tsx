@@ -10,7 +10,7 @@ import type { PubGameHandle } from "../client/usePubGame";
 import { MAX_RULE_LENGTH } from "../config";
 import { parseCard } from "../logic/cards";
 import type { PlayerView } from "../logic/player-view";
-import { allTeams, playerName, teammates } from "../logic/view-helpers";
+import { allTeams, currentCafeId, playerName, teammates } from "../logic/view-helpers";
 import { CardBack, PlayingCard } from "./PlayingCard";
 import { FormError } from "./FormError";
 import { TextField } from "./TextField";
@@ -54,9 +54,10 @@ export function CardStep({ game, onRoundSeen }: CardStepProps) {
     <PlayScreen
       eyebrow={t("pubgame.cards.eyebrow", { current: team.cafeIndex + 1, total: team.route.length })}
       title={t("pubgame.cards.title")}
-      screenId={`pub-game-cards-${team.route[team.cafeIndex]}`}
+      screenId={`pub-game-cards-${currentCafeId(view)}`}
     >
-      {current && <DrawnCard view={view} card={current} />}
+      {/* Always mounted, so the first card is announced too (not only later ones). */}
+      <div aria-live="polite">{current && <DrawnCard view={view} card={current} />}</div>
 
       {pending && canAct && <FollowUp view={view} card={pending} busy={busy} run={run} />}
 
@@ -127,7 +128,7 @@ function DrawnCard({ view, card }: { view: PlayerView; card: CurrentCard }) {
   const t = useT();
   const { rank } = parseCard(card.cardId);
   return (
-    <section className="flex flex-col items-center gap-3 text-center" aria-live="polite">
+    <section className="flex flex-col items-center gap-3 text-center">
       <p className="text-sm uppercase tracking-wider text-gold">{t("pubgame.cards.drew", { name: playerName(view, card.playerId) })}</p>
       {/* Keyed by card: a new card flips in again. */}
       <PlayingCard key={card.cardId} cardId={card.cardId} />

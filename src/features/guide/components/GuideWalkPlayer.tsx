@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { getDetourCost } from "@/features/navigation/logic/route-legs";
+import { usePreloadMap } from "@/features/navigation/preload-map";
 import { PlayHeader } from "@/features/walk-session/components/PlayHeader";
 import { PlayScreen } from "@/features/walk-session/components/PlayScreen";
 import { RoutePanel } from "@/features/walk-session/components/RoutePanel";
@@ -39,6 +40,8 @@ export function GuideWalkPlayer({ walk }: { walk: Walk }) {
   const [seenChapterIds, setSeenChapterIds] = useState<string[]>([]);
 
   const t = useT();
+  // While the start screen or a stop is read, the map code downloads in the background.
+  usePreloadMap();
   const copy = getWalkCopy(walk, t);
   const orderedLocations = getOrderedLocations(walk);
 

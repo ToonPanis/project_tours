@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ComponentProps } from "react";
+import { LinkPendingHint } from "./LinkPendingHint";
 
 /**
  * "outline" is for dark backgrounds, "outline-light" for parchment backgrounds,
@@ -29,16 +30,17 @@ type ButtonLinkProps = ComponentProps<typeof Link> & {
   variant?: ButtonVariant;
 };
 
-/** A Next.js <Link> styled as a button. */
+/** A Next.js <Link> styled as a button. Dims softly while the page it opens loads. */
 export function ButtonLink({
   variant = "primary",
   className = "",
+  children,
   ...linkProps
 }: ButtonLinkProps) {
   return (
-    <Link
-      className={`${getButtonClasses(variant)} ${className}`}
-      {...linkProps}
-    />
+    <Link className={`relative ${getButtonClasses(variant)} ${className}`} {...linkProps}>
+      {children}
+      <LinkPendingHint />
+    </Link>
   );
 }

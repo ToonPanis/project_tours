@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { PlayScreen } from "@/features/walk-session/components/PlayScreen";
 import { useT } from "@/i18n/client";
+import { shareOrCopy } from "../client/share";
 import type { PubGameHandle } from "../client/usePubGame";
 import type { QrCode } from "../logic/qr";
 import { allTeams } from "../logic/view-helpers";
@@ -33,21 +34,8 @@ export function LobbyScreen({ code, invite, game }: LobbyScreenProps) {
   const everyTeamHasPlayers = teams.every((team) => view.players.some((player) => player.teamId === team.id));
 
   async function share() {
-    // The phone's own share sheet (WhatsApp, Messages…) when there is one, else copy.
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: t("pubgame.lobby.shareText"), url: joinUrl });
-        return;
-      } catch {
-        // Cancelled by the user, or not allowed: fall back to copying.
-      }
-    }
-    try {
-      await navigator.clipboard.writeText(joinUrl);
-      setCopied(true);
-    } catch {
-      setCopied(false);
-    }
+    const result = await shareOrCopy({ title: t("pubgame.lobby.shareText"), url: joinUrl }, joinUrl);
+    if (result !== "shared") setCopied(result === "copied");
   }
 
   async function start() {

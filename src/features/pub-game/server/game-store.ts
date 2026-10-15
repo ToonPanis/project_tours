@@ -50,13 +50,22 @@ export interface GameStore {
   createGame(game: StoredGame): Promise<boolean>;
   /** The game, or null when it doesn't exist or has expired. */
   getGame(code: string): Promise<StoredGame | null>;
+  /**
+   * Only the game's version (null: no such game, or expired). Polls ask this first:
+   * when the phone already has this version, the whole game isn't read at all.
+   */
+  getVersion(code: string): Promise<number | null>;
   commitAction(input: CommitInput): Promise<CommitResult>;
   /** The version an action id produced, or null when the action id is unknown. */
   findAction(code: string, actionId: string): Promise<number | null>;
-  /** Events of actions after `version`, oldest first, at most `limit`. */
-  eventsSince(code: string, version: number, limit: number): Promise<StoredEvent[]>;
+  /**
+   * Events of the actions after `afterVersion` up to and including `upToVersion`
+   * (the version of the state they're sent with), oldest first, at most `limit`.
+   */
+  eventsSince(code: string, afterVersion: number, upToVersion: number, limit: number): Promise<StoredEvent[]>;
 
   /** Player identity: only a hash of the secret in the player's cookie is stored. */
-  savePlayerToken(code: string, tokenHash: string, playerId: string): Promise<void>;
+  /** `expiresAt`: the game's, so the token is deleted together with it. */
+  savePlayerToken(code: string, tokenHash: string, playerId: string, expiresAt: string): Promise<void>;
   findPlayerByToken(code: string, tokenHash: string): Promise<string | null>;
 }

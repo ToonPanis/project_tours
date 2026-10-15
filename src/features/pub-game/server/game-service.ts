@@ -1,6 +1,6 @@
 import type { AnswerKey, PubGameAction, PubGameDefinition, PubGameState } from "@/types/pub-game";
 import { MAX_PLAYERS_PER_TEAM, MAX_TEAMS } from "../config";
-import { applyPubGameAction, teamPlayers } from "../logic/apply-action";
+import { applyPubGameAction, findTask, teamPlayers } from "../logic/apply-action";
 import { isValidActionId, parseClientAction, toGameAction } from "../logic/client-action";
 import { createPubGame } from "../logic/create-game";
 import type { Locale } from "@/i18n/config";
@@ -57,6 +57,8 @@ const fail = (status: number, error: string): ServiceResult<never> => ({ ok: fal
 const MAX_EVENTS_PER_POLL = 100;
 /** Retries when another phone changed the game at the same moment. */
 const MAX_COMMIT_ATTEMPTS = 5;
+/** Before a retry: a short random pause, so phones that collided don't collide again right away. */
+const RETRY_PAUSE_MS = 20;
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null;
 
@@ -107,10 +109,7 @@ export async function createGame(ctx: GameContext, walkSlug: string, body: unkno
   }
 
   const createdAt = ctx.now();
-  const lifetime = GAME_LIFETIME_DAYS * 24 * 60 * 60 * 1000;
-  const expiresAt = new Date(createdAt.getTime() + lifetime);
-  // Privacy (D29): photos and videos older than a game's lifetime go, like the games themselves.
-  await ctx.media.deleteOlderThan(new Date(createdAt.getTime() - lifetime)).catch(() => 0);
+  const expiresAt = new Date(createdAt.getTime() + GAME_LIFETIME_MS);
   // A new code until one is free (with 31^6 ≈ 900 million codes, almost always the first).
   for (let attempt = 0; attempt < 10; attempt++) {
     const code = newGameCode();
@@ -124,11 +123,47 @@ export async function createGame(ctx: GameContext, walkSlug: string, body: unkno
     });
     if (created) {
       const token = newPlayerToken();
-      await ctx.store.savePlayerToken(code, hashToken(token), playerId);
+      await ctx.store.savePlayerToken(code, hashToken(token), playerId, expiresAt.toISOString());
       return ok({ code, playerId, token });
     }
   }
   return fail(503, "busy");
+}
+
+// ─── Deleting old photos and videos (privacy, D29) ──────────────────────────
+
+const GAME_LIFETIME_MS = GAME_LIFETIME_DAYS * 24 * 60 * 60 * 1000;
+/** The quick cleanup after creating a game runs at most this often per server instance. */
+const CLEANUP_INTERVAL_MS = 60 * 60 * 1000;
+let lastCleanupAt: number | null = null;
+
+/**
+ * Deletes the photos and videos older than a game's lifetime (7 days), like
+ * MongoDB deletes the games themselves. MongoDB does that on its own (TTL);
+ * the Blob store doesn't, so this runs every day (Vercel Cron:
+ * /api/cron/media-cleanup) and, as a safety net, after a game is created.
+ * Returns how many files were deleted.
+ */
+export async function deleteExpiredMedia(ctx: GameContext): Promise<number> {
+  lastCleanupAt = ctx.now().getTime();
+  return ctx.media.deleteOlderThan(new Date(lastCleanupAt - GAME_LIFETIME_MS));
+}
+
+/**
+ * The safety net (in case the daily job isn't set up): run by POST /api/games
+ * AFTER the answer has gone out, so creating a game never waits for it, and at
+ * most once an hour per server instance (listing the Blob store costs operations).
+ */
+export async function deleteExpiredMediaIfDue(ctx: GameContext): Promise<void> {
+  if (lastCleanupAt !== null && ctx.now().getTime() - lastCleanupAt < CLEANUP_INTERVAL_MS) return;
+  await deleteExpiredMedia(ctx).catch((error: unknown) => {
+    console.error(`[Hidden Pubs] media cleanup failed: ${error instanceof Error ? error.name : "unknown error"}`);
+  });
+}
+
+/** Test helper: as if no cleanup ran on this instance yet. */
+export function resetMediaCleanupClock(): void {
+  lastCleanupAt = null;
 }
 
 // ─── Lobby and joining ──────────────────────────────────────────────────────
@@ -185,7 +220,7 @@ export async function joinGame(
   if (!result.ok) return result;
 
   const token = newPlayerToken();
-  await ctx.store.savePlayerToken(code, hashToken(token), playerId);
+  await ctx.store.savePlayerToken(code, hashToken(token), playerId, game.expiresAt);
   return ok({ playerId, token });
 }
 
@@ -209,7 +244,7 @@ export async function createPlayerLink(
   if (!game.state.players.some((player) => player.id === playerId)) return fail(404, "unknown-player");
 
   const token = newPlayerToken();
-  await ctx.store.savePlayerToken(code, hashToken(token), playerId);
+  await ctx.store.savePlayerToken(code, hashToken(token), playerId, game.expiresAt);
   return ok({ token });
 }
 
@@ -241,16 +276,18 @@ export async function getGameUpdate(
   token: string | null,
   since: number | null,
 ): Promise<ServiceResult<GameUpdate>> {
+  if (!isGameCode(code)) return fail(404, "unknown-game");
+  // Every phone asks this every 2 seconds, and mostly nothing changed: first only the
+  // version (a few bytes), at the same time as the player. The whole game only when needed.
+  const [version, playerId] = await Promise.all([ctx.store.getVersion(code), findPlayer(ctx, code, token)]);
+  if (version === null) return fail(404, "unknown-game");
+  if (!playerId) return fail(401, "not-joined");
+  if (since === version) return ok({ changed: false, version });
+
   const game = await loadGame(ctx, code);
   if (!game) return fail(404, "unknown-game");
-  const playerId = await findPlayer(ctx, code, token);
-  if (!playerId) return fail(401, "not-joined");
-
-  if (since === game.version) return ok({ changed: false, version: game.version });
-
   const data = gameDataOf(ctx, game);
-  const stored = since === null ? [] : await ctx.store.eventsSince(code, since, MAX_EVENTS_PER_POLL);
-  const events = stored.filter((item) => canSeeEvent(game.state, playerId, item.event));
+  const events = since === null ? [] : await visibleEventsSince(ctx, game, playerId, since);
 
   return ok({
     changed: true,
@@ -282,7 +319,7 @@ export async function performAction(
   if (clientAction.type === "SUBMIT_EVIDENCE") {
     const game = await loadGame(ctx, code);
     if (!game) return fail(404, "unknown-game");
-    const kind = taskKind(gameDataOf(ctx, game), clientAction.taskId);
+    const kind = findTask(gameDataOf(ctx, game).definition, clientAction.taskId)?.task.evidence;
     if (!kind) return fail(409, "unknown-task");
     if (!isMediaIdOfGame(clientAction.mediaId, code)) return fail(400, "invalid-media");
     const info = await ctx.media.info(clientAction.mediaId);
@@ -298,18 +335,18 @@ export async function performAction(
   );
   if (!result.ok) return result;
 
-  const game = await loadGame(ctx, code);
+  // The game as this action left it. Only a repeated tap (already saved earlier) needs to read it again.
+  const game = result.data.game ?? (await loadGame(ctx, code));
   if (!game) return fail(404, "unknown-game");
   // Every event since the version the phone had (`knownVersion`): this action's and anything
   // other phones did meanwhile. The phone jumps to the newest version, so its next poll
   // won't ask for those again. Phones show each event once (by its version).
   const known = typeof body.knownVersion === "number" && Number.isInteger(body.knownVersion) ? body.knownVersion : null;
   const since = Math.max(0, Math.min(known ?? result.data.version - 1, result.data.version - 1));
-  const stored = await ctx.store.eventsSince(code, since, MAX_EVENTS_PER_POLL);
   return ok({
     version: game.version,
     view: toPlayerView(gameDataOf(ctx, game).definition, game.state, playerId),
-    events: stored.filter((item) => canSeeEvent(game.state, playerId, item.event)),
+    events: await visibleEventsSince(ctx, game, playerId, since),
   });
 }
 
@@ -357,15 +394,12 @@ export async function getReveal(
 // ─── Evidence photos and videos ─────────────────────────────────────────────
 
 /** Whether a task needs a photo or a video, or null for an unknown task. */
-function taskKind(data: GameData, taskId: string): EvidenceKind | null {
-  for (const cafe of data.definition.cafes) {
-    const task = cafe.tasks.find((candidate) => candidate.id === taskId);
-    if (task) return task.evidence;
-  }
-  return null;
-}
-
-/** The player of the cookie, and what their file must be for this task. */
+/**
+ * The player of the cookie, and what their file must be for this task. Only
+ * when the team may send it right now: the game's own rules are asked with a
+ * trial SUBMIT_EVIDENCE (the right café and step, not done yet, or a rejected
+ * one sent again: D26). So nobody gets upload tokens for tasks they can't submit.
+ */
 async function uploader(
   ctx: GameContext,
   code: string,
@@ -377,9 +411,20 @@ async function uploader(
   const playerId = await findPlayer(ctx, code, token);
   if (!playerId) return fail(401, "not-joined");
   if (game.state.phase !== "playing") return fail(409, "game-not-started");
-  const kind = typeof taskId === "string" ? taskKind(gameDataOf(ctx, game), taskId) : null;
-  if (!kind) return fail(400, "unknown-task");
-  return ok({ playerId, kind });
+  const { definition, answerKey } = gameDataOf(ctx, game);
+  const located = typeof taskId === "string" ? findTask(definition, taskId) : null;
+  if (!located) return fail(400, "unknown-task");
+
+  const trial = applyPubGameAction(definition, answerKey, game.state, playerId, {
+    type: "SUBMIT_EVIDENCE",
+    submissionId: "upload-check",
+    taskId: located.task.id,
+    mediaId: `${mediaPrefix(code)}upload-check.jpg`,
+    participantIds: [playerId],
+    at: ctx.now().toISOString(),
+  });
+  if (!trial.ok) return fail(409, trial.error);
+  return ok({ playerId, kind: located.task.evidence });
 }
 
 /**
@@ -428,7 +473,8 @@ export async function authorizeBlobUpload(
   }
   const who = await uploader(ctx, code, token, taskId);
   if (!who.ok) return who;
-  if (!pathname.startsWith(mediaPrefix(code)) || pathname.includes("..")) return fail(400, "invalid-media");
+  // The same strict pattern SUBMIT_EVIDENCE checks later: this game's folder, a plain file name.
+  if (!isMediaIdOfGame(pathname, code)) return fail(400, "invalid-media");
   return ok({
     allowedContentTypes: ALLOWED_TYPES[who.data.kind],
     maximumSizeInBytes: maxBytesFor(who.data.kind),
@@ -491,13 +537,13 @@ async function commitWithRetry(
   playerId: string,
   actionId: string,
   makeAction: (state: PubGameState, definition: PubGameDefinition) => PubGameAction | null,
-): Promise<ServiceResult<{ version: number }>> {
+): Promise<ServiceResult<{ version: number; game: StoredGame | null }>> {
   for (let attempt = 0; attempt < MAX_COMMIT_ATTEMPTS; attempt++) {
-    const game = await loadGame(ctx, code);
+    if (attempt > 0) await pause(RETRY_PAUSE_MS * attempt * (0.5 + Math.random()));
+    // Both at once: the game, and whether this tap was already saved (a retry).
+    const [game, earlier] = await Promise.all([loadGame(ctx, code), ctx.store.findAction(code, actionId)]);
     if (!game) return fail(404, "unknown-game");
-
-    const earlier = await ctx.store.findAction(code, actionId);
-    if (earlier !== null) return ok({ version: earlier });
+    if (earlier !== null) return ok({ version: earlier, game: null });
 
     const { definition, answerKey } = gameDataOf(ctx, game);
     const action = makeAction(game.state, definition);
@@ -515,7 +561,24 @@ async function commitWithRetry(
       state: result.state,
       events: result.events,
     });
-    if (saved.status !== "conflict") return ok({ version: saved.version });
+    if (saved.status === "committed") {
+      return ok({ version: saved.version, game: { ...game, state: result.state, version: saved.version } });
+    }
+    // Saved by an earlier request with the same id (a retry that crossed this one).
+    if (saved.status === "duplicate") return ok({ version: saved.version, game: null });
   }
   return fail(503, "busy");
+}
+
+const pause = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+/**
+ * The events a phone hasn't had yet (after `since`, up to the game's version), as far as
+ * this player may see them. A phone that was away so long that more than
+ * MAX_EVENTS_PER_POLL happened gets none: old popups would only confuse, the state is up to date.
+ */
+async function visibleEventsSince(ctx: GameContext, game: StoredGame, playerId: string, since: number) {
+  const stored = await ctx.store.eventsSince(game.code, since, game.version, MAX_EVENTS_PER_POLL + 1);
+  if (stored.length > MAX_EVENTS_PER_POLL) return [];
+  return stored.filter((item) => canSeeEvent(game.state, playerId, item.event));
 }

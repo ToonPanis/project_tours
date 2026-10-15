@@ -10,9 +10,12 @@ import { MongoClient, type MongoClientOptions } from "mongodb";
  *   seconds (the phones then show "offline" and keep trying) instead of hanging.
  */
 export const MONGO_CLIENT_OPTIONS: MongoClientOptions = {
-  // A Vercel function handles one request at a time; a few connections per instance is plenty
-  // (Atlas M0 allows 500 in total).
-  maxPoolSize: 5,
+  // One server instance can handle many requests at the same time (Vercel Fluid compute), and every
+  // phone polls every 2 seconds: 10 connections per instance (Atlas M0 allows 500 in total).
+  maxPoolSize: 10,
+  // When all of them are busy, a request waits at most this long for one (the default waits forever);
+  // then it fails like any database problem ("try again"), and the phone simply asks again.
+  waitQueueTimeoutMS: 5_000,
   // Close connections nobody used for a minute.
   maxIdleTimeMS: 60_000,
   // How long to look for a reachable server before giving up (default 30 s).

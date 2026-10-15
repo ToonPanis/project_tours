@@ -10,6 +10,7 @@ import type { PubGameHandle } from "../client/usePubGame";
 import { BeeryPopup } from "./BeeryPopup";
 import { FormError } from "./FormError";
 import { TaskCard } from "./TaskCard";
+import { currentCafeId } from "../logic/view-helpers";
 
 /**
  * Beery's bonus task (concept: "Beery heeft een bonusopdracht voor je!").
@@ -19,8 +20,8 @@ import { TaskCard } from "./TaskCard";
 export function BonusStep({ game }: { game: PubGameHandle }) {
   const t = useT();
   const texts = usePubGameTexts();
-  const { view, act, busy } = game;
-  const cafeId = view.team.route[view.team.cafeIndex];
+  const { view, act, busy, uploading } = game;
+  const cafeId = currentCafeId(view);
   const tasks = (playablePubGameDefinition.cafes.find((cafe) => cafe.id === cafeId)?.tasks ?? []).filter(
     (task) => task.presentedAs === "bonus",
   );
@@ -36,7 +37,8 @@ export function BonusStep({ game }: { game: PubGameHandle }) {
         actions={
           <>
             <FormError error={error} />
-            <Button variant="outline" disabled={busy} onClick={async () => setError(await act({ type: "CONTINUE" }))} fullWidth>
+            {/* Not while a photo or video is still on its way: moving on would lose it. */}
+            <Button variant="outline" disabled={busy || uploading} onClick={async () => setError(await act({ type: "CONTINUE" }))} fullWidth>
               {t("pubgame.bonus.skip")}
             </Button>
           </>

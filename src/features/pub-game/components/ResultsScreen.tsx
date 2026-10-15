@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { PlayScreen } from "@/features/walk-session/components/PlayScreen";
 import { useT } from "@/i18n/client";
+import { shareOrCopy } from "../client/share";
 import type { PlayerView } from "../logic/player-view";
 import { bestAt, leaderboardRows, winners } from "../logic/view-helpers";
 import { Beery } from "./Beery";
@@ -39,20 +40,8 @@ export function ResultsScreen({ view }: { view: PlayerView }) {
       t("pubgame.results.shareTitle"),
       ...rows.map((row) => t("pubgame.results.shareLine", { position: row.position, name: row.name, points: row.total })),
     ].join("\n");
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: t("pubgame.results.shareTitle"), text });
-        return;
-      } catch {
-        // Cancelled or not allowed: copy instead.
-      }
-    }
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-    } catch {
-      setCopied(false);
-    }
+    const result = await shareOrCopy({ title: t("pubgame.results.shareTitle"), text }, text);
+    if (result !== "shared") setCopied(result === "copied");
   }
 
   return (
@@ -75,11 +64,12 @@ export function ResultsScreen({ view }: { view: PlayerView }) {
         <p>{t("pubgame.results.tradition")}</p>
       </Beery>
 
-      {pending > 0 && (
-        <p role="status" className="rounded-sm border border-gold/50 bg-ink/40 p-3 text-sm">
-          {t.plural("pubgame.results.pending", pending)}
-        </p>
-      )}
+      {/* Always mounted: the message is announced when it appears or changes. */}
+      <div role="status">
+        {pending > 0 && (
+          <p className="rounded-sm border border-gold/50 bg-ink/40 p-3 text-sm">{t.plural("pubgame.results.pending", pending)}</p>
+        )}
+      </div>
 
       <Leaderboard view={view} />
 

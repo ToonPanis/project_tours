@@ -468,7 +468,8 @@ function isTaskStep(team: PubGameTeam, presentedAs: "pubtask" | "bonus"): boolea
   return team.step === presentedAs;
 }
 
-function findTask(definition: PubGameDefinition, taskId: string) {
+/** A photo/video task anywhere in the game, with the café it belongs to. */
+export function findTask(definition: PubGameDefinition, taskId: string) {
   for (const cafe of definition.cafes) {
     const task = cafe.tasks.find((candidate) => candidate.id === taskId);
     if (task) return { task, cafeId: cafe.id };

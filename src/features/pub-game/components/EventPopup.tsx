@@ -8,39 +8,26 @@ import type { PubGameHandle } from "../client/usePubGame";
 import type { PlayerView } from "../logic/player-view";
 import { playerName } from "../logic/view-helpers";
 
-/**
- * Events that interrupt with a popup (concept, card 8): new drinking buddies,
- * and every sip a buddy has to drink along, on every phone, "so they can
- * check each other". A 2-sip Beunaas instruction gets one too. Everything
- * else is already visible on the screen and only clears from the queue.
- */
-export function isPopupEvent(event: PubGameEvent): boolean {
-  if (event.type === "buddies-linked") return true;
-  if (event.type === "drink") return event.sips.some((sip) => sip.because === "buddy" || sip.sips === 2);
-  return false;
-}
-
-/** Shows the oldest popup event; closing it removes it (and anything before it) from the queue. */
+/** Shows the oldest queued popup; closing it shows the next one (usePubGame only queues popup events). */
 export function EventPopup({ game }: { game: PubGameHandle }) {
   const t = useT();
-  const { view, events, dismissEvents } = game;
-  const index = events.findIndex(isPopupEvent);
-  const event = index === -1 ? null : events[index];
-  const close = () => dismissEvents(index + 1);
+  const { view, popups, dismissPopup } = game;
+  const popup = popups[0];
 
-  if (!event) return null;
+  if (!popup) return null;
+  const { event } = popup;
   const title = event.type === "buddies-linked" ? t("pubgame.popups.buddiesTitle") : t("pubgame.popups.drinkTitle");
 
   return (
-    // Keyed by position + type, so the next popup opens fresh.
-    <Dialog key={`${index}-${events.length}`} open onClose={close} title={title} size="alert">
+    // Keyed by the popup: the next one opens fresh, a poll in between doesn't reopen this one.
+    <Dialog key={popup.id} open onClose={dismissPopup} title={title} size="alert">
       <div className="flex flex-col gap-4 p-6">
         <h2 className="font-display text-3xl font-semibold">
           <span aria-hidden="true">{event.type === "buddies-linked" ? "🤝 " : "🍻 "}</span>
           {title}
         </h2>
         <PopupBody view={view} event={event} />
-        <Button onClick={close} fullWidth>
+        <Button onClick={dismissPopup} fullWidth>
           {t("pubgame.popups.ok")}
         </Button>
       </div>

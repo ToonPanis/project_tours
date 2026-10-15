@@ -102,6 +102,9 @@ describe.each(factories)("$name store", ({ create, cleanup }) => {
     // Names with accents and Cyrillic survive the round trip through JSON.
     expect(await store.getGame(game.code)).toEqual(game);
     expect(await store.getGame(newCode())).toBeNull();
+    // Only the version (what every poll asks first).
+    expect(await store.getVersion(game.code)).toBe(0);
+    expect(await store.getVersion(newCode())).toBeNull();
   });
 
   test("an action is saved once, only on the expected version, with its events in order", async () => {
@@ -124,19 +127,22 @@ describe.each(factories)("$name store", ({ create, cleanup }) => {
 
     const saved = await store.getGame(game.code);
     expect(saved).toMatchObject({ version: 1, state: { phase: "playing" } });
+    expect(await store.getVersion(game.code)).toBe(1);
     expect(await store.findAction(game.code, "action-a")).toBe(1);
     expect(await store.findAction(game.code, "action-b")).toBeNull();
 
     await store.commitAction(commit(game.code, 1, "action-d", changed));
-    expect((await store.eventsSince(game.code, 0, 10)).map((item) => [item.version, item.event.type])).toEqual([
+    expect((await store.eventsSince(game.code, 0, 2, 10)).map((item) => [item.version, item.event.type])).toEqual([
       [1, "game-started"],
       [1, "player-joined"],
       [2, "game-started"],
       [2, "player-joined"],
     ]);
-    expect(await store.eventsSince(game.code, 1, 10)).toHaveLength(2);
-    expect(await store.eventsSince(game.code, 0, 3)).toHaveLength(3);
-    expect(await store.eventsSince(game.code, 2, 10)).toEqual([]);
+    expect(await store.eventsSince(game.code, 1, 2, 10)).toHaveLength(2);
+    expect(await store.eventsSince(game.code, 0, 2, 3)).toHaveLength(3);
+    expect(await store.eventsSince(game.code, 2, 2, 10)).toEqual([]);
+    // Never newer than the state they're sent with.
+    expect((await store.eventsSince(game.code, 0, 1, 10)).map((item) => item.version)).toEqual([1, 1]);
   });
 
   test("two saves at the same moment: exactly one wins", async () => {
@@ -163,7 +169,7 @@ describe.each(factories)("$name store", ({ create, cleanup }) => {
     // The same action id in two games is two different actions.
     expect(await store.getGame(first.code)).toMatchObject({ version: 1, state: { phase: "playing" } });
     expect(await store.getGame(second.code)).toMatchObject({ version: 1, state: { phase: second.state.phase } });
-    expect(await store.eventsSince(second.code, 0, 10)).toHaveLength(2);
+    expect(await store.eventsSince(second.code, 0, 1, 10)).toHaveLength(2);
   });
 
   test("a code can be used again once its game has expired", async () => {
@@ -173,7 +179,7 @@ describe.each(factories)("$name store", ({ create, cleanup }) => {
     const fresh = storedGame(old.code);
     expect(await store.createGame(fresh)).toBe(true);
     expect(await store.getGame(old.code)).toEqual(fresh);
-    expect(await store.eventsSince(old.code, 0, 10)).toEqual([]);
+    expect(await store.eventsSince(old.code, 0, 10, 10)).toEqual([]);
   });
 
   test("player tokens: found by hash, only in their own game", async () => {
@@ -181,8 +187,8 @@ describe.each(factories)("$name store", ({ create, cleanup }) => {
     const other = storedGame(newCode());
     await store.createGame(game);
     await store.createGame(other);
-    await store.savePlayerToken(game.code, "hash-1", "p1");
-    await store.savePlayerToken(game.code, "hash-1", "p1");
+    await store.savePlayerToken(game.code, "hash-1", "p1", game.expiresAt);
+    await store.savePlayerToken(game.code, "hash-1", "p1", game.expiresAt);
     expect(await store.findPlayerByToken(game.code, "hash-1")).toBe("p1");
     expect(await store.findPlayerByToken(game.code, "hash-2")).toBeNull();
     expect(await store.findPlayerByToken(other.code, "hash-1")).toBeNull();
@@ -191,8 +197,9 @@ describe.each(factories)("$name store", ({ create, cleanup }) => {
   test("an expired game is gone, with its players", async () => {
     const game = storedGame(newCode(), -1000);
     await store.createGame(game);
-    await store.savePlayerToken(game.code, "hash-1", "p1");
+    await store.savePlayerToken(game.code, "hash-1", "p1", game.expiresAt);
     expect(await store.getGame(game.code)).toBeNull();
+    expect(await store.getVersion(game.code)).toBeNull();
     expect(await store.findPlayerByToken(game.code, "hash-1")).toBeNull();
   });
 
@@ -269,7 +276,8 @@ describe("MongoDB store without a database", () => {
     expect(() => store.getGame(attack)).toThrow(TypeError);
     expect(() => store.findPlayerByToken("ABCD", attack)).toThrow(TypeError);
     expect(() => store.findAction(attack, "action-1")).toThrow(TypeError);
-    expect(() => store.eventsSince("ABCD", -1, 10)).toThrow(TypeError);
+    expect(() => store.getVersion(attack)).toThrow(TypeError);
+    expect(() => store.eventsSince("ABCD", -1, 1, 10)).toThrow(TypeError);
     await client.close();
   });
 

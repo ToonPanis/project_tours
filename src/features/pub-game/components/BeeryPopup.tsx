@@ -11,12 +11,11 @@ interface BeeryPopupProps {
   /** Beery's line, e.g. "Beery takes you to the next location!" (also the dialog's name). */
   title: string;
   children?: ReactNode;
-  buttonLabel?: string;
   onClose: () => void;
 }
 
 /** A short Beery moment: his line, a detail, one button. No long animation to sit through. */
-export function BeeryPopup({ open, title, children, buttonLabel, onClose }: BeeryPopupProps) {
+export function BeeryPopup({ open, title, children, onClose }: BeeryPopupProps) {
   const t = useT();
   return (
     <Dialog open={open} onClose={onClose} title={title} size="alert">
@@ -25,7 +24,7 @@ export function BeeryPopup({ open, title, children, buttonLabel, onClose }: Beer
         <h2 className="font-display text-3xl font-semibold leading-tight">{title}</h2>
         {children}
         <Button onClick={onClose} fullWidth>
-          {buttonLabel ?? t("pubgame.beery.letsGo")}
+          {t("pubgame.beery.letsGo")}
         </Button>
       </div>
     </Dialog>

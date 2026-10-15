@@ -4,7 +4,7 @@ import type { UpcomingWalk, Walk, WalkSummary } from "@/types/walk";
 import type { WalkRepository } from "./walk-repository";
 
 /** Converts a full walk into the lighter summary used in lists. */
-export function toWalkSummary(walk: Walk): WalkSummary {
+function toWalkSummary(walk: Walk): WalkSummary {
   return {
     id: walk.id,
     slug: walk.slug,

@@ -10,7 +10,7 @@ import { distanceInMeters } from "@/lib/geo";
 const MAX_ROUTE_END_TO_PIN_METERS = 30;
 
 /**
- * Known exceptions (AUDIT.md M-01): the pin is a building centroid and the nearest walkable
+ * Known exceptions (docs/archive/AUDIT.md M-01): the pin is a building centroid and the nearest walkable
  * path is farther away. They wait for an on-site check (FIELD_TEST_CHECKLIST.md A1–A5).
  * Each entry is a ceiling: the route end may not drift farther than today's measured distance.
  * Remove an entry once its pin has been moved on site and the routes regenerated.

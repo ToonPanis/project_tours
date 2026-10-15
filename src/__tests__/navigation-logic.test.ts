@@ -68,7 +68,7 @@ describe("OSRM adapter", () => {
 
   test("adds each maneuver's distance from the start", () => {
     expect(route.steps.map((step) => step.distanceFromStartMeters)).toEqual([0, 100, 170]);
-    expect(route.steps[1]).toMatchObject({ maneuver: "right", instruction: "Turn right", streetName: "Corner Street" });
+    expect(route.steps[1]).toMatchObject({ maneuver: "right", streetName: "Corner Street" });
   });
 });
 

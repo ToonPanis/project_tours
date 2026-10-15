@@ -26,6 +26,9 @@ export async function shrinkPhoto(file: File): Promise<Blob> {
     canvas.getContext("2d")?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
     bitmap.close();
     const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.82));
+    // Give the canvas's memory back right away (a few MB; older phones have little to spare).
+    canvas.width = 0;
+    canvas.height = 0;
     return blob && blob.size < file.size ? blob : file;
   } catch {
     return file;
@@ -35,7 +38,8 @@ export async function shrinkPhoto(file: File): Promise<Blob> {
 /**
  * Uploads one photo or video for a task and returns its media id (then the
  * phone sends SUBMIT_EVIDENCE with it). Checks type and size first, so a
- * wrong file fails at once instead of after a long upload.
+ * wrong file fails at once instead of after a long upload. `signal` cancels
+ * it (the "Cancel" button, or leaving the screen): then the error is "cancelled".
  */
 export async function uploadEvidence(
   code: string,
@@ -44,6 +48,7 @@ export async function uploadEvidence(
   file: File,
   mode: UploadMode,
   onProgress?: (percent: number) => void,
+  signal?: AbortSignal,
 ): Promise<UploadResult> {
   const body = kind === "photo" ? await shrinkPhoto(file) : file;
   const contentType = body.type || file.type;
@@ -57,6 +62,7 @@ export async function uploadEvidence(
         method: "POST",
         headers: { "content-type": contentType },
         body,
+        signal,
       });
       const json = (await response.json().catch(() => ({}))) as { mediaId?: string; error?: string };
       onProgress?.(100);
@@ -73,9 +79,10 @@ export async function uploadEvidence(
       // Videos in parts: retried part by part on a shaky connection.
       multipart: kind === "video",
       onUploadProgress: ({ percentage }) => onProgress?.(Math.round(percentage)),
+      abortSignal: signal,
     });
     return { ok: true, mediaId: blob.pathname };
   } catch {
-    return { ok: false, error: "upload-failed" };
+    return { ok: false, error: signal?.aborted ? "cancelled" : "upload-failed" };
   }
 }

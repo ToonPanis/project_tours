@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useSyncExternalStore } from "react";
+import { usePreloadMap } from "@/features/navigation/preload-map";
 import { useT } from "@/i18n/client";
 import { usePubGame } from "../client/usePubGame";
 import type { PlayerView } from "../logic/player-view";
@@ -23,6 +24,7 @@ import { DrinkStep } from "./DrinkStep";
 import { EffectsBar } from "./EffectsBar";
 import { EventPopup } from "./EventPopup";
 import { NextCafeScreen } from "./NextCafeScreen";
+import { currentCafeId } from "../logic/view-helpers";
 
 interface PubGameProps {
   code: string;
@@ -69,6 +71,8 @@ export function PubGame({ code, invite, initialView, initialVersion, texts, uplo
   const t = useT();
   const game = usePubGame(code, initialView, initialVersion);
   const { view, connection } = game;
+  // Once the game runs, teams walk between cafés: the map code downloads in the background.
+  usePreloadMap(view.phase === "playing");
   // Read from localStorage in the browser; null during the server render (no localStorage there).
   // useSyncExternalStore does this without a hydration mismatch.
   const storedIntroSeen = useSyncExternalStore(noSubscription, () => readIntroSeen(code), () => null);
@@ -122,7 +126,7 @@ export function PubGame({ code, invite, initialView, initialVersion, texts, uplo
     screen = <CardStep key={view.team.cafeIndex} game={game} onRoundSeen={() => setSeenLastCard(lastCard)} />;
   } else if (view.team.step === "pubtask") {
     screen = <PubtaskStep key={view.team.cafeIndex} game={game} />;
-  } else if (hasPubtask(view.team.route[view.team.cafeIndex]) && seenPubtask !== view.team.cafeIndex) {
+  } else if (hasPubtask(currentCafeId(view)) && seenPubtask !== view.team.cafeIndex) {
     // The pubtask just ended: keep its answers and explanations until this player continues.
     screen = <PubtaskStep key={view.team.cafeIndex} game={game} onDone={() => setSeenPubtask(view.team.cafeIndex)} />;
   } else if (view.team.step === "bonus") {

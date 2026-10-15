@@ -13,6 +13,9 @@ import { MAX_VIDEO_BYTES } from "@/features/pub-game/media";
 export async function POST(request: NextRequest, ctx: RouteContext<"/api/games/[code]/media">) {
   const refused = checkSameOrigin(request);
   if (refused) return refused;
+  const gameContext = getGameContext();
+  // Production uploads go straight to Blob: refuse before reading a body that may be large.
+  if (gameContext.media.uploadMode !== "direct") return errorResponse(400, "use-blob-upload");
 
   // Refuse a too-big file before reading it.
   const declaredSize = Number(request.headers.get("content-length") ?? 0);
@@ -22,7 +25,7 @@ export async function POST(request: NextRequest, ctx: RouteContext<"/api/games/[
   const bytes = new Uint8Array(await request.arrayBuffer());
   return toResponse(
     await saveDirectUpload(
-      getGameContext(),
+      gameContext,
       code,
       playerToken(request, code),
       request.nextUrl.searchParams.get("task"),

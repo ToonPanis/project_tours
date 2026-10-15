@@ -13,10 +13,25 @@ export default defineConfig({
     // `npm run test:coverage`: which lines of the pure logic the tests never run.
     coverage: {
       provider: 'v8',
-      include: ['src/**/logic/**', 'src/lib/**', 'src/i18n/**', 'src/features/walk-session/storage/**'],
-      exclude: ['src/i18n/locales/**'],
+      include: [
+        'src/**/logic/**',
+        'src/lib/**',
+        'src/i18n/**',
+        'src/features/walk-session/storage/**',
+        // Hidden Pubs server: the game service, the memory store, identity and HTTP helpers.
+        'src/features/pub-game/server/**',
+      ],
+      exclude: [
+        'src/i18n/locales/**',
+        // Need the real services (MongoDB, Vercel Blob): tested by npm run test:db and on Vercel.
+        'src/features/pub-game/server/mongo*.ts',
+        'src/features/pub-game/server/media-store.ts',
+        // Wiring per environment, and helpers of the server pages (covered by the browser tests).
+        'src/features/pub-game/server/context.ts',
+        'src/features/pub-game/server/page-data.ts',
+      ],
       reporter: ['text-summary', 'html'],
-      // A few points under today's values (lines 97.6%, branches 89.4%, functions 99.1%):
+      // A few points under today's values (lines 98.2%, statements 94.4%, branches 88.8%, functions 99.2%):
       // untested new logic fails the run; a small refactor doesn't.
       thresholds: { lines: 95, statements: 90, branches: 85, functions: 95 },
     },

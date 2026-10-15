@@ -5,7 +5,7 @@ import type { WalkingRoute } from "@/types/navigation";
 import type { LocationProgress, WalkSession } from "@/types/session";
 import type { Walk } from "@/types/walk";
 
-/** Everything both players need to know about the stop the walker is at. */
+/** Everything the guide player needs to know about the stop the walker is at. */
 export interface CurrentStop {
   /** Position in route order (0 = first stop). */
   index: number;
@@ -20,8 +20,8 @@ export interface CurrentStop {
 }
 
 /**
- * Pure: the current stop of a (valid) session. Called by the game player and the
- * guide player after their loading/start screens, when a session exists.
+ * Pure: the current stop of a (valid) session. Called by the guide player after
+ * its loading/start screen, when a session exists.
  */
 export function getCurrentStop(walk: Walk, session: WalkSession): CurrentStop {
   const orderedLocations = getOrderedLocations(walk);

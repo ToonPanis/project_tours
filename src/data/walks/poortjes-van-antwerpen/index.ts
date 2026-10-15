@@ -165,8 +165,6 @@ function buildLocations(content: PoortjesContent, collectionItems: CollectionIte
       address: stop.address,
       ...findPosition(coordinatesFile, stop.id),
       description: text.subtitle,
-      unlockCondition: index === 0 ? { type: "none" } : { type: "proximity", radiusInMeters: 40 },
-      nearbyPlaces: [],
       guide: {
         subtitle: text.subtitle,
         introduction: text.introduction,

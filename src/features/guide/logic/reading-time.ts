@@ -1,9 +1,9 @@
 import type { GuideStopContent } from "@/types/guide";
 
 /** A relaxed reading pace, for reading outdoors on a phone while standing. */
-export const WORDS_PER_MINUTE = 180;
+const WORDS_PER_MINUTE = 180;
 
-export function countWords(texts: string[]): number {
+function countWords(texts: string[]): number {
   return texts.reduce((total, text) => total + (text.trim().match(/\S+/g)?.length ?? 0), 0);
 }
 

@@ -3,16 +3,29 @@
 import { useRouter } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useMemo, type ReactNode } from "react";
 import { defaultLocale, isLocale, LOCALE_COOKIE, LOCALE_STORAGE_KEY, type Locale } from "./config";
-import { createTranslator, type Translator } from "./translate";
+import english from "./locales/en";
+import type { LocaleMessages } from "./messages";
+import { buildTranslator, type Translator } from "./translator";
 
 /**
  * The language in the browser. The server decides the language (see
- * server.ts) and passes it to <LocaleProvider>; Client Components read it
- * with useLocale() / useT(). All interface texts are bundled, so switching
- * languages needs no extra download.
+ * server.ts) and passes it to <LocaleProvider>, together with that language's
+ * texts; Client Components read them with useLocale() / useT().
+ *
+ * Only English (the fallback for anything missing) is part of the browser's
+ * JavaScript; the visitor's own language comes with the page. So a phone
+ * downloads 1–2 languages instead of all 8. Switching languages re-renders the
+ * page on the server (router.refresh), which brings the new texts along.
  */
 
-const LocaleContext = createContext<Locale>(defaultLocale);
+interface LocaleValue {
+  locale: Locale;
+  /** The texts of `locale` (none for English: those are always here). */
+  messages?: LocaleMessages;
+}
+
+// Without a provider (tests, a component on its own): English.
+const LocaleContext = createContext<LocaleValue>({ locale: defaultLocale });
 
 const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365;
 
@@ -31,9 +44,17 @@ export function readCookieLocale(): Locale | null {
   return match && isLocale(match[1]) ? match[1] : null;
 }
 
-/** Makes the current language available to Client Components below it. */
-export function LocaleProvider({ locale, children }: { locale: Locale; children: ReactNode }) {
-  return <LocaleContext.Provider value={locale}>{children}</LocaleContext.Provider>;
+interface LocaleProviderProps {
+  locale: Locale;
+  /** The texts of `locale`, from the server (`messagesByLocale[locale]`). Not needed for English. */
+  messages?: LocaleMessages;
+  children: ReactNode;
+}
+
+/** Makes the current language (and its texts) available to Client Components below it. */
+export function LocaleProvider({ locale, messages, children }: LocaleProviderProps) {
+  const value = useMemo(() => ({ locale, messages }), [locale, messages]);
+  return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;
 }
 
 /**
@@ -62,13 +83,13 @@ export function LocaleSync() {
 }
 
 export function useLocale(): Locale {
-  return useContext(LocaleContext);
+  return useContext(LocaleContext).locale;
 }
 
 /** The translator for the current language: `const t = useT(); t("common.close")`. */
 export function useT(): Translator {
-  const locale = useLocale();
-  return useMemo(() => createTranslator(locale), [locale]);
+  const { locale, messages } = useContext(LocaleContext);
+  return useMemo(() => buildTranslator(locale, messages, english), [locale, messages]);
 }
 
 /** Switches the language: remembers it and re-renders the page (URL and state stay the same). */

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import type { TaskText } from "@/data/walks/hidden-pubs/game/content/types";
 import { useT } from "@/i18n/client";
@@ -78,34 +78,57 @@ interface EvidenceFormProps {
 function EvidenceForm({ game, task, team, canSkip }: EvidenceFormProps) {
   const t = useT();
   const uploadMode = useUploadMode();
-  const { act, busy } = game;
+  const { act, busy, whileUploading } = game;
   const [file, setFile] = useState<File | null>(null);
+  // A local preview (blob: URL) of the chosen file, made when the file is chosen.
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const previewRef = useRef<string | null>(null);
+  // The upload on its way, so "Cancel" (or leaving the screen) can stop it.
+  const uploadRef = useRef<AbortController | null>(null);
   const [participants, setParticipants] = useState<string[]>(team.map((player) => player.id));
   const [progress, setProgress] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const previewUrl = useMemo(() => (file ? URL.createObjectURL(file) : null), [file]);
   const isPhoto = task.evidence === "photo";
   const inputId = `evidence-${task.id}`;
 
-  // Free the preview's memory when it changes or the screen closes.
-  useEffect(() => () => {
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-  }, [previewUrl]);
+  /** Picks a new file (or none): the old preview's memory is freed right away. */
+  function choose(next: File | null) {
+    if (previewRef.current) URL.revokeObjectURL(previewRef.current);
+    previewRef.current = next ? URL.createObjectURL(next) : null;
+    setFile(next);
+    setPreviewUrl(previewRef.current);
+  }
+
+  // When the screen closes: free the preview's memory and stop an upload nobody waits for.
+  useEffect(
+    () => () => {
+      if (previewRef.current) URL.revokeObjectURL(previewRef.current);
+      uploadRef.current?.abort();
+    },
+    [],
+  );
 
   async function send() {
     if (!file || participants.length === 0) return;
     setError(null);
     setProgress(0);
-    const uploaded = await uploadEvidence(game.code, task.id, task.evidence, file, uploadMode, setProgress);
-    if (!uploaded.ok) {
+    // While this runs the team can't move on ("No bonus"), or the upload would be lost.
+    const upload = new AbortController();
+    uploadRef.current = upload;
+    await whileUploading(async () => {
+      const uploaded = await uploadEvidence(game.code, task.id, task.evidence, file, uploadMode, setProgress, upload.signal);
+      uploadRef.current = null;
+      if (!uploaded.ok) {
+        setProgress(null);
+        // Cancelled on purpose: nothing went wrong, the photo is still there to send again.
+        setError(uploaded.error === "cancelled" ? null : uploaded.error);
+        return;
+      }
+      const failure = await act({ type: "SUBMIT_EVIDENCE", taskId: task.id, mediaId: uploaded.mediaId, participantIds: participants });
       setProgress(null);
-      setError(uploaded.error);
-      return;
-    }
-    const failure = await act({ type: "SUBMIT_EVIDENCE", taskId: task.id, mediaId: uploaded.mediaId, participantIds: participants });
-    setProgress(null);
-    setError(failure);
-    if (!failure) setFile(null);
+      setError(failure);
+      if (!failure) choose(null);
+    });
   }
 
   const sending = progress !== null;
@@ -127,7 +150,7 @@ function EvidenceForm({ game, task, team, canSkip }: EvidenceFormProps) {
         className="sr-only"
         onChange={(event) => {
           setError(null);
-          setFile(event.target.files?.[0] ?? null);
+          choose(event.target.files?.[0] ?? null);
         }}
       />
 
@@ -166,6 +189,12 @@ function EvidenceForm({ game, task, team, canSkip }: EvidenceFormProps) {
       {file && (
         <Button onClick={send} disabled={busy || sending || participants.length === 0} fullWidth>
           {sending ? t("pubgame.evidence.sending", { percent: progress ?? 0 }) : t("pubgame.evidence.send")}
+        </Button>
+      )}
+      {/* A video on weak café wifi can take long: the player can stop it (and send it later, or skip). */}
+      {sending && (
+        <Button variant="outline" onClick={() => uploadRef.current?.abort()} fullWidth>
+          {t("common.cancel")}
         </Button>
       )}
       <FormError error={error} />

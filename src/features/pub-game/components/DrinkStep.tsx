@@ -10,6 +10,7 @@ import type { PubGameHandle } from "../client/usePubGame";
 import { BeerWheel } from "./BeerWheel";
 import { Beery } from "./Beery";
 import { FormError } from "./FormError";
+import { currentCafeId } from "../logic/view-helpers";
 
 /** What this player picked: a drink from the list, a wheel number, alcohol-free, or nothing. */
 type Choice = { kind: "drink"; name: string } | { kind: "wheel"; number: number } | { kind: "alcohol-free" } | { kind: "skip" };
@@ -23,7 +24,7 @@ type Choice = { kind: "drink"; name: string } | { kind: "wheel"; number: number 
 export function DrinkStep({ game }: { game: PubGameHandle }) {
   const t = useT();
   const { view, act, busy } = game;
-  const cafeId = view.team.route[view.team.cafeIndex];
+  const cafeId = currentCafeId(view);
   const drinks = pubGameDrinks[cafeId] ?? { kind: "menu", drinks: [] };
   const [choice, setChoice] = useState<Choice | null>(null);
   const [error, setError] = useState<string | null>(null);

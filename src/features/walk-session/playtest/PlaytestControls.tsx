@@ -25,7 +25,7 @@ export function isPlaytestEnabled(env: { NODE_ENV?: string; NEXT_PUBLIC_PLAYTEST
 }
 
 // Written out in full: Next.js only inlines NEXT_PUBLIC_ variables it can see literally.
-export const isPlaytestToolsEnabled = isPlaytestEnabled({
+const isPlaytestToolsEnabled = isPlaytestEnabled({
   NODE_ENV: process.env.NODE_ENV,
   NEXT_PUBLIC_PLAYTEST_TOOLS: process.env.NEXT_PUBLIC_PLAYTEST_TOOLS,
 });

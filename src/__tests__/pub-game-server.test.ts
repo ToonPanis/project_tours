@@ -363,6 +363,86 @@ async function reachPubtask(ctx: GameContext, code: string, token: string) {
 
 // ─── Explanations and fun facts ─────────────────────────────────────────────
 
+describe("database reads (every phone polls every 2 seconds)", () => {
+  /** Counts the store calls of one context (each one is a round trip to MongoDB in production). */
+  function counting(ctx: GameContext) {
+    const calls: Record<string, number> = {};
+    const store = ctx.store;
+    const counted = new Proxy(store, {
+      get(target, name: string) {
+        const value = Reflect.get(target, name);
+        if (typeof value !== "function") return value;
+        return (...args: unknown[]) => {
+          calls[name] = (calls[name] ?? 0) + 1;
+          return value.apply(target, args);
+        };
+      },
+    });
+    const reset = () => Object.keys(calls).forEach((name) => delete calls[name]);
+    return { ctx: { ...ctx, store: counted }, calls, reset };
+  }
+
+  test("an unchanged poll reads only the version and the player, never the whole game", async () => {
+    const game = await gameWithTwoTeams();
+    const { ctx, calls, reset } = counting(game.ctx);
+    const { version } = unwrap(await getGameUpdate(ctx, game.code, game.beaToken, null));
+
+    reset();
+    expect(unwrap(await getGameUpdate(ctx, game.code, game.beaToken, version))).toEqual({ changed: false, version });
+    expect(calls).toEqual({ getVersion: 1, findPlayerByToken: 1 });
+  });
+
+  test("a poll without a cookie asks nothing about players", async () => {
+    const game = await gameWithTwoTeams();
+    const { ctx, calls } = counting(game.ctx);
+    expect(await getGameUpdate(ctx, game.code, null, 0)).toMatchObject({ ok: false, status: 401 });
+    expect(await getGameUpdate(ctx, "ZZZZZZ", null, 0)).toMatchObject({ ok: false, status: 404 });
+    expect(calls).toEqual({ getVersion: 2 });
+  });
+
+  test("a tap reads the game once (not again after saving)", async () => {
+    const game = await gameWithTwoTeams();
+    const { ctx, calls, reset } = counting(game.ctx);
+    unwrap(await tap(ctx, game.code, game.hostToken, { type: "START_GAME" }));
+
+    reset();
+    const arrived = unwrap(await tap(ctx, game.code, game.hostToken, { type: "ARRIVE" }));
+    expect(arrived.view.team.step).toBe("drinks");
+    expect(calls.getGame).toBe(1);
+    expect(calls.commitAction).toBe(1);
+  });
+
+  test("a repeated tap (already saved) still answers with the current game", async () => {
+    const game = await gameWithTwoTeams();
+    unwrap(await tap(game.ctx, game.code, game.hostToken, { type: "START_GAME" }));
+    const first = unwrap(await tap(game.ctx, game.code, game.hostToken, { type: "ARRIVE" }, "same-tap-0001"));
+    const again = unwrap(await tap(game.ctx, game.code, game.hostToken, { type: "ARRIVE" }, "same-tap-0001"));
+    expect(again.version).toBe(first.version);
+    expect(again.view).toEqual(first.view);
+  });
+
+  test("a phone that was away through more than 100 events gets the new state, not old popups", async () => {
+    const game = await gameWithTwoTeams();
+    unwrap(await tap(game.ctx, game.code, game.hostToken, { type: "START_GAME" }));
+    unwrap(await tap(game.ctx, game.code, game.hostToken, { type: "ARRIVE" }));
+    const { version } = unwrap(await getGameUpdate(game.ctx, game.code, game.hostToken, null));
+    // Sips reported in the host's own team: one event each, which the host's phone may see.
+    for (let sip = 0; sip < 101; sip++) {
+      unwrap(await tap(game.ctx, game.code, game.hostToken, { type: "REPORT_DRINK", playerId: game.hostId }));
+    }
+
+    // (A short absence does bring those events: so an empty list below really means "too many".)
+    const recent = unwrap(await getGameUpdate(game.ctx, game.code, game.hostToken, version + 100));
+    if (!recent.changed) throw new Error("expected changes");
+    expect(recent.events).toHaveLength(1);
+
+    const update = unwrap(await getGameUpdate(game.ctx, game.code, game.hostToken, version));
+    if (!update.changed) throw new Error("expected changes");
+    expect(update.version).toBe(version + 101);
+    expect(update.events).toEqual([]);
+  });
+});
+
 describe("reveals (explanations and fun facts give answers away)", () => {
   test("an explanation only after the question is finished; the fun fact only at its step", async () => {
     const { ctx, code, hostToken, beaToken } = await gameWithTwoTeams();

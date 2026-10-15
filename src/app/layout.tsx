@@ -5,6 +5,8 @@ import { Cormorant_Garamond, Source_Sans_3 } from "next/font/google";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { LocaleProvider, LocaleSync } from "@/i18n/client";
+import { defaultLocale } from "@/i18n/config";
+import { messagesByLocale } from "@/i18n/messages";
 import { getLocale, getTranslator } from "@/i18n/server";
 import "./globals.css";
 
@@ -54,7 +56,8 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${cormorant.variable} ${sourceSans.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col font-sans">
-        <LocaleProvider locale={locale}>
+        {/* The visitor's texts go to the browser with the page (English is already there). */}
+        <LocaleProvider locale={locale} messages={locale === defaultLocale ? undefined : messagesByLocale[locale]}>
           <LocaleSync />
           <SiteHeader />
           <main id="main-content" className="flex-1">

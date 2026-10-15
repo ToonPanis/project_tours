@@ -5,7 +5,6 @@
  */
 import type { GeoCoordinates } from "@/types/common";
 import type { Maneuver, NavigationStep, WalkingRoute } from "@/types/navigation";
-import { getManeuverLabel } from "./maneuver-labels";
 
 /** The subset of an OSRM route that the generator script saves. */
 export interface SavedOsrmRoute {
@@ -55,7 +54,6 @@ export function normalizeOsrmRoute(saved: SavedOsrmRoute): WalkingRoute {
     const maneuver = toManeuver(step.type, step.modifier);
     const navigationStep: NavigationStep = {
       maneuver,
-      instruction: getManeuverLabel(maneuver),
       streetName: step.name || undefined,
       location: toCoordinates(step.location),
       distanceFromStartMeters: distanceFromStart,

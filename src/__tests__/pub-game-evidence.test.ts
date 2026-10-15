@@ -1,10 +1,13 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { pubGameAnswerKey } from "@/data/walks/hidden-pubs/game/answers.server";
 import { pubGameDefinition } from "@/data/walks/hidden-pubs/game/definition";
 import { MAX_PHOTO_BYTES } from "@/features/pub-game/media";
 import {
   authorizeBlobUpload,
   createGame,
+  deleteExpiredMedia,
+  deleteExpiredMediaIfDue,
+  resetMediaCleanupClock,
   getGameUpdate,
   joinGame,
   openMedia,
@@ -85,14 +88,14 @@ async function jump(ctx: GameContext, code: string, teamIndex: number, cafeId: s
 describe("uploading", () => {
   test("only players of the game, for a real task, with the right file type and size", async () => {
     const { ctx, code, bea } = await game();
+    await jump(ctx, code, 0, "pubs-de-kat", "bonus");
     expect(unwrap(await saveDirectUpload(ctx, code, bea, "pubs-de-kat-tap", "image/jpeg", JPEG)).mediaId).toMatch(
       new RegExp(`^games/${code}/id\\d+\\.jpg$`),
     );
     expect(await saveDirectUpload(ctx, code, null, "pubs-de-kat-tap", "image/jpeg", JPEG)).toMatchObject({ status: 401 });
     expect(await saveDirectUpload(ctx, code, bea, "made-up", "image/jpeg", JPEG)).toMatchObject({ error: "unknown-task" });
-    // A photo task takes no video; the clog (video) takes no photo; no other file types.
+    // A photo task takes no video; no other file types.
     expect(await saveDirectUpload(ctx, code, bea, "pubs-de-kat-tap", "video/mp4", JPEG)).toMatchObject({ error: "invalid-media" });
-    expect(await saveDirectUpload(ctx, code, bea, "pubs-den-engel-clog", "image/jpeg", JPEG)).toMatchObject({ error: "invalid-media" });
     expect(await saveDirectUpload(ctx, code, bea, "pubs-de-kat-tap", "text/html", JPEG)).toMatchObject({ error: "invalid-media" });
     expect(
       await saveDirectUpload(ctx, code, bea, "pubs-de-kat-tap", "image/jpeg", new Uint8Array(MAX_PHOTO_BYTES + 1)),
@@ -100,10 +103,33 @@ describe("uploading", () => {
     expect(await saveDirectUpload(ctx, code, bea, "pubs-de-kat-tap", "image/jpeg", new Uint8Array())).toMatchObject({
       error: "too-large",
     });
+    // The clog (video) takes no photo.
+    await jump(ctx, code, 0, "pubs-den-engel", "bonus");
+    expect(await saveDirectUpload(ctx, code, bea, "pubs-den-engel-clog", "image/jpeg", JPEG)).toMatchObject({ error: "invalid-media" });
+  });
+
+  test("only for a task the team can send right now (no upload tokens for other cafés or done tasks)", async () => {
+    const { ctx, code, bea, dirk, beaId } = await game();
+    const clog = JSON.stringify({ taskId: "pubs-den-engel-clog" });
+    // Still walking to the first café: nothing to send yet.
+    expect(await authorizeBlobUpload(ctx, code, bea, `games/${code}/clip.mp4`, clog)).toMatchObject({ status: 409, error: "wrong-step" });
+
+    await jump(ctx, code, 0, "pubs-de-kat", "bonus");
+    // Another café's task, and another team (Dirk's team isn't at De Kat): refused.
+    expect(await authorizeBlobUpload(ctx, code, bea, `games/${code}/clip.mp4`, clog)).toMatchObject({ error: "wrong-step" });
+    expect(await saveDirectUpload(ctx, code, dirk, "pubs-de-kat-tap", "image/jpeg", JPEG)).toMatchObject({ error: "wrong-step" });
+
+    // Sent once: no new tokens for it, unless the host rejects it (then it may be sent again, D26).
+    const tapTask = JSON.stringify({ taskId: "pubs-de-kat-tap" });
+    expect((await authorizeBlobUpload(ctx, code, bea, `games/${code}/tap.jpg`, tapTask)).ok).toBe(true);
+    const { mediaId } = unwrap(await saveDirectUpload(ctx, code, bea, "pubs-de-kat-tap", "image/jpeg", JPEG));
+    unwrap(await tap(ctx, code, bea, { type: "SUBMIT_EVIDENCE", taskId: "pubs-de-kat-tap", mediaId, participantIds: [beaId] }));
+    expect(await authorizeBlobUpload(ctx, code, bea, `games/${code}/tap.jpg`, tapTask)).toMatchObject({ error: "task-done" });
   });
 
   test("the Blob upload token: only for this game's folder and a real task; limits by kind", async () => {
     const { ctx, code, bea } = await game();
+    await jump(ctx, code, 0, "pubs-den-engel", "bonus");
     const payload = JSON.stringify({ taskId: "pubs-den-engel-clog" });
     expect(unwrap(await authorizeBlobUpload(ctx, code, bea, `games/${code}/clip.mp4`, payload))).toEqual({
       allowedContentTypes: ["video/mp4", "video/quicktime", "video/webm"],
@@ -113,6 +139,7 @@ describe("uploading", () => {
     });
     expect(await authorizeBlobUpload(ctx, code, bea, "games/ZZZZZZ/clip.mp4", payload)).toMatchObject({ error: "invalid-media" });
     expect(await authorizeBlobUpload(ctx, code, bea, `games/${code}/../x.mp4`, payload)).toMatchObject({ error: "invalid-media" });
+    expect(await authorizeBlobUpload(ctx, code, bea, `games/${code}/sub/clip.mp4`, payload)).toMatchObject({ error: "invalid-media" });
     expect(await authorizeBlobUpload(ctx, code, null, `games/${code}/clip.mp4`, payload)).toMatchObject({ status: 401 });
     expect(await authorizeBlobUpload(ctx, code, bea, `games/${code}/clip.mp4`, "not json")).toMatchObject({ status: 400 });
   });
@@ -184,13 +211,42 @@ describe("submitting and reviewing", () => {
     expect(resent.view.evidence.map((item) => item.status)).toEqual(["rejected", "pending"]);
   });
 
-  test("files older than 7 days are deleted when a new game is created (D29)", async () => {
+  test("files older than 7 days are deleted by the daily cleanup (D29); newer ones stay", async () => {
     let now = NOW;
     const ctx = testContext(() => now);
     const { code, bea } = await game(ctx);
-    const { mediaId } = unwrap(await saveDirectUpload(ctx, code, bea, "pubs-de-kat-tap", "image/jpeg", JPEG));
+    await jump(ctx, code, 0, "pubs-de-kat", "bonus");
+    const { mediaId: old } = unwrap(await saveDirectUpload(ctx, code, bea, "pubs-de-kat-tap", "image/jpeg", JPEG));
+    now = new Date(NOW.getTime() + 3 * 24 * 60 * 60 * 1000);
+    const { mediaId: recent } = unwrap(await saveDirectUpload(ctx, code, bea, "pubs-de-kat-tap", "image/jpeg", JPEG));
+
     now = new Date(NOW.getTime() + 8 * 24 * 60 * 60 * 1000);
-    await game(ctx);
-    expect(await ctx.media.info(mediaId)).toBeNull();
+    expect(await deleteExpiredMedia(ctx)).toBe(1);
+    expect(await ctx.media.info(old)).toBeNull();
+    expect(await ctx.media.info(recent)).not.toBeNull();
+  });
+
+  test("the safety net after creating a game runs at most once an hour, and never blocks or throws", async () => {
+    let now = NOW;
+    const ctx = testContext(() => now);
+    let runs = 0;
+    const media = Object.assign(Object.create(ctx.media) as typeof ctx.media, {
+      deleteOlderThan: async () => {
+        runs++;
+        throw new Error("Blob store down");
+      },
+    });
+    const counted = { ...ctx, media };
+    resetMediaCleanupClock();
+    const logged = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    await deleteExpiredMediaIfDue(counted);
+    await deleteExpiredMediaIfDue(counted);
+    expect(runs).toBe(1);
+    now = new Date(NOW.getTime() + 61 * 60 * 1000);
+    await deleteExpiredMediaIfDue(counted);
+    expect(runs).toBe(2);
+    // Logged by error name only (never the message).
+    expect(logged).toHaveBeenCalledWith("[Hidden Pubs] media cleanup failed: Error");
   });
 });

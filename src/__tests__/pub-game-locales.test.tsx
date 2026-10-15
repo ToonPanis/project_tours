@@ -11,6 +11,7 @@ import { createPubGame } from "@/features/pub-game/logic/create-game";
 import { toPlayerView } from "@/features/pub-game/logic/player-view";
 import { qrCodeFor } from "@/features/pub-game/logic/qr";
 import { LocaleProvider } from "@/i18n/client";
+import { messagesByLocale } from "@/i18n/messages";
 import { locales, type Locale } from "@/i18n/config";
 import { createTranslator } from "@/i18n/translate";
 import type { PubGameAction, PubGameState } from "@/types/pub-game";
@@ -148,7 +149,7 @@ describe.each(locales)("Hidden Pubs in %s", (locale) => {
     if (item.introSeen !== false) window.localStorage.setItem(introSeenKey, "seen");
     fakeServer(locale);
     render(
-      <LocaleProvider locale={locale}>
+      <LocaleProvider locale={locale} messages={messagesByLocale[locale]}>
         <PubGame
           texts={pubGameTexts[locale]}
           code={CODE}
