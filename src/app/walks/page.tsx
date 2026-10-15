@@ -39,9 +39,9 @@ export default async function ExploreWalksPage() {
           </h2>
           {walks.length > 0 ? (
             <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {walks.map((walk) => (
+              {walks.map((walk, index) => (
                 <li key={walk.id} className="flex">
-                  <WalkCard walk={walk} t={t} />
+                  <WalkCard walk={walk} t={t} preloadCover={index === 0} />
                 </li>
               ))}
             </ul>

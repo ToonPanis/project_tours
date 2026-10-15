@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useSyncExternalStore } from "react";
+import { usePreloadMap } from "@/features/navigation/preload-map";
 import { useT } from "@/i18n/client";
 import { usePubGame } from "../client/usePubGame";
 import type { PlayerView } from "../logic/player-view";
@@ -69,6 +70,8 @@ export function PubGame({ code, invite, initialView, initialVersion, texts, uplo
   const t = useT();
   const game = usePubGame(code, initialView, initialVersion);
   const { view, connection } = game;
+  // Once the game runs, teams walk between cafés: the map code downloads in the background.
+  usePreloadMap(view.phase === "playing");
   // Read from localStorage in the browser; null during the server render (no localStorage there).
   // useSyncExternalStore does this without a hydration mismatch.
   const storedIntroSeen = useSyncExternalStore(noSubscription, () => readIntroSeen(code), () => null);

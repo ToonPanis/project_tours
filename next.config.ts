@@ -30,6 +30,10 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 828, 1080, 1200, 1920],
     imageSizes: [64, 96, 128, 256, 384],
     qualities: [75],
+    // Keep an optimised image 7 days (Next's default: 4 hours), so it is made far less often
+    // (Vercel bills each optimisation). The cache can't be emptied: an image that is REPLACED
+    // gets a new file name (as the Commons downloader already does), or it shows up to 7 days late.
+    minimumCacheTTL: 7 * 24 * 60 * 60,
   },
 
   /**

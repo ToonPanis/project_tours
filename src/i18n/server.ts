@@ -1,4 +1,5 @@
 import { cookies, headers } from "next/headers";
+import { cache } from "react";
 import { unstable_rethrow } from "next/navigation";
 import { defaultLocale, isLocale, LOCALE_COOKIE, matchLocale, type Locale } from "./config";
 import { createTranslator, type Translator } from "./translate";
@@ -11,8 +12,11 @@ import { createTranslator, type Translator } from "./translate";
  *
  * Reading cookies makes the page render per request (dynamic), which is what
  * lets every page arrive in the right language without a flash of English.
+ *
+ * Wrapped in React's cache(): metadata, layout, page, header and footer all ask,
+ * but it is worked out once per request.
  */
-export async function getLocale(): Promise<Locale> {
+export const getLocale = cache(async function getLocale(): Promise<Locale> {
   try {
     const chosen = (await cookies()).get(LOCALE_COOKIE)?.value;
     if (isLocale(chosen)) return chosen;
@@ -23,8 +27,9 @@ export async function getLocale(): Promise<Locale> {
     // Outside a request (e.g. unit tests): English.
     return defaultLocale;
   }
-}
+});
 
-export async function getTranslator(): Promise<Translator> {
+/** The translator for this request's language (one per request, see getLocale). */
+export const getTranslator = cache(async function getTranslator(): Promise<Translator> {
   return createTranslator(await getLocale());
-}
+});
