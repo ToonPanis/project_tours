@@ -2,6 +2,7 @@ import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { NextResponse, type NextRequest } from "next/server";
 import { getGameContext } from "@/features/pub-game/server/context";
 import { authorizeBlobUpload } from "@/features/pub-game/server/game-service";
+import { GameStoreUnavailableError } from "@/features/pub-game/server/mongo-store";
 import { checkPostRequest, errorResponse, playerToken } from "@/features/pub-game/server/http";
 
 /**
@@ -34,6 +35,9 @@ export async function POST(request: NextRequest, ctx: RouteContext<"/api/games/[
     return NextResponse.json(result, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     if (error instanceof UploadRefused) return errorResponse(error.status, error.message);
+    // The database is down: a server error like on every other route (the phone tries again),
+    // not "invalid request" (that would blame the phone).
+    if (error instanceof GameStoreUnavailableError) throw error;
     return errorResponse(400, "invalid-request");
   }
 }

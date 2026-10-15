@@ -1,6 +1,6 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { after, NextResponse, type NextRequest } from "next/server";
 import { getGameContext } from "@/features/pub-game/server/context";
-import { createGame } from "@/features/pub-game/server/game-service";
+import { createGame, deleteExpiredMediaIfDue } from "@/features/pub-game/server/game-service";
 import { checkPostRequest, readJson, toResponse } from "@/features/pub-game/server/http";
 import { playerCookieName, playerCookieOptions } from "@/features/pub-game/server/identity";
 
@@ -15,7 +15,11 @@ export async function POST(request: NextRequest) {
 
   const body = await readJson(request);
   const walkSlug = typeof body === "object" && body !== null && "walkSlug" in body ? body.walkSlug : null;
-  const result = await createGame(getGameContext(), typeof walkSlug === "string" ? walkSlug : "", body);
+  const ctx = getGameContext();
+  const result = await createGame(ctx, typeof walkSlug === "string" ? walkSlug : "", body);
+  // Old photos and videos (privacy, D29): after the answer has gone out, so the organiser
+  // never waits for it. (The daily job /api/cron/media-cleanup is the main cleanup.)
+  if (result.ok) after(() => deleteExpiredMediaIfDue(ctx));
   if (!result.ok) return toResponse(result);
 
   const { code, playerId, token } = result.data;

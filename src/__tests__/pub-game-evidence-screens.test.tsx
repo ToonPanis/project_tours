@@ -159,6 +159,35 @@ describe("sending evidence", () => {
     await waitFor(() => expect(noBonus.disabled).toBe(false));
   });
 
+  test("a slow upload can be cancelled: no error, the photo can be sent again", async () => {
+    const uploads: AbortSignal[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string, init?: RequestInit) => {
+        if (url.includes("/media?")) {
+          // Hangs like weak café wifi, until the phone gives up.
+          return new Promise<Response>((_, reject) => {
+            uploads.push(init!.signal!);
+            init!.signal!.addEventListener("abort", () => reject(new DOMException("Aborted", "AbortError")));
+          });
+        }
+        return new Response(JSON.stringify({ changed: false, version: 10 }), { status: 200 });
+      }),
+    );
+    show(atDeKatBonus(), "b");
+    const photo = new File([new Uint8Array([1, 2, 3])], "tap.jpg", { type: "image/jpeg" });
+    fireEvent.change(screen.getByLabelText(t("pubgame.evidence.takePhoto")), { target: { files: [photo] } });
+    fireEvent.click(screen.getByRole("button", { name: t("pubgame.evidence.send") }));
+
+    fireEvent.click(await screen.findByRole("button", { name: t("common.cancel") }));
+    await waitFor(() => expect(screen.queryByRole("button", { name: t("common.cancel") })).toBeNull());
+    expect(uploads[0].aborted).toBe(true);
+    // No error message; the chosen photo is still there to send.
+    expect(screen.queryByText(t("pubgame.errors.uploadFailed"))).toBeNull();
+    expect(screen.getByRole("button", { name: t("pubgame.evidence.send") })).toBeTruthy();
+    expect((screen.getByRole("button", { name: t("pubgame.bonus.skip") }) as HTMLButtonElement).disabled).toBe(false);
+  });
+
   test("approved shows the points; rejected shows the reason and allows a new photo", () => {
     let state = atDeKatBonus();
     state = apply(state, "b", { type: "SUBMIT_EVIDENCE", submissionId: "s1", taskId: "pubs-de-kat-tap", mediaId: MEDIA_ID, participantIds: ["b"], at: AT });

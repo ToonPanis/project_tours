@@ -1,6 +1,6 @@
 import type { AnswerKey, PubGameAction, PubGameDefinition, PubGameState } from "@/types/pub-game";
 import { MAX_PLAYERS_PER_TEAM, MAX_TEAMS } from "../config";
-import { applyPubGameAction, teamPlayers } from "../logic/apply-action";
+import { applyPubGameAction, findTask, teamPlayers } from "../logic/apply-action";
 import { isValidActionId, parseClientAction, toGameAction } from "../logic/client-action";
 import { createPubGame } from "../logic/create-game";
 import type { Locale } from "@/i18n/config";
@@ -109,10 +109,7 @@ export async function createGame(ctx: GameContext, walkSlug: string, body: unkno
   }
 
   const createdAt = ctx.now();
-  const lifetime = GAME_LIFETIME_DAYS * 24 * 60 * 60 * 1000;
-  const expiresAt = new Date(createdAt.getTime() + lifetime);
-  // Privacy (D29): photos and videos older than a game's lifetime go, like the games themselves.
-  await ctx.media.deleteOlderThan(new Date(createdAt.getTime() - lifetime)).catch(() => 0);
+  const expiresAt = new Date(createdAt.getTime() + GAME_LIFETIME_MS);
   // A new code until one is free (with 31^6 ≈ 900 million codes, almost always the first).
   for (let attempt = 0; attempt < 10; attempt++) {
     const code = newGameCode();
@@ -131,6 +128,42 @@ export async function createGame(ctx: GameContext, walkSlug: string, body: unkno
     }
   }
   return fail(503, "busy");
+}
+
+// ─── Deleting old photos and videos (privacy, D29) ──────────────────────────
+
+const GAME_LIFETIME_MS = GAME_LIFETIME_DAYS * 24 * 60 * 60 * 1000;
+/** The quick cleanup after creating a game runs at most this often per server instance. */
+const CLEANUP_INTERVAL_MS = 60 * 60 * 1000;
+let lastCleanupAt: number | null = null;
+
+/**
+ * Deletes the photos and videos older than a game's lifetime (7 days), like
+ * MongoDB deletes the games themselves. MongoDB does that on its own (TTL);
+ * the Blob store doesn't, so this runs every day (Vercel Cron:
+ * /api/cron/media-cleanup) and, as a safety net, after a game is created.
+ * Returns how many files were deleted.
+ */
+export async function deleteExpiredMedia(ctx: GameContext): Promise<number> {
+  lastCleanupAt = ctx.now().getTime();
+  return ctx.media.deleteOlderThan(new Date(lastCleanupAt - GAME_LIFETIME_MS));
+}
+
+/**
+ * The safety net (in case the daily job isn't set up): run by POST /api/games
+ * AFTER the answer has gone out, so creating a game never waits for it, and at
+ * most once an hour per server instance (listing the Blob store costs operations).
+ */
+export async function deleteExpiredMediaIfDue(ctx: GameContext): Promise<void> {
+  if (lastCleanupAt !== null && ctx.now().getTime() - lastCleanupAt < CLEANUP_INTERVAL_MS) return;
+  await deleteExpiredMedia(ctx).catch((error: unknown) => {
+    console.error(`[Hidden Pubs] media cleanup failed: ${error instanceof Error ? error.name : "unknown error"}`);
+  });
+}
+
+/** Test helper: as if no cleanup ran on this instance yet. */
+export function resetMediaCleanupClock(): void {
+  lastCleanupAt = null;
 }
 
 // ─── Lobby and joining ──────────────────────────────────────────────────────
@@ -286,7 +319,7 @@ export async function performAction(
   if (clientAction.type === "SUBMIT_EVIDENCE") {
     const game = await loadGame(ctx, code);
     if (!game) return fail(404, "unknown-game");
-    const kind = taskKind(gameDataOf(ctx, game), clientAction.taskId);
+    const kind = findTask(gameDataOf(ctx, game).definition, clientAction.taskId)?.task.evidence;
     if (!kind) return fail(409, "unknown-task");
     if (!isMediaIdOfGame(clientAction.mediaId, code)) return fail(400, "invalid-media");
     const info = await ctx.media.info(clientAction.mediaId);
@@ -361,15 +394,12 @@ export async function getReveal(
 // ─── Evidence photos and videos ─────────────────────────────────────────────
 
 /** Whether a task needs a photo or a video, or null for an unknown task. */
-function taskKind(data: GameData, taskId: string): EvidenceKind | null {
-  for (const cafe of data.definition.cafes) {
-    const task = cafe.tasks.find((candidate) => candidate.id === taskId);
-    if (task) return task.evidence;
-  }
-  return null;
-}
-
-/** The player of the cookie, and what their file must be for this task. */
+/**
+ * The player of the cookie, and what their file must be for this task. Only
+ * when the team may send it right now: the game's own rules are asked with a
+ * trial SUBMIT_EVIDENCE (the right café and step, not done yet, or a rejected
+ * one sent again: D26). So nobody gets upload tokens for tasks they can't submit.
+ */
 async function uploader(
   ctx: GameContext,
   code: string,
@@ -381,9 +411,20 @@ async function uploader(
   const playerId = await findPlayer(ctx, code, token);
   if (!playerId) return fail(401, "not-joined");
   if (game.state.phase !== "playing") return fail(409, "game-not-started");
-  const kind = typeof taskId === "string" ? taskKind(gameDataOf(ctx, game), taskId) : null;
-  if (!kind) return fail(400, "unknown-task");
-  return ok({ playerId, kind });
+  const { definition, answerKey } = gameDataOf(ctx, game);
+  const located = typeof taskId === "string" ? findTask(definition, taskId) : null;
+  if (!located) return fail(400, "unknown-task");
+
+  const trial = applyPubGameAction(definition, answerKey, game.state, playerId, {
+    type: "SUBMIT_EVIDENCE",
+    submissionId: "upload-check",
+    taskId: located.task.id,
+    mediaId: `${mediaPrefix(code)}upload-check.jpg`,
+    participantIds: [playerId],
+    at: ctx.now().toISOString(),
+  });
+  if (!trial.ok) return fail(409, trial.error);
+  return ok({ playerId, kind: located.task.evidence });
 }
 
 /**
@@ -432,7 +473,8 @@ export async function authorizeBlobUpload(
   }
   const who = await uploader(ctx, code, token, taskId);
   if (!who.ok) return who;
-  if (!pathname.startsWith(mediaPrefix(code)) || pathname.includes("..")) return fail(400, "invalid-media");
+  // The same strict pattern SUBMIT_EVIDENCE checks later: this game's folder, a plain file name.
+  if (!isMediaIdOfGame(pathname, code)) return fail(400, "invalid-media");
   return ok({
     allowedContentTypes: ALLOWED_TYPES[who.data.kind],
     maximumSizeInBytes: maxBytesFor(who.data.kind),

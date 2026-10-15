@@ -1,5 +1,6 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { NextRequest } from "next/server";
+import { GET as mediaCleanupRoute } from "@/app/api/cron/media-cleanup/route";
 import { POST as createGameRoute } from "@/app/api/games/route";
 import { GET as lobbyRoute } from "@/app/api/games/[code]/route";
 import { POST as joinRoute } from "@/app/api/games/[code]/join/route";
@@ -11,6 +12,15 @@ import { playerCookieName } from "@/features/pub-game/server/identity";
  * The Route Handlers called directly, like Next.js does, with real Request
  * objects. They use the development memory store (shared by these tests).
  */
+
+// after() only works inside a real Next.js request; here it collects the work for later.
+const afterResponse = vi.hoisted(() => ({ tasks: [] as (() => unknown)[] }));
+vi.mock("next/server", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("next/server")>()),
+  after: (task: () => unknown) => {
+    afterResponse.tasks.push(task);
+  },
+}));
 
 const ORIGIN = "http://localhost:3000";
 
@@ -117,5 +127,30 @@ describe("API routes", () => {
     const response = await actions(post("/", action, { cookie: cookieHeader }));
     expect(response.status).toBe(409);
     expect(await response.json()).toEqual({ error: "empty-team" });
+  });
+});
+
+describe("cleaning up old photos and videos (D29)", () => {
+  test("creating a game doesn't wait for it: the cleanup is scheduled for after the answer", async () => {
+    afterResponse.tasks.length = 0;
+    await createTestGame();
+    expect(afterResponse.tasks).toHaveLength(1);
+    await afterResponse.tasks[0]();
+  });
+
+  test("the daily job only runs with Vercel's CRON_SECRET", async () => {
+    const call = (authorization?: string) =>
+      mediaCleanupRoute(new NextRequest(`${ORIGIN}/api/cron/media-cleanup`, { headers: authorization ? { authorization } : {} }));
+
+    vi.stubEnv("CRON_SECRET", "");
+    expect((await call("Bearer anything")).status).toBe(503);
+
+    vi.stubEnv("CRON_SECRET", "s3cret-for-tests");
+    expect((await call()).status).toBe(401);
+    expect((await call("Bearer wrong")).status).toBe(401);
+    expect((await call("s3cret-for-tests")).status).toBe(401);
+    const ok = await call("Bearer s3cret-for-tests");
+    expect(ok.status).toBe(200);
+    expect(await ok.json()).toEqual({ deleted: expect.any(Number) });
   });
 });
