@@ -67,7 +67,7 @@ test("the corporate page: loads without errors, fits a phone, and a quote reques
 });
 
 test("the new admin pages need a session", async ({ page }) => {
-  for (const path of ["/admin/orders", "/admin/tax", "/admin/discounts", "/admin/quotes"]) {
+  for (const path of ["/admin/orders", "/admin/tax", "/admin/discounts", "/admin/quotes", "/admin/groups", "/admin/documents"]) {
     await page.goto(path);
     await expect(page).toHaveURL(/\/admin\/login$/);
   }

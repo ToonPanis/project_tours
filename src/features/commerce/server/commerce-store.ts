@@ -155,6 +155,20 @@ export interface CommerceStore {
   /** Moves a request to a new status only while it is still `from` (atomic), adding the history line. */
   transitionQuote(id: string, from: QuoteStatus, entry: QuoteRequest["history"][number]): Promise<boolean>;
 
+  /** How many requests have one of these statuses (the dashboard's "open quotes"). */
+  countQuotes(statuses: QuoteStatus[]): Promise<number>;
+
+  // ── Reports (P5) ─────────────────────────────────────────────────────
+  /**
+   * Paid orders (status "paid" or "refunded") paid before `to`, oldest first, at most `limit`.
+   * The dashboard needs the earlier ones too, to tell new from returning customers.
+   */
+  listPaidOrdersUntil(to: Date, limit: number): Promise<Order[]>;
+  /** Receipts, invoices and credit notes, newest first; optionally only one status. */
+  listDocuments(query: { skip: number; limit: number; status?: BillingDocument["status"] }): Promise<{ documents: BillingDocument[]; total: number }>;
+  /** Tickets used for a Hidden Pubs game (a real game code, not a reservation), newest first. */
+  listGrantsWithGame(query: { skip: number; limit: number }): Promise<{ grants: TicketGrant[]; total: number }>;
+
   // ── Settings ─────────────────────────────────────────────────────────
   /** The corporate price table, or null when an admin never saved one (the defaults are used). */
   getCorporatePricing(): Promise<CorporatePricing | null>;

@@ -359,6 +359,35 @@ export class MemoryCommerceStore implements CommerceStore {
     return true;
   }
 
+  async countQuotes(statuses: QuoteStatus[]) {
+    return [...this.quotes.values()].filter((entry) => statuses.includes(entry.quote.status)).length;
+  }
+
+  async listPaidOrdersUntil(to: Date, limit: number) {
+    return structuredClone(
+      [...this.orders.values()]
+        .filter((order) => (order.status === "paid" || order.status === "refunded") && order.paidAt !== null && Date.parse(order.paidAt) < to.getTime())
+        .sort((a, b) => (a.paidAt as string).localeCompare(b.paidAt as string))
+        .slice(0, limit),
+    );
+  }
+
+  async listDocuments({ skip, limit, status }: { skip: number; limit: number; status?: BillingDocument["status"] }) {
+    const matching = [...this.documents.values()]
+      .filter((document) => !status || document.status === status)
+      .reverse()
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    return { documents: structuredClone(matching.slice(skip, skip + limit)), total: matching.length };
+  }
+
+  async listGrantsWithGame({ skip, limit }: { skip: number; limit: number }) {
+    const matching = [...this.grants.values()]
+      .filter((grant) => typeof grant.gameCode === "string" && !grant.gameCode.startsWith("pending:"))
+      .reverse()
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    return { grants: structuredClone(matching.slice(skip, skip + limit)), total: matching.length };
+  }
+
   async getCorporatePricing() {
     return this.corporatePricing ? structuredClone(this.corporatePricing) : null;
   }

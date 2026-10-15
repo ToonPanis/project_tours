@@ -349,6 +349,8 @@ export const INDEXES = {
   [COLLECTIONS.orders]: [
     { key: { createdAt: -1 }, name: "createdAt_desc" },
     { key: { status: 1, createdAt: -1 }, name: "status_createdAt" },
+    // P5: the dashboard reads paid orders by payment date.
+    { key: { status: 1, paidAt: 1 }, name: "status_paidAt" },
     {
       key: { "stripe.paymentIntentId": 1 },
       name: "paymentIntentId",
@@ -356,11 +358,17 @@ export const INDEXES = {
     },
   ],
   [COLLECTIONS.stripeEvents]: [expiry],
-  [COLLECTIONS.ticketGrants]: [{ key: { orderId: 1 }, name: "orderId_unique", unique: true }],
+  [COLLECTIONS.ticketGrants]: [
+    { key: { orderId: 1 }, name: "orderId_unique", unique: true },
+    { key: { gameCode: 1, createdAt: -1 }, name: "gameCode_createdAt" },
+  ],
   [COLLECTIONS.ticketDevices]: [{ key: { grantId: 1 }, name: "grantId" }, expiry],
   [COLLECTIONS.discounts]: [{ key: { code: 1 }, name: "code_unique", unique: true }],
   [COLLECTIONS.counters]: [],
-  [COLLECTIONS.documents]: [{ key: { orderId: 1 }, name: "orderId" }],
+  [COLLECTIONS.documents]: [
+    { key: { orderId: 1 }, name: "orderId" },
+    { key: { status: 1, createdAt: -1 }, name: "status_createdAt" },
+  ],
   [COLLECTIONS.quotes]: [
     { key: { status: 1, createdAt: -1 }, name: "status_createdAt" },
     { key: { createdAt: -1 }, name: "createdAt_desc" },
