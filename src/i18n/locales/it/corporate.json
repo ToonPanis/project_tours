@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "title": "Team building e uscite aziendali ad Anversa",
+    "description": "Sfide a squadre, passeggiate private e uscite per aziende e gruppi ad Anversa, in autonomia sui propri smartphone o con una guida. Richieda un preventivo."
+  },
+  "eyebrow": "Per aziende e gruppi",
+  "title": "Team building per le strade di Anversa",
+  "intro": "Scoprire Anversa insieme: una sfida a squadre, una passeggiata privata o un'intera uscita aziendale. In autonomia sui propri smartphone o con una guida. Ogni programma è su misura.",
+  "cta": "Richieda un preventivo",
+  "offersTitle": "Cosa possiamo organizzare",
+  "offers": {
+    "team-building": "Le squadre risolvono prove ed enigmi sul posto nel centro storico, sui propri smartphone, con una classifica in tempo reale.",
+    "hidden-pubs-team-challenge": "Il nostro gioco nei locali per squadre: prove, carte e storie nei caffè di Anversa. Per adulti (18+); ognuno sceglie la propria bevanda, e quella analcolica vale esattamente lo stesso.",
+    "alcohol-free-city-challenge": "La sfida a squadre senza locali: lo stesso lavoro di squadra e le stesse prove in città, completamente analcolica.",
+    "private-walk": "Una delle nostre passeggiate solo per il Suo gruppo, nella data che Le è più comoda.",
+    "company-outing": "Una mezza giornata o una giornata intera ad Anversa, che unisce una passeggiata o una sfida al Suo programma.",
+    "international-group": "Le passeggiate e i giochi sono disponibili in otto lingue, così squadre miste possono giocare insieme."
+  },
+  "pricesTitle": "Prezzi indicativi",
+  "pricesIntro": "Per l'intero gruppo. Il Suo preventivo è su misura.",
+  "persons": "Persone",
+  "selfGuided": "In autonomia",
+  "guided": "Con guida",
+  "from": "da {amount}",
+  "onRequest": "su richiesta",
+  "exclVat": "Prezzi IVA esclusa.",
+  "inclVat": "Prezzi IVA inclusa.",
+  "notIncluded": "Bevande, catering e servizi aggiuntivi sono quotati a parte.",
+  "howTitle": "Come funziona",
+  "how": {
+    "step1": "Ci invii la Sua richiesta con la data, il numero di persone e ciò che ha in mente.",
+    "step2": "La contattiamo e Le inviamo una proposta su misura.",
+    "step3": "Non appena avrà dato il Suo consenso, prepareremo tutto per la Sua giornata ad Anversa."
+  },
+  "form": {
+    "title": "Richieda un preventivo",
+    "company": "Nome dell'azienda",
+    "contactName": "Referente",
+    "email": "E-mail aziendale",
+    "phone": "Telefono (facoltativo)",
+    "date": "Data preferita",
+    "flexible": "flessibile",
+    "dateHint": "Lasci vuoto se è flessibile.",
+    "participants": "Numero stimato di partecipanti",
+    "activity": "Attività",
+    "language": "Lingua dell'attività",
+    "formula": "Formula",
+    "wishes": "Altre richieste (facoltativo)",
+    "privacy": "Utilizziamo questi dati solo per rispondere alla Sua richiesta. Le richieste vengono cancellate dopo due anni.",
+    "submit": "Invia richiesta",
+    "sending": "Invio in corso…",
+    "thanks": "Grazie! Abbiamo ricevuto la Sua richiesta e La contatteremo a breve. Riceverà anche una conferma via e-mail.",
+    "honeypot": "Lasci vuoto questo campo"
+  },
+  "activities": {
+    "team-building": "Team building",
+    "hidden-pubs-team-challenge": "Hidden Pubs Team Challenge",
+    "alcohol-free-city-challenge": "City Challenge analcolica",
+    "private-walk": "Passeggiata privata",
+    "company-outing": "Uscita aziendale",
+    "international-group": "Attività per gruppi internazionali",
+    "something-else": "Altro"
+  },
+  "formulas": {
+    "self-guided": "In autonomia (sui propri smartphone)",
+    "guided": "Con guida",
+    "unsure": "Non ancora deciso"
+  },
+  "errors": {
+    "invalid-company": "Indichi il nome dell'azienda.",
+    "invalid-name": "Indichi il referente.",
+    "invalid-email": "Indichi un indirizzo e-mail valido.",
+    "invalid-phone": "Controlli il numero di telefono (solo cifre, spazi e +).",
+    "invalid-date": "Scelga una data a partire da oggi, al massimo due anni in avanti.",
+    "invalid-participants": "Indichi un numero di partecipanti da 2 a 1000.",
+    "invalid-activity": "Scelga un'attività.",
+    "invalid-language": "Scelga una lingua.",
+    "invalid-formula": "Scelga una formula.",
+    "invalid-wishes": "Le Sue richieste possono contenere al massimo 2000 caratteri.",
+    "too-many-requests": "Ha già inviato diverse richieste. Riprovi tra un'ora.",
+    "offline": "Nessuna connessione. Controlli la connessione a Internet e riprovi.",
+    "generic": "Qualcosa è andato storto. Riprovi."
+  },
+  "email": {
+    "subject": "Abbiamo ricevuto la Sua richiesta – Hidden Antwerp",
+    "greeting": "Gentile {name},",
+    "body": "La ringraziamo per la Sua richiesta di preventivo per {company}.",
+    "next": "Le invieremo una proposta il prima possibile.",
+    "summary": "La Sua richiesta:",
+    "signoff": "Cordiali saluti,"
+  }
+}

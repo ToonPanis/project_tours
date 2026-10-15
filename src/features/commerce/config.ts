@@ -28,6 +28,8 @@ export const RATE_LIMITS = {
   checkoutPerClient: { limit: 20, windowMs: 15 * MINUTE },
   /** Ticket links opened per network address (no guessing). */
   ticketPerClient: { limit: 30, windowMs: 15 * MINUTE },
+  /** Quote requests per network address (P4: no spam floods). */
+  quotePerClient: { limit: 5, windowMs: 60 * MINUTE },
 } as const;
 
 /** Outgoing email: how often to try, and how long to wait after each failure. */
@@ -64,6 +66,17 @@ export const ORDERS_PAGE_SIZE = 25;
 /** Tax categories and discount codes: short ids, letters, digits and dashes. */
 export const MAX_TAX_CATEGORIES = 10;
 export const MAX_OSS_RATES = 200;
+
+// ─── P4: corporate quote requests ───────────────────────────────────────────
+
+/** A real person needs a few seconds to fill in the form; a bot sends at once. */
+export const QUOTE_MIN_FILL_MS = 3000;
+/** The same company, email, date and activity again within this time is the same request (no second one). */
+export const QUOTE_DUPLICATE_WINDOW_MS = DAY;
+/** Requests are deleted this long after they came in (GDPR: only kept while useful; to confirm, B-list). */
+export const QUOTE_RETENTION_MS = 2 * 365 * DAY;
+export const QUOTES_PAGE_SIZE = 25;
+export const MAX_QUOTE_PARTICIPANTS = 1000;
 
 /** The 27 EU member states (ISO codes): OSS rates only exist for these. */
 export const EU_COUNTRIES = [

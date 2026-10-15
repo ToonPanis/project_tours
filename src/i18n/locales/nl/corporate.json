@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "title": "Teambuilding en bedrijfsuitjes in Antwerpen",
+    "description": "Teamchallenges, privéwandelingen en uitstappen voor bedrijven en groepen in Antwerpen, zelfgeleid op uw eigen smartphones of met een gids. Vraag een offerte aan."
+  },
+  "eyebrow": "Voor bedrijven en groepen",
+  "title": "Teambuilding in de straten van Antwerpen",
+  "intro": "Ontdek Antwerpen samen: een teamchallenge, een privéwandeling of een volledig bedrijfsuitje. Zelfgeleid op uw eigen smartphones, of met een gids. Elk programma is maatwerk.",
+  "cta": "Vraag een offerte aan",
+  "offersTitle": "Wat we kunnen organiseren",
+  "offers": {
+    "team-building": "Teams lossen opdrachten en raadsels op locatie op in de oude stad, op hun eigen smartphones, met een live klassement.",
+    "hidden-pubs-team-challenge": "Ons caféspel voor teams: opdrachten, kaarten en verhalen in de cafés van Antwerpen. Voor volwassenen (18+); iedereen kiest zijn eigen drankje, alcoholvrij telt net zo goed.",
+    "alcohol-free-city-challenge": "De teamchallenge zonder cafés: hetzelfde teamwerk en dezelfde stadsopdrachten, volledig alcoholvrij.",
+    "private-walk": "Een van onze wandelingen voor uw groep alleen, op een datum die u past.",
+    "company-outing": "Een halve of volledige dag uit in Antwerpen, waarin een wandeling of challenge wordt gecombineerd met uw eigen programma.",
+    "international-group": "De wandelingen en spellen zijn beschikbaar in acht talen, zodat gemengde teams samen kunnen spelen."
+  },
+  "pricesTitle": "Richtprijzen",
+  "pricesIntro": "Voor de hele groep. Uw offerte is maatwerk.",
+  "persons": "Personen",
+  "selfGuided": "Zelfgeleid",
+  "guided": "Met gids",
+  "from": "vanaf {amount}",
+  "onRequest": "op aanvraag",
+  "exclVat": "Prijzen exclusief btw.",
+  "inclVat": "Prijzen inclusief btw.",
+  "notIncluded": "Dranken, catering en extra diensten worden apart aangerekend.",
+  "howTitle": "Hoe het werkt",
+  "how": {
+    "step1": "Stuur ons uw aanvraag met de datum, de groepsgrootte en wat u voor ogen hebt.",
+    "step2": "We nemen contact met u op en sturen een voorstel op maat.",
+    "step3": "Zodra u akkoord gaat, bereiden we alles voor uw dag in Antwerpen voor."
+  },
+  "form": {
+    "title": "Vraag een offerte aan",
+    "company": "Bedrijfsnaam",
+    "contactName": "Contactpersoon",
+    "email": "Zakelijk e-mailadres",
+    "phone": "Telefoon (optioneel)",
+    "date": "Voorkeursdatum",
+    "flexible": "flexibel",
+    "dateHint": "Laat leeg als u flexibel bent.",
+    "participants": "Geschat aantal deelnemers",
+    "activity": "Activiteit",
+    "language": "Taal van de activiteit",
+    "formula": "Formule",
+    "wishes": "Andere wensen (optioneel)",
+    "privacy": "We gebruiken deze gegevens alleen om uw aanvraag te beantwoorden. Aanvragen worden na twee jaar verwijderd.",
+    "submit": "Aanvraag versturen",
+    "sending": "Bezig met versturen…",
+    "thanks": "Dank u! We hebben uw aanvraag ontvangen en nemen binnenkort contact met u op. U ontvangt ook een bevestiging per e-mail.",
+    "honeypot": "Laat dit veld leeg"
+  },
+  "activities": {
+    "team-building": "Teambuilding",
+    "hidden-pubs-team-challenge": "Hidden Pubs Team Challenge",
+    "alcohol-free-city-challenge": "Alcoholvrije City Challenge",
+    "private-walk": "Privéwandeling",
+    "company-outing": "Bedrijfsuitje",
+    "international-group": "Activiteit voor internationale groepen",
+    "something-else": "Iets anders"
+  },
+  "formulas": {
+    "self-guided": "Zelfgeleid (op uw eigen smartphones)",
+    "guided": "Met gids",
+    "unsure": "Nog niet zeker"
+  },
+  "errors": {
+    "invalid-company": "Vul de bedrijfsnaam in.",
+    "invalid-name": "Vul de contactpersoon in.",
+    "invalid-email": "Vul een geldig e-mailadres in.",
+    "invalid-phone": "Controleer het telefoonnummer (alleen cijfers, spaties en +).",
+    "invalid-date": "Kies een datum vanaf vandaag, hoogstens twee jaar vooruit.",
+    "invalid-participants": "Geef een aantal deelnemers van 2 tot 1000 op.",
+    "invalid-activity": "Kies een activiteit.",
+    "invalid-language": "Kies een taal.",
+    "invalid-formula": "Kies een formule.",
+    "invalid-wishes": "Uw wensen mogen hoogstens 2000 tekens lang zijn.",
+    "too-many-requests": "U hebt al meerdere aanvragen verstuurd. Probeer het over een uur opnieuw.",
+    "offline": "Geen verbinding. Controleer uw internetverbinding en probeer het opnieuw.",
+    "generic": "Er ging iets mis. Probeer het opnieuw."
+  },
+  "email": {
+    "subject": "We hebben uw aanvraag ontvangen – Hidden Antwerp",
+    "greeting": "Beste {name},",
+    "body": "Hartelijk dank voor uw offerteaanvraag voor {company}.",
+    "next": "We komen zo snel mogelijk bij u terug met een voorstel.",
+    "summary": "Uw aanvraag:",
+    "signoff": "Met vriendelijke groeten,"
+  }
+}

@@ -2,6 +2,9 @@ import type {
   AuditEntry,
   BillingDocument,
   CommerceUser,
+  CorporatePricing,
+  QuoteRequest,
+  QuoteStatus,
   Discount,
   Order,
   OrderStatus,
@@ -39,6 +42,8 @@ export class MemoryCommerceStore implements CommerceStore {
   private discounts = new Map<string, Discount>();
   private numbers = new Map<string, number>();
   private documents = new Map<string, BillingDocument>();
+  private quotes = new Map<string, { quote: QuoteRequest; dedupeKey: string }>();
+  private corporatePricing: CorporatePricing | null = null;
 
   async findUserByEmail(email: string) {
     const user = [...this.users.values()].find((candidate) => candidate.email === email);
@@ -320,5 +325,45 @@ export class MemoryCommerceStore implements CommerceStore {
 
   async listDocumentsForOrder(orderId: string) {
     return structuredClone([...this.documents.values()].filter((document) => document.orderId === orderId));
+  }
+
+  async insertQuote(quote: QuoteRequest, dedupeKey: string) {
+    this.quotes.set(quote.id, { quote: structuredClone(quote), dedupeKey });
+  }
+
+  async findQuoteByDedupeKey(dedupeKey: string, since: Date) {
+    const found = [...this.quotes.values()].find(
+      (entry) => entry.dedupeKey === dedupeKey && Date.parse(entry.quote.createdAt) > since.getTime(),
+    );
+    return found ? structuredClone(found.quote) : null;
+  }
+
+  async getQuote(id: string) {
+    const entry = this.quotes.get(id);
+    return entry ? structuredClone(entry.quote) : null;
+  }
+
+  async listQuotes({ skip, limit, status }: { skip: number; limit: number; status?: QuoteStatus }) {
+    const matching = [...this.quotes.values()]
+      .map((entry) => entry.quote)
+      .filter((quote) => !status || quote.status === status)
+      .reverse()
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    return { quotes: structuredClone(matching.slice(skip, skip + limit)), total: matching.length };
+  }
+
+  async transitionQuote(id: string, from: QuoteStatus, entry: QuoteRequest["history"][number]) {
+    const stored = this.quotes.get(id);
+    if (!stored || stored.quote.status !== from) return false;
+    stored.quote = { ...stored.quote, status: entry.status, updatedAt: entry.at, history: [...stored.quote.history, structuredClone(entry)] };
+    return true;
+  }
+
+  async getCorporatePricing() {
+    return this.corporatePricing ? structuredClone(this.corporatePricing) : null;
+  }
+
+  async saveCorporatePricing(pricing: CorporatePricing) {
+    this.corporatePricing = structuredClone(pricing);
   }
 }

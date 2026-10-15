@@ -1,5 +1,6 @@
 import commerce from "./commerce.json";
 import common from "./common.json";
+import corporate from "./corporate.json";
 import errors from "./errors.json";
 import game from "./game.json";
 import gps from "./gps.json";
@@ -11,6 +12,6 @@ import pubgame from "./pubgame.json";
 import walks from "./walks.json";
 
 /** English: the master language. Every other language is checked against these keys. */
-const en = { common, navigation, meta, home, errors, walks, game, guide, gps, pubgame, commerce };
+const en = { common, navigation, meta, home, errors, walks, game, guide, gps, pubgame, commerce, corporate };
 
 export default en;

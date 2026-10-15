@@ -79,7 +79,9 @@ export type AuditAction =
   | "refund-requested"
   | "ticket-revoked"
   | "ticket-devices-reset"
-  | "order-email-resent";
+  | "order-email-resent"
+  | "quote-status-changed"
+  | "corporate-pricing-updated";
 
 // ─── Tax (decision B8) ──────────────────────────────────────────────────────
 
@@ -299,4 +301,62 @@ export interface OutboxEmail {
   lastError: string | null;
   createdAt: string;
   sentAt: string | null;
+}
+
+// ─── Corporate quote requests (P4) ──────────────────────────────────────────
+
+/** NEW → CONTACTED → QUOTED → ACCEPTED → COMPLETED; DECLINED and CANCELLED end a request. */
+export type QuoteStatus = "NEW" | "CONTACTED" | "QUOTED" | "ACCEPTED" | "DECLINED" | "COMPLETED" | "CANCELLED";
+
+export type QuoteActivity =
+  | "team-building"
+  | "hidden-pubs-team-challenge"
+  | "alcohol-free-city-challenge"
+  | "private-walk"
+  | "company-outing"
+  | "international-group"
+  | "something-else";
+
+export type QuoteFormula = "self-guided" | "guided" | "unsure";
+
+/**
+ * A company's request for a quote, from /corporate. Only what's needed to make
+ * an offer (no address, no job title): data minimisation (brief 5.3).
+ */
+export interface QuoteRequest {
+  id: string;
+  status: QuoteStatus;
+  company: string;
+  contactName: string;
+  email: string;
+  phone: string | null;
+  /** "2026-12-05", or null when the company is flexible. */
+  preferredDate: string | null;
+  participants: number;
+  activity: QuoteActivity;
+  /** One of the site's 8 languages (also the language of the confirmation email). */
+  language: string;
+  formula: QuoteFormula;
+  wishes: string | null;
+  /** Every status change, with who made it and an optional internal note. */
+  history: { status: QuoteStatus; at: string; by: string | null; note: string | null }[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** One line of the indicative price table on /corporate (editable in the admin, brief 5.2). */
+export interface CorporatePriceTier {
+  persons: number;
+  selfGuidedCents: number | null;
+  guidedCents: number | null;
+  /** "From €999": the guided price is a starting price. */
+  guidedFrom: boolean;
+}
+
+export interface CorporatePricing {
+  tiers: CorporatePriceTier[];
+  /** Whether the amounts include VAT (shown next to the table). */
+  pricesIncludeVat: boolean;
+  updatedAt: string | null;
+  updatedBy: string | null;
 }

@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "title": "Teambuilding und Firmenausflüge in Antwerpen",
+    "description": "Team-Challenges, private Rundgänge und Ausflüge für Unternehmen und Gruppen in Antwerpen, selbstgeführt auf Ihren eigenen Smartphones oder mit Guide. Fordern Sie ein Angebot an."
+  },
+  "eyebrow": "Für Unternehmen und Gruppen",
+  "title": "Teambuilding in den Straßen Antwerpens",
+  "intro": "Entdecken Sie Antwerpen gemeinsam: eine Team-Challenge, ein privater Rundgang oder ein ganzer Firmenausflug. Selbstgeführt auf Ihren eigenen Smartphones oder mit Guide. Jedes Programm wird individuell gestaltet.",
+  "cta": "Angebot anfordern",
+  "offersTitle": "Was wir organisieren können",
+  "offers": {
+    "team-building": "Teams lösen vor Ort in der Altstadt Aufgaben und Rätsel, auf ihren eigenen Smartphones, mit einer Live-Rangliste.",
+    "hidden-pubs-team-challenge": "Unser Kneipenspiel für Teams: Aufgaben, Karten und Geschichten in den Cafés von Antwerpen. Für Erwachsene (18+); jeder wählt sein eigenes Getränk, alkoholfrei zählt genauso.",
+    "alcohol-free-city-challenge": "Die Team-Challenge ohne Cafés: dieselbe Teamarbeit und dieselben Stadtaufgaben, komplett alkoholfrei.",
+    "private-walk": "Einer unserer Rundgänge nur für Ihre Gruppe, an einem Termin, der Ihnen passt.",
+    "company-outing": "Ein halber oder ganzer Tag in Antwerpen, der einen Rundgang oder eine Challenge mit Ihrem eigenen Programm verbindet.",
+    "international-group": "Die Rundgänge und Spiele gibt es in acht Sprachen, sodass gemischte Teams zusammen spielen können."
+  },
+  "pricesTitle": "Richtpreise",
+  "pricesIntro": "Für die ganze Gruppe. Ihr Angebot wird individuell erstellt.",
+  "persons": "Personen",
+  "selfGuided": "Selbstgeführt",
+  "guided": "Mit Guide",
+  "from": "ab {amount}",
+  "onRequest": "auf Anfrage",
+  "exclVat": "Preise zzgl. MwSt.",
+  "inclVat": "Preise inkl. MwSt.",
+  "notIncluded": "Getränke, Catering und zusätzliche Leistungen werden separat berechnet.",
+  "howTitle": "So funktioniert es",
+  "how": {
+    "step1": "Senden Sie uns Ihre Anfrage mit Datum, Gruppengröße und Ihren Vorstellungen.",
+    "step2": "Wir melden uns bei Ihnen und senden Ihnen ein individuelles Angebot.",
+    "step3": "Sobald Sie zustimmen, bereiten wir alles für Ihren Tag in Antwerpen vor."
+  },
+  "form": {
+    "title": "Angebot anfordern",
+    "company": "Firmenname",
+    "contactName": "Ansprechperson",
+    "email": "Geschäftliche E-Mail-Adresse",
+    "phone": "Telefon (optional)",
+    "date": "Wunschtermin",
+    "flexible": "flexibel",
+    "dateHint": "Leer lassen, wenn Sie flexibel sind.",
+    "participants": "Geschätzte Teilnehmerzahl",
+    "activity": "Aktivität",
+    "language": "Sprache der Aktivität",
+    "formula": "Format",
+    "wishes": "Weitere Wünsche (optional)",
+    "privacy": "Wir verwenden diese Angaben nur, um Ihre Anfrage zu beantworten. Anfragen werden nach zwei Jahren gelöscht.",
+    "submit": "Anfrage senden",
+    "sending": "Wird gesendet…",
+    "thanks": "Vielen Dank! Wir haben Ihre Anfrage erhalten und melden uns in Kürze bei Ihnen. Sie erhalten außerdem eine Bestätigung per E-Mail.",
+    "honeypot": "Dieses Feld bitte leer lassen"
+  },
+  "activities": {
+    "team-building": "Teambuilding",
+    "hidden-pubs-team-challenge": "Hidden Pubs Team Challenge",
+    "alcohol-free-city-challenge": "Alkoholfreie City Challenge",
+    "private-walk": "Privater Rundgang",
+    "company-outing": "Firmenausflug",
+    "international-group": "Aktivität für internationale Gruppen",
+    "something-else": "Etwas anderes"
+  },
+  "formulas": {
+    "self-guided": "Selbstgeführt (auf Ihren eigenen Smartphones)",
+    "guided": "Mit Guide",
+    "unsure": "Noch nicht sicher"
+  },
+  "errors": {
+    "invalid-company": "Bitte geben Sie den Firmennamen an.",
+    "invalid-name": "Bitte geben Sie die Ansprechperson an.",
+    "invalid-email": "Bitte geben Sie eine gültige E-Mail-Adresse an.",
+    "invalid-phone": "Bitte prüfen Sie die Telefonnummer (nur Ziffern, Leerzeichen und +).",
+    "invalid-date": "Bitte wählen Sie ein Datum ab heute, höchstens zwei Jahre im Voraus.",
+    "invalid-participants": "Bitte geben Sie eine Teilnehmerzahl von 2 bis 1000 an.",
+    "invalid-activity": "Bitte wählen Sie eine Aktivität.",
+    "invalid-language": "Bitte wählen Sie eine Sprache.",
+    "invalid-formula": "Bitte wählen Sie ein Format.",
+    "invalid-wishes": "Ihre Wünsche dürfen höchstens 2000 Zeichen lang sein.",
+    "too-many-requests": "Sie haben bereits mehrere Anfragen gesendet. Bitte versuchen Sie es in einer Stunde erneut.",
+    "offline": "Keine Verbindung. Prüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.",
+    "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+  },
+  "email": {
+    "subject": "Wir haben Ihre Anfrage erhalten – Hidden Antwerp",
+    "greeting": "Guten Tag {name},",
+    "body": "Vielen Dank für Ihre Angebotsanfrage für {company}.",
+    "next": "Wir melden uns so bald wie möglich mit einem Angebot bei Ihnen.",
+    "summary": "Ihre Anfrage:",
+    "signoff": "Mit freundlichen Grüßen"
+  }
+}

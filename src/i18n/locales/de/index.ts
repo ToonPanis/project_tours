@@ -1,5 +1,6 @@
 import commerce from "./commerce.json";
 import common from "./common.json";
+import corporate from "./corporate.json";
 import errors from "./errors.json";
 import game from "./game.json";
 import gps from "./gps.json";
@@ -10,6 +11,6 @@ import navigation from "./navigation.json";
 import pubgame from "./pubgame.json";
 import walks from "./walks.json";
 
-const de = { common, navigation, meta, home, errors, walks, game, guide, gps, pubgame, commerce };
+const de = { common, navigation, meta, home, errors, walks, game, guide, gps, pubgame, commerce, corporate };
 
 export default de;

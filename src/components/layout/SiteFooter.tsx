@@ -13,9 +13,14 @@ export async function SiteFooter() {
           {" · "}
           {t("navigation.footerTagline")}
         </p>
-        <Link href="/walks" className="underline-offset-4 hover:text-gold hover:underline">
-          {t("navigation.exploreWalks")}
-        </Link>
+        <div className="flex flex-wrap gap-x-5 gap-y-2">
+          <Link href="/walks" className="min-h-11 content-center underline-offset-4 hover:text-gold hover:underline">
+            {t("navigation.exploreWalks")}
+          </Link>
+          <Link href="/corporate" className="min-h-11 content-center underline-offset-4 hover:text-gold hover:underline">
+            {t("navigation.forCompanies")}
+          </Link>
+        </div>
       </div>
     </footer>
   );

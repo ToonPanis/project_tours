@@ -2,6 +2,9 @@ import type {
   AuditEntry,
   BillingDocument,
   CommerceUser,
+  CorporatePricing,
+  QuoteRequest,
+  QuoteStatus,
   Discount,
   Order,
   OrderStatus,
@@ -141,6 +144,21 @@ export interface CommerceStore {
   insertDocumentIfMissing(document: BillingDocument): Promise<BillingDocument>;
   getDocument(id: string): Promise<BillingDocument | null>;
   listDocumentsForOrder(orderId: string): Promise<BillingDocument[]>;
+
+  // ── Corporate quote requests (P4) ────────────────────────────────────
+  /** `dedupeKey`: a hash of company, email, date and activity (recognises the same request sent again). */
+  insertQuote(quote: QuoteRequest, dedupeKey: string, expiresAt: Date): Promise<void>;
+  /** A request with this key that came in after `since`, if any. */
+  findQuoteByDedupeKey(dedupeKey: string, since: Date): Promise<QuoteRequest | null>;
+  getQuote(id: string): Promise<QuoteRequest | null>;
+  listQuotes(query: { skip: number; limit: number; status?: QuoteStatus }): Promise<{ quotes: QuoteRequest[]; total: number }>;
+  /** Moves a request to a new status only while it is still `from` (atomic), adding the history line. */
+  transitionQuote(id: string, from: QuoteStatus, entry: QuoteRequest["history"][number]): Promise<boolean>;
+
+  // ── Settings ─────────────────────────────────────────────────────────
+  /** The corporate price table, or null when an admin never saved one (the defaults are used). */
+  getCorporatePricing(): Promise<CorporatePricing | null>;
+  saveCorporatePricing(pricing: CorporatePricing): Promise<void>;
 }
 
 /**
