@@ -3,6 +3,9 @@ import type {
   AuditEntry,
   BillingDocument,
   CommerceUser,
+  CorporatePricing,
+  QuoteRequest,
+  QuoteStatus,
   Discount,
   Order,
   OrderStatus,
@@ -141,6 +144,26 @@ const GRANT_DATES = ["createdAt", "validUntil"] as const;
 const DISCOUNT_DATES = ["validFrom", "validUntil", "createdAt"] as const;
 const DOCUMENT_DATES = ["createdAt"] as const;
 const TAX_DATES = ["updatedAt"] as const;
+/** Top-level dates only; the history lines keep their ISO strings. */
+const QUOTE_DATES = ["createdAt", "updatedAt"] as const;
+/** The fields of a quote document that a status change touches. */
+interface QuoteHistoryDocument {
+  _id: string;
+  status: QuoteStatus;
+  updatedAt: Date;
+  history: QuoteRequest["history"];
+}
+
+/** The key of the corporate price table in com_settings. */
+const CORPORATE_PRICING_ID = "corporate-pricing";
+
+/** A stored quote back to the app's shape (the dedupe key and expiry stay in the database). */
+function toQuote(doc: Document | null): QuoteRequest | null {
+  const quote = datesFromDb<QuoteRequest & { dedupeKey?: string }>(doc, QUOTE_DATES);
+  if (!quote) return null;
+  delete quote.dedupeKey;
+  return quote;
+}
 
 /** The app's ISO strings back to BSON dates, only for the date fields that are present. */
 function emailChangesToDoc(changes: Partial<Omit<OutboxEmail, "id">>): Document {
@@ -625,6 +648,70 @@ export class MongoCommerceStore implements CommerceStore {
     return this.run(async () => {
       const docs = await this.collection(COLLECTIONS.documents).find({ orderId: key(orderId, 100) }).sort({ createdAt: 1 }).toArray();
       return docs.map((doc) => datesFromDb<BillingDocument>(doc, DOCUMENT_DATES) as BillingDocument);
+    });
+  }
+
+  // ── P4 ───────────────────────────────────────────────────────────────
+
+  insertQuote(quote: QuoteRequest, dedupeKey: string, expiresAt: Date) {
+    return this.run(async () => {
+      await this.collection(COLLECTIONS.quotes).insertOne({ _id: key(quote.id, 100), ...datesToDb(quote, QUOTE_DATES), dedupeKey: key(dedupeKey, 100), expiresAt });
+    });
+  }
+
+  findQuoteByDedupeKey(dedupeKey: string, since: Date) {
+    return this.run(async () => toQuote(await this.collection(COLLECTIONS.quotes).findOne({ dedupeKey: key(dedupeKey, 100), createdAt: { $gt: since } })));
+  }
+
+  getQuote(id: string) {
+    return this.run(async () => toQuote(await this.collection(COLLECTIONS.quotes).findOne({ _id: key(id, 100) })));
+  }
+
+  listQuotes({ skip, limit, status }: { skip: number; limit: number; status?: QuoteStatus }) {
+    return this.run(async () => {
+      const filter = status ? { status: key(status, 20) } : {};
+      const collection = this.collection(COLLECTIONS.quotes);
+      const [docs, total] = await Promise.all([
+        collection.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).toArray(),
+        collection.countDocuments(filter),
+      ]);
+      return { quotes: docs.map((doc) => toQuote(doc) as QuoteRequest), total };
+    });
+  }
+
+  transitionQuote(id: string, from: QuoteStatus, entry: QuoteRequest["history"][number]) {
+    return this.run(async () => {
+      // Status check, new status and the history line in one atomic update.
+      // A precisely typed view of the collection, so the driver knows `history` is an array ($push).
+      const quotes = this.db.collection<QuoteHistoryDocument>(COLLECTIONS.quotes);
+      const result = await quotes.updateOne(
+        { _id: key(id, 100), status: key(from, 20) as QuoteStatus },
+        { $set: { status: entry.status, updatedAt: toDate(entry.at) }, $push: { history: entry } },
+      );
+      return result.modifiedCount === 1;
+    });
+  }
+
+  getCorporatePricing() {
+    return this.run(async () => {
+      const doc = await this.collection(COLLECTIONS.settings).findOne({ _id: CORPORATE_PRICING_ID });
+      if (!doc || !Array.isArray(doc.tiers)) return null;
+      return {
+        tiers: doc.tiers,
+        pricesIncludeVat: doc.pricesIncludeVat === true,
+        updatedAt: iso(doc.updatedAt),
+        updatedBy: typeof doc.updatedBy === "string" ? doc.updatedBy : null,
+      } as CorporatePricing;
+    });
+  }
+
+  saveCorporatePricing(pricing: CorporatePricing) {
+    return this.run(async () => {
+      await this.collection(COLLECTIONS.settings).replaceOne(
+        { _id: CORPORATE_PRICING_ID },
+        { tiers: pricing.tiers, pricesIncludeVat: pricing.pricesIncludeVat, updatedAt: pricing.updatedAt ? toDate(pricing.updatedAt) : null, updatedBy: pricing.updatedBy },
+        { upsert: true },
+      );
     });
   }
 }

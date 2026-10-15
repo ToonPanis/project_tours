@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "title": "Team building et sorties d'entreprise à Anvers",
+    "description": "Défis d'équipe, balades privées et sorties pour entreprises et groupes à Anvers, en autonomie sur vos propres téléphones ou avec un guide. Demandez un devis."
+  },
+  "eyebrow": "Pour les entreprises et les groupes",
+  "title": "Team building dans les rues d'Anvers",
+  "intro": "Découvrez Anvers ensemble : un défi d'équipe, une balade privée ou une sortie d'entreprise complète. En autonomie sur vos propres téléphones, ou avec un guide. Chaque programme est fait sur mesure.",
+  "cta": "Demander un devis",
+  "offersTitle": "Ce que nous pouvons organiser",
+  "offers": {
+    "team-building": "Les équipes résolvent des épreuves et des énigmes sur place dans la vieille ville, sur leurs propres téléphones, avec un classement en direct.",
+    "hidden-pubs-team-challenge": "Notre jeu de cafés pour équipes : épreuves, cartes et histoires dans les cafés d'Anvers. Pour adultes (18+) ; chacun choisit sa propre boisson, le sans alcool compte tout autant.",
+    "alcohol-free-city-challenge": "Le défi d'équipe sans cafés : le même travail d'équipe et les mêmes épreuves en ville, entièrement sans alcool.",
+    "private-walk": "L'une de nos balades rien que pour votre groupe, à la date qui vous convient.",
+    "company-outing": "Une demi-journée ou une journée complète à Anvers, alliant une balade ou un défi à votre propre programme.",
+    "international-group": "Les balades et les jeux sont disponibles en huit langues, pour que des équipes mixtes puissent jouer ensemble."
+  },
+  "pricesTitle": "Prix indicatifs",
+  "pricesIntro": "Pour l'ensemble du groupe. Votre devis est établi sur mesure.",
+  "persons": "Personnes",
+  "selfGuided": "En autonomie",
+  "guided": "Avec un guide",
+  "from": "à partir de {amount}",
+  "onRequest": "sur demande",
+  "exclVat": "Prix hors TVA.",
+  "inclVat": "Prix TVA comprise.",
+  "notIncluded": "Les boissons, le traiteur et les services supplémentaires sont facturés séparément.",
+  "howTitle": "Comment ça marche",
+  "how": {
+    "step1": "Envoyez-nous votre demande avec la date, la taille du groupe et ce que vous avez en tête.",
+    "step2": "Nous vous contactons et vous envoyons une proposition sur mesure.",
+    "step3": "Dès votre accord, nous préparons tout pour votre journée à Anvers."
+  },
+  "form": {
+    "title": "Demander un devis",
+    "company": "Nom de l'entreprise",
+    "contactName": "Personne de contact",
+    "email": "E-mail professionnel",
+    "phone": "Téléphone (facultatif)",
+    "date": "Date souhaitée",
+    "flexible": "flexible",
+    "dateHint": "Laissez vide si vous êtes flexible.",
+    "participants": "Nombre estimé de participants",
+    "activity": "Activité",
+    "language": "Langue de l'activité",
+    "formula": "Formule",
+    "wishes": "Autres souhaits (facultatif)",
+    "privacy": "Nous utilisons ces données uniquement pour répondre à votre demande. Les demandes sont supprimées après deux ans.",
+    "submit": "Envoyer la demande",
+    "sending": "Envoi en cours…",
+    "thanks": "Merci ! Nous avons bien reçu votre demande et nous vous contacterons prochainement. Vous recevrez également une confirmation par e-mail.",
+    "honeypot": "Laissez ce champ vide"
+  },
+  "activities": {
+    "team-building": "Team building",
+    "hidden-pubs-team-challenge": "Hidden Pubs Team Challenge",
+    "alcohol-free-city-challenge": "City Challenge sans alcool",
+    "private-walk": "Balade privée",
+    "company-outing": "Sortie d'entreprise",
+    "international-group": "Activité pour groupe international",
+    "something-else": "Autre chose"
+  },
+  "formulas": {
+    "self-guided": "En autonomie (sur vos propres téléphones)",
+    "guided": "Avec un guide",
+    "unsure": "Pas encore sûr"
+  },
+  "errors": {
+    "invalid-company": "Veuillez indiquer le nom de l'entreprise.",
+    "invalid-name": "Veuillez indiquer la personne de contact.",
+    "invalid-email": "Veuillez indiquer une adresse e-mail valide.",
+    "invalid-phone": "Veuillez vérifier le numéro de téléphone (chiffres, espaces et + uniquement).",
+    "invalid-date": "Veuillez choisir une date à partir d'aujourd'hui, au plus deux ans à l'avance.",
+    "invalid-participants": "Veuillez indiquer un nombre de participants entre 2 et 1000.",
+    "invalid-activity": "Veuillez choisir une activité.",
+    "invalid-language": "Veuillez choisir une langue.",
+    "invalid-formula": "Veuillez choisir une formule.",
+    "invalid-wishes": "Vos souhaits peuvent compter au maximum 2000 caractères.",
+    "too-many-requests": "Vous avez déjà envoyé plusieurs demandes. Veuillez réessayer dans une heure.",
+    "offline": "Pas de connexion. Vérifiez votre connexion Internet et réessayez.",
+    "generic": "Une erreur s'est produite. Veuillez réessayer."
+  },
+  "email": {
+    "subject": "Nous avons bien reçu votre demande – Hidden Antwerp",
+    "greeting": "Bonjour {name},",
+    "body": "Merci pour votre demande de devis pour {company}.",
+    "next": "Nous reviendrons vers vous avec une proposition dans les meilleurs délais.",
+    "summary": "Votre demande :",
+    "signoff": "Cordialement,"
+  }
+}

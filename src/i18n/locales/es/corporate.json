@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "title": "Team building y salidas de empresa en Amberes",
+    "description": "Retos de equipo, paseos privados y salidas para empresas y grupos en Amberes, autoguiados en sus propios teléfonos o con un guía. Solicite un presupuesto."
+  },
+  "eyebrow": "Para empresas y grupos",
+  "title": "Team building en las calles de Amberes",
+  "intro": "Descubran Amberes juntos: un reto de equipo, un paseo privado o una salida de empresa completa. Autoguiado en sus propios teléfonos o con un guía. Cada programa se hace a medida.",
+  "cta": "Solicitar un presupuesto",
+  "offersTitle": "Lo que podemos organizar",
+  "offers": {
+    "team-building": "Los equipos resuelven pruebas y acertijos sobre el terreno por el casco antiguo, en sus propios teléfonos, con una clasificación en directo.",
+    "hidden-pubs-team-challenge": "Nuestro juego de bares para equipos: pruebas, cartas e historias en los cafés de Amberes. Para adultos (18+); cada uno elige su propia bebida, y la sin alcohol cuenta exactamente igual.",
+    "alcohol-free-city-challenge": "El reto de equipo sin cafés: el mismo trabajo en equipo y las mismas pruebas por la ciudad, totalmente sin alcohol.",
+    "private-walk": "Uno de nuestros paseos solo para su grupo, en la fecha que mejor le convenga.",
+    "company-outing": "Media jornada o una jornada completa en Amberes que combina un paseo o un reto con su propio programa.",
+    "international-group": "Los paseos y los juegos están disponibles en ocho idiomas, para que equipos mixtos puedan jugar juntos."
+  },
+  "pricesTitle": "Precios orientativos",
+  "pricesIntro": "Para todo el grupo. Su presupuesto se hace a medida.",
+  "persons": "Personas",
+  "selfGuided": "Autoguiado",
+  "guided": "Con guía",
+  "from": "desde {amount}",
+  "onRequest": "a consultar",
+  "exclVat": "Precios sin IVA.",
+  "inclVat": "Precios con IVA incluido.",
+  "notIncluded": "Las bebidas, el catering y los servicios adicionales se presupuestan por separado.",
+  "howTitle": "Cómo funciona",
+  "how": {
+    "step1": "Envíenos su solicitud con la fecha, el tamaño del grupo y lo que tiene en mente.",
+    "step2": "Nos ponemos en contacto con usted y le enviamos una propuesta a medida.",
+    "step3": "En cuanto dé su conformidad, preparamos todo para su día en Amberes."
+  },
+  "form": {
+    "title": "Solicitar un presupuesto",
+    "company": "Nombre de la empresa",
+    "contactName": "Persona de contacto",
+    "email": "Correo electrónico profesional",
+    "phone": "Teléfono (opcional)",
+    "date": "Fecha preferida",
+    "flexible": "flexible",
+    "dateHint": "Déjelo vacío si tiene flexibilidad.",
+    "participants": "Número estimado de participantes",
+    "activity": "Actividad",
+    "language": "Idioma de la actividad",
+    "formula": "Fórmula",
+    "wishes": "Otros deseos (opcional)",
+    "privacy": "Solo utilizamos estos datos para responder a su solicitud. Las solicitudes se eliminan al cabo de dos años.",
+    "submit": "Enviar solicitud",
+    "sending": "Enviando…",
+    "thanks": "¡Gracias! Hemos recibido su solicitud y nos pondremos en contacto con usted en breve. También recibirá una confirmación por correo electrónico.",
+    "honeypot": "Deje este campo vacío"
+  },
+  "activities": {
+    "team-building": "Team building",
+    "hidden-pubs-team-challenge": "Hidden Pubs Team Challenge",
+    "alcohol-free-city-challenge": "City Challenge sin alcohol",
+    "private-walk": "Paseo privado",
+    "company-outing": "Salida de empresa",
+    "international-group": "Actividad para grupos internacionales",
+    "something-else": "Otra cosa"
+  },
+  "formulas": {
+    "self-guided": "Autoguiado (en sus propios teléfonos)",
+    "guided": "Con guía",
+    "unsure": "Aún no lo sé"
+  },
+  "errors": {
+    "invalid-company": "Indique el nombre de la empresa.",
+    "invalid-name": "Indique la persona de contacto.",
+    "invalid-email": "Indique una dirección de correo electrónico válida.",
+    "invalid-phone": "Compruebe el número de teléfono (solo cifras, espacios y +).",
+    "invalid-date": "Elija una fecha a partir de hoy y como máximo con dos años de antelación.",
+    "invalid-participants": "Indique un número de participantes entre 2 y 1000.",
+    "invalid-activity": "Elija una actividad.",
+    "invalid-language": "Elija un idioma.",
+    "invalid-formula": "Elija una fórmula.",
+    "invalid-wishes": "Sus deseos pueden tener como máximo 2000 caracteres.",
+    "too-many-requests": "Ya ha enviado varias solicitudes. Vuelva a intentarlo dentro de una hora.",
+    "offline": "Sin conexión. Compruebe su conexión a Internet y vuelva a intentarlo.",
+    "generic": "Algo ha salido mal. Vuelva a intentarlo."
+  },
+  "email": {
+    "subject": "Hemos recibido su solicitud – Hidden Antwerp",
+    "greeting": "Estimado/a {name}:",
+    "body": "Gracias por su solicitud de presupuesto para {company}.",
+    "next": "Nos pondremos en contacto con usted con una propuesta lo antes posible.",
+    "summary": "Su solicitud:",
+    "signoff": "Atentamente,"
+  }
+}

@@ -60,6 +60,11 @@ export const COLLECTIONS = {
   counters: "com_counters",
   /** Receipts, invoices and credit notes: `_id` = e.g. "receipt:<orderId>". */
   documents: "com_documents",
+
+  /** Corporate quote requests (P4), deleted after 2 years (TTL). */
+  quotes: "com_quote_requests",
+  /** Small settings documents by key, e.g. "corporate-pricing". */
+  settings: "com_settings",
 };
 
 const text = (maxLength) => ({ bsonType: "string", minLength: 1, maxLength });
@@ -289,6 +294,33 @@ const VALIDATORS = {
       createdAt: date,
     },
   },
+
+  [COLLECTIONS.quotes]: {
+    required: ["_id", "status", "company", "contactName", "email", "participants", "activity", "language", "formula", "history", "dedupeKey", "createdAt", "updatedAt", "expiresAt"],
+    properties: {
+      _id: text(100),
+      status: { enum: ["NEW", "CONTACTED", "QUOTED", "ACCEPTED", "DECLINED", "COMPLETED", "CANCELLED"] },
+      company: text(120),
+      contactName: text(80),
+      email: text(254),
+      phone: optionalText(25),
+      preferredDate: optionalText(10),
+      participants: { bsonType: ["int", "long"], minimum: 2, maximum: 1000 },
+      activity: text(40),
+      language: text(5),
+      formula: { enum: ["self-guided", "guided", "unsure"] },
+      wishes: optionalText(2000),
+      history: { bsonType: "array", maxItems: 100 },
+      dedupeKey: text(100),
+      createdAt: date,
+      updatedAt: date,
+      expiresAt: date,
+    },
+  },
+  [COLLECTIONS.settings]: {
+    required: ["_id"],
+    properties: { _id: text(100) },
+  },
 };
 
 /** TTL: delete a document as soon as its `expiresAt` has passed. */
@@ -329,6 +361,13 @@ export const INDEXES = {
   [COLLECTIONS.discounts]: [{ key: { code: 1 }, name: "code_unique", unique: true }],
   [COLLECTIONS.counters]: [],
   [COLLECTIONS.documents]: [{ key: { orderId: 1 }, name: "orderId" }],
+  [COLLECTIONS.quotes]: [
+    { key: { status: 1, createdAt: -1 }, name: "status_createdAt" },
+    { key: { createdAt: -1 }, name: "createdAt_desc" },
+    { key: { dedupeKey: 1, createdAt: -1 }, name: "dedupeKey_createdAt" },
+    expiry,
+  ],
+  [COLLECTIONS.settings]: [],
 };
 
 /**

@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "title": "Team building and company outings in Antwerp",
+    "description": "Team challenges, private walks and outings for companies and groups in Antwerp, self-guided on your own phones or with a guide. Ask for a quote."
+  },
+  "eyebrow": "For companies and groups",
+  "title": "Team building in the streets of Antwerp",
+  "intro": "Discover Antwerp together: a team challenge, a private walk or a full company outing. Self-guided on your own phones, or with a guide. Every programme is made to measure.",
+  "cta": "Ask for a quote",
+  "offersTitle": "What we can organise",
+  "offers": {
+    "team-building": "Teams solve tasks and riddles on location across the old city, on their own phones, with a live leaderboard.",
+    "hidden-pubs-team-challenge": "Our café game for teams: tasks, cards and stories in Antwerp's cafés. For adults (18+); everyone chooses their own drink, alcohol-free counts just the same.",
+    "alcohol-free-city-challenge": "The team challenge without cafés: the same teamwork and city tasks, completely alcohol-free.",
+    "private-walk": "One of our walks for your group alone, on a date that suits you.",
+    "company-outing": "A half or full day out in Antwerp, combining a walk or challenge with your own programme.",
+    "international-group": "The walks and games are available in eight languages, so mixed teams can play together."
+  },
+  "pricesTitle": "Indicative prices",
+  "pricesIntro": "For the whole group. Your quote is made to measure.",
+  "persons": "Persons",
+  "selfGuided": "Self-guided",
+  "guided": "With a guide",
+  "from": "from {amount}",
+  "onRequest": "on request",
+  "exclVat": "Prices excluding VAT.",
+  "inclVat": "Prices including VAT.",
+  "notIncluded": "Drinks, catering and extra services are priced separately.",
+  "howTitle": "How it works",
+  "how": {
+    "step1": "Send us your request with the date, group size and what you have in mind.",
+    "step2": "We contact you and send a proposal made to measure.",
+    "step3": "Once you agree, we prepare everything for your day in Antwerp."
+  },
+  "form": {
+    "title": "Ask for a quote",
+    "company": "Company name",
+    "contactName": "Contact person",
+    "email": "Business email",
+    "phone": "Phone (optional)",
+    "date": "Preferred date",
+    "flexible": "flexible",
+    "dateHint": "Leave empty if you're flexible.",
+    "participants": "Estimated number of participants",
+    "activity": "Activity",
+    "language": "Language of the activity",
+    "formula": "Formula",
+    "wishes": "Other wishes (optional)",
+    "privacy": "We only use these details to answer your request. Requests are deleted after two years.",
+    "submit": "Send request",
+    "sending": "Sending…",
+    "thanks": "Thank you! We've received your request and will contact you soon. You'll also get a confirmation by email.",
+    "honeypot": "Leave this field empty"
+  },
+  "activities": {
+    "team-building": "Team building",
+    "hidden-pubs-team-challenge": "Hidden Pubs Team Challenge",
+    "alcohol-free-city-challenge": "Alcohol-free City Challenge",
+    "private-walk": "Private walk",
+    "company-outing": "Company outing",
+    "international-group": "International group activity",
+    "something-else": "Something else"
+  },
+  "formulas": {
+    "self-guided": "Self-guided (on your own phones)",
+    "guided": "With a guide",
+    "unsure": "Not sure yet"
+  },
+  "errors": {
+    "invalid-company": "Please fill in the company name.",
+    "invalid-name": "Please fill in the contact person.",
+    "invalid-email": "Please fill in a valid email address.",
+    "invalid-phone": "Please check the phone number (digits, spaces and + only).",
+    "invalid-date": "Please choose a date from today on, at most two years ahead.",
+    "invalid-participants": "Please give a number of participants from 2 to 1000.",
+    "invalid-activity": "Please choose an activity.",
+    "invalid-language": "Please choose a language.",
+    "invalid-formula": "Please choose a formula.",
+    "invalid-wishes": "Your wishes can be at most 2000 characters.",
+    "too-many-requests": "You've sent several requests already. Please try again in an hour.",
+    "offline": "No connection. Check your internet and try again.",
+    "generic": "Something went wrong. Please try again."
+  },
+  "email": {
+    "subject": "We've received your request – Hidden Antwerp",
+    "greeting": "Hello {name},",
+    "body": "Thank you for your quote request for {company}.",
+    "next": "We'll get back to you with a proposal as soon as possible.",
+    "summary": "Your request:",
+    "signoff": "Kind regards,"
+  }
+}

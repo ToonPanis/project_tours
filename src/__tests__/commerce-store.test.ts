@@ -121,6 +121,7 @@ if (mongoClient) {
         COLLECTIONS.discounts,
         COLLECTIONS.counters,
         COLLECTIONS.documents,
+        COLLECTIONS.quotes,
       ];
       for (const name of names) await db.collection<{ _id: string }>(name).deleteMany({ _id: ours });
       // Tax settings are found by version number: this run used its own, very high ones.
@@ -343,6 +344,52 @@ describe.each(factories)("$name commerce store", ({ create, cleanup }) => {
     await store.updateDiscount(id, { active: false });
     expect(await store.reserveDiscount(id)).toBe(false);
     expect((await store.listDiscounts()).some((candidate) => candidate.id === id)).toBe(true);
+  });
+
+  test("quote requests (P4): saved, found by duplicate key within the window, listed by status, status changed once", async () => {
+    const id = unique("quote");
+    const quote = {
+      id,
+      status: "NEW" as const,
+      company: "Brewery NV",
+      contactName: "An",
+      email: "an@example.com",
+      phone: null,
+      preferredDate: "2099-12-05",
+      participants: 20,
+      activity: "team-building" as const,
+      language: "nl",
+      formula: "guided" as const,
+      wishes: "Line one\nline two",
+      history: [{ status: "NEW" as const, at: NOW.toISOString(), by: null, note: null }],
+      createdAt: NOW.toISOString(),
+      updatedAt: NOW.toISOString(),
+    };
+    const dedupeKey = unique("dedupe");
+    await store.insertQuote(quote, dedupeKey, LATER);
+    expect(await store.getQuote(id)).toEqual(quote);
+    expect(await store.findQuoteByDedupeKey(dedupeKey, new Date(NOW.getTime() - 1000))).toEqual(quote);
+    expect(await store.findQuoteByDedupeKey(dedupeKey, NOW)).toBeNull();
+
+    const entry = (status: "CONTACTED" | "DECLINED") => ({ status, at: LATER.toISOString(), by: "a@b.c", note: null });
+    const results = await Promise.all([store.transitionQuote(id, "NEW", entry("CONTACTED")), store.transitionQuote(id, "NEW", entry("DECLINED"))]);
+    expect(results.filter(Boolean)).toHaveLength(1);
+    const changed = await store.getQuote(id);
+    expect(changed?.history).toHaveLength(2);
+    expect(changed?.updatedAt).toBe(LATER.toISOString());
+    const listed = await store.listQuotes({ skip: 0, limit: 500, status: changed!.status });
+    expect(listed.quotes.some((candidate) => candidate.id === id)).toBe(true);
+  });
+
+  test("settings: the corporate price table is saved and read back", async () => {
+    const pricing = {
+      tiers: [{ persons: 12, selfGuidedCents: 18_000, guidedCents: null, guidedFrom: false }],
+      pricesIncludeVat: true,
+      updatedAt: NOW.toISOString(),
+      updatedBy: "a@b.c",
+    };
+    await store.saveCorporatePricing(pricing);
+    expect(await store.getCorporatePricing()).toEqual(pricing);
   });
 
   test("numbers and documents: a series counts up without gaps at once; a document id is stored once", async () => {

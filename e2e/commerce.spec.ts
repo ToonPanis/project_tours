@@ -46,8 +46,28 @@ test("with sales closed, organisers create a Hidden Pubs game without a ticket, 
   await expect(page.getByText(en("pubgame.create.ticketSeats", { players: "" }).split(",")[0])).toHaveCount(0);
 });
 
+test("the corporate page: loads without errors, fits a phone, and a quote request is thanked", async ({ page }) => {
+  const problems = watchForProblems(page);
+  await page.goto("/corporate");
+  await expect(page.getByRole("heading", { level: 1, name: en("corporate.title") })).toBeVisible();
+  // No sideways scrolling at 390 px (the price table scrolls inside its own box if needed).
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await expect(page.getByRole("link", { name: en("navigation.forCompanies") })).toBeVisible();
+
+  await page.getByLabel(en("corporate.form.company")).fill("Test Company");
+  await page.getByLabel(en("corporate.form.contactName")).fill("Test Person");
+  await page.getByLabel(en("corporate.form.email")).fill("test@example.com");
+  await page.getByLabel(en("corporate.form.participants")).fill("25");
+  // A person takes a few seconds; the server treats instant forms as bots.
+  await page.waitForTimeout(3500);
+  await page.getByRole("button", { name: en("corporate.form.submit") }).click();
+  await expect(page.getByText(en("corporate.form.thanks"))).toBeVisible();
+  await page.waitForLoadState("networkidle");
+  expect(problems).toEqual([]);
+});
+
 test("the new admin pages need a session", async ({ page }) => {
-  for (const path of ["/admin/orders", "/admin/tax", "/admin/discounts"]) {
+  for (const path of ["/admin/orders", "/admin/tax", "/admin/discounts", "/admin/quotes"]) {
     await page.goto(path);
     await expect(page).toHaveURL(/\/admin\/login$/);
   }
