@@ -179,6 +179,17 @@ export class MongoGameStore implements GameStore {
     });
   }
 
+  getVersion(code: string): Promise<number | null> {
+    const id = key(code);
+    return this.guard("getVersion", async () => {
+      // Only the version leaves the database: a few bytes instead of the whole game.
+      const doc = await this.games.findOne({ _id: id, expiresAt: { $gt: new Date() } }, { projection: { version: 1 } });
+      if (!doc) return null;
+      if (typeof doc.version !== "number") throw new StoredDataError("game");
+      return doc.version;
+    });
+  }
+
   commitAction(input: CommitInput): Promise<CommitResult> {
     const code = key(input.code);
     const actionId = key(input.actionId);
@@ -197,22 +208,19 @@ export class MongoGameStore implements GameStore {
             result = { status: "duplicate", version: earlier.version };
             return;
           }
-          const game = await this.games.findOne(
-            { _id: code, expiresAt: { $gt: now } },
-            { session, projection: { version: 1, expiresAt: 1 } },
+          const version = expectedVersion + 1;
+          // Saved only when the game is still at the expected version (and not expired): check
+          // and save in one step. No match = someone else saved first (or the game is gone).
+          const game = await this.games.findOneAndUpdate(
+            { _id: code, version: expectedVersion, expiresAt: { $gt: now } },
+            { $set: { state: input.state, version } },
+            { session, projection: { expiresAt: 1 } },
           );
-          if (!game || game.version !== expectedVersion) {
+          if (!game) {
             result = { status: "conflict" };
             return;
           }
-
-          const version = expectedVersion + 1;
           const { expiresAt } = game;
-          await this.games.updateOne(
-            { _id: code, version: expectedVersion },
-            { $set: { state: input.state, version } },
-            { session },
-          );
           await this.actions.insertOne(
             { gameCode: code, actionId, playerId, action: input.action, version, createdAt: now, expiresAt },
             { session },
@@ -240,14 +248,15 @@ export class MongoGameStore implements GameStore {
     });
   }
 
-  eventsSince(code: string, version: number, limit: number): Promise<StoredEvent[]> {
+  eventsSince(code: string, afterVersion: number, upToVersion: number, limit: number): Promise<StoredEvent[]> {
     const gameCode = key(code);
-    const since = wholeNumber(version);
+    const since = wholeNumber(afterVersion);
+    const upTo = wholeNumber(upToVersion);
     // In MongoDB limit(0) means "no limit"; asking for no events gets none.
     if (wholeNumber(limit) === 0) return Promise.resolve([]);
     return this.guard("eventsSince", async () => {
       const docs = await this.events
-        .find({ gameCode, version: { $gt: since } }, { projection: { _id: 0, version: 1, event: 1 } })
+        .find({ gameCode, version: { $gt: since, $lte: upTo } }, { projection: { _id: 0, version: 1, event: 1 } })
         .sort({ version: 1, position: 1 })
         .limit(limit)
         .toArray();
@@ -255,18 +264,18 @@ export class MongoGameStore implements GameStore {
     });
   }
 
-  savePlayerToken(code: string, tokenHash: string, playerId: string): Promise<void> {
+  savePlayerToken(code: string, tokenHash: string, playerId: string, expiresAt: string): Promise<void> {
     const gameCode = key(code);
     const filter = { gameCode, tokenHash: key(tokenHash) };
     const player = key(playerId);
+    const expires = new Date(expiresAt);
+    if (Number.isNaN(expires.getTime())) throw new TypeError("savePlayerToken: expiresAt is not a date");
     return this.guard("savePlayerToken", async () => {
-      const game = await this.games.findOne({ _id: gameCode }, { projection: { expiresAt: 1 } });
-      if (!game) return;
       try {
         // Saved once: the same token again changes nothing.
         await this.players.updateOne(
           filter,
-          { $setOnInsert: { ...filter, playerId: player, expiresAt: game.expiresAt } },
+          { $setOnInsert: { ...filter, playerId: player, expiresAt: expires } },
           { upsert: true },
         );
       } catch (error) {

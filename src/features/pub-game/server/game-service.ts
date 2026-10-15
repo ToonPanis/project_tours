@@ -57,6 +57,8 @@ const fail = (status: number, error: string): ServiceResult<never> => ({ ok: fal
 const MAX_EVENTS_PER_POLL = 100;
 /** Retries when another phone changed the game at the same moment. */
 const MAX_COMMIT_ATTEMPTS = 5;
+/** Before a retry: a short random pause, so phones that collided don't collide again right away. */
+const RETRY_PAUSE_MS = 20;
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null;
 
@@ -124,7 +126,7 @@ export async function createGame(ctx: GameContext, walkSlug: string, body: unkno
     });
     if (created) {
       const token = newPlayerToken();
-      await ctx.store.savePlayerToken(code, hashToken(token), playerId);
+      await ctx.store.savePlayerToken(code, hashToken(token), playerId, expiresAt.toISOString());
       return ok({ code, playerId, token });
     }
   }
@@ -185,7 +187,7 @@ export async function joinGame(
   if (!result.ok) return result;
 
   const token = newPlayerToken();
-  await ctx.store.savePlayerToken(code, hashToken(token), playerId);
+  await ctx.store.savePlayerToken(code, hashToken(token), playerId, game.expiresAt);
   return ok({ playerId, token });
 }
 
@@ -209,7 +211,7 @@ export async function createPlayerLink(
   if (!game.state.players.some((player) => player.id === playerId)) return fail(404, "unknown-player");
 
   const token = newPlayerToken();
-  await ctx.store.savePlayerToken(code, hashToken(token), playerId);
+  await ctx.store.savePlayerToken(code, hashToken(token), playerId, game.expiresAt);
   return ok({ token });
 }
 
@@ -241,16 +243,18 @@ export async function getGameUpdate(
   token: string | null,
   since: number | null,
 ): Promise<ServiceResult<GameUpdate>> {
+  if (!isGameCode(code)) return fail(404, "unknown-game");
+  // Every phone asks this every 2 seconds, and mostly nothing changed: first only the
+  // version (a few bytes), at the same time as the player. The whole game only when needed.
+  const [version, playerId] = await Promise.all([ctx.store.getVersion(code), findPlayer(ctx, code, token)]);
+  if (version === null) return fail(404, "unknown-game");
+  if (!playerId) return fail(401, "not-joined");
+  if (since === version) return ok({ changed: false, version });
+
   const game = await loadGame(ctx, code);
   if (!game) return fail(404, "unknown-game");
-  const playerId = await findPlayer(ctx, code, token);
-  if (!playerId) return fail(401, "not-joined");
-
-  if (since === game.version) return ok({ changed: false, version: game.version });
-
   const data = gameDataOf(ctx, game);
-  const stored = since === null ? [] : await ctx.store.eventsSince(code, since, MAX_EVENTS_PER_POLL);
-  const events = stored.filter((item) => canSeeEvent(game.state, playerId, item.event));
+  const events = since === null ? [] : await visibleEventsSince(ctx, game, playerId, since);
 
   return ok({
     changed: true,
@@ -298,18 +302,18 @@ export async function performAction(
   );
   if (!result.ok) return result;
 
-  const game = await loadGame(ctx, code);
+  // The game as this action left it. Only a repeated tap (already saved earlier) needs to read it again.
+  const game = result.data.game ?? (await loadGame(ctx, code));
   if (!game) return fail(404, "unknown-game");
   // Every event since the version the phone had (`knownVersion`): this action's and anything
   // other phones did meanwhile. The phone jumps to the newest version, so its next poll
   // won't ask for those again. Phones show each event once (by its version).
   const known = typeof body.knownVersion === "number" && Number.isInteger(body.knownVersion) ? body.knownVersion : null;
   const since = Math.max(0, Math.min(known ?? result.data.version - 1, result.data.version - 1));
-  const stored = await ctx.store.eventsSince(code, since, MAX_EVENTS_PER_POLL);
   return ok({
     version: game.version,
     view: toPlayerView(gameDataOf(ctx, game).definition, game.state, playerId),
-    events: stored.filter((item) => canSeeEvent(game.state, playerId, item.event)),
+    events: await visibleEventsSince(ctx, game, playerId, since),
   });
 }
 
@@ -491,13 +495,13 @@ async function commitWithRetry(
   playerId: string,
   actionId: string,
   makeAction: (state: PubGameState, definition: PubGameDefinition) => PubGameAction | null,
-): Promise<ServiceResult<{ version: number }>> {
+): Promise<ServiceResult<{ version: number; game: StoredGame | null }>> {
   for (let attempt = 0; attempt < MAX_COMMIT_ATTEMPTS; attempt++) {
-    const game = await loadGame(ctx, code);
+    if (attempt > 0) await pause(RETRY_PAUSE_MS * attempt * (0.5 + Math.random()));
+    // Both at once: the game, and whether this tap was already saved (a retry).
+    const [game, earlier] = await Promise.all([loadGame(ctx, code), ctx.store.findAction(code, actionId)]);
     if (!game) return fail(404, "unknown-game");
-
-    const earlier = await ctx.store.findAction(code, actionId);
-    if (earlier !== null) return ok({ version: earlier });
+    if (earlier !== null) return ok({ version: earlier, game: null });
 
     const { definition, answerKey } = gameDataOf(ctx, game);
     const action = makeAction(game.state, definition);
@@ -515,7 +519,24 @@ async function commitWithRetry(
       state: result.state,
       events: result.events,
     });
-    if (saved.status !== "conflict") return ok({ version: saved.version });
+    if (saved.status === "committed") {
+      return ok({ version: saved.version, game: { ...game, state: result.state, version: saved.version } });
+    }
+    // Saved by an earlier request with the same id (a retry that crossed this one).
+    if (saved.status === "duplicate") return ok({ version: saved.version, game: null });
   }
   return fail(503, "busy");
+}
+
+const pause = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+/**
+ * The events a phone hasn't had yet (after `since`, up to the game's version), as far as
+ * this player may see them. A phone that was away so long that more than
+ * MAX_EVENTS_PER_POLL happened gets none: old popups would only confuse, the state is up to date.
+ */
+async function visibleEventsSince(ctx: GameContext, game: StoredGame, playerId: string, since: number) {
+  const stored = await ctx.store.eventsSince(game.code, since, game.version, MAX_EVENTS_PER_POLL + 1);
+  if (stored.length > MAX_EVENTS_PER_POLL) return [];
+  return stored.filter((item) => canSeeEvent(game.state, playerId, item.event));
 }
