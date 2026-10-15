@@ -1,0 +1,358 @@
+{
+  "create": {
+    "eyebrow": "Hidden Pubs · Nieuw spel",
+    "title": "Stel jullie spel samen",
+    "teamCount": "Hoeveel teams?",
+    "playersPerTeam": "Spelers per team (max.)",
+    "teamName": "Naam van team {number}",
+    "defaultTeamName": "Team {number}",
+    "yourName": "Jouw naam",
+    "yourTeam": "Jouw team",
+    "hostNote": "Jij bent de host: jij start het spel en keurt de bonusfoto's goed. Je speelt zelf ook mee in je eigen team.",
+    "submit": "Spel aanmaken",
+    "creating": "Bezig met aanmaken…"
+  },
+  "adults": {
+    "confirm": "Iedereen die meespeelt is 18 jaar of ouder",
+    "note": "Drinken is nooit verplicht: elk drankje mag alcoholvrij zijn."
+  },
+  "join": {
+    "eyebrow": "Hidden Pubs · Spel {code}",
+    "title": "Doe mee",
+    "yourName": "Jouw naam",
+    "chooseTeam": "Kies je team",
+    "placesLeft": {
+      "one": "Nog {count} plaats vrij",
+      "other": "Nog {count} plaatsen vrij"
+    },
+    "full": "Vol",
+    "submit": "Meedoen",
+    "joining": "Bezig…",
+    "closed": "Dit spel is al begonnen. Vraag de host om je toe te voegen.",
+    "finished": "Dit spel is voorbij."
+  },
+  "lobby": {
+    "eyebrow": "Spel {code}",
+    "title": "Wachten op iedereen",
+    "inviteTitle": "Nodig de anderen uit",
+    "inviteText": "Iedereen speelt op zijn eigen gsm: scan de QR-code of deel de link.",
+    "code": "Spelcode",
+    "qrLabel": "QR-code om mee te doen met spel {code}",
+    "share": "Link delen",
+    "copied": "Link gekopieerd",
+    "shareText": "Doe mee met ons Hidden Pubs-spel!",
+    "players": {
+      "one": "{count} speler",
+      "other": "{count} spelers"
+    },
+    "emptyTeam": "Nog niemand",
+    "you": "jij",
+    "host": "host",
+    "start": "Start het spel",
+    "startHint": "Elk team heeft minstens één speler nodig.",
+    "waitingForHost": "De host start het spel zodra iedereen er is."
+  },
+  "beery": {
+    "portrait": "Beery, de mascotte van Hidden Pubs: een vrolijke bierpot",
+    "nextLocation": "Beery brengt je naar de volgende locatie!",
+    "bonusTask": "Beery heeft een bonusopdracht voor je!",
+    "letsGo": "Op weg",
+    "intro": {
+      "eyebrow": "Beery legt uit",
+      "progress": "{current} van {total}",
+      "next": "Volgende",
+      "skip": "Overslaan",
+      "done": "Spelen maar!",
+      "welcomeTitle": "Santé! Ik ben Beery.",
+      "welcomeText": "Ik ben vanavond jullie gastheer: 12 cafés, van Rococo tot Den Engel. In elk café kies je een drankje, speel je Drunken Bastard, los je de pubtask op en lees je een funfact. Wie de meeste punten heeft, wint!",
+      "cardsTitle": "Drunken Bastard",
+      "cardsText": "In elk café kiest elke speler één van 10 omgedraaide kaarten. Elke kaart doet iets: een slok uitdelen, een drinking buddy kiezen, een regel verzinnen, Thumb King worden… Een slok is altijd een slok van je eigen drankje, en alcoholvrij telt ook.",
+      "pubtasksTitle": "Pubtasks",
+      "pubtasksText": "Elk café heeft een vraag over het café zelf. Meteen juist: 100 punten. Tweede poging: 80. Derde poging: 60. Daarna geef ik het antwoord, maar dan zijn er geen punten.",
+      "bonusTitle": "Bonusopdrachten",
+      "bonusText": "Soms heb ik een bonusopdracht voor jullie. Stuur een foto of video als bewijs: de host keurt hem goed, en pas dan tellen de punten.",
+      "respectTitle": "Huisregels",
+      "respectText": "Vraag het personeel en de gasten voor je hen fotografeert, sta nooit in de weg aan de toog en drink op je eigen tempo. Traditie: iedereen trakteert de winnaar op een drankje naar keuze. Alcoholvrij mag, en niemand moet."
+    }
+  },
+  "nextCafe": {
+    "eyebrow": "Café {current} van {total}",
+    "text": "De volgende stop van je team."
+  },
+  "menu": {
+    "label": "Spelmenu",
+    "rules": "Regels",
+    "host": "Hostoverzicht",
+    "game": "Terug naar het spel",
+    "scores": "Stand"
+  },
+  "host": {
+    "eyebrow": "Spel {code} · Host",
+    "title": "Hostoverzicht",
+    "teams": "Teams",
+    "progress": "{done} van {total} cafés",
+    "teamFinished": "Klaar",
+    "pendingEvidence": {
+      "one": "{count} foto of video wacht op jouw goedkeuring",
+      "other": "{count} foto's of video's wachten op jouw goedkeuring"
+    },
+    "noPendingEvidence": "Er wachten geen foto's of video's.",
+    "addPlayer": "Speler toevoegen",
+    "addPlayerName": "Naam",
+    "addPlayerTeam": "Team",
+    "addPlayerSubmit": "Toevoegen",
+    "playerAdded": "{name} is toegevoegd. Stuur de persoonlijke link (tik hierboven op de naam).",
+    "endGame": "Spel beëindigen",
+    "endConfirmTitle": "Het spel voor iedereen beëindigen?",
+    "endConfirmText": "Elk team stopt waar het is en de uitslag wordt getoond. Dit kan niet ongedaan worden gemaakt.",
+    "endConfirm": "Spel beëindigen",
+    "notHost": "Alleen de host kan deze pagina openen.",
+    "playerLinkFor": "Persoonlijke link voor {name}",
+    "playerLinkHelp": "Stuur deze link alleen naar {name}: wie hem opent, speelt als {name}. Handig voor laatkomers en een nieuwe gsm.",
+    "shareLink": "Link delen",
+    "linkCopied": "Link gekopieerd",
+    "reviewTitle": "Foto's en video's om te beoordelen",
+    "reviewHelp": "Punten tellen pas als jij goedkeurt. Keur af wat niet bij de opdracht past.",
+    "reviewFor": "{team} · {task}",
+    "tookPart": "Deden mee: {names}",
+    "approve": "Goedkeuren",
+    "reject": "Afkeuren",
+    "rejectReason": "Reden van afkeuren (niet verplicht)",
+    "mediaLabel": "Bewijs van {team} voor {task}"
+  },
+  "connection": {
+    "offline": "Geen verbinding. We proberen opnieuw…",
+    "gone": "Dit spel bestaat niet meer. Spellen worden na 7 dagen gewist."
+  },
+  "errors": {
+    "generic": "Dat lukte niet. Probeer het opnieuw.",
+    "adultsOnly": "Bevestig dat iedereen die meespeelt 18 jaar of ouder is.",
+    "invalidSettings": "Controleer de namen en aantallen.",
+    "invalidText": "Typ een naam (hoogstens 30 tekens).",
+    "nameTaken": "Iemand in dit spel heeft die naam al.",
+    "teamFull": "Dit team is vol. Kies een ander team.",
+    "joiningClosed": "Dit spel is al begonnen. Vraag de host om je toe te voegen.",
+    "notHost": "Alleen de host kan dat doen.",
+    "emptyTeam": "Elk team heeft minstens één speler nodig voor het spel kan starten.",
+    "unknownGame": "Dit spel bestaat niet (meer).",
+    "gameFinished": "Dit spel is voorbij.",
+    "outdated": "Iemand in je team was sneller. Het scherm is bijgewerkt.",
+    "unknownLink": "Deze link werkt niet (meer). Vraag de host om een nieuwe.",
+    "chooseTeam": "Kies een team.",
+    "invalidMedia": "Dit soort bestand werkt niet. Gebruik een gewone foto of video van je gsm.",
+    "tooLarge": "Dit bestand is te groot. Een kortere video werkt beter.",
+    "uploadFailed": "Versturen lukte niet. Controleer de verbinding en probeer opnieuw."
+  },
+  "claim": {
+    "title": "Je spel wordt geopend…",
+    "invalid": "Deze link werkt niet (meer). Vraag de host om een nieuwe."
+  },
+  "drinks": {
+    "title": "Kies je drankje",
+    "intro": "Iedereen kiest zijn eigen drankje en bestelt het aan de toog.",
+    "alcoholFree": "Alcoholvrij / frisdrank",
+    "skip": "Deze ronde geen drankje",
+    "yourChoice": "Jouw drankje: {drink}. Bestel het aan de toog.",
+    "noDrink": "Deze ronde geen drankje voor jou. Helemaal oké!",
+    "respect": "Drink op je eigen tempo. Niemand moet alcohol drinken.",
+    "ready": "We hebben onze drankjes: start Drunken Bastard",
+    "eyebrow": "Café {current} van {total} · {cafe}",
+    "welcome": "Welkom in {cafe}!"
+  },
+  "wheel": {
+    "title": "Draai aan het bierrad",
+    "intro": "Billie's heeft een genummerde bierlijst: draai aan het rad en bestel het bier met jouw nummer.",
+    "label": "Bierrad met de nummers 1 tot 10",
+    "spin": "Draai aan het rad",
+    "spinning": "Het rad draait…",
+    "result": "Jouw nummer: {number}",
+    "order": "Vraag aan de toog bier nummer {number}."
+  },
+  "cards": {
+    "eyebrow": "Café {current} van {total} · Drunken Bastard",
+    "title": "Drunken Bastard",
+    "yourTurn": "Jij bent aan de beurt! Kies één van 10 omgedraaide kaarten.",
+    "draw": "Toon mijn 10 kaarten",
+    "pick": "Tik op een kaart",
+    "waitingFor": "{name} trekt een kaart…",
+    "drawFor": "Trek voor {name}",
+    "faceDown": "Kaart {number} van {total}, omgedraaid",
+    "drew": "{name} trok",
+    "cardLabel": "{rank} van {suit}",
+    "ranks": {
+      "J": "Boer",
+      "Q": "Dame",
+      "K": "Koning",
+      "A": "Aas"
+    },
+    "suits": {
+      "hearts": "harten",
+      "diamonds": "ruiten",
+      "clubs": "klaveren",
+      "spades": "schoppen"
+    },
+    "cardsLeft": {
+      "one": "Nog {count} kaart in het spel",
+      "other": "Nog {count} kaarten in het spel"
+    },
+    "sipNote": "Een slok is altijd een slok van je eigen drankje. Alcoholvrij telt ook.",
+    "effects": {
+      "2": "Deel een slok uit: kies wie drinkt.",
+      "3": "Je neemt zelf een slok.",
+      "4": "Iedereen raakt zo snel mogelijk de vloer aan. De laatste drinkt een slok.",
+      "5": "Elke vrouw die meespeelt neemt een slok.",
+      "6": "Elke man die meespeelt neemt een slok.",
+      "7": "Iedereen wijst zo snel mogelijk naar boven. De laatste drinkt een slok.",
+      "8": "Kies een drinking buddy, ook uit een ander team. Vanaf nu drinkt de ander mee als een van jullie moet drinken.",
+      "9": "Zeg een woord. Om de beurt zegt iedereen een woord dat erop rijmt. Wie er geen meer weet of een woord herhaalt, drinkt een slok.",
+      "10": "Kies een categorie. Om de beurt noemt iedereen iets uit die categorie. Wie niets meer weet of iets herhaalt, drinkt een slok.",
+      "J": "Verzin een regel die iedereen volgt voor de rest van het spel. Hoogstens 4 regels: een 5de vervangt de oudste.",
+      "Q": "Je bent Question Bitch tot iemand anders een dame trekt: wie antwoordt op een vraag van jou, drinkt een slok.",
+      "K": "Je bent Thumb King tot iemand anders een koning trekt: leg op eender welk moment je duim op tafel. Iedereen doet je na, en de laatste drinkt een slok.",
+      "A": "Je bent de Beunaas tot iemand anders een aas trekt: je drinkt dubbel, en je drinking buddy ook."
+    },
+    "chooseTarget": "Wie krijgt de slok?",
+    "chooseBuddy": "Kies je drinking buddy",
+    "writeRule": "Je nieuwe regel",
+    "rulePlaceholder": "bv. drink enkel met je linkerhand",
+    "ruleSubmit": "Regel toevoegen",
+    "reportLoser": "Wie was de laatste of verloor? (niet verplicht)",
+    "nobody": "Overslaan",
+    "waitingForChoice": "{name} kiest…",
+    "done": "Iedereen heeft een kaart getrokken! Nu volgt de pubtask.",
+    "chooseFor": "Kies voor {name}",
+    "toPubtask": "Naar de pubtask"
+  },
+  "effects": {
+    "label": "Kaartkrachten, buddies en regels",
+    "questionBitch": "Question Bitch",
+    "thumbKing": "Thumb King",
+    "beunaas": "Beunaas",
+    "nobody": "nog niemand",
+    "buddies": "Drinking buddies",
+    "noBuddies": "Nog geen drinking buddies.",
+    "rules": "Regels",
+    "rulesCount": {
+      "one": "{count} regel",
+      "other": "{count} regels"
+    },
+    "noRules": "Nog geen regels.",
+    "ruleBy": "van {name}",
+    "open": "Krachten & regels",
+    "title": "Krachten, buddies en regels",
+    "close": "Sluiten",
+    "reportDrink": "Wie moet drinken?",
+    "reportDrinkHelp": "Betrapt door de Question Bitch, de Thumb King of een regel? Tik op de naam: buddies drinken mee en iedereen krijgt een pop-up.",
+    "reported": "Gedaan: iedereen is verwittigd.",
+    "yourBuddy": "Jouw buddy: {name}",
+    "noBuddy": "Nog geen buddy"
+  },
+  "popups": {
+    "buddiesTitle": "Nieuwe drinking buddies!",
+    "buddiesText": "{first} en {second} drinken vanaf nu samen: als de ene drinkt, drinkt de andere mee.",
+    "buddiesEnded": "Het duo {first} & {second} is voorbij.",
+    "drinkTitle": "Santé!",
+    "sip": {
+      "one": "{name}: {count} slok",
+      "other": "{name}: {count} slokken"
+    },
+    "sipAlong": {
+      "one": "{name} drinkt mee met buddy {buddy}: {count} slok",
+      "other": "{name} drinkt mee met buddy {buddy}: {count} slokken"
+    },
+    "ok": "OK"
+  },
+  "pubtask": {
+    "eyebrow": "Café {current} van {total} · Pubtask",
+    "title": "Pubtask",
+    "teamAnswers": "Eén antwoord per team: wie als eerste tikt, antwoordt voor iedereen.",
+    "playerAnswers": "Iedereen antwoordt op zijn eigen gsm en scoort voor zichzelf.",
+    "questionOf": "Vraag {current} van {total}",
+    "worth": "Poging {attempt}: goed voor {points} punten",
+    "correct": "Juist! +{points} punten",
+    "wrong": {
+      "one": "Net niet: {count} fout antwoord.",
+      "other": "Net niet: {count} foute antwoorden."
+    },
+    "hint": "Beery's hint: {hint}",
+    "revealed": "Het antwoord was: {answer}. Deze keer geen punten.",
+    "wrongOption": "fout",
+    "rightOption": "juist",
+    "score": "Score tot nu toe: {points} punten",
+    "continue": "Verder"
+  },
+  "tasks": {
+    "skip": "Deze opdracht overslaan",
+    "done": "Gedaan",
+    "points": {
+      "one": "{count} punt",
+      "other": "{count} punten"
+    },
+    "perPlayer": "{points} punten per speler die meedoet",
+    "respect": "Vraag het eerst aan personeel en gasten, en loop nooit in de weg."
+  },
+  "bonus": {
+    "eyebrow": "Café {current} van {total} · Bonus",
+    "title": "Bonusopdracht",
+    "skip": "Geen bonus: verder"
+  },
+  "funFact": {
+    "eyebrow": "Café {current} van {total} · Funfact",
+    "loading": "Beery zoekt het op…",
+    "cafeStory": "Het eigen verhaal van het café",
+    "next": "Naar het volgende café",
+    "finish": "Het spel afronden"
+  },
+  "teamFinished": {
+    "title": "Jullie team is klaar!",
+    "text": "Goed gespeeld! De eindstand verschijnt zodra elk team klaar is, of als de host het spel beëindigt."
+  },
+  "evidence": {
+    "takePhoto": "Neem of kies een foto",
+    "takeVideo": "Neem of kies een video",
+    "previewPhoto": "Je foto, voor het versturen",
+    "previewVideo": "Je video, voor het versturen",
+    "whoTookPart": "Wie deed er mee?",
+    "send": "Naar de host sturen",
+    "sending": "Bezig met versturen… {percent}%",
+    "pending": "Verstuurd! Wacht op de goedkeuring van de host.",
+    "approved": {
+      "one": "Goedgekeurd: +{count} punt",
+      "other": "Goedgekeurd: +{count} punten"
+    },
+    "rejected": "Niet goedgekeurd door de host.",
+    "rejectedReason": "Niet goedgekeurd door de host: {reason}",
+    "sendAgain": "Je mag een nieuwe sturen.",
+    "consent": "Fotografeer of film alleen mensen die ja zeiden."
+  },
+  "leaderboard": {
+    "title": "Stand",
+    "label": "Stand: rangschikking van alle teams",
+    "points": {
+      "one": "{count} punt",
+      "other": "{count} punten"
+    },
+    "details": "{done} van {total} cafés · bonus {bonus}",
+    "detailsPlayer": "bonus {bonus}",
+    "own": "jij",
+    "close": "Sluiten"
+  },
+  "results": {
+    "eyebrow": "Hidden Pubs · Het einde",
+    "winner": "{name} wint!",
+    "sharedWin": "Gedeelde eerste plaats: {names}!",
+    "tradition": "Santé op de kampioenen! Traditie: iedereen trakteert de winnaar op een drankje naar keuze. Alcoholvrij telt, en niemand moet.",
+    "pending": {
+      "one": "{count} foto of video wacht nog op de host: de stand kan nog veranderen.",
+      "other": "{count} foto's of video's wachten nog op de host: de stand kan nog veranderen."
+    },
+    "statsTitle": "Hoogtepunten van de avond",
+    "firstTry": "Het vaakst meteen juist: {name} ({count}×)",
+    "mostCorrect": "De meeste juiste antwoorden: {name} ({count})",
+    "mostBonus": "De meeste bonusopdrachten: {name} ({count})",
+    "share": "Deel de uitslag",
+    "shareTitle": "Uitslag Hidden Pubs",
+    "shareLine": "{position}. {name}: {points} punten",
+    "copied": "Uitslag gekopieerd"
+  }
+}

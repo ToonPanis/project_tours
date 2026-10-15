@@ -1,0 +1,42 @@
+{
+  "_comment": "Hidden Pubs 2.0 route rules (HIDDEN_PUBS_CONCEPT.txt): Rococo → cafés 2–7 in a random order → De Varkenspoot → Boer van Tienen → De Muze and Cabron in a random order → Den Engel. One random route per team (D5). Read by definition.ts AND scripts/generate-walking-routes.mjs (which makes a walking leg for every pair of cafés that can follow each other).",
+  "groups": [
+    {
+      "cafeIds": [
+        "pubs-rococo"
+      ],
+      "shuffle": false
+    },
+    {
+      "cafeIds": [
+        "pubs-barok",
+        "pubs-quinten-matsijs",
+        "pubs-de-kat",
+        "pubs-billies",
+        "pubs-barries",
+        "pubs-paters-vaetje"
+      ],
+      "shuffle": true
+    },
+    {
+      "cafeIds": [
+        "pubs-de-varkenspoot",
+        "pubs-boer-van-tienen"
+      ],
+      "shuffle": false
+    },
+    {
+      "cafeIds": [
+        "pubs-de-muze",
+        "pubs-cabron"
+      ],
+      "shuffle": true
+    },
+    {
+      "cafeIds": [
+        "pubs-den-engel"
+      ],
+      "shuffle": false
+    }
+  ]
+}

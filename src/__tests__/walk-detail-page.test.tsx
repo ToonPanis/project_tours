@@ -56,31 +56,31 @@ describe("Walk detail page", () => {
     expect(screen.getAllByText(t("guide.status.vanished")).length).toBeGreaterThan(0);
   });
 
-  test("renders Hidden Pubs with its story, highlights and practical info", async () => {
-    const howItWorks = getHowItWorksSteps(hiddenPubsWalk, t);
+  test("renders Hidden Pubs (the multiplayer game): tagline, highlights, practical info, how it works", async () => {
     await renderWalkPage("hidden-pubs");
 
     expect(screen.getByRole("heading", { level: 1, name: hiddenPubsWalk.title })).toBeDefined();
-    expect(screen.getByText(t("walks.detail.storyFiction"))).toBeDefined();
-    expect(screen.getByRole("heading", { name: hiddenPubsWalk.narrative!.title })).toBeDefined();
-    expect(screen.getByRole("heading", { name: t("walks.detail.whatToExpect") })).toBeDefined();
-    // Practical info, including the alcohol rule ("Never required…").
-    for (const item of hiddenPubsWalk.practicalInfo!) {
-      expect(screen.getByText(item.value)).toBeDefined();
-    }
-    expect(screen.getByRole("heading", { name: howItWorks[4] })).toBeDefined();
+    expect(screen.getByText(hiddenPubsWalk.tagline)).toBeDefined();
+    for (const highlight of hiddenPubsWalk.highlights!) expect(screen.getByText(highlight)).toBeDefined();
+    // Practical info, including the alcohol rule ("Never required…") and 18+.
+    for (const item of hiddenPubsWalk.practicalInfo!) expect(screen.getByText(item.value)).toBeDefined();
+    for (const step of getHowItWorksSteps(hiddenPubsWalk, t)) expect(screen.getByRole("heading", { name: step })).toBeDefined();
+    // "Create a game" leads to the play page, which sends organisers on to /games/new.
+    const start = screen.getByRole("link", { name: getWalkCopy(hiddenPubsWalk, t).startLabel });
+    expect(start.getAttribute("href")).toBe("/walks/hidden-pubs/play");
   });
 
-  test("Hidden Pubs reveals only the first café before the walk starts", async () => {
+  test("Hidden Pubs shows only Rococo; the cafés in between stay hidden", async () => {
     const [first, ...hidden] = getOrderedLocations(hiddenPubsWalk);
     await renderWalkPage("hidden-pubs");
 
     expect(screen.getByRole("heading", { name: containing(first.name) })).toBeDefined();
     expect(screen.getAllByRole("heading", { name: hiddenStopHeading })).toHaveLength(hidden.length);
-    expect(screen.getByText(t("walks.preview.finalDestination"))).toBeDefined();
-    // Nothing may give a hidden café away: not its name, a short form of it, or its address.
-    expect(hidden.length).toBeGreaterThan(0);
-    for (const location of hidden) {
+    // Every team starts at Rococo and ends at Den Engel (the concept): the description may say
+    // so. The ten cafés in between are each team's own secret order: nothing may give them away.
+    const between = hidden.slice(0, -1);
+    expect(between).toHaveLength(10);
+    for (const location of between) {
       expect(revealedIn(document.body.textContent ?? "", location)).toEqual([]);
     }
   });

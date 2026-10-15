@@ -39,7 +39,6 @@ export const classicsContentEs: ClassicsContent = {
     },
     copy: {
       startLabel: "Empezar el paseo",
-      nextLocationTitle: "Siguiente parada",
       completionTitle: "Fin del paseo",
       completionMessage: "No solo has recorrido Amberes. Has recorrido, hacia atrás, su historia.",
       locationsTitle: "La ruta",

@@ -6,10 +6,13 @@
 /** Who is calling: public APIs (OSRM, Wikimedia) ask for a way to contact the author. */
 export const USER_AGENT_CONTACT = "+https://github.com/ToonPanis/project_tours";
 
-/** A walk folder name from the command line: only lowercase letters, digits and dashes. */
+/**
+ * A walk folder name from the command line: lowercase letters, digits and dashes,
+ * optionally one subfolder (e.g. "hidden-pubs/game").
+ */
 export function readWalkFolderArg(value, usage) {
   if (!value) throw new Error(`Usage: ${usage}`);
-  if (!/^[a-z0-9-]+$/.test(value)) {
+  if (!/^[a-z0-9-]+(\/[a-z0-9-]+)?$/.test(value)) {
     throw new Error(`Invalid walk folder "${value}": use a folder name from src/data/walks (e.g. hidden-pubs).`);
   }
   return value;

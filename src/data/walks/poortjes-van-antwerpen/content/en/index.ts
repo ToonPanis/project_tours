@@ -53,7 +53,6 @@ export const poortjesContentEn: PoortjesContent = {
     },
     copy: {
       startLabel: "Start the walk",
-      nextLocationTitle: "Next stop",
       completionTitle: "End of the walk",
       completionMessage: "Today you saw fifty gates. From now on, take a look at the doors.",
       locationsTitle: "The route",

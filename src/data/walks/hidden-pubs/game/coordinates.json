@@ -1,0 +1,89 @@
+{
+  "_comment": "Hidden Pubs 2.0 café positions. DRAFT: OpenStreetMap (Nominatim) building positions; the 8 cafés of the old walk from 2026-09-23, Barok, Billie's and Cabron looked up on 2026-10-14, Café Barries (Reyndersstraat 21, address from the owner; OpenStreetMap names the café there 'Bootje bier') on 2026-10-14. All 'to-verify' until checked on site (ideally at the entrance). De Varkenspoot and Boer van Tienen are two places, always visited one after the other (D6). After changing a position, run: node scripts/generate-walking-routes.mjs hidden-pubs/game",
+  "locations": [
+    {
+      "id": "pubs-rococo",
+      "name": "Rococo",
+      "latitude": 51.221093,
+      "longitude": 4.400314,
+      "status": "to-verify"
+    },
+    {
+      "id": "pubs-barok",
+      "name": "Barok",
+      "latitude": 51.2207411,
+      "longitude": 4.4027978,
+      "status": "to-verify"
+    },
+    {
+      "id": "pubs-quinten-matsijs",
+      "name": "Quinten Matsijs",
+      "latitude": 51.221371,
+      "longitude": 4.403566,
+      "status": "to-verify"
+    },
+    {
+      "id": "pubs-de-kat",
+      "name": "De Kat",
+      "latitude": 51.221466,
+      "longitude": 4.403593,
+      "status": "to-verify"
+    },
+    {
+      "id": "pubs-billies",
+      "name": "Billie's Bier Kafétaria",
+      "latitude": 51.2184188,
+      "longitude": 4.400184,
+      "status": "to-verify"
+    },
+    {
+      "id": "pubs-barries",
+      "name": "Café Barries",
+      "latitude": 51.2192893,
+      "longitude": 4.3990752,
+      "status": "to-verify"
+    },
+    {
+      "id": "pubs-paters-vaetje",
+      "name": "Paters Vaetje",
+      "latitude": 51.220701,
+      "longitude": 4.400537,
+      "status": "to-verify"
+    },
+    {
+      "id": "pubs-de-varkenspoot",
+      "name": "De Varkenspoot",
+      "latitude": 51.2161083,
+      "longitude": 4.4081384,
+      "status": "to-verify"
+    },
+    {
+      "id": "pubs-boer-van-tienen",
+      "name": "In den Boer van Tienen",
+      "latitude": 51.2132455,
+      "longitude": 4.4047022,
+      "status": "to-verify"
+    },
+    {
+      "id": "pubs-de-muze",
+      "name": "De Muze",
+      "latitude": 51.220489,
+      "longitude": 4.402921,
+      "status": "to-verify"
+    },
+    {
+      "id": "pubs-cabron",
+      "name": "Cabron",
+      "latitude": 51.2211706,
+      "longitude": 4.4016629,
+      "status": "to-verify"
+    },
+    {
+      "id": "pubs-den-engel",
+      "name": "Den Engel",
+      "latitude": 51.221669,
+      "longitude": 4.399638,
+      "status": "to-verify"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { useEffect } from "react";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
+import { classicsOfAntwerpWalk } from "@/data/walks/classics-of-antwerp";
 import { NavigationScreen } from "@/features/navigation/components/NavigationScreen";
 import { getRouteLegTo } from "@/features/navigation/logic/route-legs";
 import { NAVIGATION_CONFIG } from "@/features/navigation/config";
@@ -23,8 +23,9 @@ vi.mock("@/features/navigation/components/WalkingMap", () => ({
 beforeEach(() => window.localStorage.clear());
 afterEach(cleanup);
 
-const deMuze = hiddenPubsWalk.locations.find((location) => location.id === "pubs-de-muze")!;
-const routeToDeMuze = getRouteLegTo(hiddenPubsWalk, "pubs-de-muze")!.route;
+// Any stop with a walking route leading to it.
+const destinationStop = classicsOfAntwerpWalk.locations[3];
+const routeToStop = getRouteLegTo(classicsOfAntwerpWalk, destinationStop.id)!.route;
 
 /** Gives the test a handle on the simulated GPS. */
 const simulationHandle: { emit: (coordinates: GeoCoordinates, accuracyMeters?: number) => void } = {
@@ -45,8 +46,8 @@ function renderNavigation(onArrive = vi.fn(), { gpsAlreadyEnabled = false } = {}
     <PositionSimulationProvider>
       <SimulationHandle />
       <NavigationScreen
-        destination={deMuze}
-        route={routeToDeMuze}
+        destination={destinationStop}
+        route={routeToStop}
         gpsAlreadyEnabled={gpsAlreadyEnabled}
         onGpsEnabled={() => {}}
         onArrive={onArrive}
@@ -72,11 +73,11 @@ describe("NavigationScreen", () => {
 
   test("shows the next maneuver while walking the route", async () => {
     renderNavigation();
-    const position = pointAlongRoute(routeToDeMuze.geometry, 5);
+    const position = pointAlongRoute(routeToStop.geometry, 5);
     await act(async () => emitPosition(position));
 
     // The instruction the route data says should be shown here.
-    const progress = getRouteProgress(routeToDeMuze, position);
+    const progress = getRouteProgress(routeToStop, position);
     const maneuver = progress.nextStep!.maneuver;
     const expectedLabel =
       progress.distanceToNextStepMeters <= NAVIGATION_CONFIG.MANEUVER_NOW_METERS
@@ -88,7 +89,7 @@ describe("NavigationScreen", () => {
 
   test("detects arrival from GPS and moves the game on", async () => {
     const onArrive = renderNavigation();
-    const destination = deMuze.coordinates!;
+    const destination = destinationStop.coordinates!;
     await act(async () => emitPosition(destination)); // switches navigation to live mode
     await act(async () => emitPosition(destination));
     await act(async () => emitPosition(destination));
@@ -97,7 +98,7 @@ describe("NavigationScreen", () => {
 
   test("an inaccurate position never triggers arrival, and shows a weak-signal warning", async () => {
     const onArrive = renderNavigation();
-    const destination = deMuze.coordinates!;
+    const destination = destinationStop.coordinates!;
     for (let reading = 0; reading < 4; reading++) {
       await act(async () => emitPosition(destination, 80));
     }
@@ -112,8 +113,8 @@ describe("NavigationScreen", () => {
   test("with good GPS just outside the arrival radius, 'I'm here' moves the game on", async () => {
     const onArrive = renderNavigation();
     // 60 m before the end of the route: outside the 40 m radius, e.g. an unreachable pin.
-    const nearby = pointAlongRoute(routeToDeMuze.geometry, routeToDeMuze.distanceMeters - 60);
-    expect(distanceInMeters(nearby, deMuze.coordinates!)).toBeGreaterThan(NAVIGATION_CONFIG.ARRIVAL_RADIUS_METERS);
+    const nearby = pointAlongRoute(routeToStop.geometry, routeToStop.distanceMeters - 60);
+    expect(distanceInMeters(nearby, destinationStop.coordinates!)).toBeGreaterThan(NAVIGATION_CONFIG.ARRIVAL_RADIUS_METERS);
     for (let reading = 0; reading < 3; reading++) {
       await act(async () => emitPosition(nearby, 5)); // 5 m accuracy: a "good" fix
     }
@@ -126,14 +127,14 @@ describe("NavigationScreen", () => {
 
   test("far from the stop with good GPS, 'I'm here' asks first (an accidental tap can't skip ahead)", async () => {
     const onArrive = renderNavigation();
-    const farAway = pointAlongRoute(routeToDeMuze.geometry, 5); // at the start of the route
-    expect(distanceInMeters(farAway, deMuze.coordinates!)).toBeGreaterThan(
+    const farAway = pointAlongRoute(routeToStop.geometry, 5); // at the start of the route
+    expect(distanceInMeters(farAway, destinationStop.coordinates!)).toBeGreaterThan(
       NAVIGATION_CONFIG.MANUAL_ARRIVAL_CONFIRM_METERS,
     );
     await act(async () => emitPosition(farAway, 5));
 
     fireEvent.click(screen.getByRole("button", { name: "I'm here" }));
-    expect(screen.getByRole("heading", { name: `Are you at ${deMuze.name}?`, hidden: true })).toBeDefined();
+    expect(screen.getByRole("heading", { name: `Are you at ${destinationStop.name}?`, hidden: true })).toBeDefined();
     fireEvent.click(screen.getByRole("button", { name: "Cancel", hidden: true }));
     expect(onArrive).not.toHaveBeenCalled();
 
@@ -145,7 +146,7 @@ describe("NavigationScreen", () => {
 
   test("with weak GPS far away, 'I'm here' doesn't ask (the position can't be trusted)", async () => {
     const onArrive = renderNavigation();
-    await act(async () => emitPosition(pointAlongRoute(routeToDeMuze.geometry, 5), 80));
+    await act(async () => emitPosition(pointAlongRoute(routeToStop.geometry, 5), 80));
     fireEvent.click(screen.getByRole("button", { name: "I'm here" }));
     expect(onArrive).toHaveBeenCalledTimes(1);
   });
@@ -178,7 +179,7 @@ describe("NavigationScreen", () => {
 
   test("no GPS position is ever written to localStorage", async () => {
     renderNavigation();
-    const position = pointAlongRoute(routeToDeMuze.geometry, 30);
+    const position = pointAlongRoute(routeToStop.geometry, 30);
     await act(async () => emitPosition(position));
     const everything = JSON.stringify({ ...window.localStorage });
     expect(everything).not.toContain(String(position.latitude).slice(0, 7));

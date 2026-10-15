@@ -45,7 +45,6 @@ export const poortjesContentIt: PoortjesContent = {
     },
     copy: {
       startLabel: "Inizia la passeggiata",
-      nextLocationTitle: "Prossima tappa",
       completionTitle: "Fine della passeggiata",
       completionMessage: "Oggi avete visto cinquanta portali. D'ora in poi, fate caso alle porte.",
       locationsTitle: "Il percorso",

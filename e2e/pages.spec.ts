@@ -26,9 +26,15 @@ test("an unknown walk is a real 404 page", async ({ page }) => {
 });
 
 test("the playtest tools are not in the production build", async ({ page }) => {
-  await page.goto("/walks/hidden-pubs/play");
-  await page.getByRole("button", { name: en("game.start.newAdventure") }).waitFor();
+  await page.goto("/walks/poortjes-van-antwerpen/play");
+  await page.getByRole("button", { name: en("guide.startWalk") }).waitFor();
   await expect(page.getByText("Playtest tools")).toHaveCount(0);
+});
+
+test("Hidden Pubs' play page leads organisers to 'create a game'", async ({ page }) => {
+  await page.goto("/walks/hidden-pubs/play");
+  await page.waitForURL(/\/games\/new\?walk=hidden-pubs$/);
+  await expect(page.getByRole("heading", { level: 1, name: en("pubgame.create.title") })).toBeVisible();
 });
 
 test("security headers are sent", async ({ page }) => {

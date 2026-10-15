@@ -6,8 +6,9 @@ import guide from "./guide.json";
 import home from "./home.json";
 import meta from "./meta.json";
 import navigation from "./navigation.json";
+import pubgame from "./pubgame.json";
 import walks from "./walks.json";
 
-const ru = { common, navigation, meta, home, errors, walks, game, guide, gps };
+const ru = { common, navigation, meta, home, errors, walks, game, guide, gps, pubgame };
 
 export default ru;

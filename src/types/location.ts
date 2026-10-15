@@ -1,9 +1,5 @@
-import type { Challenge } from "./challenge";
 import type { GeoCoordinates, ImageAsset } from "./common";
-import type { ContentBlock } from "./content";
-import type { DrinkRound } from "./drink";
 import type { GuideStopContent } from "./guide";
-import type { HistoricalReveal } from "./reveal";
 
 /** What kind of place a location is. (Whether it's a bonus stop is a separate flag.) */
 export type LocationType =
@@ -74,18 +70,9 @@ export interface WalkLocation {
   coordinatesStatus?: "verified" | "to-verify";
   /** Short introduction, safe to show before the walk starts. */
   description: string;
-  /** History, legends and story fragments, revealed during the walk. */
-  content: ContentBlock[];
   images?: LocationImages;
   /** What to look at on site, e.g. "Look up at the facade". */
   observationPrompt?: string;
-  /** Team drink vote at this location (e.g. Hidden Pubs cafés). */
-  drinkRound?: DrinkRound;
-  challenge?: Challenge;
-  /** Optional extra question after the main challenge. Never blocks progress. */
-  bonusChallenge?: Challenge;
-  /** Real history, revealed after the challenge is solved. */
-  historicalReveal?: HistoricalReveal;
   /** The narrated stop page, for guide walks. */
   guide?: GuideStopContent;
   /** Not used by the app yet (the reducer decides when a stop unlocks). Kept for future rules. */

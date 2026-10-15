@@ -43,7 +43,6 @@ export const classicsContentEn: ClassicsContent = {
     },
     copy: {
       startLabel: "Start the walk",
-      nextLocationTitle: "Next stop",
       completionTitle: "The end of the walk",
       completionMessage: "You haven't just walked through Antwerp. You've walked back through its history.",
       locationsTitle: "The route",

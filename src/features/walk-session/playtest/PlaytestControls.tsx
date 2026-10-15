@@ -2,11 +2,10 @@
 
 /**
  * PLAYTEST TOOLING: not part of the game.
- * To remove: delete this folder and the <PlaytestControls> line in WalkPlayer.
+ * To remove: delete this folder and the <PlaytestControls> line in GuideWalkPlayer.
  */
 import { useState } from "react";
 import type { SessionAction, WalkSession } from "@/types/session";
-import type { Team } from "@/types/team";
 import type { Walk } from "@/types/walk";
 import { NavigationPlaytestTools } from "@/features/navigation/simulation/NavigationPlaytestTools";
 import type { GeoCoordinates } from "@/types/common";
@@ -14,7 +13,7 @@ import type { WalkingRoute } from "@/types/navigation";
 import { getOrderedLocations } from "@/lib/walk-locations";
 import type { CurrentStop } from "../logic/current-stop";
 import { storageKey } from "../storage/session-storage";
-import { getJumpToStopActions, getNextStageActions, getUnlockNextActions } from "./get-correct-answer";
+import { getJumpToStopActions, getNextStageActions, getUnlockNextActions } from "./fast-forward";
 
 /**
  * Always on in development. In a production build (e.g. Vercel) only when
@@ -56,10 +55,10 @@ interface PlaytestControlsProps {
   walk: Walk;
   session: WalkSession;
   dispatch: (action: SessionAction) => void;
-  /** Starts a fresh session with the same team (used to jump to a stop). */
-  startNewSession: (team: Team) => void;
+  /** Starts a fresh session (used to jump to a stop). */
+  startNewSession: () => void;
   onRestart: () => void;
-  /** Present while the team is travelling: the simulated-GPS tools. */
+  /** Present while the walker is travelling: the simulated-GPS tools. */
   navigation: { route: WalkingRoute | null; destination: GeoCoordinates | null; onReset: () => void } | null;
 }
 
@@ -80,13 +79,13 @@ export function PlaytestControls({
   const now = () => new Date().toISOString();
 
   function unlockNextLocation() {
-    if (currentLocation) getUnlockNextActions(currentLocation, now()).forEach(dispatch);
+    if (currentLocation) getUnlockNextActions(now()).forEach(dispatch);
   }
 
   function jumpToStop(stopNumber: number) {
-    // Start over with the same team, then fast-forward with normal actions.
+    // Start over, then fast-forward with normal actions.
     // (React applies these queued updates in order.)
-    startNewSession(session.team);
+    startNewSession();
     getJumpToStopActions(walk, stopNumber, now()).forEach(dispatch);
     setIsOpen(false);
   }
@@ -128,7 +127,7 @@ export function PlaytestControls({
         <button
           type="button"
           className={toolButtonClasses}
-          onClick={() => getNextStageActions(walk, session, now()).forEach(dispatch)}
+          onClick={() => getNextStageActions(session, now()).forEach(dispatch)}
         >
           Skip to next stage
         </button>
@@ -163,7 +162,7 @@ export function PlaytestControls({
           />
         )}
 
-        <p className="mt-1 text-xs font-bold uppercase tracking-wider text-yellow-300">Game</p>
+        <p className="mt-1 text-xs font-bold uppercase tracking-wider text-yellow-300">Walk</p>
         <button type="button" className={toolButtonClasses} onClick={onRestart}>
           Reset walk
         </button>

@@ -1,0 +1,358 @@
+{
+  "create": {
+    "eyebrow": "Hidden Pubs · New game",
+    "title": "Set up your game",
+    "teamCount": "How many teams?",
+    "playersPerTeam": "Players per team (max.)",
+    "teamName": "Name of team {number}",
+    "defaultTeamName": "Team {number}",
+    "yourName": "Your name",
+    "yourTeam": "Your team",
+    "hostNote": "You're the host: you start the game and approve the bonus photos. You also play in your own team.",
+    "submit": "Create game",
+    "creating": "Creating…"
+  },
+  "adults": {
+    "confirm": "Everyone playing is 18 or older",
+    "note": "Drinking is never required: every drink may be alcohol-free."
+  },
+  "join": {
+    "eyebrow": "Hidden Pubs · Game {code}",
+    "title": "Join the game",
+    "yourName": "Your name",
+    "chooseTeam": "Choose your team",
+    "placesLeft": {
+      "one": "{count} place left",
+      "other": "{count} places left"
+    },
+    "full": "Full",
+    "submit": "Join",
+    "joining": "Joining…",
+    "closed": "This game has already started. Ask the host to add you.",
+    "finished": "This game is over."
+  },
+  "lobby": {
+    "eyebrow": "Game {code}",
+    "title": "Waiting for everyone",
+    "inviteTitle": "Invite the others",
+    "inviteText": "Everyone plays on their own phone: scan the QR code or share the link.",
+    "code": "Game code",
+    "qrLabel": "QR code to join game {code}",
+    "share": "Share link",
+    "copied": "Link copied",
+    "shareText": "Join our Hidden Pubs game!",
+    "players": {
+      "one": "{count} player",
+      "other": "{count} players"
+    },
+    "emptyTeam": "No one yet",
+    "you": "you",
+    "host": "host",
+    "start": "Start the game",
+    "startHint": "Every team needs at least one player.",
+    "waitingForHost": "The host starts the game when everyone is in."
+  },
+  "beery": {
+    "portrait": "Beery, the Hidden Pubs mascot: a cheerful beer mug",
+    "nextLocation": "Beery takes you to the next location!",
+    "bonusTask": "Beery has a bonus task for you!",
+    "letsGo": "Let's go",
+    "intro": {
+      "eyebrow": "Beery explains",
+      "progress": "{current} of {total}",
+      "next": "Next",
+      "skip": "Skip",
+      "done": "Let's play!",
+      "welcomeTitle": "Proost! I'm Beery.",
+      "welcomeText": "I'm your host tonight: 12 cafés, from Rococo to Den Engel. At every café you pick a drink, play Drunken Bastard, solve the pubtask and read a fun fact. Most points wins!",
+      "cardsTitle": "Drunken Bastard",
+      "cardsText": "At every café each player picks one of 10 face-down cards. Every card does something: hand out a sip, pick a drinking buddy, invent a rule, become Thumb King… A sip is always a sip of your own drink, and alcohol-free counts.",
+      "pubtasksTitle": "Pubtasks",
+      "pubtasksText": "Every café has a question about the place itself. Right first time: 100 points. Second try: 80. Third try: 60. After that I'll tell you the answer, but there are no points.",
+      "bonusTitle": "Bonus tasks",
+      "bonusText": "Sometimes I have a bonus task for you. Send a photo or video as proof: the host approves it, and only then do the points count.",
+      "respectTitle": "House rules",
+      "respectText": "Ask staff and guests before you photograph them, never get in the way at the bar, and drink at your own pace. Tradition: everyone treats the winner to a drink of their choice. Alcohol-free is fine, and nobody has to."
+    }
+  },
+  "nextCafe": {
+    "eyebrow": "Café {current} of {total}",
+    "text": "Your team's next stop."
+  },
+  "menu": {
+    "label": "Game menu",
+    "rules": "Rules",
+    "host": "Host dashboard",
+    "game": "Back to the game",
+    "scores": "Scores"
+  },
+  "host": {
+    "eyebrow": "Game {code} · Host",
+    "title": "Host dashboard",
+    "teams": "Teams",
+    "progress": "{done} of {total} cafés",
+    "teamFinished": "Finished",
+    "pendingEvidence": {
+      "one": "{count} photo or video waiting for your approval",
+      "other": "{count} photos or videos waiting for your approval"
+    },
+    "noPendingEvidence": "No photos or videos waiting.",
+    "addPlayer": "Add a player",
+    "addPlayerName": "Name",
+    "addPlayerTeam": "Team",
+    "addPlayerSubmit": "Add",
+    "playerAdded": "{name} has been added. Send them their personal link (tap their name above).",
+    "endGame": "End the game",
+    "endConfirmTitle": "End the game for everyone?",
+    "endConfirmText": "Every team stops where it is and the results are shown. This can't be undone.",
+    "endConfirm": "End the game",
+    "notHost": "Only the host can open this page.",
+    "playerLinkFor": "Personal link for {name}",
+    "playerLinkHelp": "Send this link to {name} only: whoever opens it plays as {name}. Handy for late arrivals and new phones.",
+    "shareLink": "Share link",
+    "linkCopied": "Link copied",
+    "reviewTitle": "Photos and videos to review",
+    "reviewHelp": "Points only count once you approve. Reject anything that doesn't match the task.",
+    "reviewFor": "{team} · {task}",
+    "tookPart": "Took part: {names}",
+    "approve": "Approve",
+    "reject": "Reject",
+    "rejectReason": "Reason for rejecting (optional)",
+    "mediaLabel": "Evidence from {team} for {task}"
+  },
+  "connection": {
+    "offline": "No connection. Trying again…",
+    "gone": "This game no longer exists. Games are deleted after 7 days."
+  },
+  "errors": {
+    "generic": "That didn't work. Please try again.",
+    "adultsOnly": "Please confirm that everyone playing is 18 or older.",
+    "invalidSettings": "Please check the names and numbers.",
+    "invalidText": "Please type a name (at most 30 characters).",
+    "nameTaken": "Someone in this game already has that name.",
+    "teamFull": "This team is full. Choose another team.",
+    "joiningClosed": "This game has already started. Ask the host to add you.",
+    "notHost": "Only the host can do that.",
+    "emptyTeam": "Every team needs at least one player before the game can start.",
+    "unknownGame": "This game doesn't exist (any more).",
+    "gameFinished": "This game is over.",
+    "outdated": "Someone in your team was quicker. The screen has been updated.",
+    "unknownLink": "This link doesn't work (any more). Ask the host for a new one.",
+    "chooseTeam": "Please choose a team.",
+    "invalidMedia": "This file type isn't supported. Use a normal photo or video from your phone.",
+    "tooLarge": "This file is too big. A shorter video works better.",
+    "uploadFailed": "Sending didn't work. Check the connection and try again."
+  },
+  "claim": {
+    "title": "Opening your game…",
+    "invalid": "This link doesn't work (any more). Ask the host for a new one."
+  },
+  "drinks": {
+    "title": "Choose your drink",
+    "intro": "Everyone picks their own drink and orders it at the bar.",
+    "alcoholFree": "Alcohol-free / soft drink",
+    "skip": "No drink this round",
+    "yourChoice": "Your drink: {drink}. Order it at the bar.",
+    "noDrink": "No drink for you this round. That's fine!",
+    "respect": "Drink at your own pace. Nobody has to drink alcohol.",
+    "ready": "We've got our drinks: start Drunken Bastard",
+    "eyebrow": "Café {current} of {total} · {cafe}",
+    "welcome": "Welcome to {cafe}!"
+  },
+  "wheel": {
+    "title": "Spin the beer wheel",
+    "intro": "Billie's has a numbered beer list: spin the wheel and order the beer with your number.",
+    "label": "Beer wheel with the numbers 1 to 10",
+    "spin": "Spin the wheel",
+    "spinning": "Spinning…",
+    "result": "Your number: {number}",
+    "order": "Ask the bar for beer number {number}."
+  },
+  "cards": {
+    "eyebrow": "Café {current} of {total} · Drunken Bastard",
+    "title": "Drunken Bastard",
+    "yourTurn": "Your turn! Pick one of 10 face-down cards.",
+    "draw": "Show my 10 cards",
+    "pick": "Tap a card",
+    "waitingFor": "{name} is drawing a card…",
+    "drawFor": "Draw for {name}",
+    "faceDown": "Card {number} of {total}, face down",
+    "drew": "{name} drew",
+    "cardLabel": "{rank} of {suit}",
+    "ranks": {
+      "J": "Jack",
+      "Q": "Queen",
+      "K": "King",
+      "A": "Ace"
+    },
+    "suits": {
+      "hearts": "hearts",
+      "diamonds": "diamonds",
+      "clubs": "clubs",
+      "spades": "spades"
+    },
+    "cardsLeft": {
+      "one": "{count} card left in the deck",
+      "other": "{count} cards left in the deck"
+    },
+    "sipNote": "A sip is always a sip of your own drink. Alcohol-free counts.",
+    "effects": {
+      "2": "Hand out a sip: choose who drinks.",
+      "3": "You take a sip yourself.",
+      "4": "Everyone touches the floor as fast as possible. The last one drinks a sip.",
+      "5": "Every woman playing takes a sip.",
+      "6": "Every man playing takes a sip.",
+      "7": "Everyone points up as fast as possible. The last one drinks a sip.",
+      "8": "Choose a drinking buddy, also from another team. From now on, when one of you drinks, the other drinks along.",
+      "9": "Say a word. Going round, everyone says a word that rhymes with it. Whoever can't, or repeats a word, drinks a sip.",
+      "10": "Choose a category. Going round, everyone names something in it. Whoever can't, or repeats one, drinks a sip.",
+      "J": "Invent a rule that everyone follows for the rest of the game. At most 4 rules: a 5th replaces the oldest.",
+      "Q": "You're the Question Bitch until someone else draws a queen: anyone who answers a question from you drinks a sip.",
+      "K": "You're the Thumb King until someone else draws a king: put your thumb on the table at any moment. Everyone copies you, and the last one drinks a sip.",
+      "A": "You're the Beunaas until someone else draws an ace: you drink double, and so does your drinking buddy."
+    },
+    "chooseTarget": "Who gets the sip?",
+    "chooseBuddy": "Pick your drinking buddy",
+    "writeRule": "Your new rule",
+    "rulePlaceholder": "e.g. drink only with your left hand",
+    "ruleSubmit": "Add the rule",
+    "reportLoser": "Who was last or lost? (optional)",
+    "nobody": "Skip",
+    "waitingForChoice": "{name} is choosing…",
+    "done": "Everyone has drawn a card! The pubtask comes next.",
+    "chooseFor": "Choose for {name}",
+    "toPubtask": "On to the pubtask"
+  },
+  "effects": {
+    "label": "Card powers, buddies and rules",
+    "questionBitch": "Question Bitch",
+    "thumbKing": "Thumb King",
+    "beunaas": "Beunaas",
+    "nobody": "nobody yet",
+    "buddies": "Drinking buddies",
+    "noBuddies": "No drinking buddies yet.",
+    "rules": "Rules",
+    "rulesCount": {
+      "one": "{count} rule",
+      "other": "{count} rules"
+    },
+    "noRules": "No rules yet.",
+    "ruleBy": "by {name}",
+    "open": "Powers & rules",
+    "title": "Powers, buddies and rules",
+    "close": "Close",
+    "reportDrink": "Who has to drink?",
+    "reportDrinkHelp": "Caught by the Question Bitch, the Thumb King or a rule? Tap the name: buddies drink along and everyone gets a popup.",
+    "reported": "Done: everyone has been told.",
+    "yourBuddy": "Your buddy: {name}",
+    "noBuddy": "No buddy yet"
+  },
+  "popups": {
+    "buddiesTitle": "New drinking buddies!",
+    "buddiesText": "{first} and {second} drink together from now on: when one drinks, the other drinks along.",
+    "buddiesEnded": "The pair {first} & {second} is no more.",
+    "drinkTitle": "Cheers!",
+    "sip": {
+      "one": "{name}: {count} sip",
+      "other": "{name}: {count} sips"
+    },
+    "sipAlong": {
+      "one": "{name} drinks along with buddy {buddy}: {count} sip",
+      "other": "{name} drinks along with buddy {buddy}: {count} sips"
+    },
+    "ok": "OK"
+  },
+  "pubtask": {
+    "eyebrow": "Café {current} of {total} · Pubtask",
+    "title": "Pubtask",
+    "teamAnswers": "One answer per team: whoever taps first answers for everyone.",
+    "playerAnswers": "Everyone answers on their own phone and scores for themselves.",
+    "questionOf": "Question {current} of {total}",
+    "worth": "Attempt {attempt}: worth {points} points",
+    "correct": "Correct! +{points} points",
+    "wrong": {
+      "one": "Not quite: {count} wrong answer.",
+      "other": "Not quite: {count} wrong answers."
+    },
+    "hint": "Beery's hint: {hint}",
+    "revealed": "The answer was: {answer}. No points this time.",
+    "wrongOption": "wrong",
+    "rightOption": "right",
+    "score": "Score so far: {points} points",
+    "continue": "Continue"
+  },
+  "tasks": {
+    "skip": "Skip this task",
+    "done": "Done",
+    "points": {
+      "one": "{count} point",
+      "other": "{count} points"
+    },
+    "perPlayer": "{points} points per player who takes part",
+    "respect": "Ask staff and guests first, and never get in their way."
+  },
+  "bonus": {
+    "eyebrow": "Café {current} of {total} · Bonus",
+    "title": "Bonus task",
+    "skip": "No bonus: continue"
+  },
+  "funFact": {
+    "eyebrow": "Café {current} of {total} · Fun fact",
+    "loading": "Beery is looking it up…",
+    "cafeStory": "The café's own story",
+    "next": "On to the next café",
+    "finish": "Finish the game"
+  },
+  "teamFinished": {
+    "title": "Your team has finished!",
+    "text": "Well played! The final results appear as soon as every team has finished, or when the host ends the game."
+  },
+  "evidence": {
+    "takePhoto": "Take or choose a photo",
+    "takeVideo": "Record or choose a video",
+    "previewPhoto": "Your photo, before sending",
+    "previewVideo": "Your video, before sending",
+    "whoTookPart": "Who took part?",
+    "send": "Send to the host",
+    "sending": "Sending… {percent}%",
+    "pending": "Sent! Waiting for the host's approval.",
+    "approved": {
+      "one": "Approved: +{count} point",
+      "other": "Approved: +{count} points"
+    },
+    "rejected": "Not approved by the host.",
+    "rejectedReason": "Not approved by the host: {reason}",
+    "sendAgain": "You can send a new one.",
+    "consent": "Only photograph or film people who said yes."
+  },
+  "leaderboard": {
+    "title": "Scores",
+    "label": "Scores: ranking of all teams",
+    "points": {
+      "one": "{count} point",
+      "other": "{count} points"
+    },
+    "details": "{done} of {total} cafés · bonus {bonus}",
+    "detailsPlayer": "bonus {bonus}",
+    "own": "you",
+    "close": "Close"
+  },
+  "results": {
+    "eyebrow": "Hidden Pubs · The end",
+    "winner": "{name} wins!",
+    "sharedWin": "Shared first place: {names}!",
+    "tradition": "Proost to the champions! Tradition: everyone treats the winner to a drink of their choice. Alcohol-free counts, and nobody has to.",
+    "pending": {
+      "one": "{count} photo or video is still waiting for the host: the scores can still change.",
+      "other": "{count} photos or videos are still waiting for the host: the scores can still change."
+    },
+    "statsTitle": "Highlights of the night",
+    "firstTry": "Right first time most often: {name} ({count}×)",
+    "mostCorrect": "Most right answers: {name} ({count})",
+    "mostBonus": "Most bonus tasks: {name} ({count})",
+    "share": "Share the results",
+    "shareTitle": "Hidden Pubs results",
+    "shareLine": "{position}. {name}: {points} points",
+    "copied": "Results copied"
+  }
+}

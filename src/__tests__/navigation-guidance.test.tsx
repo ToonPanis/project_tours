@@ -1,7 +1,7 @@
 import { englishTranslator as t } from "@/i18n/translate";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { act, cleanup, fireEvent, render, renderHook, screen } from "@testing-library/react";
-import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
+import { classicsOfAntwerpWalk } from "@/data/walks/classics-of-antwerp";
 import { DirectionPanel } from "@/features/navigation/components/DirectionPanel";
 import { NavigationScreen } from "@/features/navigation/components/NavigationScreen";
 import { NAVIGATION_CONFIG } from "@/features/navigation/config";
@@ -18,7 +18,7 @@ vi.mock("@/features/navigation/components/WalkingMap", () => ({
 
 afterEach(cleanup);
 
-const rococo = hiddenPubsWalk.locations[0];
+const destinationStop = classicsOfAntwerpWalk.locations[1];
 const fix = (changes: Partial<GpsFix> = {}): GpsFix => ({
   coordinates: { latitude: 51.2211, longitude: 4.3997 },
   accuracyMeters: 5,
@@ -64,8 +64,8 @@ describe("head to destination: a direction, not just a name", () => {
   });
 
   test("the first stop (no route) gets a bearing and a compass direction in the panel", () => {
-    const start = fix({ coordinates: { latitude: rococo.coordinates!.latitude - 0.003, longitude: rococo.coordinates!.longitude } });
-    const view = getNavigationView(start, null, rococo.name, rococo.coordinates, initialTracking);
+    const start = fix({ coordinates: { latitude: destinationStop.coordinates!.latitude - 0.003, longitude: destinationStop.coordinates!.longitude } });
+    const view = getNavigationView(start, null, destinationStop.name, destinationStop.coordinates, initialTracking);
     expect(view.instruction).toMatchObject({ kind: "head-to-destination" });
     if (view.instruction.kind !== "head-to-destination") return;
     expect(toCompassPoint(view.instruction.bearingDegrees)).toBe("n");
@@ -110,7 +110,7 @@ describe("GPS status and retry (real geolocation path)", () => {
     render(
       <PositionSimulationProvider>
         <NavigationScreen
-          destination={rococo}
+          destination={destinationStop}
           route={null}
           gpsAlreadyEnabled
           onGpsEnabled={() => {}}
@@ -134,7 +134,7 @@ describe("GPS status and retry (real geolocation path)", () => {
     render(
       <PositionSimulationProvider>
         <NavigationScreen
-          destination={rococo}
+          destination={destinationStop}
           route={null}
           gpsAlreadyEnabled
           onGpsEnabled={() => {}}
@@ -144,7 +144,7 @@ describe("GPS status and retry (real geolocation path)", () => {
       </PositionSimulationProvider>,
     );
     await act(async () => {});
-    const oneKmSouth = { latitude: rococo.coordinates!.latitude - 0.009, longitude: rococo.coordinates!.longitude };
+    const oneKmSouth = { latitude: destinationStop.coordinates!.latitude - 0.009, longitude: destinationStop.coordinates!.longitude };
     await act(async () =>
       watches[0].success({
         coords: { ...oneKmSouth, accuracy: 5, heading: null, speed: null, altitude: null, altitudeAccuracy: null },
@@ -155,7 +155,7 @@ describe("GPS status and retry (real geolocation path)", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "I'm here" }));
     expect(onArrive).not.toHaveBeenCalled(); // asks first instead of skipping the stop
-    expect(screen.getByRole("heading", { name: `Are you at ${rococo.name}?`, hidden: true })).toBeDefined();
+    expect(screen.getByRole("heading", { name: `Are you at ${destinationStop.name}?`, hidden: true })).toBeDefined();
   });
 
   test("'Try again' after a refusal restarts the watch cleanly (no stale message)", async () => {

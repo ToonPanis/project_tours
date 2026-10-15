@@ -4,9 +4,9 @@ import { classicsOfAntwerpWalk } from "@/data/walks/classics-of-antwerp";
 import { WalkPlayer } from "@/features/walk-session/components/WalkPlayer";
 import { createWalkSession } from "@/features/walk-session/logic/create-session";
 import { applySessionAction } from "@/features/walk-session/logic/session-reducer";
-import { getJumpToStopActions } from "@/features/walk-session/playtest/get-correct-answer";
+import { getJumpToStopActions } from "@/features/walk-session/playtest/fast-forward";
 import { getWalkCopy } from "@/features/walk-session/logic/walk-copy";
-import { localWalkSessionStore } from "@/features/walk-session/storage/session-storage";
+import { localWalkSessionStore, storageKey } from "@/features/walk-session/storage/session-storage";
 import { englishTranslator } from "@/i18n/translate";
 import { getOrderedLocations } from "@/lib/walk-locations";
 import type { SessionAction } from "@/types/session";
@@ -45,12 +45,7 @@ function click(name: string | RegExp) {
 
 /** Saves a visitor session advanced by `actions`, then opens the player and continues. */
 async function continueAfter(actions: SessionAction[]) {
-  const start = createWalkSession({
-    walk,
-    team: { id: "visitor", name: "", players: [{ id: "visitor", name: "You" }] },
-    sessionId: "s",
-    startedAt: "2026-09-23T10:00:00.000Z",
-  });
+  const start = createWalkSession({ walk, sessionId: "s", startedAt: "2026-09-23T10:00:00.000Z" });
   localWalkSessionStore.save(actions.reduce((state, action) => applySessionAction(walk, state, action), start));
   render(<WalkPlayer walk={walk} />);
   const continueButton = await screen.findByRole("button", {
@@ -60,7 +55,7 @@ async function continueAfter(actions: SessionAction[]) {
 }
 
 describe("Guide walk player: Classics of Antwerp", () => {
-  test("starts with the hero screen and walks to the first stop without a team setup", async () => {
+  test("starts with the hero screen and walks straight to the first stop", async () => {
     const [first, second] = stops;
     const { minMinutes, maxMinutes } = walk.estimatedDuration;
     render(<WalkPlayer walk={walk} />);
@@ -72,8 +67,6 @@ describe("Guide walk player: Classics of Antwerp", () => {
     expect(screen.getByText(t.plural("guide.hours", Math.round((minMinutes + maxMinutes) / 2 / 60)))).toBeDefined();
     click(t("guide.startWalk"));
 
-    // No "How many players?": straight to navigation.
-    expect(screen.queryByText(t("game.team.howMany"))).toBeNull();
     expect(screen.getByRole("heading", { name: first.name })).toBeDefined();
     click(t("gps.continueWithoutGps"));
     click(t("gps.arrived"));
@@ -127,11 +120,24 @@ describe("Guide walk player: Classics of Antwerp", () => {
   });
 });
 
-describe("existing walks are unaffected", () => {
-  test("Hidden Pubs still starts with its team setup", async () => {
-    const { hiddenPubsWalk } = await import("@/data/walks/hidden-pubs");
-    render(<WalkPlayer walk={hiddenPubsWalk} />);
-    click((await screen.findByRole("button", { name: t("game.start.newAdventure") })).textContent ?? "");
-    expect(screen.getByRole("heading", { name: t("game.team.howMany") })).toBeDefined();
+describe("saved progress", () => {
+  test("progress survives a page reload", async () => {
+    await continueAfter(getJumpToStopActions(walk, 3, "2026-09-23T11:00:00.000Z"));
+    expect(window.localStorage.getItem(storageKey(walk.slug))).not.toBeNull();
+
+    // Simulate a reload: unmount and mount a fresh player.
+    cleanup();
+    render(<WalkPlayer walk={walk} />);
+    expect(await screen.findByRole("button", { name: t("guide.continueAt", { stop: 3, total: mainStopCount }) })).toBeDefined();
+  });
+
+  test("starting again asks for confirmation, then deletes the saved walk", async () => {
+    localWalkSessionStore.save(createWalkSession({ walk, sessionId: "s", startedAt: "2026-09-23T10:00:00.000Z" }));
+    render(<WalkPlayer walk={walk} />);
+    click((await screen.findByRole("button", { name: t("guide.startAgain") })).textContent ?? "");
+    expect(window.localStorage.getItem(storageKey(walk.slug))).not.toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: t("guide.startAgainConfirm"), hidden: true }));
+    expect(window.localStorage.getItem(storageKey(walk.slug))).toBeNull();
   });
 });

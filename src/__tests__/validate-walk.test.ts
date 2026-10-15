@@ -20,43 +20,10 @@ describe("validateWalk catches structural mistakes", () => {
     expect(validateWalk(broken).join()).toMatch(/needs guide content/);
   });
 
-  test("a guide stop with a game challenge (the guide player can't finish it)", () => {
-    const broken: Walk = {
-      ...classicsOfAntwerpWalk,
-      locations: classicsOfAntwerpWalk.locations.map((stop, index) =>
-        index === 1 ? { ...stop, challenge: hiddenPubsWalk.locations[0].challenge } : stop,
-      ),
-    };
-    expect(validateWalk(broken).join()).toMatch(/can't have a challenge/);
-  });
-
-  test("a number answer that isn't a whole number (typed numbers are read with thousands separators)", () => {
-    const broken: Walk = {
-      ...hiddenPubsWalk,
-      locations: hiddenPubsWalk.locations.map((stop, index) =>
-        index === 0
-          ? { ...stop, challenge: { id: "c", type: "number-answer", title: "", question: "", hints: [], correctNumber: 1.5 } }
-          : stop,
-      ),
-    };
-    expect(validateWalk(broken).join()).toMatch(/must be a whole number \(1\.5\)/);
-  });
-
-  test("a challenge type the player can't play yet (a team would be stuck)", () => {
-    const broken: Walk = {
-      ...hiddenPubsWalk,
-      locations: hiddenPubsWalk.locations.map((stop, index) =>
-        index === 0
-          ? { ...stop, challenge: { id: "c", type: "sequence", title: "", question: "", hints: [], items: ["a", "b"], correctOrder: [1, 0] } }
-          : stop,
-      ),
-    };
-    expect(validateWalk(broken).join()).toMatch(/can't be played yet/);
-  });
-
   test("a missing walking route between two stops", () => {
-    const broken: Walk = { ...hiddenPubsWalk, routeLegs: hiddenPubsWalk.routeLegs!.slice(1) };
-    expect(validateWalk(broken).join()).toMatch(/no walking route pubs-rococo → pubs-den-engel/);
+    const [firstLeg, ...otherLegs] = classicsOfAntwerpWalk.routeLegs!;
+    const broken: Walk = { ...classicsOfAntwerpWalk, routeLegs: otherLegs };
+    expect(validateWalk(broken)).toContain(`no walking route ${firstLeg.fromLocationId} → ${firstLeg.toLocationId}`);
   });
 
   test("a missing bypass around an optional stop", () => {
@@ -71,13 +38,7 @@ describe("validateWalk catches structural mistakes", () => {
     expect(validateWalk({ ...poortjesWalk, routeLegs: bypassFree }).join()).toMatch(/no bypass route .* around optional poortjes-rodestraat/);
   });
 
-  test("a clue or chapter pointing at a stop that doesn't exist", () => {
-    const brokenClue: Walk = {
-      ...hiddenPubsWalk,
-      clues: [...hiddenPubsWalk.clues!, { ...hiddenPubsWalk.clues![0], id: "x", sourceLocationId: "nowhere" }],
-    };
-    expect(validateWalk(brokenClue).join()).toMatch(/clue x comes from unknown stop/);
-
+  test("a chapter pointing at a stop that doesn't exist", () => {
     const brokenChapter: Walk = {
       ...poortjesWalk,
       chapters: [...poortjesWalk.chapters!, { ...poortjesWalk.chapters![0], id: "y", firstLocationId: "nowhere" }],

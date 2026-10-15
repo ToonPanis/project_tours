@@ -51,7 +51,6 @@ export const poortjesContentNl: PoortjesContent = {
     },
     copy: {
       startLabel: "Start de wandeling",
-      nextLocationTitle: "Volgende stop",
       completionTitle: "Einde van de wandeling",
       completionMessage: "Je hebt vandaag vijftig poorten gezien. Kijk voortaan eens naar de deuren.",
       locationsTitle: "De route",

@@ -28,7 +28,7 @@ for (const locale of ["de", "ru", "es"] as const) {
   test.describe(`${locale} at 390 px`, () => {
     test.use({ locale, permissions: ["geolocation"] });
 
-    test("detail pages, a guide walk and a game walk fit the screen", async ({ page, context }) => {
+    test("detail pages, a guide walk and the pub game fit the screen", async ({ page, context }) => {
       const t = tr(locale);
       await context.addCookies([{ name: "ha-locale", value: locale, url: "http://localhost:3300" }]);
       const walks = getWalks(locale);
@@ -52,16 +52,16 @@ for (const locale of ["de", "ru", "es"] as const) {
       await page.waitForTimeout(1_500);
       await snap(page, locale, "poortjes-navigation");
 
-      // Game walk: the route panel ("Ledger") with its sticky close button.
+      // Hidden Pubs: "create a game" (the play page sends organisers there) and the lobby.
       await page.goto(`/walks/${pubs.slug}/play`);
-      await page.getByRole("button", { name: t("game.start.newAdventure") }).click();
-      await page.getByRole("button", { name: "1", exact: true }).click();
-      await page.getByRole("textbox").first().fill("Anna-Katharina");
-      await page.getByRole("button", { name: t("game.team.startAdventure") }).click();
-      await page.getByRole("button", { name: t("game.intro.begin") }).click();
-      await page.getByRole("button", { name: pubs.copy!.routeButtonLabel! }).click();
-      await snap(page, locale, "pubs-route-panel");
-      await expect(page.getByRole("button", { name: t("common.close") }).first()).toBeInViewport();
+      await page.waitForURL(/\/games\/new/);
+      await page.getByLabel(t("pubgame.create.yourName")).fill("Anna-Katharina");
+      await snap(page, locale, "pubs-create");
+      await page.getByRole("checkbox").check();
+      await page.getByRole("button", { name: t("pubgame.create.submit") }).click();
+      await page.waitForURL(/\/games\/[A-Z0-9]{6}$/);
+      await expect(page.getByRole("button", { name: t("pubgame.lobby.share") })).toBeVisible();
+      await snap(page, locale, "pubs-lobby");
     });
   });
 }

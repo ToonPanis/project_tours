@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
-import { hiddenPubsWalk } from "@/data/walks/hidden-pubs";
 import { poortjesWalk } from "@/data/walks/poortjes-van-antwerpen";
 import { classicsOfAntwerpWalk } from "@/data/walks/classics-of-antwerp";
 import { LanguageSelector } from "@/components/layout/LanguageSelector";
@@ -14,16 +13,13 @@ import { NavigationScreen } from "@/features/navigation/components/NavigationScr
 import { getSpokenDirection, type SpokenDirection } from "@/features/navigation/logic/spoken-direction";
 import { getRouteLegTo } from "@/features/navigation/logic/route-legs";
 import { PositionSimulationProvider } from "@/features/navigation/simulation/PositionSimulation";
-import { ChallengeScreen } from "@/features/walk-session/components/ChallengeScreen";
 import { RoutePanel } from "@/features/walk-session/components/RoutePanel";
-import { createLocationProgress, createWalkSession } from "@/features/walk-session/logic/create-session";
+import { createWalkSession } from "@/features/walk-session/logic/create-session";
 import { getWalkCopy } from "@/features/walk-session/logic/walk-copy";
 import { createTranslator, englishTranslator as t } from "@/i18n/translate";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { GuideStartScreen } from "@/features/guide/components/GuideStartScreen";
-import type { Challenge } from "@/types/challenge";
-import type { LocationProgress } from "@/types/session";
 
 // The language menu refreshes the page through the router.
 vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
@@ -38,8 +34,6 @@ beforeEach(() => {
   window.scrollTo = () => {};
 });
 afterEach(cleanup);
-
-const copy = getWalkCopy(hiddenPubsWalk, t);
 
 // ── M-09: directions are not re-read on every GPS reading ─────────────────
 
@@ -110,7 +104,6 @@ describe("M-10: focus on new screens", () => {
   test("the guide completion screen focuses its title", () => {
     const session = createWalkSession({
       walk: classicsOfAntwerpWalk,
-      team: { id: "t", name: "", players: [{ id: "p", name: "Visitor" }] },
       sessionId: "s",
       startedAt: "2026-09-29T10:00:00.000Z",
     });
@@ -120,12 +113,13 @@ describe("M-10: focus on new screens", () => {
   });
 
   test("navigation focuses the destination: first the explainer, then the live map title", async () => {
-    const deMuze = hiddenPubsWalk.locations.find((location) => location.id === "pubs-de-muze")!;
+    // Any stop with a walking route leading to it.
+    const destinationStop = classicsOfAntwerpWalk.locations[3];
     render(
       <PositionSimulationProvider>
         <NavigationScreen
-          destination={deMuze}
-          route={getRouteLegTo(hiddenPubsWalk, "pubs-de-muze")!.route}
+          destination={destinationStop}
+          route={getRouteLegTo(classicsOfAntwerpWalk, destinationStop.id)!.route}
           gpsAlreadyEnabled={false}
           onGpsEnabled={() => {}}
           onArrive={() => {}}
@@ -133,20 +127,19 @@ describe("M-10: focus on new screens", () => {
         />
       </PositionSimulationProvider>,
     );
-    expect(document.activeElement).toBe(screen.getByRole("heading", { level: 1, name: deMuze.name }));
+    expect(document.activeElement).toBe(screen.getByRole("heading", { level: 1, name: destinationStop.name }));
 
     fireEvent.click(screen.getByRole("button", { name: t("gps.continueWithoutGps") }));
-    // The ★ is decorative (aria-hidden), so the accessible name is "Your next destination: De Muze".
-    const mapTitle = screen.getByRole("heading", { level: 1, name: new RegExp(`^${t("gps.yourNextDestination")}:\\s+${deMuze.name}$`) });
+    // The ★ is decorative (aria-hidden), so the accessible name is "Your next destination: <stop>".
+    const mapTitle = screen.getByRole("heading", { level: 1, name: new RegExp(`^${t("gps.yourNextDestination")}:\\s+${destinationStop.name}$`) });
     expect(document.activeElement).toBe(mapTitle);
     // L-27: the map region has a translated, descriptive name.
-    expect(await screen.findByRole("region", { name: t("gps.mapRegion", { name: deMuze.name }) })).toBeDefined();
+    expect(await screen.findByRole("region", { name: t("gps.mapRegion", { name: destinationStop.name }) })).toBeDefined();
   });
 
   test("the guide start screen leaves focus alone on page load, and takes it after 'start again'", () => {
     const session = createWalkSession({
       walk: classicsOfAntwerpWalk,
-      team: { id: "t", name: "", players: [{ id: "p", name: "Visitor" }] },
       sessionId: "s",
       startedAt: "2026-09-29T10:00:00.000Z",
     });
@@ -172,96 +165,11 @@ describe("M-10: focus on new screens", () => {
   });
 });
 
-// ── M-11: every wrong answer gives fresh, announced feedback ──────────────
-
-describe("M-11: wrong-answer feedback", () => {
-  const textChallenge: Challenge = {
-    id: "test-text",
-    type: "text-answer",
-    title: "Test",
-    question: "What is written above the door?",
-    hints: [],
-    acceptedAnswers: ["anno"],
-  };
-  const choiceChallenge: Challenge = {
-    id: "test-choice",
-    type: "multiple-choice",
-    title: "Test",
-    question: "Which animal?",
-    hints: [],
-    options: ["Cat", "Dog", "Pig"],
-    correctOptionIndex: 2,
-  };
-  const progressWith = (wrongAttempts: number): LocationProgress => ({ ...createLocationProgress("challenge"), wrongAttempts });
-  const renderChallenge = (challenge: Challenge, wrongAttempts: number, onSubmit = vi.fn()) => (
-    <ChallengeScreen
-      challenge={challenge}
-      progress={progressWith(wrongAttempts)}
-      copy={copy}
-      requiredClues={[]}
-      onSubmit={onSubmit}
-      onRevealHint={() => {}}
-      onRevealAnswer={() => {}}
-    />
-  );
-
-  test("the status exists before the first wrong answer, and its text changes with every attempt", () => {
-    const { rerender } = render(renderChallenge(textChallenge, 0));
-    const status = screen.getByRole("status");
-    expect(status.textContent).toBe("");
-
-    rerender(renderChallenge(textChallenge, 1));
-    const afterFirst = screen.getByRole("status").textContent;
-    expect(afterFirst).toContain(copy.wrongAnswer);
-    expect(afterFirst).toContain(t("game.challenge.wrongAttempts", { count: 1 }));
-
-    rerender(renderChallenge(textChallenge, 2));
-    expect(screen.getByRole("status")).toBe(status);
-    expect(screen.getByRole("status").textContent).not.toBe(afterFirst);
-  });
-
-  test("the answer field is marked invalid while it holds the wrong answer", () => {
-    const { rerender } = render(renderChallenge(textChallenge, 0));
-    const input = screen.getByRole("textbox", { name: t("common.yourAnswer") });
-    expect(input.getAttribute("aria-describedby")).toBe(screen.getByRole("status").id);
-    fireEvent.change(input, { target: { value: "wrong" } });
-    fireEvent.submit(input.closest("form")!);
-    rerender(renderChallenge(textChallenge, 1));
-    expect(input.getAttribute("aria-invalid")).toBe("true");
-
-    fireEvent.change(input, { target: { value: "new try" } });
-    expect(input.getAttribute("aria-invalid")).toBe("false");
-  });
-
-  test("a wrong multiple-choice option is marked, for eyes and for screen readers", () => {
-    const { rerender } = render(renderChallenge(choiceChallenge, 0));
-    fireEvent.click(screen.getByRole("button", { name: /Dog/ }));
-    rerender(renderChallenge(choiceChallenge, 1));
-    expect(screen.getByRole("button", { name: /Dog/ }).textContent).toContain(t("game.challenge.wrongOption"));
-    expect(screen.getByRole("button", { name: /Cat/ }).textContent).not.toContain(t("game.challenge.wrongOption"));
-  });
-
-  test("tapping an option that is already crossed out doesn't count as another wrong answer", () => {
-    const onSubmit = vi.fn();
-    const { rerender } = render(renderChallenge(choiceChallenge, 0, onSubmit));
-    fireEvent.click(screen.getByRole("button", { name: /Dog/ }));
-    rerender(renderChallenge(choiceChallenge, 1, onSubmit));
-    fireEvent.click(screen.getByRole("button", { name: /Dog/ }));
-    expect(onSubmit).toHaveBeenCalledTimes(1);
-    expect(screen.getByRole("button", { name: /Dog/ }).getAttribute("aria-disabled")).toBe("true");
-  });
-});
-
 // ── M-13, L-23: the route panel ───────────────────────────────────────────
 
 describe("M-13 / L-23: route panel", () => {
   test("a close button comes before the (long) list of stops", () => {
-    const session = createWalkSession({
-      walk: poortjesWalk,
-      team: { id: "t", name: "", players: [{ id: "p", name: "Visitor" }] },
-      sessionId: "s",
-      startedAt: "2026-09-29T10:00:00.000Z",
-    });
+    const session = createWalkSession({ walk: poortjesWalk, sessionId: "s", startedAt: "2026-09-29T10:00:00.000Z" });
     const onClose = vi.fn();
     render(<RoutePanel walk={poortjesWalk} session={session} copy={getWalkCopy(poortjesWalk, t)} open onClose={onClose} />);
     const [topClose] = screen.getAllByRole("button", { name: t("common.close"), hidden: true });
@@ -273,13 +181,10 @@ describe("M-13 / L-23: route panel", () => {
   });
 
   test("locked entries use a readable text colour (at least /65, not /40)", () => {
-    const session = createWalkSession({
-      walk: hiddenPubsWalk,
-      team: { id: "t", name: "", players: [{ id: "p", name: "Tony" }] },
-      sessionId: "s",
-      startedAt: "2026-09-29T10:00:00.000Z",
-    });
-    render(<RoutePanel walk={hiddenPubsWalk} session={session} copy={copy} open onClose={() => {}} />);
+    // A route revealed step by step shows its locked stops as "???".
+    const progressiveWalk = { ...poortjesWalk, routeReveal: "progressive" as const };
+    const session = createWalkSession({ walk: progressiveWalk, sessionId: "s", startedAt: "2026-09-29T10:00:00.000Z" });
+    render(<RoutePanel walk={progressiveWalk} session={session} copy={getWalkCopy(progressiveWalk, t)} open onClose={() => {}} />);
     const dialog = screen.getByRole("dialog", { hidden: true });
     expect(dialog.innerHTML).not.toMatch(/text-parchment\/(40|50)\b/);
   });

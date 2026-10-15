@@ -22,6 +22,8 @@ All 61 stop coordinates currently have `coordinatesStatus: "to-verify"`. They we
 | A6 | De Kat (`pubs-de-kat`, Wolstraat 22) ↔ Quinten Matsijs (`pubs-quinten-matsijs`, Moriaanstraat 17) | Are the two cafés really ~10.7 m apart, or did the geocoder put both on one building? | The pins are 10.7 m apart | Entrance coordinates of both cafés; photo | L-08 | OPEN |
 | A7 | Other very short legs: `poortjes-gildekamersstraat` → `poortjes-leonie-glassplein` (32 m), `poortjes-mutsaardstraat` → `poortjes-academie` (59 m), `classics-brabo` → `classics-stadhuis` (38 m), `classics-conscienceplein` → `classics-carolus-borromeus` (43–50 m) | Do these legs feel right, or does arrival fire instantly and confuse the walker? | The positions are correct | Walker's experience note; entrance coordinates if the pins are wrong | L-08 | OPEN |
 | A8 | Every other stop (all three walks) | Pin at a sensible public spot; route leads there | Geocoded | A note per stop: OK / move to (lat, lng) | M-01 (general) | OPEN |
+| A9 | Hidden Pubs 2.0 new cafés: Barok (Melkmarkt 11), Billie's Bier Kafétaria (Kammenstraat 12), Cabron (Kaasrui 1), Café Barries (Reyndersstraat 21: OpenStreetMap still names the café there "Bootje bier") | Right café and entrance? | OpenStreetMap positions (`src/data/walks/hidden-pubs/game/coordinates.json`) | Entrance coordinates; photo | HIDDEN_PUBS_DATA_AUDIT.md | OPEN |
+| A10 | De Varkenspoot (Graanmarkt 3) → In den Boer van Tienen (Mechelseplein 6): two places, always visited one after the other (D6) | Does the 529 m walking route between them feel right? | The route generator's walk | Walker's note | — | OPEN |
 
 ## B. Challenge answers (Hidden Pubs)
 

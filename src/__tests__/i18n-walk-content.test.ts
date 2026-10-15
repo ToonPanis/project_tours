@@ -3,14 +3,15 @@ import { locales } from "@/i18n/config";
 import type { LocalizedContent } from "@/i18n/content";
 import { findStructureProblems } from "@/i18n/content-shape";
 import { classicsContent } from "@/data/walks/classics-of-antwerp/content";
-import { hiddenPubsContent } from "@/data/walks/hidden-pubs/content";
+import { hiddenPubsWalkTexts } from "@/data/walks/hidden-pubs/walk-texts";
 import { poortjesContent } from "@/data/walks/poortjes-van-antwerpen/content";
 
 /** Every walk with texts per language. A translation must match English in structure. */
 const walkContents: Record<string, LocalizedContent<unknown>> = {
   "poortjes-van-antwerpen": poortjesContent,
   "classics-of-antwerp": classicsContent,
-  "hidden-pubs": hiddenPubsContent,
+  "hidden-pubs": hiddenPubsWalkTexts,
+  // The old one-phone game (a test fixture): its texts still have to stay consistent.
 };
 
 /** Hidden Pubs' ledger is written in Dutch, so Dutch needs no translation of it. */

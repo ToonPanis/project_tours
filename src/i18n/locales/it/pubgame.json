@@ -1,0 +1,358 @@
+{
+  "create": {
+    "eyebrow": "Hidden Pubs · Nuova partita",
+    "title": "Preparate la vostra partita",
+    "teamCount": "Quante squadre?",
+    "playersPerTeam": "Giocatori per squadra (max.)",
+    "teamName": "Nome della squadra {number}",
+    "defaultTeamName": "Squadra {number}",
+    "yourName": "Il tuo nome",
+    "yourTeam": "La tua squadra",
+    "hostNote": "Sei l'host: avvii la partita e approvi le foto bonus. Giochi anche tu nella tua squadra.",
+    "submit": "Crea la partita",
+    "creating": "Creazione…"
+  },
+  "adults": {
+    "confirm": "Tutti i giocatori hanno almeno 18 anni",
+    "note": "Bere non è mai obbligatorio: ogni bevanda può essere analcolica."
+  },
+  "join": {
+    "eyebrow": "Hidden Pubs · Partita {code}",
+    "title": "Unisciti alla partita",
+    "yourName": "Il tuo nome",
+    "chooseTeam": "Scegli la tua squadra",
+    "placesLeft": {
+      "one": "Ancora {count} posto",
+      "other": "Ancora {count} posti"
+    },
+    "full": "Al completo",
+    "submit": "Partecipa",
+    "joining": "Un attimo…",
+    "closed": "Questa partita è già iniziata. Chiedi all'host di aggiungerti.",
+    "finished": "Questa partita è finita."
+  },
+  "lobby": {
+    "eyebrow": "Partita {code}",
+    "title": "In attesa di tutti",
+    "inviteTitle": "Invita gli altri",
+    "inviteText": "Ognuno gioca sul proprio telefono: scansiona il codice QR o condividi il link.",
+    "code": "Codice partita",
+    "qrLabel": "Codice QR per unirsi alla partita {code}",
+    "share": "Condividi il link",
+    "copied": "Link copiato",
+    "shareText": "Unisciti alla nostra partita di Hidden Pubs!",
+    "players": {
+      "one": "{count} giocatore",
+      "other": "{count} giocatori"
+    },
+    "emptyTeam": "Ancora nessuno",
+    "you": "tu",
+    "host": "host",
+    "start": "Avvia la partita",
+    "startHint": "Ogni squadra ha bisogno di almeno un giocatore.",
+    "waitingForHost": "L'host avvia la partita quando ci siete tutti."
+  },
+  "beery": {
+    "portrait": "Beery, la mascotte di Hidden Pubs: un boccale di birra sorridente",
+    "nextLocation": "Beery ti porta al prossimo locale!",
+    "bonusTask": "Beery ha una missione bonus per te!",
+    "letsGo": "Andiamo",
+    "intro": {
+      "eyebrow": "Beery spiega",
+      "progress": "{current} di {total}",
+      "next": "Avanti",
+      "skip": "Salta",
+      "done": "Si gioca!",
+      "welcomeTitle": "Salute! Sono Beery.",
+      "welcomeText": "Stasera sono il vostro host: 12 locali, dal Rococo fino a Den Engel. In ogni locale scegliete una bevanda, giocate a Drunken Bastard, risolvete la pubtask e leggete una curiosità. Vince chi fa più punti!",
+      "cardsTitle": "Drunken Bastard",
+      "cardsText": "In ogni locale ogni giocatore sceglie una tra 10 carte coperte. Ogni carta fa qualcosa: distribuire un sorso, scegliere un drinking buddy, inventare una regola, diventare Thumb King… Un sorso è sempre un sorso della tua bevanda, e anche analcolico vale.",
+      "pubtasksTitle": "Pubtasks",
+      "pubtasksText": "Ogni locale ha una domanda sul locale stesso. Giusto al primo colpo: 100 punti. Secondo tentativo: 80. Terzo tentativo: 60. Poi vi dico la risposta, ma senza punti.",
+      "bonusTitle": "Missioni bonus",
+      "bonusText": "A volte ho una missione bonus per voi. Mandate una foto o un video come prova: l'host la approva, e solo allora i punti contano.",
+      "respectTitle": "Regole della casa",
+      "respectText": "Chiedete al personale e ai clienti prima di fotografarli, non intralciate mai al bancone e bevete con calma. Tradizione: tutti offrono al vincitore una bevanda a sua scelta. Analcolica va benissimo, e nessuno è obbligato."
+    }
+  },
+  "nextCafe": {
+    "eyebrow": "Locale {current} di {total}",
+    "text": "La prossima tappa della tua squadra."
+  },
+  "menu": {
+    "label": "Menu della partita",
+    "rules": "Regole",
+    "host": "Pannello dell'host",
+    "game": "Torna alla partita",
+    "scores": "Punteggi"
+  },
+  "host": {
+    "eyebrow": "Partita {code} · Host",
+    "title": "Pannello dell'host",
+    "teams": "Squadre",
+    "progress": "{done} locali su {total}",
+    "teamFinished": "Finito",
+    "pendingEvidence": {
+      "one": "{count} foto o video aspetta la tua approvazione",
+      "other": "{count} foto o video aspettano la tua approvazione"
+    },
+    "noPendingEvidence": "Nessuna foto o video in attesa.",
+    "addPlayer": "Aggiungi un giocatore",
+    "addPlayerName": "Nome",
+    "addPlayerTeam": "Squadra",
+    "addPlayerSubmit": "Aggiungi",
+    "playerAdded": "{name} è stato aggiunto. Mandagli il suo link personale (tocca il suo nome qui sopra).",
+    "endGame": "Termina la partita",
+    "endConfirmTitle": "Terminare la partita per tutti?",
+    "endConfirmText": "Ogni squadra si ferma dove si trova e viene mostrata la classifica. Non si può annullare.",
+    "endConfirm": "Termina la partita",
+    "notHost": "Solo l'host può aprire questa pagina.",
+    "playerLinkFor": "Link personale per {name}",
+    "playerLinkHelp": "Manda questo link solo a {name}: chi lo apre gioca come {name}. Utile per chi arriva tardi o cambia telefono.",
+    "shareLink": "Condividi il link",
+    "linkCopied": "Link copiato",
+    "reviewTitle": "Foto e video da valutare",
+    "reviewHelp": "I punti contano solo quando li approvi. Rifiuta ciò che non corrisponde alla missione.",
+    "reviewFor": "{team} · {task}",
+    "tookPart": "Hanno partecipato: {names}",
+    "approve": "Approva",
+    "reject": "Rifiuta",
+    "rejectReason": "Motivo del rifiuto (facoltativo)",
+    "mediaLabel": "Prova di {team} per {task}"
+  },
+  "connection": {
+    "offline": "Nessuna connessione. Nuovo tentativo…",
+    "gone": "Questa partita non esiste più. Le partite vengono cancellate dopo 7 giorni."
+  },
+  "errors": {
+    "generic": "Non ha funzionato. Riprova.",
+    "adultsOnly": "Conferma che tutti i giocatori hanno almeno 18 anni.",
+    "invalidSettings": "Controlla i nomi e i numeri.",
+    "invalidText": "Scrivi un nome (al massimo 30 caratteri).",
+    "nameTaken": "Qualcuno in questa partita ha già quel nome.",
+    "teamFull": "Questa squadra è al completo. Scegline un'altra.",
+    "joiningClosed": "Questa partita è già iniziata. Chiedi all'host di aggiungerti.",
+    "notHost": "Solo l'host può farlo.",
+    "emptyTeam": "Ogni squadra ha bisogno di almeno un giocatore prima che la partita possa iniziare.",
+    "unknownGame": "Questa partita non esiste (più).",
+    "gameFinished": "Questa partita è finita.",
+    "outdated": "Qualcuno della tua squadra è stato più veloce. La schermata è stata aggiornata.",
+    "unknownLink": "Questo link non funziona (più). Chiedi all'host un link nuovo.",
+    "chooseTeam": "Scegli una squadra.",
+    "invalidMedia": "Questo tipo di file non è supportato. Usa una normale foto o un video del telefono.",
+    "tooLarge": "Questo file è troppo grande. Un video più corto funziona meglio.",
+    "uploadFailed": "L'invio non è riuscito. Controlla la connessione e riprova."
+  },
+  "claim": {
+    "title": "Apertura della tua partita…",
+    "invalid": "Questo link non funziona (più). Chiedi all'host un link nuovo."
+  },
+  "drinks": {
+    "title": "Scegli la tua bevanda",
+    "intro": "Ognuno sceglie la propria bevanda e la ordina al bancone.",
+    "alcoholFree": "Analcolica / bibita",
+    "skip": "Niente bevanda questo giro",
+    "yourChoice": "La tua bevanda: {drink}. Ordinala al bancone.",
+    "noDrink": "Niente bevanda per te questo giro. Va benissimo!",
+    "respect": "Bevi con calma. Nessuno è obbligato a bere alcol.",
+    "ready": "Abbiamo le bevande: via con Drunken Bastard",
+    "eyebrow": "Locale {current} di {total} · {cafe}",
+    "welcome": "Benvenuti al {cafe}!"
+  },
+  "wheel": {
+    "title": "Gira la ruota delle birre",
+    "intro": "Billie's ha una lista di birre numerate: gira la ruota e ordina la birra con il tuo numero.",
+    "label": "Ruota delle birre con i numeri da 1 a 10",
+    "spin": "Gira la ruota",
+    "spinning": "La ruota gira…",
+    "result": "Il tuo numero: {number}",
+    "order": "Chiedi al bancone la birra numero {number}."
+  },
+  "cards": {
+    "eyebrow": "Locale {current} di {total} · Drunken Bastard",
+    "title": "Drunken Bastard",
+    "yourTurn": "Tocca a te! Scegli una tra 10 carte coperte.",
+    "draw": "Mostra le mie 10 carte",
+    "pick": "Tocca una carta",
+    "waitingFor": "{name} sta pescando una carta…",
+    "drawFor": "Pesca per {name}",
+    "faceDown": "Carta {number} di {total}, coperta",
+    "drew": "{name} ha pescato",
+    "cardLabel": "{rank} di {suit}",
+    "ranks": {
+      "J": "Fante",
+      "Q": "Donna",
+      "K": "Re",
+      "A": "Asso"
+    },
+    "suits": {
+      "hearts": "cuori",
+      "diamonds": "quadri",
+      "clubs": "fiori",
+      "spades": "picche"
+    },
+    "cardsLeft": {
+      "one": "Resta {count} carta nel mazzo",
+      "other": "Restano {count} carte nel mazzo"
+    },
+    "sipNote": "Un sorso è sempre un sorso della tua bevanda. Anche analcolico vale.",
+    "effects": {
+      "2": "Distribuisci un sorso: scegli chi beve.",
+      "3": "Bevi tu un sorso.",
+      "4": "Tutti toccano il pavimento il più in fretta possibile. L'ultimo beve un sorso.",
+      "5": "Ogni donna che gioca beve un sorso.",
+      "6": "Ogni uomo che gioca beve un sorso.",
+      "7": "Tutti indicano verso l'alto il più in fretta possibile. L'ultimo beve un sorso.",
+      "8": "Scegli un drinking buddy, anche di un'altra squadra. D'ora in poi, quando uno di voi beve, beve anche l'altro.",
+      "9": "Di' una parola. A turno, ognuno dice una parola che fa rima. Chi non ne trova più o ripete una parola beve un sorso.",
+      "10": "Scegli una categoria. A turno, ognuno nomina qualcosa di quella categoria. Chi non sa più cosa dire o ripete beve un sorso.",
+      "J": "Inventa una regola che tutti seguono fino alla fine della partita. Al massimo 4 regole: una 5ª sostituisce la più vecchia.",
+      "Q": "Sei la Question Bitch finché qualcun altro non pesca una donna: chi risponde a una tua domanda beve un sorso.",
+      "K": "Sei il Thumb King finché qualcun altro non pesca un re: metti il pollice sul tavolo quando vuoi. Tutti ti imitano, e l'ultimo beve un sorso.",
+      "A": "Sei il Beunaas finché qualcun altro non pesca un asso: bevi doppio, e anche il tuo drinking buddy."
+    },
+    "chooseTarget": "Chi riceve il sorso?",
+    "chooseBuddy": "Scegli il tuo drinking buddy",
+    "writeRule": "La tua nuova regola",
+    "rulePlaceholder": "es. bere solo con la mano sinistra",
+    "ruleSubmit": "Aggiungi la regola",
+    "reportLoser": "Chi è stato l'ultimo o ha perso? (facoltativo)",
+    "nobody": "Salta",
+    "waitingForChoice": "{name} sta scegliendo…",
+    "done": "Tutti hanno pescato una carta! Ora tocca alla pubtask.",
+    "chooseFor": "Scegli per {name}",
+    "toPubtask": "Via alla pubtask"
+  },
+  "effects": {
+    "label": "Poteri, buddies e regole",
+    "questionBitch": "Question Bitch",
+    "thumbKing": "Thumb King",
+    "beunaas": "Beunaas",
+    "nobody": "ancora nessuno",
+    "buddies": "Drinking buddies",
+    "noBuddies": "Ancora nessun drinking buddy.",
+    "rules": "Regole",
+    "rulesCount": {
+      "one": "{count} regola",
+      "other": "{count} regole"
+    },
+    "noRules": "Ancora nessuna regola.",
+    "ruleBy": "di {name}",
+    "open": "Poteri e regole",
+    "title": "Poteri, buddies e regole",
+    "close": "Chiudi",
+    "reportDrink": "Chi deve bere?",
+    "reportDrinkHelp": "Beccato dalla Question Bitch, dal Thumb King o da una regola? Tocca il nome: i buddies bevono insieme e tutti ricevono un avviso.",
+    "reported": "Fatto: tutti sono stati avvisati.",
+    "yourBuddy": "Il tuo buddy: {name}",
+    "noBuddy": "Ancora nessun buddy"
+  },
+  "popups": {
+    "buddiesTitle": "Nuovi drinking buddies!",
+    "buddiesText": "{first} e {second} da ora bevono insieme: quando uno beve, beve anche l'altro.",
+    "buddiesEnded": "La coppia {first} & {second} non c'è più.",
+    "drinkTitle": "Salute!",
+    "sip": {
+      "one": "{name}: {count} sorso",
+      "other": "{name}: {count} sorsi"
+    },
+    "sipAlong": {
+      "one": "{name} beve con il suo buddy {buddy}: {count} sorso",
+      "other": "{name} beve con il suo buddy {buddy}: {count} sorsi"
+    },
+    "ok": "OK"
+  },
+  "pubtask": {
+    "eyebrow": "Locale {current} di {total} · Pubtask",
+    "title": "Pubtask",
+    "teamAnswers": "Una risposta per squadra: chi tocca per primo risponde per tutti.",
+    "playerAnswers": "Ognuno risponde sul proprio telefono e fa punti per sé.",
+    "questionOf": "Domanda {current} di {total}",
+    "worth": "Tentativo {attempt}: vale {points} punti",
+    "correct": "Giusto! +{points} punti",
+    "wrong": {
+      "one": "Quasi: {count} risposta sbagliata.",
+      "other": "Quasi: {count} risposte sbagliate."
+    },
+    "hint": "L'indizio di Beery: {hint}",
+    "revealed": "La risposta era: {answer}. Questa volta niente punti.",
+    "wrongOption": "sbagliata",
+    "rightOption": "giusta",
+    "score": "Punteggio finora: {points} punti",
+    "continue": "Continua"
+  },
+  "tasks": {
+    "skip": "Salta questa missione",
+    "done": "Fatto",
+    "points": {
+      "one": "{count} punto",
+      "other": "{count} punti"
+    },
+    "perPlayer": "{points} punti per ogni giocatore che partecipa",
+    "respect": "Chiedi prima al personale e ai clienti, e non intralciare mai."
+  },
+  "bonus": {
+    "eyebrow": "Locale {current} di {total} · Bonus",
+    "title": "Missione bonus",
+    "skip": "Niente bonus: continua"
+  },
+  "funFact": {
+    "eyebrow": "Locale {current} di {total} · Curiosità",
+    "loading": "Beery sta cercando…",
+    "cafeStory": "La storia raccontata dal locale",
+    "next": "Al prossimo locale",
+    "finish": "Concludi la partita"
+  },
+  "teamFinished": {
+    "title": "La tua squadra ha finito!",
+    "text": "Ben giocato! La classifica finale appare quando tutte le squadre hanno finito, o quando l'host termina la partita."
+  },
+  "evidence": {
+    "takePhoto": "Scatta o scegli una foto",
+    "takeVideo": "Registra o scegli un video",
+    "previewPhoto": "La tua foto, prima dell'invio",
+    "previewVideo": "Il tuo video, prima dell'invio",
+    "whoTookPart": "Chi ha partecipato?",
+    "send": "Invia all'host",
+    "sending": "Invio… {percent}%",
+    "pending": "Inviato! In attesa dell'approvazione dell'host.",
+    "approved": {
+      "one": "Approvato: +{count} punto",
+      "other": "Approvato: +{count} punti"
+    },
+    "rejected": "Non approvato dall'host.",
+    "rejectedReason": "Non approvato dall'host: {reason}",
+    "sendAgain": "Puoi inviarne una nuova.",
+    "consent": "Fotografa o riprendi solo le persone che hanno detto di sì."
+  },
+  "leaderboard": {
+    "title": "Punteggi",
+    "label": "Punteggi: classifica di tutte le squadre",
+    "points": {
+      "one": "{count} punto",
+      "other": "{count} punti"
+    },
+    "details": "{done} locali su {total} · bonus {bonus}",
+    "detailsPlayer": "bonus {bonus}",
+    "own": "tu",
+    "close": "Chiudi"
+  },
+  "results": {
+    "eyebrow": "Hidden Pubs · La fine",
+    "winner": "Vince {name}!",
+    "sharedWin": "Primo posto condiviso: {names}!",
+    "tradition": "Salute ai campioni! Tradizione: tutti offrono al vincitore una bevanda a sua scelta. Anche analcolica vale, e nessuno è obbligato.",
+    "pending": {
+      "one": "{count} foto o video aspetta ancora l'host: i punteggi possono ancora cambiare.",
+      "other": "{count} foto o video aspettano ancora l'host: i punteggi possono ancora cambiare."
+    },
+    "statsTitle": "I momenti migliori della serata",
+    "firstTry": "Più spesso giusto al primo colpo: {name} ({count}×)",
+    "mostCorrect": "Più risposte giuste: {name} ({count})",
+    "mostBonus": "Più missioni bonus: {name} ({count})",
+    "share": "Condividi i risultati",
+    "shareTitle": "Risultati di Hidden Pubs",
+    "shareLine": "{position}. {name}: {points} punti",
+    "copied": "Risultati copiati"
+  }
+}

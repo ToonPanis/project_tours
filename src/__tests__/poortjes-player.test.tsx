@@ -76,7 +76,6 @@ function click(name: string | RegExp) {
 function newSession(): WalkSession {
   return createWalkSession({
     walk,
-    team: { id: "visitor", name: "", players: [{ id: "visitor", name: "You" }] },
     sessionId: "s",
     startedAt: AT,
   });

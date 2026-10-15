@@ -66,7 +66,6 @@ function buildLocations(content: ClassicsContent, unknownLabel: string): WalkLoc
       address: stop.address,
       ...findPosition(coordinatesFile, stop.id),
       description: text.subtitle,
-      content: [],
       unlockCondition: index === 0 ? { type: "none" } : { type: "proximity", radiusInMeters: 40 },
       nearbyPlaces: [],
       guide: {

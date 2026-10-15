@@ -1,0 +1,358 @@
+{
+  "create": {
+    "eyebrow": "Hidden Pubs · Neues Spiel",
+    "title": "Stellt euer Spiel zusammen",
+    "teamCount": "Wie viele Teams?",
+    "playersPerTeam": "Spieler pro Team (max.)",
+    "teamName": "Name von Team {number}",
+    "defaultTeamName": "Team {number}",
+    "yourName": "Dein Name",
+    "yourTeam": "Dein Team",
+    "hostNote": "Du bist der Host: Du startest das Spiel und bestätigst die Bonusfotos. Du spielst auch selbst in deinem Team mit.",
+    "submit": "Spiel erstellen",
+    "creating": "Wird erstellt…"
+  },
+  "adults": {
+    "confirm": "Alle Mitspielenden sind 18 Jahre oder älter",
+    "note": "Trinken ist nie Pflicht: Jedes Getränk darf alkoholfrei sein."
+  },
+  "join": {
+    "eyebrow": "Hidden Pubs · Spiel {code}",
+    "title": "Mitspielen",
+    "yourName": "Dein Name",
+    "chooseTeam": "Wähle dein Team",
+    "placesLeft": {
+      "one": "Noch {count} Platz frei",
+      "other": "Noch {count} Plätze frei"
+    },
+    "full": "Voll",
+    "submit": "Mitspielen",
+    "joining": "Einen Moment…",
+    "closed": "Dieses Spiel hat schon begonnen. Bitte den Host, dich hinzuzufügen.",
+    "finished": "Dieses Spiel ist vorbei."
+  },
+  "lobby": {
+    "eyebrow": "Spiel {code}",
+    "title": "Warten auf alle",
+    "inviteTitle": "Lade die anderen ein",
+    "inviteText": "Alle spielen auf ihrem eigenen Handy: Scannt den QR-Code oder teilt den Link.",
+    "code": "Spielcode",
+    "qrLabel": "QR-Code zum Mitspielen bei Spiel {code}",
+    "share": "Link teilen",
+    "copied": "Link kopiert",
+    "shareText": "Spiel mit bei unserem Hidden-Pubs-Spiel!",
+    "players": {
+      "one": "{count} Spieler",
+      "other": "{count} Spieler"
+    },
+    "emptyTeam": "Noch niemand",
+    "you": "du",
+    "host": "Host",
+    "start": "Spiel starten",
+    "startHint": "Jedes Team braucht mindestens einen Spieler.",
+    "waitingForHost": "Der Host startet das Spiel, sobald alle da sind."
+  },
+  "beery": {
+    "portrait": "Beery, das Maskottchen von Hidden Pubs: ein fröhlicher Bierkrug",
+    "nextLocation": "Beery bringt dich zum nächsten Ort!",
+    "bonusTask": "Beery hat eine Bonusaufgabe für dich!",
+    "letsGo": "Los geht's",
+    "intro": {
+      "eyebrow": "Beery erklärt",
+      "progress": "{current} von {total}",
+      "next": "Weiter",
+      "skip": "Überspringen",
+      "done": "Auf geht's!",
+      "welcomeTitle": "Prost! Ich bin Beery.",
+      "welcomeText": "Heute Abend bin ich euer Gastgeber: 12 Kneipen, vom Rococo bis zum Den Engel. In jeder Kneipe wählt ihr ein Getränk, spielt Drunken Bastard, löst die Pubtask und lest einen Fun Fact. Wer die meisten Punkte hat, gewinnt!",
+      "cardsTitle": "Drunken Bastard",
+      "cardsText": "In jeder Kneipe wählt jeder Spieler eine von 10 verdeckten Karten. Jede Karte bewirkt etwas: einen Schluck verteilen, einen Drinking Buddy wählen, eine Regel erfinden, Thumb King werden… Ein Schluck ist immer ein Schluck vom eigenen Getränk, und alkoholfrei zählt auch.",
+      "pubtasksTitle": "Pubtasks",
+      "pubtasksText": "Jede Kneipe hat eine Frage über den Ort selbst. Beim ersten Versuch richtig: 100 Punkte. Zweiter Versuch: 80. Dritter Versuch: 60. Danach verrate ich euch die Antwort, aber ohne Punkte.",
+      "bonusTitle": "Bonusaufgaben",
+      "bonusText": "Manchmal habe ich eine Bonusaufgabe für euch. Schickt ein Foto oder Video als Beweis: Der Host bestätigt es, und erst dann zählen die Punkte.",
+      "respectTitle": "Hausregeln",
+      "respectText": "Fragt Personal und Gäste, bevor ihr sie fotografiert, steht nie an der Theke im Weg und trinkt in eurem eigenen Tempo. Tradition: Alle spendieren dem Gewinner ein Getränk seiner Wahl. Alkoholfrei ist völlig in Ordnung, und niemand muss."
+    }
+  },
+  "nextCafe": {
+    "eyebrow": "Kneipe {current} von {total}",
+    "text": "Der nächste Halt deines Teams."
+  },
+  "menu": {
+    "label": "Spielmenü",
+    "rules": "Regeln",
+    "host": "Host-Übersicht",
+    "game": "Zurück zum Spiel",
+    "scores": "Punktestand"
+  },
+  "host": {
+    "eyebrow": "Spiel {code} · Host",
+    "title": "Host-Übersicht",
+    "teams": "Teams",
+    "progress": "{done} von {total} Kneipen",
+    "teamFinished": "Fertig",
+    "pendingEvidence": {
+      "one": "{count} Foto oder Video wartet auf deine Bestätigung",
+      "other": "{count} Fotos oder Videos warten auf deine Bestätigung"
+    },
+    "noPendingEvidence": "Keine Fotos oder Videos in der Warteschlange.",
+    "addPlayer": "Spieler hinzufügen",
+    "addPlayerName": "Name",
+    "addPlayerTeam": "Team",
+    "addPlayerSubmit": "Hinzufügen",
+    "playerAdded": "{name} wurde hinzugefügt. Schick den persönlichen Link (tippe oben auf den Namen).",
+    "endGame": "Spiel beenden",
+    "endConfirmTitle": "Das Spiel für alle beenden?",
+    "endConfirmText": "Jedes Team hört dort auf, wo es gerade ist, und das Ergebnis wird angezeigt. Das lässt sich nicht rückgängig machen.",
+    "endConfirm": "Spiel beenden",
+    "notHost": "Nur der Host kann diese Seite öffnen.",
+    "playerLinkFor": "Persönlicher Link für {name}",
+    "playerLinkHelp": "Schick diesen Link nur an {name}: Wer ihn öffnet, spielt als {name}. Praktisch für Nachzügler und neue Handys.",
+    "shareLink": "Link teilen",
+    "linkCopied": "Link kopiert",
+    "reviewTitle": "Fotos und Videos zur Prüfung",
+    "reviewHelp": "Punkte zählen erst, wenn du bestätigst. Lehne ab, was nicht zur Aufgabe passt.",
+    "reviewFor": "{team} · {task}",
+    "tookPart": "Haben mitgemacht: {names}",
+    "approve": "Bestätigen",
+    "reject": "Ablehnen",
+    "rejectReason": "Grund für die Ablehnung (optional)",
+    "mediaLabel": "Beweis von {team} für {task}"
+  },
+  "connection": {
+    "offline": "Keine Verbindung. Neuer Versuch…",
+    "gone": "Dieses Spiel gibt es nicht mehr. Spiele werden nach 7 Tagen gelöscht."
+  },
+  "errors": {
+    "generic": "Das hat nicht geklappt. Bitte versuch es noch einmal.",
+    "adultsOnly": "Bitte bestätige, dass alle Mitspielenden 18 Jahre oder älter sind.",
+    "invalidSettings": "Bitte prüfe die Namen und Zahlen.",
+    "invalidText": "Bitte gib einen Namen ein (höchstens 30 Zeichen).",
+    "nameTaken": "Jemand in diesem Spiel hat schon diesen Namen.",
+    "teamFull": "Dieses Team ist voll. Wähle ein anderes Team.",
+    "joiningClosed": "Dieses Spiel hat schon begonnen. Bitte den Host, dich hinzuzufügen.",
+    "notHost": "Das kann nur der Host.",
+    "emptyTeam": "Jedes Team braucht mindestens einen Spieler, bevor das Spiel starten kann.",
+    "unknownGame": "Dieses Spiel gibt es nicht (mehr).",
+    "gameFinished": "Dieses Spiel ist vorbei.",
+    "outdated": "Jemand aus deinem Team war schneller. Der Bildschirm wurde aktualisiert.",
+    "unknownLink": "Dieser Link funktioniert nicht (mehr). Bitte den Host um einen neuen.",
+    "chooseTeam": "Bitte wähle ein Team.",
+    "invalidMedia": "Diese Dateiart wird nicht unterstützt. Nimm ein normales Foto oder Video vom Handy.",
+    "tooLarge": "Diese Datei ist zu groß. Ein kürzeres Video klappt besser.",
+    "uploadFailed": "Senden hat nicht geklappt. Prüfe die Verbindung und versuch es noch einmal."
+  },
+  "claim": {
+    "title": "Dein Spiel wird geöffnet…",
+    "invalid": "Dieser Link funktioniert nicht (mehr). Bitte den Host um einen neuen."
+  },
+  "drinks": {
+    "title": "Wähle dein Getränk",
+    "intro": "Alle wählen ihr eigenes Getränk und bestellen es an der Theke.",
+    "alcoholFree": "Alkoholfrei / Softdrink",
+    "skip": "Diese Runde kein Getränk",
+    "yourChoice": "Dein Getränk: {drink}. Bestell es an der Theke.",
+    "noDrink": "Diese Runde kein Getränk für dich. Völlig in Ordnung!",
+    "respect": "Trink in deinem eigenen Tempo. Niemand muss Alkohol trinken.",
+    "ready": "Wir haben unsere Getränke: Drunken Bastard starten",
+    "eyebrow": "Kneipe {current} von {total} · {cafe}",
+    "welcome": "Willkommen im {cafe}!"
+  },
+  "wheel": {
+    "title": "Dreh am Bierrad",
+    "intro": "Billie's hat eine nummerierte Bierkarte: Dreh am Rad und bestell das Bier mit deiner Nummer.",
+    "label": "Bierrad mit den Zahlen 1 bis 10",
+    "spin": "Am Rad drehen",
+    "spinning": "Das Rad dreht sich…",
+    "result": "Deine Nummer: {number}",
+    "order": "Bestell an der Theke Bier Nummer {number}."
+  },
+  "cards": {
+    "eyebrow": "Kneipe {current} von {total} · Drunken Bastard",
+    "title": "Drunken Bastard",
+    "yourTurn": "Du bist dran! Wähle eine von 10 verdeckten Karten.",
+    "draw": "Meine 10 Karten zeigen",
+    "pick": "Tippe auf eine Karte",
+    "waitingFor": "{name} zieht eine Karte…",
+    "drawFor": "Für {name} ziehen",
+    "faceDown": "Karte {number} von {total}, verdeckt",
+    "drew": "{name} hat gezogen",
+    "cardLabel": "{suit} {rank}",
+    "ranks": {
+      "J": "Bube",
+      "Q": "Dame",
+      "K": "König",
+      "A": "Ass"
+    },
+    "suits": {
+      "hearts": "Herz",
+      "diamonds": "Karo",
+      "clubs": "Kreuz",
+      "spades": "Pik"
+    },
+    "cardsLeft": {
+      "one": "Noch {count} Karte im Stapel",
+      "other": "Noch {count} Karten im Stapel"
+    },
+    "sipNote": "Ein Schluck ist immer ein Schluck vom eigenen Getränk. Alkoholfrei zählt auch.",
+    "effects": {
+      "2": "Verteile einen Schluck: Wähle, wer trinkt.",
+      "3": "Du trinkst selbst einen Schluck.",
+      "4": "Alle berühren so schnell wie möglich den Boden. Der Letzte trinkt einen Schluck.",
+      "5": "Jede Frau, die mitspielt, trinkt einen Schluck.",
+      "6": "Jeder Mann, der mitspielt, trinkt einen Schluck.",
+      "7": "Alle zeigen so schnell wie möglich nach oben. Der Letzte trinkt einen Schluck.",
+      "8": "Wähle einen Drinking Buddy, auch aus einem anderen Team. Ab jetzt trinkt der andere mit, wenn einer von euch trinken muss.",
+      "9": "Sag ein Wort. Reihum sagt jeder ein Wort, das sich darauf reimt. Wer keins mehr weiß oder ein Wort wiederholt, trinkt einen Schluck.",
+      "10": "Wähle eine Kategorie. Reihum nennt jeder etwas daraus. Wer nichts mehr weiß oder etwas wiederholt, trinkt einen Schluck.",
+      "J": "Erfinde eine Regel, die alle für den Rest des Spiels befolgen. Höchstens 4 Regeln: Eine 5. ersetzt die älteste.",
+      "Q": "Du bist die Question Bitch, bis jemand anderes eine Dame zieht: Wer auf eine Frage von dir antwortet, trinkt einen Schluck.",
+      "K": "Du bist der Thumb King, bis jemand anderes einen König zieht: Leg jederzeit deinen Daumen auf den Tisch. Alle machen es nach, und der Letzte trinkt einen Schluck.",
+      "A": "Du bist der Beunaas, bis jemand anderes ein Ass zieht: Du trinkst doppelt, und dein Drinking Buddy auch."
+    },
+    "chooseTarget": "Wer bekommt den Schluck?",
+    "chooseBuddy": "Wähle deinen Drinking Buddy",
+    "writeRule": "Deine neue Regel",
+    "rulePlaceholder": "z. B. nur mit der linken Hand trinken",
+    "ruleSubmit": "Regel hinzufügen",
+    "reportLoser": "Wer war der Letzte oder hat verloren? (optional)",
+    "nobody": "Überspringen",
+    "waitingForChoice": "{name} wählt…",
+    "done": "Alle haben eine Karte gezogen! Jetzt kommt die Pubtask.",
+    "chooseFor": "Für {name} wählen",
+    "toPubtask": "Weiter zur Pubtask"
+  },
+  "effects": {
+    "label": "Kartenkräfte, Buddies und Regeln",
+    "questionBitch": "Question Bitch",
+    "thumbKing": "Thumb King",
+    "beunaas": "Beunaas",
+    "nobody": "noch niemand",
+    "buddies": "Drinking Buddies",
+    "noBuddies": "Noch keine Drinking Buddies.",
+    "rules": "Regeln",
+    "rulesCount": {
+      "one": "{count} Regel",
+      "other": "{count} Regeln"
+    },
+    "noRules": "Noch keine Regeln.",
+    "ruleBy": "von {name}",
+    "open": "Kräfte & Regeln",
+    "title": "Kräfte, Buddies und Regeln",
+    "close": "Schließen",
+    "reportDrink": "Wer muss trinken?",
+    "reportDrinkHelp": "Von der Question Bitch, dem Thumb King oder einer Regel erwischt? Tippe auf den Namen: Buddies trinken mit und alle bekommen ein Pop-up.",
+    "reported": "Erledigt: Alle wissen Bescheid.",
+    "yourBuddy": "Dein Buddy: {name}",
+    "noBuddy": "Noch kein Buddy"
+  },
+  "popups": {
+    "buddiesTitle": "Neue Drinking Buddies!",
+    "buddiesText": "{first} und {second} trinken ab jetzt zusammen: Wenn einer trinkt, trinkt der andere mit.",
+    "buddiesEnded": "Das Duo {first} & {second} ist Geschichte.",
+    "drinkTitle": "Prost!",
+    "sip": {
+      "one": "{name}: {count} Schluck",
+      "other": "{name}: {count} Schlucke"
+    },
+    "sipAlong": {
+      "one": "{name} trinkt mit Buddy {buddy} mit: {count} Schluck",
+      "other": "{name} trinkt mit Buddy {buddy} mit: {count} Schlucke"
+    },
+    "ok": "OK"
+  },
+  "pubtask": {
+    "eyebrow": "Kneipe {current} von {total} · Pubtask",
+    "title": "Pubtask",
+    "teamAnswers": "Eine Antwort pro Team: Wer zuerst tippt, antwortet für alle.",
+    "playerAnswers": "Alle antworten auf ihrem eigenen Handy und punkten für sich.",
+    "questionOf": "Frage {current} von {total}",
+    "worth": "Versuch {attempt}: {points} Punkte wert",
+    "correct": "Richtig! +{points} Punkte",
+    "wrong": {
+      "one": "Knapp daneben: {count} falsche Antwort.",
+      "other": "Knapp daneben: {count} falsche Antworten."
+    },
+    "hint": "Beerys Tipp: {hint}",
+    "revealed": "Die Antwort war: {answer}. Diesmal keine Punkte.",
+    "wrongOption": "falsch",
+    "rightOption": "richtig",
+    "score": "Punktestand bisher: {points} Punkte",
+    "continue": "Weiter"
+  },
+  "tasks": {
+    "skip": "Diese Aufgabe überspringen",
+    "done": "Erledigt",
+    "points": {
+      "one": "{count} Punkt",
+      "other": "{count} Punkte"
+    },
+    "perPlayer": "{points} Punkte pro Spieler, der mitmacht",
+    "respect": "Frag zuerst Personal und Gäste und steh nie im Weg."
+  },
+  "bonus": {
+    "eyebrow": "Kneipe {current} von {total} · Bonus",
+    "title": "Bonusaufgabe",
+    "skip": "Kein Bonus: weiter"
+  },
+  "funFact": {
+    "eyebrow": "Kneipe {current} von {total} · Fun Fact",
+    "loading": "Beery schlägt nach…",
+    "cafeStory": "Die Geschichte, die die Kneipe erzählt",
+    "next": "Zur nächsten Kneipe",
+    "finish": "Spiel abschließen"
+  },
+  "teamFinished": {
+    "title": "Euer Team ist fertig!",
+    "text": "Gut gespielt! Das Endergebnis erscheint, sobald alle Teams fertig sind oder der Host das Spiel beendet."
+  },
+  "evidence": {
+    "takePhoto": "Foto aufnehmen oder auswählen",
+    "takeVideo": "Video aufnehmen oder auswählen",
+    "previewPhoto": "Dein Foto, vor dem Senden",
+    "previewVideo": "Dein Video, vor dem Senden",
+    "whoTookPart": "Wer hat mitgemacht?",
+    "send": "An den Host senden",
+    "sending": "Wird gesendet… {percent} %",
+    "pending": "Gesendet! Wartet auf die Bestätigung des Hosts.",
+    "approved": {
+      "one": "Bestätigt: +{count} Punkt",
+      "other": "Bestätigt: +{count} Punkte"
+    },
+    "rejected": "Vom Host nicht bestätigt.",
+    "rejectedReason": "Vom Host nicht bestätigt: {reason}",
+    "sendAgain": "Du kannst ein neues senden.",
+    "consent": "Fotografiere oder filme nur Menschen, die zugestimmt haben."
+  },
+  "leaderboard": {
+    "title": "Punktestand",
+    "label": "Punktestand: Rangliste aller Teams",
+    "points": {
+      "one": "{count} Punkt",
+      "other": "{count} Punkte"
+    },
+    "details": "{done} von {total} Kneipen · Bonus {bonus}",
+    "detailsPlayer": "Bonus {bonus}",
+    "own": "du",
+    "close": "Schließen"
+  },
+  "results": {
+    "eyebrow": "Hidden Pubs · Das Ende",
+    "winner": "{name} gewinnt!",
+    "sharedWin": "Geteilter erster Platz: {names}!",
+    "tradition": "Prost auf die Champions! Tradition: Alle spendieren dem Gewinner ein Getränk seiner Wahl. Alkoholfrei zählt, und niemand muss.",
+    "pending": {
+      "one": "{count} Foto oder Video wartet noch auf den Host: Der Punktestand kann sich noch ändern.",
+      "other": "{count} Fotos oder Videos warten noch auf den Host: Der Punktestand kann sich noch ändern."
+    },
+    "statsTitle": "Highlights des Abends",
+    "firstTry": "Am häufigsten beim ersten Versuch richtig: {name} ({count}×)",
+    "mostCorrect": "Die meisten richtigen Antworten: {name} ({count})",
+    "mostBonus": "Die meisten Bonusaufgaben: {name} ({count})",
+    "share": "Ergebnis teilen",
+    "shareTitle": "Ergebnis Hidden Pubs",
+    "shareLine": "{position}. {name}: {points} Punkte",
+    "copied": "Ergebnis kopiert"
+  }
+}
