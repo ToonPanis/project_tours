@@ -1,0 +1,134 @@
+{
+  "meta": {
+    "title": "Portal de socios",
+    "loginTitle": "Acceso para socios"
+  },
+  "login": {
+    "title": "Acceso para socios",
+    "intro": "Escriba la dirección de correo electrónico que Hidden Antwerp registró para su negocio. Recibirá un enlace para iniciar sesión; no necesita contraseña.",
+    "email": "Correo electrónico",
+    "submit": "Enviarme un enlace de acceso",
+    "sending": "Enviando…",
+    "sent": "Si {email} tiene acceso a un portal de socios, le hemos enviado un enlace de acceso. Funciona una sola vez, durante 15 minutos.",
+    "noAccess": "¿Aún no es socio? Póngase en contacto con Hidden Antwerp.",
+    "verifyTitle": "Iniciar sesión en el portal de socios",
+    "verifyIntro": "Pulse el botón para iniciar sesión en este dispositivo.",
+    "verifyButton": "Iniciar sesión",
+    "verifying": "Iniciando sesión…"
+  },
+  "errors": {
+    "invalid-email": "Eso no parece una dirección de correo electrónico.",
+    "too-many-requests": "Demasiados intentos. Espere un cuarto de hora y vuelva a intentarlo.",
+    "invalid-link": "Este enlace de acceso ya no es válido (usado, caducado o incompleto). Solicite uno nuevo.",
+    "not-allowed": "Esta dirección ya no tiene acceso a un portal de socios.",
+    "not-configured": "El inicio de sesión aún no está disponible en este servidor.",
+    "offline": "No hay conexión con el servidor. Compruebe su conexión a internet y vuelva a intentarlo.",
+    "unknown": "Algo ha salido mal. Vuelva a intentarlo."
+  },
+  "email": {
+    "greeting": "Hola:",
+    "loginSubject": "Su enlace de acceso al portal de socios de Hidden Antwerp",
+    "loginBody": "Utilice este enlace para iniciar sesión en su portal de socios de Hidden Antwerp:",
+    "loginValid": "El enlace funciona una sola vez, durante {minutes} minutos.",
+    "loginIgnore": "¿No lo ha solicitado? Entonces puede ignorar este correo: nadie puede iniciar sesión sin el enlace.",
+    "inviteSubject": "Su acceso al portal de socios de Hidden Antwerp",
+    "inviteBody": "Ya tiene acceso al portal de socios de {name} en Hidden Antwerp. Allí puede seguir los visitantes, las ventas y las comisiones de su enlace de socio:",
+    "inviteHow": "Inicie sesión con esta dirección de correo electrónico: recibirá un enlace de acceso de un solo uso (sin contraseña)."
+  },
+  "portal": {
+    "title": "Portal de socios",
+    "signedInAs": "Sesión iniciada como {email}",
+    "signOut": "Cerrar sesión",
+    "linkTitle": "Su enlace de socio",
+    "linkIntro": "Comparta este enlace o el código QR con sus clientes. Las compras realizadas en los {days} días siguientes a abrirlo cuentan para usted.",
+    "linkLabel": "Enlace de socio",
+    "campaignHint": "¿Quiere comparar ubicaciones o materiales? Añada una campaña al enlace, por ejemplo {example}.",
+    "downloadQr": "Descargar código QR (SVG)",
+    "qrLabel": "Código QR de su enlace de socio",
+    "rule": "Su comisión: {rule}",
+    "ruleNote": "Los cambios en la comisión solo se aplican a las compras realizadas después del cambio."
+  },
+  "rules": {
+    "percent-net": "{percent} % del precio de la entrada sin IVA",
+    "fixed-per-ticket": "{amount} por entrada",
+    "fixed-per-booking": "{amount} por reserva",
+    "none": "sin comisión (solo estadísticas)"
+  },
+  "filters": {
+    "title": "Periodo y filtros",
+    "period": "Periodo",
+    "today": "Hoy",
+    "last7": "Últimos 7 días",
+    "last30": "Últimos 30 días",
+    "thisMonth": "Este mes",
+    "lastMonth": "Mes pasado",
+    "thisYear": "Este año",
+    "custom": "Fechas personalizadas",
+    "from": "Desde",
+    "to": "Hasta",
+    "per": "Por",
+    "day": "Día",
+    "week": "Semana",
+    "month": "Mes",
+    "product": "Producto",
+    "allProducts": "Todos los productos",
+    "campaign": "Campaña",
+    "allCampaigns": "Todas las campañas",
+    "noCampaign": "Sin campaña",
+    "apply": "Aplicar"
+  },
+  "stats": {
+    "title": "{from} – {to}",
+    "visitors": "Visitantes a través de su enlace",
+    "visitorsNote": "Contados por enlace, sin datos personales.",
+    "sales": "Ventas",
+    "conversion": "Conversión",
+    "conversionNote": "Ventas por visitante.",
+    "revenue": "Ingresos sin IVA",
+    "commission": "Comisión en este periodo",
+    "outstanding": "Comisión pendiente",
+    "outstandingNote": "Ganada, aún no pagada (todos los periodos).",
+    "pendingNote": "De la cual {amount} aún está en el periodo de comprobación de 14 días.",
+    "paid": "Comisión pagada",
+    "paidNote": "Todos los periodos."
+  },
+  "chart": {
+    "revenue": "Ingresos sin IVA por {unit}",
+    "commission": "Comisión por {unit}",
+    "table": "Mostrar como tabla",
+    "empty": "No hay ventas en este periodo.",
+    "units": {
+      "day": "día",
+      "week": "semana",
+      "month": "mes"
+    }
+  },
+  "sales": {
+    "title": "Ventas",
+    "empty": "No hay ventas a través de su enlace en este periodo.",
+    "date": "Fecha",
+    "product": "Producto",
+    "persons": "Personas",
+    "revenue": "Ingresos sin IVA",
+    "commission": "Comisión",
+    "status": "Estado",
+    "refunded": "reembolsado (en parte)",
+    "limited": "Se muestran las últimas {count} ventas; los totales de arriba abarcan todo el periodo."
+  },
+  "status": {
+    "pending": "En comprobación",
+    "approved": "Aprobada",
+    "payable": "Lista para el pago",
+    "paid": "Pagada",
+    "reversed": "Anulada (reembolso)",
+    "none": "–"
+  },
+  "how": {
+    "title": "Cómo funciona",
+    "attribution": "Un visitante que abre su enlace se recuerda durante {days} días en ese dispositivo. Si después abre el enlace de otro socio, cuenta ese último enlace.",
+    "paidOnly": "La comisión solo se gana con compras realmente pagadas y se calcula sobre el precio sin IVA.",
+    "refunds": "Si se reembolsa una compra, la comisión se anula o se reduce en proporción.",
+    "statuses": "Cada comisión primero se comprueba (plazo de desistimiento de 14 días), después se aprueba, se prepara para el pago y se abona por transferencia bancaria.",
+    "privacy": "Nunca ve quién compró: ni nombres ni direcciones de correo, solo cifras."
+  }
+}

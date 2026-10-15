@@ -2,6 +2,10 @@ import type {
   AuditEntry,
   BillingDocument,
   CommerceUser,
+  CommissionEntry,
+  CommissionStatus,
+  Partner,
+  PartnerClickDay,
   CorporatePricing,
   QuoteRequest,
   QuoteStatus,
@@ -14,7 +18,7 @@ import type {
   TaxSettings,
   TicketGrant,
 } from "@/types/commerce";
-import type { CommerceStore } from "./commerce-store";
+import type { CommerceStore, CommissionChange, CommissionQuery } from "./commerce-store";
 
 /**
  * Everything in memory: for development and tests only. It's lost when the
@@ -44,6 +48,9 @@ export class MemoryCommerceStore implements CommerceStore {
   private documents = new Map<string, BillingDocument>();
   private quotes = new Map<string, { quote: QuoteRequest; dedupeKey: string }>();
   private corporatePricing: CorporatePricing | null = null;
+  private partners = new Map<string, Partner>();
+  private partnerClicks = new Map<string, PartnerClickDay>();
+  private commissions = new Map<string, CommissionEntry>();
 
   async findUserByEmail(email: string) {
     const user = [...this.users.values()].find((candidate) => candidate.email === email);
@@ -394,5 +401,99 @@ export class MemoryCommerceStore implements CommerceStore {
 
   async saveCorporatePricing(pricing: CorporatePricing) {
     this.corporatePricing = structuredClone(pricing);
+  }
+
+  async insertPartner(partner: Partner) {
+    if ([...this.partners.values()].some((existing) => existing.code === partner.code)) return false;
+    this.partners.set(partner.id, structuredClone(partner));
+    return true;
+  }
+
+  async getPartner(id: string) {
+    const partner = this.partners.get(id);
+    return partner ? structuredClone(partner) : null;
+  }
+
+  async getPartnerByCode(code: string) {
+    const partner = [...this.partners.values()].find((candidate) => candidate.code === code);
+    return partner ? structuredClone(partner) : null;
+  }
+
+  async listPartners() {
+    return structuredClone([...this.partners.values()].sort((a, b) => a.name.localeCompare(b.name)));
+  }
+
+  async updatePartner(id: string, changes: Partial<Omit<Partner, "id" | "code" | "createdAt">>) {
+    const partner = this.partners.get(id);
+    if (partner) this.partners.set(id, { ...partner, ...structuredClone(changes) });
+  }
+
+  async listPartnerUsers(partnerId: string) {
+    return structuredClone([...this.users.values()].filter((user) => user.partnerId === partnerId));
+  }
+
+  async incrementPartnerClicks(partnerId: string, day: string, campaign: string) {
+    const id = `${partnerId}:${day}:${campaign}`;
+    const existing = this.partnerClicks.get(id);
+    this.partnerClicks.set(id, { partnerId, day, campaign, clicks: (existing?.clicks ?? 0) + 1 });
+  }
+
+  async listPartnerClicks({ partnerId, fromDay, toDay }: { partnerId?: string; fromDay: string; toDay: string }) {
+    return structuredClone(
+      [...this.partnerClicks.values()].filter((row) => (!partnerId || row.partnerId === partnerId) && row.day >= fromDay && row.day <= toDay),
+    );
+  }
+
+  async listPartnerOrders(partnerId: string, from: Date, to: Date, limit: number) {
+    return structuredClone(
+      [...this.orders.values()]
+        .filter(
+          (order) =>
+            order.partner?.partnerId === partnerId &&
+            (order.status === "paid" || order.status === "refunded") &&
+            order.paidAt !== null &&
+            Date.parse(order.paidAt) >= from.getTime() &&
+            Date.parse(order.paidAt) < to.getTime(),
+        )
+        .sort((a, b) => (a.paidAt as string).localeCompare(b.paidAt as string))
+        .slice(0, limit),
+    );
+  }
+
+  async insertCommissionIfMissing(entry: CommissionEntry) {
+    if (this.commissions.has(entry.id)) return false;
+    this.commissions.set(entry.id, structuredClone(entry));
+    return true;
+  }
+
+  async listCommissionsForOrder(orderId: string) {
+    return structuredClone([...this.commissions.values()].filter((entry) => entry.orderId === orderId));
+  }
+
+  async listCommissions(query: CommissionQuery) {
+    const matching = [...this.commissions.values()]
+      .filter(
+        (entry) =>
+          (!query.partnerId || entry.partnerId === query.partnerId) &&
+          (!query.status || entry.status === query.status) &&
+          (!query.orderPaidFrom || Date.parse(entry.orderPaidAt) >= query.orderPaidFrom.getTime()) &&
+          (!query.orderPaidTo || Date.parse(entry.orderPaidAt) < query.orderPaidTo.getTime()),
+      )
+      .sort((a, b) => b.orderPaidAt.localeCompare(a.orderPaidAt) || b.id.localeCompare(a.id));
+    return { entries: structuredClone(matching.slice(query.skip, query.skip + query.limit)), total: matching.length };
+  }
+
+  async transitionCommission(id: string, from: CommissionStatus[], change: CommissionChange) {
+    const entry = this.commissions.get(id);
+    // JavaScript runs this synchronously: no other request can change it in between.
+    if (!entry || !from.includes(entry.status)) return false;
+    this.commissions.set(id, {
+      ...entry,
+      status: change.status,
+      updatedAt: change.at,
+      payoutReference: change.payoutReference !== undefined ? change.payoutReference : entry.payoutReference,
+      history: [...entry.history, { status: change.status, at: change.at, by: change.by }],
+    });
+    return true;
   }
 }

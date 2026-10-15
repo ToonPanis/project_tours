@@ -6,7 +6,7 @@ import { CommerceStoreUnavailableError } from "@/features/commerce/server/commer
 import { MemoryCommerceStore } from "@/features/commerce/server/memory-store";
 import { MongoCommerceStore } from "@/features/commerce/server/mongo-store";
 import { createMongoClient, databaseOf, MONGO_CLIENT_OPTIONS } from "@/features/pub-game/server/mongo";
-import type { Discount, Order, OutboxEmail, Product, TicketGrant } from "@/types/commerce";
+import type { CommissionEntry, Discount, Order, OutboxEmail, Partner, Product, TicketGrant } from "@/types/commerce";
 
 /**
  * The same tests for every CommerceStore, so the MongoDB store is proven to
@@ -84,6 +84,31 @@ function order(id: string, overrides: Partial<Order> = {}): Order {
   };
 }
 
+function partner(id: string, code: string): Partner {
+  return { id, code, name: "Hotel Test", type: "HOTEL_PARTNER", active: true, commission: { kind: "percent-net", basisPoints: 1500 }, createdAt: NOW.toISOString(), updatedAt: NOW.toISOString() };
+}
+
+function commission(id: string, partnerId: string, orderId: string, overrides: Partial<CommissionEntry> = {}): CommissionEntry {
+  return {
+    id,
+    partnerId,
+    orderId,
+    kind: "accrual",
+    amountCents: 150,
+    basisCents: 1000,
+    rule: { kind: "percent-net", basisPoints: 1500 },
+    status: "pending",
+    productId: "classics-of-antwerp",
+    campaign: null,
+    orderPaidAt: "2099-02-01T10:00:00.000Z",
+    createdAt: NOW.toISOString(),
+    updatedAt: NOW.toISOString(),
+    payoutReference: null,
+    history: [{ status: "pending", at: NOW.toISOString(), by: null }],
+    ...overrides,
+  };
+}
+
 function grant(id: string, orderId: string, seats = 2): TicketGrant {
   return { id, orderId, productId: "classics-of-antwerp", walkSlug: "classics-of-antwerp", seats, devicesUsed: 0, status: "active", createdAt: NOW.toISOString(), validUntil: LATER.toISOString(), gameCode: null };
 }
@@ -122,8 +147,12 @@ if (mongoClient) {
         COLLECTIONS.counters,
         COLLECTIONS.documents,
         COLLECTIONS.quotes,
+        COLLECTIONS.partners,
+        COLLECTIONS.partnerClicks,
       ];
       for (const name of names) await db.collection<{ _id: string }>(name).deleteMany({ _id: ours });
+      // Ledger ids start with "accrual:"/"adjustment:"; their order ids are this run's.
+      await db.collection(COLLECTIONS.commissions).deleteMany({ orderId: ours });
       // Tax settings are found by version number: this run used its own, very high ones.
       await db.collection(COLLECTIONS.taxSettings).deleteMany({ version: { $in: taxVersionsUsed } });
       await mongoClient.close();
@@ -402,6 +431,72 @@ describe.each(factories)("$name commerce store", ({ create, cleanup }) => {
     await store.insertGrantIfMissing({ ...grant(unique("grant"), unique("order")), gameCode: "pending:1:x", createdAt: "2099-01-07T10:00:00.000Z" });
     const groups = await store.listGrantsWithGame({ skip: 0, limit: 5 });
     expect(groups.grants[0].id).toBe(withGame.id);
+  });
+
+  test("partners (P7): unique codes, users of a partner, click counters per day and campaign, a partner's paid orders", async () => {
+    const id = unique("partner");
+    const code = `P${counter}${runId.slice(2, 7).toUpperCase()}`;
+    expect(await store.insertPartner(partner(id, code))).toBe(true);
+    expect(await store.insertPartner(partner(unique("partner"), code))).toBe(false);
+    expect(await store.getPartnerByCode(code)).toEqual(partner(id, code));
+    await store.updatePartner(id, { active: false, commission: { kind: "none" }, updatedAt: LATER.toISOString() });
+    expect(await store.getPartner(id)).toMatchObject({ code, active: false, commission: { kind: "none" } });
+    expect((await store.listPartners()).some((candidate) => candidate.id === id)).toBe(true);
+
+    const userId = unique("user");
+    const partnerUser = { id: userId, email: `${userId.toLowerCase()}@example.com`, roles: ["PARTNER" as const], partnerId: id, active: true, createdAt: NOW.toISOString(), lastLoginAt: null };
+    await store.saveUser(partnerUser);
+    expect(await store.findUserById(userId)).toEqual(partnerUser);
+    expect(await store.listPartnerUsers(id)).toEqual([partnerUser]);
+
+    await Promise.all([store.incrementPartnerClicks(id, "2099-02-01", ""), store.incrementPartnerClicks(id, "2099-02-01", "")]);
+    await store.incrementPartnerClicks(id, "2099-02-01", "lobby");
+    await store.incrementPartnerClicks(id, "2099-02-03", "");
+    const clicks = await store.listPartnerClicks({ partnerId: id, fromDay: "2099-02-01", toDay: "2099-02-02" });
+    expect(clicks.map(({ day, campaign, clicks: count }) => ({ day, campaign, count })).sort((a, b) => a.campaign.localeCompare(b.campaign))).toEqual([
+      { day: "2099-02-01", campaign: "", count: 2 },
+      { day: "2099-02-01", campaign: "lobby", count: 1 },
+    ]);
+
+    const referral = { partnerId: id, code, campaign: null, clickedAt: NOW.toISOString(), rule: { kind: "percent-net" as const, basisPoints: 1500 } };
+    const inside = unique("order");
+    await store.insertOrder(order(inside, { status: "paid", paidAt: "2099-02-01T12:00:00.000Z", partner: referral }));
+    await store.insertOrder(order(unique("order"), { status: "paid", paidAt: "2099-03-01T12:00:00.000Z", partner: referral }));
+    await store.insertOrder(order(unique("order"), { status: "pending", paidAt: null, partner: referral }));
+    await store.insertOrder(order(unique("order"), { status: "paid", paidAt: "2099-02-01T12:00:00.000Z" }));
+    const found = await store.listPartnerOrders(id, new Date("2099-02-01T00:00:00Z"), new Date("2099-02-02T00:00:00Z"), 10);
+    expect(found.map((candidate) => candidate.id)).toEqual([inside]);
+    expect(found[0].partner).toEqual(referral);
+  });
+
+  test("commission ledger (P7): one line per id, atomic status steps with history, filters", async () => {
+    const partnerId = unique("partner");
+    const orderId = unique("order");
+    const line = commission(`accrual:${orderId}`, partnerId, orderId);
+    const [first, second] = await Promise.all([store.insertCommissionIfMissing(line), store.insertCommissionIfMissing({ ...line, amountCents: 999 })]);
+    expect([first, second].sort()).toEqual([false, true]);
+    expect(await store.listCommissionsForOrder(orderId)).toEqual([line]);
+
+    const steps = await Promise.all([
+      store.transitionCommission(line.id, ["pending"], { status: "approved", at: LATER.toISOString(), by: "a@b.c" }),
+      store.transitionCommission(line.id, ["pending"], { status: "approved", at: LATER.toISOString(), by: "a@b.c" }),
+    ]);
+    expect(steps.filter(Boolean)).toHaveLength(1);
+    expect(await store.transitionCommission(line.id, ["payable"], { status: "paid", at: LATER.toISOString(), by: "a@b.c" })).toBe(false);
+    await store.transitionCommission(line.id, ["approved"], { status: "payable", at: LATER.toISOString(), by: "a@b.c" });
+    await store.transitionCommission(line.id, ["payable"], { status: "paid", at: LATER.toISOString(), by: "a@b.c", payoutReference: "TRANSFER-1" });
+    const [paid] = await store.listCommissionsForOrder(orderId);
+    expect(paid).toMatchObject({ status: "paid", payoutReference: "TRANSFER-1", amountCents: 150 });
+    expect(paid.history.map((entry) => entry.status)).toEqual(["pending", "approved", "payable", "paid"]);
+
+    const adjustment = commission(`adjustment:${orderId}:500`, partnerId, orderId, { kind: "adjustment", amountCents: -50, orderPaidAt: "2099-02-01T10:00:00.000Z" });
+    await store.insertCommissionIfMissing(adjustment);
+    await store.insertCommissionIfMissing(commission(`accrual:${unique("order")}`, partnerId, unique("order"), { orderPaidAt: "2099-04-01T10:00:00.000Z" }));
+    const february = await store.listCommissions({ partnerId, orderPaidFrom: new Date("2099-02-01T00:00:00Z"), orderPaidTo: new Date("2099-03-01T00:00:00Z"), skip: 0, limit: 10 });
+    expect(february.total).toBe(2);
+    expect(february.entries.map((entry) => entry.amountCents).sort((a, b) => a - b)).toEqual([-50, 150]);
+    const pending = await store.listCommissions({ partnerId, status: "pending", skip: 0, limit: 10 });
+    expect(pending.entries.map((entry) => entry.orderPaidAt)).toEqual(["2099-04-01T10:00:00.000Z", "2099-02-01T10:00:00.000Z"]);
   });
 
   test("settings: the corporate price table is saved and read back", async () => {

@@ -1,5 +1,5 @@
 import type { NextRequest } from "next/server";
-import { ADMIN_SESSION_LIFETIME_MS } from "../config";
+import { ADMIN_SESSION_LIFETIME_MS, PARTNER_ATTRIBUTION_MS, PARTNER_SESSION_LIFETIME_MS } from "../config";
 import { hashSecret } from "./context";
 
 /** The admin session cookie. Its value is a random secret; the database only has its hash. */
@@ -64,4 +64,28 @@ export function siteBaseUrl(request: NextRequest): string | null {
   const configured = process.env.APP_BASE_URL?.replace(/\/+$/, "");
   if (configured) return configured;
   return process.env.NODE_ENV === "production" ? null : request.nextUrl.origin;
+}
+
+/** The partner portal's session cookie (P7). Like the admin cookie, with its own name and lifetime. */
+export const PARTNER_COOKIE = "ha_partner";
+
+export function partnerCookieOptions() {
+  return { ...adminCookieOptions(), maxAge: PARTNER_SESSION_LIFETIME_MS / 1000 };
+}
+
+/**
+ * The referral cookie (P7): which partner link brought this visitor, e.g.
+ * "HOTELJULIEN..1760000000000" (code, campaign, click time; nothing personal).
+ * Lax: it must be sent when the visitor comes back from another site.
+ */
+export const REFERRAL_COOKIE = "ha_ref";
+
+export function referralCookieOptions() {
+  return {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax" as const,
+    path: "/",
+    maxAge: PARTNER_ATTRIBUTION_MS / 1000,
+  };
 }

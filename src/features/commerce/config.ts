@@ -30,6 +30,8 @@ export const RATE_LIMITS = {
   ticketPerClient: { limit: 30, windowMs: 15 * MINUTE },
   /** Quote requests per network address (P4: no spam floods). */
   quotePerClient: { limit: 5, windowMs: 60 * MINUTE },
+  /** Counted partner-link clicks per network address (P7: one visitor can't inflate a partner's figures). */
+  partnerClicksPerClient: { limit: 20, windowMs: 60 * MINUTE },
 } as const;
 
 /** Outgoing email: how often to try, and how long to wait after each failure. */
@@ -83,3 +85,26 @@ export const EU_COUNTRIES = [
   "AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HR", "HU",
   "IE", "IT", "LT", "LU", "LV", "MT", "NL", "PL", "PT", "RO", "SE", "SI", "SK",
 ] as const;
+
+// ─── P7: partners and commissions ───────────────────────────────────────────
+
+/**
+ * Attribution (docs/commercial/PHASE_7_REPORT.md, "Attribution rules"): a partner
+ * link is remembered this long in a first-party cookie; a newer partner link
+ * replaces it (last click wins). Only orders started within the window count.
+ */
+export const PARTNER_ATTRIBUTION_DAYS = 30;
+export const PARTNER_ATTRIBUTION_MS = PARTNER_ATTRIBUTION_DAYS * DAY;
+/** The same visitor opening the same partner link again within this time is one click. */
+export const PARTNER_CLICK_REPEAT_MS = 30 * MINUTE;
+/** A partner stays signed in to the portal this long (it only shows the partner's own figures). */
+export const PARTNER_SESSION_LIFETIME_MS = 7 * DAY;
+/** The "approve everything older than …" button: older than the 14-day withdrawal period. */
+export const COMMISSION_APPROVAL_AGE_DAYS = 14;
+export const MAX_PARTNER_NAME_LENGTH = 80;
+/** A commission can never be more than this per order or ticket (a typo like "50000" is refused). */
+export const MAX_FIXED_COMMISSION_CENTS = 100_000;
+export const PARTNERS_PAGE_SIZE = 50;
+export const COMMISSIONS_PAGE_SIZE = 50;
+/** Rows in the partner's own sales list (the totals always cover the whole period). */
+export const PARTNER_SALES_ROWS = 200;

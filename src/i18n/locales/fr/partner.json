@@ -1,0 +1,134 @@
+{
+  "meta": {
+    "title": "Espace partenaire",
+    "loginTitle": "Connexion partenaire"
+  },
+  "login": {
+    "title": "Connexion partenaire",
+    "intro": "Saisissez l'adresse e-mail que Hidden Antwerp a enregistrée pour votre établissement. Vous recevrez un lien de connexion ; aucun mot de passe n'est nécessaire.",
+    "email": "Adresse e-mail",
+    "submit": "M'envoyer un lien de connexion",
+    "sending": "Envoi en cours…",
+    "sent": "Si {email} a accès à un espace partenaire, un lien de connexion est en route. Il fonctionne une seule fois, pendant 15 minutes.",
+    "noAccess": "Pas encore partenaire ? Contactez Hidden Antwerp.",
+    "verifyTitle": "Connexion à l'espace partenaire",
+    "verifyIntro": "Appuyez sur le bouton pour vous connecter sur cet appareil.",
+    "verifyButton": "Se connecter",
+    "verifying": "Connexion en cours…"
+  },
+  "errors": {
+    "invalid-email": "Cela ne ressemble pas à une adresse e-mail.",
+    "too-many-requests": "Trop de tentatives. Patientez un quart d'heure, puis réessayez.",
+    "invalid-link": "Ce lien de connexion n'est plus valable (déjà utilisé, expiré ou incomplet). Demandez-en un nouveau.",
+    "not-allowed": "Cette adresse n'a plus accès à un espace partenaire.",
+    "not-configured": "La connexion n'est pas encore disponible sur ce serveur.",
+    "offline": "Pas de connexion au serveur. Vérifiez votre connexion internet et réessayez.",
+    "unknown": "Une erreur s'est produite. Veuillez réessayer."
+  },
+  "email": {
+    "greeting": "Bonjour,",
+    "loginSubject": "Votre lien de connexion à l'espace partenaire Hidden Antwerp",
+    "loginBody": "Utilisez ce lien pour vous connecter à votre espace partenaire Hidden Antwerp :",
+    "loginValid": "Le lien fonctionne une seule fois, pendant {minutes} minutes.",
+    "loginIgnore": "Vous ne l'avez pas demandé ? Vous pouvez alors ignorer cet e-mail : personne ne peut se connecter sans le lien.",
+    "inviteSubject": "Votre accès à l'espace partenaire Hidden Antwerp",
+    "inviteBody": "Vous avez désormais accès à l'espace partenaire de {name} chez Hidden Antwerp. Vous pouvez y suivre les visiteurs, les ventes et les commissions de votre lien partenaire :",
+    "inviteHow": "Connectez-vous avec cette adresse e-mail : vous recevrez un lien de connexion à usage unique (sans mot de passe)."
+  },
+  "portal": {
+    "title": "Espace partenaire",
+    "signedInAs": "Connecté en tant que {email}",
+    "signOut": "Se déconnecter",
+    "linkTitle": "Votre lien partenaire",
+    "linkIntro": "Partagez ce lien ou le code QR avec vos clients. Les achats effectués dans les {days} jours suivant son ouverture vous sont attribués.",
+    "linkLabel": "Lien partenaire",
+    "campaignHint": "Vous souhaitez comparer des emplacements ou des supports ? Ajoutez une campagne au lien, par exemple {example}.",
+    "downloadQr": "Télécharger le code QR (SVG)",
+    "qrLabel": "Code QR de votre lien partenaire",
+    "rule": "Votre commission : {rule}",
+    "ruleNote": "Les modifications de la commission ne s'appliquent qu'aux achats effectués après la modification."
+  },
+  "rules": {
+    "percent-net": "{percent} % du prix du billet hors TVA",
+    "fixed-per-ticket": "{amount} par billet",
+    "fixed-per-booking": "{amount} par réservation",
+    "none": "pas de commission (statistiques uniquement)"
+  },
+  "filters": {
+    "title": "Période et filtres",
+    "period": "Période",
+    "today": "Aujourd'hui",
+    "last7": "7 derniers jours",
+    "last30": "30 derniers jours",
+    "thisMonth": "Ce mois-ci",
+    "lastMonth": "Le mois dernier",
+    "thisYear": "Cette année",
+    "custom": "Dates personnalisées",
+    "from": "Du",
+    "to": "Au",
+    "per": "Par",
+    "day": "Jour",
+    "week": "Semaine",
+    "month": "Mois",
+    "product": "Produit",
+    "allProducts": "Tous les produits",
+    "campaign": "Campagne",
+    "allCampaigns": "Toutes les campagnes",
+    "noCampaign": "Sans campagne",
+    "apply": "Appliquer"
+  },
+  "stats": {
+    "title": "{from} – {to}",
+    "visitors": "Visiteurs via votre lien",
+    "visitorsNote": "Comptés par lien, sans données personnelles.",
+    "sales": "Ventes",
+    "conversion": "Conversion",
+    "conversionNote": "Ventes par visiteur.",
+    "revenue": "Chiffre d'affaires HT",
+    "commission": "Commission sur cette période",
+    "outstanding": "Commission en attente",
+    "outstandingNote": "Gagnée, pas encore versée (toutes périodes).",
+    "pendingNote": "Dont {amount} encore dans la période de vérification de 14 jours.",
+    "paid": "Commission versée",
+    "paidNote": "Toutes périodes."
+  },
+  "chart": {
+    "revenue": "Chiffre d'affaires HT par {unit}",
+    "commission": "Commission par {unit}",
+    "table": "Afficher sous forme de tableau",
+    "empty": "Aucune vente sur cette période.",
+    "units": {
+      "day": "jour",
+      "week": "semaine",
+      "month": "mois"
+    }
+  },
+  "sales": {
+    "title": "Ventes",
+    "empty": "Aucune vente via votre lien sur cette période.",
+    "date": "Date",
+    "product": "Produit",
+    "persons": "Personnes",
+    "revenue": "Chiffre d'affaires HT",
+    "commission": "Commission",
+    "status": "Statut",
+    "refunded": "remboursé (en partie)",
+    "limited": "Affichage des {count} dernières ventes ; les totaux ci-dessus couvrent toute la période."
+  },
+  "status": {
+    "pending": "En vérification",
+    "approved": "Approuvée",
+    "payable": "Prête à être versée",
+    "paid": "Versée",
+    "reversed": "Annulée (remboursement)",
+    "none": "–"
+  },
+  "how": {
+    "title": "Comment ça marche",
+    "attribution": "Un visiteur qui ouvre votre lien est mémorisé pendant {days} jours sur cet appareil. S'il ouvre ensuite le lien d'un autre partenaire, c'est ce dernier lien qui compte.",
+    "paidOnly": "La commission n'est gagnée que sur les achats effectivement payés, et elle est calculée sur le prix hors TVA.",
+    "refunds": "Si un achat est remboursé, la commission est annulée ou réduite en proportion.",
+    "statuses": "Chaque commission est d'abord vérifiée (délai de rétractation de 14 jours), puis approuvée, préparée pour le versement et versée par virement bancaire.",
+    "privacy": "Vous ne voyez jamais qui a acheté : ni noms ni adresses e-mail, uniquement des chiffres."
+  }
+}

@@ -67,8 +67,25 @@ test("the corporate page: loads without errors, fits a phone, and a quote reques
 });
 
 test("the new admin pages need a session", async ({ page }) => {
-  for (const path of ["/admin/orders", "/admin/tax", "/admin/discounts", "/admin/quotes", "/admin/groups", "/admin/documents"]) {
+  for (const path of ["/admin/orders", "/admin/tax", "/admin/discounts", "/admin/quotes", "/admin/groups", "/admin/documents", "/admin/partners"]) {
     await page.goto(path);
     await expect(page).toHaveURL(/\/admin\/login$/);
   }
+});
+
+test("a partner link with an unknown code: the page opens as usual, without the parameter", async ({ page }) => {
+  const problems = watchForProblems(page);
+  await page.goto("/walks?ref=NOSUCHPARTNER&c=lobby");
+  await expect(page).toHaveURL(/\/walks$/);
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await page.waitForLoadState("networkidle");
+  expect(problems).toEqual([]);
+});
+
+test("the partner portal needs a session; its sign-in page fits a phone and is never indexed", async ({ page }) => {
+  await page.goto("/partner");
+  await expect(page).toHaveURL(/\/partner\/login$/);
+  await expect(page.getByRole("heading", { level: 1, name: en("partner.login.title") })).toBeVisible();
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });

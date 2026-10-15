@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { RATE_LIMITS } from "@/features/commerce/config";
 import { startCheckout } from "@/features/commerce/server/checkout-service";
 import { getCommerceContext } from "@/features/commerce/server/context";
-import { BUYER_COOKIE, buyerCookieOptions, clientKey, siteBaseUrl } from "@/features/commerce/server/http";
+import { BUYER_COOKIE, REFERRAL_COOKIE, buyerCookieOptions, clientKey, siteBaseUrl } from "@/features/commerce/server/http";
 import { allowRequest } from "@/features/commerce/server/support";
 import { checkPostRequest, errorResponse, readJson, toResponse } from "@/features/pub-game/server/http";
 
@@ -23,7 +23,8 @@ export async function POST(request: NextRequest) {
   if (!(await allowRequest(ctx, "checkout-client", clientKey(request), RATE_LIMITS.checkoutPerClient))) {
     return errorResponse(429, "too-many-requests");
   }
-  const result = await startCheckout(ctx, await readJson(request), baseUrl);
+  // The partner link this visitor came through, if any (P7, attribution rules in referral-service.ts).
+  const result = await startCheckout(ctx, await readJson(request), baseUrl, request.cookies.get(REFERRAL_COOKIE)?.value);
   if (!result.ok) return toResponse(result);
 
   const response = NextResponse.json({ url: result.data.url }, { headers: { "Cache-Control": "no-store" } });

@@ -30,13 +30,15 @@ export interface SalesReport {
   series: { key: string; netCents: number; tickets: number }[];
   byProduct: (MoneyTotals & { productId: string; productName: string })[];
   byLanguage: (MoneyTotals & { locale: string })[];
+  /** P7: orders that came through a partner link, per partner code (orders without a partner are left out). */
+  byPartner: (MoneyTotals & { partnerId: string; code: string })[];
   customers: { total: number; new: number; returning: number };
 }
 
 const emptyTotals = (): MoneyTotals => ({ grossCents: 0, refundsCents: 0, netCents: 0, vatCents: 0, exVatCents: 0, orders: 0, tickets: 0 });
 
 /** One order's share: gross, refunds, and the VAT that's left after refunds. */
-function amountsOf(order: Order): MoneyTotals {
+export function amountsOf(order: Order): MoneyTotals {
   const refunded = Math.min(order.refundedCents, order.totalCents);
   const net = order.totalCents - refunded;
   const vat = order.tax?.vatCents ?? 0;
@@ -83,6 +85,7 @@ export function computeSalesReport(orders: Order[], range: Pick<ReportRange, "fr
   const series = new Map(bucketsOf(range).map((key) => [key, { key, netCents: 0, tickets: 0 }]));
   const byProduct = new Map<string, MoneyTotals & { productId: string; productName: string }>();
   const byLanguage = new Map<string, MoneyTotals & { locale: string }>();
+  const byPartner = new Map<string, MoneyTotals & { partnerId: string; code: string }>();
 
   for (const order of inRange) {
     const amounts = amountsOf(order);
@@ -99,6 +102,11 @@ export function computeSalesReport(orders: Order[], range: Pick<ReportRange, "fr
     const language = byLanguage.get(order.locale) ?? { locale: order.locale, ...emptyTotals() };
     add(language, amounts);
     byLanguage.set(order.locale, language);
+    if (order.partner) {
+      const partner = byPartner.get(order.partner.partnerId) ?? { partnerId: order.partner.partnerId, code: order.partner.code, ...emptyTotals() };
+      add(partner, amounts);
+      byPartner.set(order.partner.partnerId, partner);
+    }
   }
 
   // New = their first paid order ever falls in this range; returning = they had one before.
@@ -119,6 +127,7 @@ export function computeSalesReport(orders: Order[], range: Pick<ReportRange, "fr
     series: [...series.values()],
     byProduct: [...byProduct.values()].sort(byNet),
     byLanguage: [...byLanguage.values()].sort(byNet),
+    byPartner: [...byPartner.values()].sort(byNet),
     customers: { total: customersInRange.size, new: newCustomers, returning: customersInRange.size - newCustomers },
   };
 }
@@ -144,6 +153,7 @@ export function ordersToCsv(orders: Order[], range: Pick<ReportRange, "from" | "
     "email",
     "discount_code",
     "language",
+    "partner_code",
   ];
   const euros = (cents: number) => (cents / 100).toFixed(2);
   const cell = (value: string | number | boolean | null) => {
@@ -176,6 +186,7 @@ export function ordersToCsv(orders: Order[], range: Pick<ReportRange, "from" | "
         order.email,
         order.discount?.code ?? null,
         order.locale,
+        order.partner?.code ?? null,
       ]
         .map(cell)
         .join(",");

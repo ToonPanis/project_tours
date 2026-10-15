@@ -1,5 +1,6 @@
 import type { Order, OrderCustomer } from "@/types/commerce";
 import { applyTax } from "../logic/tax";
+import { ensureCommission, syncCommissionAfterRefund } from "./commission-service";
 import type { CommerceContext } from "./context";
 import { ensureCreditNote, ensureOrderDocument } from "./document-service";
 import { queueOrderConfirmation, queueRefundEmail } from "./order-emails";
@@ -97,6 +98,8 @@ async function fulfil(ctx: CommerceContext, event: CheckoutPaidEvent, baseUrl: s
 
   const grant = await ensureTicket(ctx, paid);
   const document = await ensureOrderDocument(ctx, paid);
+  // P7: the referring partner's commission (pending; only for a paid order, booked once).
+  await ensureCommission(ctx, paid);
   await queueOrderConfirmation(ctx, paid, grant, document, ticketUrl(ctx, grant.id, baseUrl));
   return "fulfilled";
 }
@@ -114,7 +117,11 @@ async function recordRefund(ctx: CommerceContext, paymentIntentId: string | null
   const order: Order | null = paymentIntentId ? await ctx.store.findOrderByPaymentIntent(paymentIntentId) : null;
   if (!order) return "unknown-order";
   // Stripe sends the total refunded so far: only what's new counts.
-  if (refundedTotalCents <= order.refundedCents) return "already-processed";
+  if (refundedTotalCents <= order.refundedCents) {
+    // A retry after a failure halfway: the order was updated, make sure the commission was too.
+    await syncCommissionAfterRefund(ctx, order);
+    return "already-processed";
+  }
 
   const newlyRefunded = refundedTotalCents - order.refundedCents;
   const fully = refundedTotalCents >= order.totalCents;
@@ -131,6 +138,8 @@ async function recordRefund(ctx: CommerceContext, paymentIntentId: string | null
     ticketRevoked = true;
   }
   await ensureCreditNote(ctx, order, newlyRefunded, refundedTotalCents);
+  // P7: the partner earns only on what was kept.
+  await syncCommissionAfterRefund(ctx, { ...order, refundedCents: refundedTotalCents, status: fully ? "refunded" : order.status });
   await queueRefundEmail(ctx, order, newlyRefunded, refundedTotalCents, ticketRevoked || grant?.status === "revoked");
   return "refund-recorded";
 }

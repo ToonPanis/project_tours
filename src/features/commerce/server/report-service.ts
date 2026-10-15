@@ -1,3 +1,4 @@
+import { ledgerTotals } from "../logic/partners";
 import { localDayOf, resolveRange, startOfLocalDay, type ReportRange } from "../logic/report-dates";
 import { computeSalesReport, ordersToCsv, type SalesReport } from "../logic/reports";
 import type { CommerceContext } from "./context";
@@ -25,6 +26,10 @@ export interface Dashboard {
   documentsAwaitingProvider: number;
   /** True when more orders exist than were read (figures incomplete). */
   truncated: boolean;
+  /** P7: partner commission on the range's orders (ledger lines not reversed, refund adjustments included). */
+  commissionsCents: number;
+  /** P7: commission per partner in the range, by partner id. */
+  commissionsByPartner: Record<string, number>;
 }
 
 export async function buildDashboard(
@@ -40,12 +45,18 @@ export async function buildDashboard(
 
   // Everything paid up to the later of the range's end and tonight (also for the "today" tiles).
   const until = range.to > tomorrow ? range.to : tomorrow;
-  const [orders, openQuotes, grants, awaiting] = await Promise.all([
+  const [orders, openQuotes, grants, awaiting, commissions] = await Promise.all([
     ctx.store.listPaidOrdersUntil(until, MAX_REPORT_ORDERS),
     ctx.store.countQuotes(["NEW", "CONTACTED", "QUOTED"]),
     ctx.store.listGrantsWithGame({ skip: 0, limit: 5000 }),
     ctx.store.listDocuments({ skip: 0, limit: 1, status: "awaiting-provider" }),
+    ctx.store.listCommissions({ orderPaidFrom: range.from, orderPaidTo: range.to, skip: 0, limit: MAX_REPORT_ORDERS }),
   ]);
+  const commissionsByPartner: Record<string, number> = {};
+  for (const entry of commissions.entries) {
+    if (entry.status === "reversed") continue;
+    commissionsByPartner[entry.partnerId] = (commissionsByPartner[entry.partnerId] ?? 0) + entry.amountCents;
+  }
 
   const day = (from: Date, to: Date) => computeSalesReport(orders, { from, to, granularity: "day" }).totals.netCents;
   return {
@@ -60,6 +71,8 @@ export async function buildDashboard(
     }).length,
     documentsAwaitingProvider: awaiting.total,
     truncated: orders.length >= MAX_REPORT_ORDERS,
+    commissionsCents: ledgerTotals(commissions.entries).earnedCents,
+    commissionsByPartner,
   };
 }
 
