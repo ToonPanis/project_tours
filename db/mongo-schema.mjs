@@ -73,6 +73,11 @@ export const COLLECTIONS = {
   partnerClicks: "com_partner_clicks",
   /** The commission ledger: `_id` = "accrual:<orderId>" or "adjustment:<orderId>:<refunded>". Never deleted. */
   commissions: "com_commission_ledger",
+
+  /** Reviews (P8): one per ticket (unique grantId); moderated before anything is shown. */
+  reviews: "com_reviews",
+  /** Addresses that unsubscribed from non-transactional mail: `_id` = SHA-256 of the address (never the address). */
+  suppressions: "com_suppressions",
 };
 
 const text = (maxLength) => ({ bsonType: "string", minLength: 1, maxLength });
@@ -197,6 +202,9 @@ const VALIDATORS = {
       to: text(254),
       subject: text(200),
       text: optionalText(20000),
+      // P8: the HTML version and the unsubscribe link (follow-up mails).
+      html: optionalText(100000),
+      unsubscribeUrl: optionalText(500),
       status: { enum: ["pending", "sent", "failed"] },
       attempts: whole,
       nextAttemptAt: date,
@@ -246,6 +254,8 @@ const VALIDATORS = {
       paidAt: optionalDate,
       // P7: the referring partner and its commission rule at the time.
       partner: { bsonType: ["object", "null"] },
+      // P8: consent for the one email after the walk (time + sentence version).
+      followUp: { bsonType: ["object", "null"] },
     },
   },
   [COLLECTIONS.stripeEvents]: {
@@ -266,6 +276,8 @@ const VALIDATORS = {
       validUntil: date,
       // Hidden Pubs (P3): the game this ticket was used for.
       gameCode: optionalText(100),
+      // P8: when the walk was finished with this ticket (first time only).
+      completedAt: optionalDate,
     },
   },
   [COLLECTIONS.ticketDevices]: {
@@ -287,6 +299,10 @@ const VALIDATORS = {
       active: { bsonType: "bool" },
       createdAt: date,
       createdBy: text(254),
+      // P8: admin | batch | review, the batch, the order a review reward belongs to.
+      source: { enum: ["admin", "batch", "review"] },
+      batchId: optionalText(100),
+      forOrderId: optionalText(100),
     },
   },
   [COLLECTIONS.counters]: {
@@ -379,6 +395,32 @@ const VALIDATORS = {
       history: { bsonType: "array", maxItems: 50 },
     },
   },
+
+  [COLLECTIONS.reviews]: {
+    required: ["_id", "grantId", "orderId", "walkSlug", "productId", "rating", "locale", "status", "incentivised", "createdAt"],
+    properties: {
+      _id: text(100),
+      grantId: text(100),
+      orderId: text(100),
+      walkSlug: text(100),
+      productId: text(100),
+      rating: { bsonType: ["int", "long"], minimum: 1, maximum: 5 },
+      text: optionalText(1000),
+      displayName: optionalText(40),
+      mayPublish: { bsonType: "bool" },
+      locale: text(5),
+      status: { enum: ["pending", "approved", "rejected"] },
+      incentivised: { bsonType: "bool" },
+      rewardDiscountId: optionalText(100),
+      createdAt: date,
+      moderatedAt: optionalDate,
+      moderatedBy: optionalText(254),
+    },
+  },
+  [COLLECTIONS.suppressions]: {
+    required: ["_id", "reason", "at"],
+    properties: { _id: text(100), reason: { enum: ["unsubscribed"] }, at: date },
+  },
 };
 
 /** TTL: delete a document as soon as its `expiresAt` has passed. */
@@ -452,6 +494,12 @@ export const INDEXES = {
     { key: { status: 1, orderPaidAt: -1 }, name: "status_orderPaidAt" },
     { key: { orderPaidAt: -1 }, name: "orderPaidAt_desc" },
   ],
+  [COLLECTIONS.reviews]: [
+    { key: { grantId: 1 }, name: "grantId_unique", unique: true },
+    { key: { status: 1, createdAt: -1 }, name: "status_createdAt" },
+    { key: { createdAt: -1 }, name: "createdAt_desc" },
+  ],
+  [COLLECTIONS.suppressions]: [],
 };
 
 /**

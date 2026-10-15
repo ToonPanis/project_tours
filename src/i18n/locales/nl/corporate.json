@@ -87,6 +87,11 @@
     "body": "Hartelijk dank voor uw offerteaanvraag voor {company}.",
     "next": "We komen zo snel mogelijk bij u terug met een voorstel.",
     "summary": "Uw aanvraag:",
-    "signoff": "Met vriendelijke groeten,"
+    "signoff": "Met vriendelijke groeten,",
+    "accepted": {
+      "subject": "Uw boeking bij Hidden Antwerp is bevestigd",
+      "body": "Goed nieuws: we hebben de boeking voor {company} bevestigd.",
+      "next": "Vóór de dag zelf sturen we u de praktische details (vertrekpunt, tijden, tickets). Vragen? Antwoord gewoon op deze e-mail."
+    }
   }
 }

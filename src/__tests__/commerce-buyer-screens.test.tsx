@@ -28,7 +28,22 @@ describe("buy box", () => {
     await waitFor(() => expect(assign).toHaveBeenCalledWith("https://checkout.stripe.test/cs_1"));
     const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
     expect(url).toBe("/api/checkout");
-    expect(JSON.parse(String(init.body))).toEqual({ walkSlug: "classics-of-antwerp", quantity: 3, discountCode: "welcome", locale: "en" });
+    // P8: the follow-up box is unticked unless the buyer ticks it.
+    expect(JSON.parse(String(init.body))).toEqual({ walkSlug: "classics-of-antwerp", quantity: 3, discountCode: "welcome", locale: "en", followUpConsent: false });
+  });
+
+  test("the follow-up email is an active choice: unticked at first, sent as true only when ticked", async () => {
+    const fetchMock = answer(200, { url: "https://checkout.stripe.test/cs_1" });
+    vi.stubGlobal("fetch", fetchMock);
+    vi.stubGlobal("location", { ...window.location, assign: vi.fn() });
+    render(<BuyBox walkSlug="classics-of-antwerp" unitPriceCents={795} />);
+    const box = screen.getByLabelText(t("commerce.buy.followUpConsent")) as HTMLInputElement;
+    expect(box.checked).toBe(false);
+    fireEvent.click(box);
+    fireEvent.click(screen.getByRole("button", { name: t("commerce.buy.button") }));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+    const [, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
+    expect(JSON.parse(String(init.body)).followUpConsent).toBe(true);
   });
 
   test("persons stay between 1 and the maximum", () => {

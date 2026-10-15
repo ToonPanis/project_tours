@@ -6,6 +6,7 @@ import type {
   CommissionStatus,
   Partner,
   PartnerClickDay,
+  Review,
   CorporatePricing,
   QuoteRequest,
   QuoteStatus,
@@ -51,6 +52,8 @@ export class MemoryCommerceStore implements CommerceStore {
   private partners = new Map<string, Partner>();
   private partnerClicks = new Map<string, PartnerClickDay>();
   private commissions = new Map<string, CommissionEntry>();
+  private reviews = new Map<string, Review>();
+  private suppressions = new Set<string>();
 
   async findUserByEmail(email: string) {
     const user = [...this.users.values()].find((candidate) => candidate.email === email);
@@ -495,5 +498,58 @@ export class MemoryCommerceStore implements CommerceStore {
       history: [...entry.history, { status: change.status, at: change.at, by: change.by }],
     });
     return true;
+  }
+
+  async markGrantCompleted(grantId: string, at: string) {
+    const grant = this.grants.get(grantId);
+    if (!grant || grant.completedAt) return false;
+    this.grants.set(grantId, { ...grant, completedAt: at });
+    return true;
+  }
+
+  async getGrantByGameCode(gameCode: string) {
+    const grant = [...this.grants.values()].find((candidate) => candidate.gameCode === gameCode);
+    return grant ? structuredClone(grant) : null;
+  }
+
+  async insertReview(review: Review) {
+    if ([...this.reviews.values()].some((existing) => existing.grantId === review.grantId)) return "duplicate" as const;
+    this.reviews.set(review.id, structuredClone(review));
+    return "inserted" as const;
+  }
+
+  async getReview(id: string) {
+    const review = this.reviews.get(id);
+    return review ? structuredClone(review) : null;
+  }
+
+  async getReviewByGrant(grantId: string) {
+    const review = [...this.reviews.values()].find((candidate) => candidate.grantId === grantId);
+    return review ? structuredClone(review) : null;
+  }
+
+  async listReviews({ skip, limit, status }: { skip: number; limit: number; status?: Review["status"] }) {
+    const matching = [...this.reviews.values()]
+      .filter((review) => !status || review.status === status)
+      .reverse()
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    return { reviews: structuredClone(matching.slice(skip, skip + limit)), total: matching.length };
+  }
+
+  async updateReview(id: string, changes: Partial<Omit<Review, "id" | "grantId">>) {
+    const review = this.reviews.get(id);
+    if (review) this.reviews.set(id, { ...review, ...structuredClone(changes) });
+  }
+
+  async deleteReview(id: string) {
+    this.reviews.delete(id);
+  }
+
+  async addSuppression(emailHash: string) {
+    this.suppressions.add(emailHash);
+  }
+
+  async isSuppressed(emailHash: string) {
+    return this.suppressions.has(emailHash);
   }
 }

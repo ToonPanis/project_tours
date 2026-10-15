@@ -87,6 +87,11 @@
     "body": "Gracias por su solicitud de presupuesto para {company}.",
     "next": "Nos pondremos en contacto con usted con una propuesta lo antes posible.",
     "summary": "Su solicitud:",
-    "signoff": "Atentamente,"
+    "signoff": "Atentamente,",
+    "accepted": {
+      "subject": "Su reserva con Hidden Antwerp está confirmada",
+      "body": "Buenas noticias: hemos confirmado la reserva para {company}.",
+      "next": "Antes del día le enviaremos los detalles prácticos (punto de encuentro, horarios, entradas). ¿Tiene preguntas? Simplemente responda a este correo."
+    }
   }
 }

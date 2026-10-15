@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "reviewTitle": "La tua recensione",
+    "unsubscribeTitle": "Annulla l'iscrizione"
+  },
+  "followUp": {
+    "subject": "Com'è stato {product}?",
+    "greeting": "Ciao,",
+    "thanks": "Grazie per aver scoperto Anversa con noi!",
+    "question": "Com'è stata la tua esperienza? La tua recensione aiuta altri visitatori e aiuta noi a migliorare le passeggiate. Basta un minuto.",
+    "reward": "Per ringraziarti ricevi il {percent} di sconto sulla tua prossima avventura, per qualsiasi recensione, positiva o critica.",
+    "button": "Lascia una recensione",
+    "signoff": "A presto ad Anversa,",
+    "why": "Ricevi questa unica e-mail perché l'hai richiesta quando hai acquistato il biglietto il {date}. Non invieremo altre e-mail di follow-up per questo ordine.",
+    "unsubscribe": "Non inviarmi più e-mail come questa"
+  },
+  "rewardEmail": {
+    "subject": "Il tuo codice di ringraziamento per una prossima passeggiata",
+    "greeting": "Ciao,",
+    "thanks": "Grazie per la tua recensione!",
+    "code": "Il tuo codice personale: {code}",
+    "terms": "{percent} di sconto su un prossimo acquisto su hidden-antwerp, valido fino al {date}. Il codice funziona una sola volta.",
+    "signoff": "A presto ad Anversa,"
+  },
+  "review": {
+    "title": "Com'è stata la tua passeggiata?",
+    "intro": "Racconta agli altri visitatori cosa ne pensi. Solo chi ha un biglietto può lasciare una recensione, una per biglietto.",
+    "checking": "Verifica del link…",
+    "invalid": "Questo link per la recensione non è (più) valido. Usa il link della tua e-mail esattamente così com'è.",
+    "done": "Con questo biglietto è già stata lasciata una recensione. Grazie!",
+    "product": "La tua passeggiata: {product}",
+    "rating": "La tua valutazione",
+    "stars": {
+      "one": "{count} stella",
+      "other": "{count} stelle"
+    },
+    "text": "La tua recensione (facoltativa)",
+    "textHint": "Al massimo {max} caratteri. Non scrivere nomi di altre persone né dati personali.",
+    "name": "Il tuo nome come verrà mostrato (facoltativo)",
+    "nameHint": "Ad es. \"Anna da Gand\". Lascia vuoto per restare anonimo.",
+    "mayPublish": "Hidden Antwerp può mostrare la mia recensione (e il nome qui sopra) sul suo sito web.",
+    "rewardNote": "Per ringraziarti ricevi un codice con il {percent} di sconto sulla tua prossima passeggiata, qualunque sia la tua valutazione. Le recensioni che hanno ottenuto un codice vengono segnalate come tali se sono mostrate.",
+    "moderation": "Leggiamo ogni recensione prima che venga pubblicata; non ne cambiamo le parole.",
+    "submit": "Invia la mia recensione",
+    "sending": "Invio in corso…",
+    "thanks": "Grazie per la tua recensione!",
+    "codeIntro": "Il tuo codice con il {percent} di sconto sulla tua prossima passeggiata (inviato anche via e-mail):",
+    "codeValid": "Valido una volta, fino al {date}."
+  },
+  "unsubscribe": {
+    "title": "Annulla l'iscrizione",
+    "intro": "Non vuoi più ricevere e-mail di follow-up da Hidden Antwerp (richieste di opinione, codici sconto)? Premi il pulsante. Le e-mail necessarie per un acquisto (biglietto, ricevuta, rimborso) continueranno ad arrivare.",
+    "button": "Annulla l'iscrizione",
+    "busy": "Salvataggio…",
+    "done": "Fatto: non riceverai più e-mail di follow-up.",
+    "invalid": "Questo link di annullamento dell'iscrizione non è valido. Usa il link dell'e-mail esattamente così com'è."
+  },
+  "errors": {
+    "invalid-review-link": "Questo link per la recensione non è (più) valido.",
+    "already-reviewed": "Con questo biglietto è già stata lasciata una recensione.",
+    "invalid-rating": "Scegli una valutazione da 1 a 5 stelle.",
+    "invalid-review-text": "La tua recensione è troppo lunga.",
+    "invalid-name": "Il nome è troppo lungo.",
+    "invalid-unsubscribe-link": "Questo link di annullamento dell'iscrizione non è valido.",
+    "too-many-requests": "Troppi tentativi. Riprova più tardi.",
+    "offline": "Nessuna connessione al server. Controlla la connessione internet e riprova.",
+    "generic": "Qualcosa è andato storto. Riprova."
+  }
+}

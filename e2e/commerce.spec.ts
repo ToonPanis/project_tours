@@ -67,7 +67,7 @@ test("the corporate page: loads without errors, fits a phone, and a quote reques
 });
 
 test("the new admin pages need a session", async ({ page }) => {
-  for (const path of ["/admin/orders", "/admin/tax", "/admin/discounts", "/admin/quotes", "/admin/groups", "/admin/documents", "/admin/partners"]) {
+  for (const path of ["/admin/orders", "/admin/tax", "/admin/discounts", "/admin/quotes", "/admin/groups", "/admin/documents", "/admin/partners", "/admin/reviews"]) {
     await page.goto(path);
     await expect(page).toHaveURL(/\/admin\/login$/);
   }
@@ -88,4 +88,21 @@ test("the partner portal needs a session; its sign-in page fits a phone and is n
   await expect(page.getByRole("heading", { level: 1, name: en("partner.login.title") })).toBeVisible();
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
+test("the review page without a valid link says so, fits a phone and is never indexed", async ({ page }) => {
+  const problems = watchForProblems(page);
+  await page.goto("/review#not-a-real-token");
+  await expect(page.getByRole("heading", { level: 1, name: en("feedback.review.title") })).toBeVisible();
+  await expect(page.getByText(en("feedback.review.invalid"))).toBeVisible();
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  expect(problems.filter((problem) => !problem.includes("404"))).toEqual([]);
+});
+
+test("the unsubscribe page only acts on a button press, and refuses a broken link", async ({ page }) => {
+  await page.goto("/unsubscribe#broken.link");
+  await expect(page.getByRole("heading", { level: 1, name: en("feedback.unsubscribe.title") })).toBeVisible();
+  await page.getByRole("button", { name: en("feedback.unsubscribe.button") }).click();
+  await expect(page.getByText(en("feedback.unsubscribe.invalid"))).toBeVisible();
 });

@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "reviewTitle": "Tu reseña",
+    "unsubscribeTitle": "Darse de baja"
+  },
+  "followUp": {
+    "subject": "¿Qué tal {product}?",
+    "greeting": "Hola:",
+    "thanks": "¡Gracias por descubrir Amberes con nosotros!",
+    "question": "¿Qué tal fue tu experiencia? Tu reseña ayuda a otros visitantes y nos ayuda a mejorar los paseos. Solo te llevará un minuto.",
+    "reward": "Como agradecimiento, recibes un {percent} de descuento en tu próxima aventura, por cualquier reseña, positiva o crítica.",
+    "button": "Escribir una reseña",
+    "signoff": "Nos vemos en Amberes,",
+    "why": "Recibes este único correo porque lo pediste al comprar tu entrada el {date}. No enviaremos más correos de seguimiento para este pedido.",
+    "unsubscribe": "No quiero recibir más correos como este"
+  },
+  "rewardEmail": {
+    "subject": "Tu código de agradecimiento para un próximo paseo",
+    "greeting": "Hola:",
+    "thanks": "¡Gracias por tu reseña!",
+    "code": "Tu código personal: {code}",
+    "terms": "Un {percent} de descuento en una próxima compra en hidden-antwerp, válido hasta el {date}. El código funciona una sola vez.",
+    "signoff": "Hasta pronto en Amberes,"
+  },
+  "review": {
+    "title": "¿Qué tal fue tu paseo?",
+    "intro": "Cuenta a otros visitantes qué te pareció. Solo quien tiene una entrada puede dejar una reseña, una por entrada.",
+    "checking": "Comprobando tu enlace…",
+    "invalid": "Este enlace para reseñas no es válido (o ya no lo es). Usa el enlace de tu correo tal como está.",
+    "done": "Ya se dejó una reseña con esta entrada. ¡Gracias!",
+    "product": "Tu paseo: {product}",
+    "rating": "Tu valoración",
+    "stars": {
+      "one": "{count} estrella",
+      "other": "{count} estrellas"
+    },
+    "text": "Tu reseña (opcional)",
+    "textHint": "Como máximo {max} caracteres. Por favor, no escribas nombres de otras personas ni datos personales.",
+    "name": "Tu nombre tal como se mostrará (opcional)",
+    "nameHint": "P. ej., «Anna de Gante». Déjalo vacío para seguir en el anonimato.",
+    "mayPublish": "Hidden Antwerp puede mostrar mi reseña (y el nombre de arriba) en su sitio web.",
+    "rewardNote": "Como agradecimiento, recibes un código con un {percent} de descuento en tu próximo paseo, sea cual sea tu valoración. Las reseñas que han recibido un código se marcan como tales si se muestran.",
+    "moderation": "Leemos cada reseña antes de que aparezca; no cambiamos sus palabras.",
+    "submit": "Enviar mi reseña",
+    "sending": "Enviando…",
+    "thanks": "¡Gracias por tu reseña!",
+    "codeIntro": "Tu código con un {percent} de descuento en tu próximo paseo (también enviado por correo):",
+    "codeValid": "Válido una vez, hasta el {date}."
+  },
+  "unsubscribe": {
+    "title": "Darse de baja",
+    "intro": "¿Ya no quieres recibir correos de seguimiento de Hidden Antwerp (preguntas de opinión, códigos de descuento)? Pulsa el botón. Los correos que necesitas para una compra (entrada, recibo, reembolso) seguirán llegando.",
+    "button": "Darme de baja",
+    "busy": "Guardando…",
+    "done": "Listo: ya no recibirás correos de seguimiento.",
+    "invalid": "Este enlace para darse de baja no es válido. Usa el enlace del correo tal como está."
+  },
+  "errors": {
+    "invalid-review-link": "Este enlace para reseñas no es válido (o ya no lo es).",
+    "already-reviewed": "Ya se dejó una reseña con esta entrada.",
+    "invalid-rating": "Elige una valoración de 1 a 5 estrellas.",
+    "invalid-review-text": "Tu reseña es demasiado larga.",
+    "invalid-name": "El nombre es demasiado largo.",
+    "invalid-unsubscribe-link": "Este enlace para darse de baja no es válido.",
+    "too-many-requests": "Demasiados intentos. Inténtalo de nuevo más tarde.",
+    "offline": "No hay conexión con el servidor. Comprueba tu conexión a internet e inténtalo de nuevo.",
+    "generic": "Algo salió mal. Inténtalo de nuevo."
+  }
+}

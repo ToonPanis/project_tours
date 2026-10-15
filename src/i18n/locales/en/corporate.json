@@ -87,6 +87,11 @@
     "body": "Thank you for your quote request for {company}.",
     "next": "We'll get back to you with a proposal as soon as possible.",
     "summary": "Your request:",
-    "signoff": "Kind regards,"
+    "signoff": "Kind regards,",
+    "accepted": {
+      "subject": "Your booking with Hidden Antwerp is confirmed",
+      "body": "Good news: we've confirmed the booking for {company}.",
+      "next": "We'll send you the practical details (meeting point, times, tickets) before the day. Questions? Simply reply to this email."
+    }
   }
 }

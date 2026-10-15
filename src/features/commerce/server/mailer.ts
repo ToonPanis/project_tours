@@ -10,8 +10,16 @@
 export interface EmailMessage {
   to: string;
   subject: string;
-  /** Plain text only for now: readable everywhere, nothing to escape. */
+  /** Always there: readable everywhere, nothing to escape. */
   text: string;
+  /** P8: the same content laid out (email-templates.ts); admin mails stay text only. */
+  html?: string | null;
+  /**
+   * P8: for non-transactional mail (follow-up after a walk): sent as the
+   * List-Unsubscribe header, so mail apps show their own "unsubscribe" button
+   * (one click, RFC 8058).
+   */
+  unsubscribeUrl?: string | null;
 }
 
 export interface Mailer {
@@ -55,6 +63,10 @@ export class BrevoMailer implements Mailer {
           to: [{ email: message.to }],
           subject: message.subject,
           textContent: message.text,
+          ...(message.html ? { htmlContent: message.html } : {}),
+          ...(message.unsubscribeUrl
+            ? { headers: { "List-Unsubscribe": `<${message.unsubscribeUrl}>`, "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" } }
+            : {}),
         }),
         // Never wait forever for the provider.
         signal: AbortSignal.timeout(10_000),

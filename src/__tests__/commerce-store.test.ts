@@ -6,7 +6,7 @@ import { CommerceStoreUnavailableError } from "@/features/commerce/server/commer
 import { MemoryCommerceStore } from "@/features/commerce/server/memory-store";
 import { MongoCommerceStore } from "@/features/commerce/server/mongo-store";
 import { createMongoClient, databaseOf, MONGO_CLIENT_OPTIONS } from "@/features/pub-game/server/mongo";
-import type { CommissionEntry, Discount, Order, OutboxEmail, Partner, Product, TicketGrant } from "@/types/commerce";
+import type { CommissionEntry, Discount, Order, OutboxEmail, Partner, Product, Review, TicketGrant } from "@/types/commerce";
 
 /**
  * The same tests for every CommerceStore, so the MongoDB store is proven to
@@ -149,6 +149,8 @@ if (mongoClient) {
         COLLECTIONS.quotes,
         COLLECTIONS.partners,
         COLLECTIONS.partnerClicks,
+        COLLECTIONS.reviews,
+        COLLECTIONS.suppressions,
       ];
       for (const name of names) await db.collection<{ _id: string }>(name).deleteMany({ _id: ours });
       // Ledger ids start with "accrual:"/"adjustment:"; their order ids are this run's.
@@ -475,7 +477,11 @@ describe.each(factories)("$name commerce store", ({ create, cleanup }) => {
     const line = commission(`accrual:${orderId}`, partnerId, orderId);
     const [first, second] = await Promise.all([store.insertCommissionIfMissing(line), store.insertCommissionIfMissing({ ...line, amountCents: 999 })]);
     expect([first, second].sort()).toEqual([false, true]);
-    expect(await store.listCommissionsForOrder(orderId)).toEqual([line]);
+    // Whichever of the two arrived first is the one line (the other is refused, never merged).
+    const [kept] = await store.listCommissionsForOrder(orderId);
+    expect(await store.listCommissionsForOrder(orderId)).toHaveLength(1);
+    expect(kept).toEqual({ ...line, amountCents: kept.amountCents });
+    expect([150, 999]).toContain(kept.amountCents);
 
     const steps = await Promise.all([
       store.transitionCommission(line.id, ["pending"], { status: "approved", at: LATER.toISOString(), by: "a@b.c" }),
@@ -486,7 +492,7 @@ describe.each(factories)("$name commerce store", ({ create, cleanup }) => {
     await store.transitionCommission(line.id, ["approved"], { status: "payable", at: LATER.toISOString(), by: "a@b.c" });
     await store.transitionCommission(line.id, ["payable"], { status: "paid", at: LATER.toISOString(), by: "a@b.c", payoutReference: "TRANSFER-1" });
     const [paid] = await store.listCommissionsForOrder(orderId);
-    expect(paid).toMatchObject({ status: "paid", payoutReference: "TRANSFER-1", amountCents: 150 });
+    expect(paid).toMatchObject({ status: "paid", payoutReference: "TRANSFER-1", amountCents: kept.amountCents });
     expect(paid.history.map((entry) => entry.status)).toEqual(["pending", "approved", "payable", "paid"]);
 
     const adjustment = commission(`adjustment:${orderId}:500`, partnerId, orderId, { kind: "adjustment", amountCents: -50, orderPaidAt: "2099-02-01T10:00:00.000Z" });
@@ -494,9 +500,60 @@ describe.each(factories)("$name commerce store", ({ create, cleanup }) => {
     await store.insertCommissionIfMissing(commission(`accrual:${unique("order")}`, partnerId, unique("order"), { orderPaidAt: "2099-04-01T10:00:00.000Z" }));
     const february = await store.listCommissions({ partnerId, orderPaidFrom: new Date("2099-02-01T00:00:00Z"), orderPaidTo: new Date("2099-03-01T00:00:00Z"), skip: 0, limit: 10 });
     expect(february.total).toBe(2);
-    expect(february.entries.map((entry) => entry.amountCents).sort((a, b) => a - b)).toEqual([-50, 150]);
+    expect(february.entries.map((entry) => entry.amountCents).sort((a, b) => a - b)).toEqual([-50, kept.amountCents]);
     const pending = await store.listCommissions({ partnerId, status: "pending", skip: 0, limit: 10 });
     expect(pending.entries.map((entry) => entry.orderPaidAt)).toEqual(["2099-04-01T10:00:00.000Z", "2099-02-01T10:00:00.000Z"]);
+  });
+
+  test("P8: a walk is finished once (also at the same moment); a game's ticket is found by its code", async () => {
+    const stored = await store.insertGrantIfMissing({ ...grant(unique("grant"), unique("order")), gameCode: `G${counter}${runId.slice(2, 6).toUpperCase()}` });
+    const results = await Promise.all([store.markGrantCompleted(stored.id, NOW.toISOString()), store.markGrantCompleted(stored.id, LATER.toISOString())]);
+    expect(results.filter(Boolean)).toHaveLength(1);
+    expect((await store.getGrant(stored.id))?.completedAt).toMatch(/^2026-10-16T1[01]:00:00.000Z$/);
+    expect(await store.markGrantCompleted(stored.id, LATER.toISOString())).toBe(false);
+    expect((await store.getGrantByGameCode(stored.gameCode!))?.id).toBe(stored.id);
+    expect(await store.getGrantByGameCode("NOSUCHGAME")).toBeNull();
+  });
+
+  test("P8: one review per ticket (also at the same moment), listed by status, updated, deleted", async () => {
+    const grantId = unique("grant");
+    const review: Review = {
+      id: unique("review"),
+      grantId,
+      orderId: unique("order"),
+      walkSlug: "classics-of-antwerp",
+      productId: "classics-of-antwerp",
+      rating: 4,
+      text: "Lovely",
+      displayName: null,
+      mayPublish: true,
+      locale: "nl",
+      status: "pending",
+      incentivised: true,
+      rewardDiscountId: null,
+      createdAt: "2099-03-01T10:00:00.000Z",
+      moderatedAt: null,
+      moderatedBy: null,
+    };
+    const results = await Promise.all([store.insertReview(review), store.insertReview({ ...review, id: unique("review") })]);
+    expect([...results].sort()).toEqual(["duplicate", "inserted"]);
+    // Whichever of the two arrived first is the ticket's one review.
+    const kept = (await store.getReviewByGrant(grantId))!;
+    expect(kept).toEqual({ ...review, id: kept.id });
+    await store.updateReview(kept.id, { status: "approved", moderatedAt: LATER.toISOString(), moderatedBy: "a@b.c" });
+    expect(await store.getReview(kept.id)).toMatchObject({ status: "approved", moderatedAt: LATER.toISOString() });
+    const approved = await store.listReviews({ skip: 0, limit: 5, status: "approved" });
+    expect(approved.reviews[0].id).toBe(kept.id);
+    await store.deleteReview(kept.id);
+    expect(await store.getReview(kept.id)).toBeNull();
+  });
+
+  test("P8: unsubscribed addresses (hash only), idempotent", async () => {
+    const hash = unique("emailhash");
+    expect(await store.isSuppressed(hash)).toBe(false);
+    await store.addSuppression(hash, "unsubscribed", NOW.toISOString());
+    await store.addSuppression(hash, "unsubscribed", LATER.toISOString());
+    expect(await store.isSuppressed(hash)).toBe(true);
   });
 
   test("settings: the corporate price table is saved and read back", async () => {

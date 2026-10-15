@@ -10,7 +10,8 @@
     "discountCode": "Codice sconto (facoltativo)",
     "button": "Paga in modo sicuro",
     "busy": "Apertura della pagina di pagamento…",
-    "note": "Paghi sulla pagina di pagamento sicura di Stripe. Poi ricevi via e-mail un link al biglietto: ogni persona del tuo gruppo lo apre sul proprio telefono."
+    "note": "Paghi sulla pagina di pagamento sicura di Stripe. Poi ricevi via e-mail un link al biglietto: ogni persona del tuo gruppo lo apre sul proprio telefono.",
+    "followUpConsent": "Desidero ricevere un'unica e-mail dopo la passeggiata: una breve domanda per un parere e un codice sconto per una prossima passeggiata (facoltativo, puoi annullare l'iscrizione in qualsiasi momento)."
   },
   "errors": {
     "sales-closed": "I biglietti non si possono ancora acquistare online.",
@@ -74,13 +75,20 @@
       "invoice": "La tua fattura seguirà separatamente.",
       "linkIntro": "Il link del tuo biglietto. Ogni persona del tuo gruppo lo apre sul proprio telefono (il biglietto vale per {seats}):",
       "validUntil": "Il biglietto è valido fino al {date}.",
-      "signoff": "Buon divertimento ad Anversa!"
+      "signoff": "Buon divertimento ad Anversa!",
+      "group": "Giocate in più persone? Ognuno apre questo stesso link sul proprio telefono. Per Hidden Pubs, l'organizzatore lo apre, crea la partita e invita gli altri dalla sala d'attesa della partita (link, codice QR o WhatsApp).",
+      "button": "Apri il tuo biglietto"
     },
     "refund": {
       "subject": "Il tuo rimborso da Hidden Antwerp",
       "body": "Ti abbiamo rimborsato {amount} per il tuo ordine di {product}.",
       "ticketRevoked": "Il link del tuo biglietto non funziona più.",
       "bankTime": "A seconda della tua banca, possono volerci alcuni giorni prima che il rimborso sia visibile."
+    },
+    "invoice": {
+      "subject": "La tua fattura da Hidden Antwerp",
+      "body": "La tua fattura {number} per il tuo ordine di {product} è pronta.",
+      "button": "Visualizza la tua fattura"
     }
   },
   "groups": {

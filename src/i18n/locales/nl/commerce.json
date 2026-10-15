@@ -10,7 +10,8 @@
     "discountCode": "Kortingscode (optioneel)",
     "button": "Veilig betalen",
     "busy": "Betaalpagina wordt geopend…",
-    "note": "Je betaalt op de beveiligde betaalpagina van Stripe. Daarna krijg je een ticketlink per e-mail: iedereen in je groep opent die op zijn eigen telefoon."
+    "note": "Je betaalt op de beveiligde betaalpagina van Stripe. Daarna krijg je een ticketlink per e-mail: iedereen in je groep opent die op zijn eigen telefoon.",
+    "followUpConsent": "Stuur me na de wandeling één e-mail: een korte feedbackvraag en een kortingscode voor een volgende wandeling (optioneel, je kunt je op elk moment uitschrijven)."
   },
   "errors": {
     "sales-closed": "Tickets kunnen nog niet online gekocht worden.",
@@ -74,13 +75,20 @@
       "invoice": "Je factuur volgt afzonderlijk.",
       "linkIntro": "Je ticketlink. Iedereen in je groep opent hem op zijn eigen telefoon (het ticket werkt voor {seats}):",
       "validUntil": "Het ticket is geldig tot {date}.",
-      "signoff": "Veel plezier in Antwerpen!"
+      "signoff": "Veel plezier in Antwerpen!",
+      "group": "Speel je met meer mensen? Iedereen opent deze zelfde link op zijn eigen telefoon. Voor Hidden Pubs opent de organisator hem, maakt het spel aan en nodigt de anderen uit vanuit de lobby van het spel (link, QR-code of WhatsApp).",
+      "button": "Open je ticket"
     },
     "refund": {
       "subject": "Je terugbetaling van Hidden Antwerp",
       "body": "We hebben {amount} terugbetaald voor je bestelling van {product}.",
       "ticketRevoked": "Je ticketlink werkt niet meer.",
       "bankTime": "Afhankelijk van je bank kan het een paar dagen duren voor je de terugbetaling ziet."
+    },
+    "invoice": {
+      "subject": "Je factuur van Hidden Antwerp",
+      "body": "Je factuur {number} voor je bestelling van {product} is klaar.",
+      "button": "Bekijk je factuur"
     }
   },
   "groups": {

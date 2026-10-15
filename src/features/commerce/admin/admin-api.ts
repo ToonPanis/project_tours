@@ -81,6 +81,9 @@ const MESSAGES: Record<string, string> = {
   "invalid-action": "Unknown action.",
   "invalid-selection": "Select at least one line (at most 200).",
   "payout-reference-required": "Type the reference of the bank transfer (2 to 100 characters).",
+  // Reviews and unique codes (P8)
+  "unknown-review": "This review doesn't exist (anymore).",
+  "invalid-count": "Choose how many codes: a whole number from 1 to 500.",
   offline: "No connection to the server. Check your internet and try again.",
 };
 

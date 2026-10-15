@@ -1,7 +1,7 @@
 import { isLocale } from "@/i18n/config";
 import { createTranslator } from "@/i18n/translate";
 import type { Discount, Order, Product, ProductPrice } from "@/types/commerce";
-import { CHECKOUT_LIFETIME_MS } from "../config";
+import { CHECKOUT_LIFETIME_MS, FOLLOW_UP_CONSENT_VERSION } from "../config";
 import { currentPrice } from "../logic/catalog";
 import { discountProblem, normalizeDiscountCode, priceOrder } from "../logic/pricing";
 import { taxAllowsSales, taxBasisFor } from "../logic/tax";
@@ -142,6 +142,8 @@ export async function startCheckout(
     updatedAt: now.toISOString(),
     paidAt: null,
     partner,
+    // P8: the unticked box on the buy box; recorded either way, with the sentence's version.
+    followUp: { consent: input.followUpConsent === true, at: now.toISOString(), textVersion: FOLLOW_UP_CONSENT_VERSION },
   };
   await ctx.store.insertOrder(order);
 

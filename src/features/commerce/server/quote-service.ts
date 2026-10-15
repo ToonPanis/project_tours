@@ -5,6 +5,7 @@ import { QUOTE_DUPLICATE_WINDOW_MS, QUOTE_RETENTION_MS, RATE_LIMITS } from "../c
 import { canMoveTo, defaultCorporatePricing, parseCorporatePricing, parseQuoteInput, QUOTE_STATUSES } from "../logic/quotes";
 import { hashSecret, type CommerceContext } from "./context";
 import { queueEmail } from "./email-service";
+import { renderEmail } from "./email-templates";
 import { fail, ok, type ServiceResult } from "./result";
 import { allowRequest, recordAudit, type Actor } from "./support";
 
@@ -55,22 +56,21 @@ async function queueQuoteEmails(ctx: CommerceContext, quote: QuoteRequest, baseU
   const t = createTranslator(isLocale(quote.language) ? quote.language : "en");
   await queueEmail(ctx, `quote-received:${quote.id}`, {
     to: quote.email,
-    subject: t("corporate.email.subject"),
-    text: [
-      t("corporate.email.greeting", { name: quote.contactName }),
-      "",
-      t("corporate.email.body", { company: quote.company }),
-      t("corporate.email.next"),
-      "",
-      t("corporate.email.summary"),
-      `${t("corporate.form.participants")}: ${quote.participants}`,
-      `${t("corporate.form.date")}: ${quote.preferredDate ?? t("corporate.form.flexible")}`,
-      `${t("corporate.form.activity")}: ${t(`corporate.activities.${quote.activity}`)}`,
-      `${t("corporate.form.formula")}: ${t(`corporate.formulas.${quote.formula}`)}`,
-      "",
-      t("corporate.email.signoff"),
-      "Hidden Antwerp",
-    ].join("\n"),
+    ...renderEmail({
+      subject: t("corporate.email.subject"),
+      greeting: t("corporate.email.greeting", { name: quote.contactName }),
+      paragraphs: [
+        `${t("corporate.email.body", { company: quote.company })}\n${t("corporate.email.next")}`,
+        [
+          t("corporate.email.summary"),
+          `${t("corporate.form.participants")}: ${quote.participants}`,
+          `${t("corporate.form.date")}: ${quote.preferredDate ?? t("corporate.form.flexible")}`,
+          `${t("corporate.form.activity")}: ${t(`corporate.activities.${quote.activity}`)}`,
+          `${t("corporate.form.formula")}: ${t(`corporate.formulas.${quote.formula}`)}`,
+        ].join("\n"),
+      ],
+      signoff: [t("corporate.email.signoff"), "Hidden Antwerp"],
+    }),
   });
   // The admins (English, like the admin area): what came in, and where to handle it.
   for (const admin of ctx.adminEmails) {
@@ -116,6 +116,8 @@ export async function changeQuoteStatus(ctx: CommerceContext, admin: Actor, id: 
   // Another admin changed it at the same moment: refused, nothing is overwritten.
   if (!(await ctx.store.transitionQuote(id, quote.status, entry))) return fail(409, "changed-meanwhile");
   await recordAudit(ctx, admin, "quote-status-changed", `quote:${id}`, { status: `${quote.status} → ${to}` });
+  // P8 (brief 7.1, "bevestiging van zakelijke boeking"): the company hears it's confirmed, in its language, once.
+  if (to === "ACCEPTED") await queueBookingConfirmation(ctx, quote);
   return ok({ ...quote, status: to, updatedAt: entry.at, history: [...quote.history, entry] });
 }
 
@@ -135,4 +137,25 @@ export async function updateCorporatePricing(ctx: CommerceContext, admin: Actor,
     pricesIncludeVat: pricing.pricesIncludeVat,
   });
   return ok(pricing);
+}
+
+async function queueBookingConfirmation(ctx: CommerceContext, quote: QuoteRequest): Promise<void> {
+  const t = createTranslator(isLocale(quote.language) ? quote.language : "en");
+  await queueEmail(ctx, `quote-accepted:${quote.id}`, {
+    to: quote.email,
+    ...renderEmail({
+      subject: t("corporate.email.accepted.subject"),
+      greeting: t("corporate.email.greeting", { name: quote.contactName }),
+      paragraphs: [
+        t("corporate.email.accepted.body", { company: quote.company }),
+        [
+          `${t("corporate.form.participants")}: ${quote.participants}`,
+          `${t("corporate.form.date")}: ${quote.preferredDate ?? t("corporate.form.flexible")}`,
+          `${t("corporate.form.activity")}: ${t(`corporate.activities.${quote.activity}`)}`,
+        ].join("\n"),
+        t("corporate.email.accepted.next"),
+      ],
+      signoff: [t("corporate.email.signoff"), "Hidden Antwerp"],
+    }),
+  });
 }

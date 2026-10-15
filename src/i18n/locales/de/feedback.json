@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "reviewTitle": "Deine Bewertung",
+    "unsubscribeTitle": "Abmelden"
+  },
+  "followUp": {
+    "subject": "Wie war {product}?",
+    "greeting": "Hallo,",
+    "thanks": "Danke, dass du Antwerpen mit uns entdeckt hast!",
+    "question": "Wie hat es dir gefallen? Deine Bewertung hilft anderen Besuchern und hilft uns, die Rundgänge zu verbessern. Es dauert nur eine Minute.",
+    "reward": "Als Dankeschön bekommst du {percent} Rabatt auf dein nächstes Abenteuer, für jede Bewertung, ob positiv oder kritisch.",
+    "button": "Bewertung abgeben",
+    "signoff": "Bis bald in Antwerpen,",
+    "why": "Du bekommst diese eine E-Mail, weil du sie beim Kauf deines Tickets am {date} angefordert hast. Für diese Bestellung schicken wir keine weiteren Folge-E-Mails.",
+    "unsubscribe": "Keine solchen E-Mails mehr an mich senden"
+  },
+  "rewardEmail": {
+    "subject": "Dein Dankeschön-Code für einen nächsten Rundgang",
+    "greeting": "Hallo,",
+    "thanks": "Danke für deine Bewertung!",
+    "code": "Dein persönlicher Code: {code}",
+    "terms": "{percent} Rabatt auf einen nächsten Kauf bei hidden-antwerp, gültig bis {date}. Der Code funktioniert einmal.",
+    "signoff": "Bis bald in Antwerpen,"
+  },
+  "review": {
+    "title": "Wie war dein Rundgang?",
+    "intro": "Erzähl anderen Besuchern, wie du ihn fandest. Nur wer ein Ticket hat, kann eine Bewertung abgeben, eine pro Ticket.",
+    "checking": "Dein Link wird geprüft…",
+    "invalid": "Dieser Bewertungslink ist nicht (mehr) gültig. Verwende den Link aus deiner E-Mail genau so, wie er ist.",
+    "done": "Mit diesem Ticket wurde bereits eine Bewertung abgegeben. Danke!",
+    "product": "Dein Rundgang: {product}",
+    "rating": "Deine Sterne",
+    "stars": {
+      "one": "{count} Stern",
+      "other": "{count} Sterne"
+    },
+    "text": "Deine Bewertung (optional)",
+    "textHint": "Höchstens {max} Zeichen. Bitte schreib keine Namen anderer Personen oder persönliche Daten.",
+    "name": "Dein Name, wie er angezeigt wird (optional)",
+    "nameHint": "Z. B. „Anna aus Gent“. Leer lassen, um anonym zu bleiben.",
+    "mayPublish": "Hidden Antwerp darf meine Bewertung (und den Namen oben) auf seiner Website zeigen.",
+    "rewardNote": "Als Dankeschön bekommst du einen Code für {percent} Rabatt auf deinen nächsten Rundgang, egal wie du bewertest. Bewertungen, für die es einen Code gab, werden als solche gekennzeichnet, wenn sie angezeigt werden.",
+    "moderation": "Wir lesen jede Bewertung, bevor sie erscheint; ihren Wortlaut ändern wir nicht.",
+    "submit": "Bewertung senden",
+    "sending": "Wird gesendet…",
+    "thanks": "Danke für deine Bewertung!",
+    "codeIntro": "Dein Code für {percent} Rabatt auf deinen nächsten Rundgang (auch per E-Mail verschickt):",
+    "codeValid": "Einmal gültig, bis {date}."
+  },
+  "unsubscribe": {
+    "title": "Abmelden",
+    "intro": "Du möchtest keine Folge-E-Mails von Hidden Antwerp mehr (Feedback-Fragen, Rabattcodes)? Drück auf den Button. E-Mails, die du für einen Kauf brauchst (Ticket, Beleg, Erstattung), kommen weiterhin an.",
+    "button": "Abmelden",
+    "busy": "Wird gespeichert…",
+    "done": "Erledigt: Du bekommst keine Folge-E-Mails mehr.",
+    "invalid": "Dieser Abmeldelink ist nicht gültig. Verwende den Link aus der E-Mail genau so, wie er ist."
+  },
+  "errors": {
+    "invalid-review-link": "Dieser Bewertungslink ist nicht (mehr) gültig.",
+    "already-reviewed": "Mit diesem Ticket wurde bereits eine Bewertung abgegeben.",
+    "invalid-rating": "Wähle eine Bewertung von 1 bis 5 Sternen.",
+    "invalid-review-text": "Deine Bewertung ist zu lang.",
+    "invalid-name": "Der Name ist zu lang.",
+    "invalid-unsubscribe-link": "Dieser Abmeldelink ist nicht gültig.",
+    "too-many-requests": "Zu viele Versuche. Bitte versuch es später noch einmal.",
+    "offline": "Keine Verbindung zum Server. Prüf deine Internetverbindung und versuch es noch einmal.",
+    "generic": "Etwas ist schiefgelaufen. Bitte versuch es noch einmal."
+  }
+}

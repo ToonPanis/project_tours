@@ -5,6 +5,7 @@ import { localeNames, isLocale } from "@/i18n/config";
 import { requireAdmin } from "@/features/commerce/server/admin-access";
 import { configurationStatus, getCommerceContext } from "@/features/commerce/server/context";
 import { buildDashboard } from "@/features/commerce/server/report-service";
+import { reviewSummary } from "@/features/commerce/server/review-service";
 
 const euros = (cents: number) => new Intl.NumberFormat("nl-BE", { style: "currency", currency: "EUR" }).format(cents / 100);
 const compactEuros = (cents: number) =>
@@ -18,7 +19,7 @@ const bucketLabel = (key: string) => (key.length === 7 ? key : key.slice(5).spli
 export default async function AdminHomePage({ searchParams }: PageProps<"/admin">) {
   const admin = await requireAdmin();
   const query = await searchParams;
-  const dashboard = await buildDashboard(getCommerceContext(), query);
+  const [dashboard, reviews] = await Promise.all([buildDashboard(getCommerceContext(), query), reviewSummary(getCommerceContext())]);
   const { report, range } = dashboard;
   const { totals } = report;
   const status = configurationStatus();
@@ -126,6 +127,11 @@ export default async function AdminHomePage({ searchParams }: PageProps<"/admin"
         <StatTile label="New / returning" value={`${report.customers.new} / ${report.customers.returning}`} note="returning = bought before this period" />
         <StatTile label="Hidden Pubs groups" value={String(dashboard.groupsFromTickets)} note="games from tickets bought in this period" />
         <StatTile label="Open quote requests" value={String(dashboard.openQuotes)} note="new, contacted or quoted" />
+        <StatTile
+          label="Average rating"
+          value={reviews.average === null ? "–" : `${reviews.average.toFixed(1)} / 5`}
+          note={`${reviews.approved} approved reviews (all time) · ${reviews.pending} to moderate`}
+        />
       </div>
 
       {dashboard.documentsAwaitingProvider > 0 && (
@@ -141,7 +147,6 @@ export default async function AdminHomePage({ searchParams }: PageProps<"/admin"
         <h2 className="font-display text-2xl font-semibold">Not measured yet</h2>
         <ul className="list-inside list-disc text-sm text-parchment/80">
           <li>Completed walks and started vs completed: walks only save progress on the phone; needs decision B9 (a privacy-safe &quot;walk completed&quot; signal).</li>
-          <li>Average rating: reviews come in phase P8.</li>
           <li>Conversion from visit to purchase for the whole site: no analytics (by design); needs a privacy decision. Partner links do have it (visitors without personal data), in each partner&apos;s portal.</li>
         </ul>
       </div>

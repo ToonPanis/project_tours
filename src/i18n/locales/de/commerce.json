@@ -10,7 +10,8 @@
     "discountCode": "Rabattcode (optional)",
     "button": "Sicher bezahlen",
     "busy": "Zahlungsseite wird geöffnet…",
-    "note": "Du bezahlst auf der sicheren Zahlungsseite von Stripe. Danach bekommst du per E-Mail einen Ticket-Link: Alle in deiner Gruppe öffnen ihn auf ihrem eigenen Handy."
+    "note": "Du bezahlst auf der sicheren Zahlungsseite von Stripe. Danach bekommst du per E-Mail einen Ticket-Link: Alle in deiner Gruppe öffnen ihn auf ihrem eigenen Handy.",
+    "followUpConsent": "Ich möchte nach dem Rundgang eine einzige E-Mail erhalten: eine kurze Feedback-Frage und einen Rabattcode für einen nächsten Rundgang (optional, du kannst dich jederzeit abmelden)."
   },
   "errors": {
     "sales-closed": "Tickets können noch nicht online gekauft werden.",
@@ -74,13 +75,20 @@
       "invoice": "Deine Rechnung folgt separat.",
       "linkIntro": "Dein Ticket-Link. Alle in deiner Gruppe öffnen ihn auf ihrem eigenen Handy (das Ticket gilt für {seats}):",
       "validUntil": "Das Ticket ist gültig bis {date}.",
-      "signoff": "Viel Spaß in Antwerpen!"
+      "signoff": "Viel Spaß in Antwerpen!",
+      "group": "Ihr seid mehrere? Alle öffnen denselben Link auf ihrem eigenen Handy. Bei Hidden Pubs öffnet ihn der Organisator, erstellt das Spiel und lädt die anderen aus dem Warteraum des Spiels ein (Link, QR-Code oder WhatsApp).",
+      "button": "Ticket öffnen"
     },
     "refund": {
       "subject": "Deine Erstattung von Hidden Antwerp",
       "body": "Wir haben dir {amount} für deine Bestellung von {product} erstattet.",
       "ticketRevoked": "Dein Ticket-Link funktioniert nicht mehr.",
       "bankTime": "Je nach Bank kann es ein paar Tage dauern, bis du die Erstattung siehst."
+    },
+    "invoice": {
+      "subject": "Deine Rechnung von Hidden Antwerp",
+      "body": "Deine Rechnung {number} für deine Bestellung von {product} ist fertig.",
+      "button": "Rechnung ansehen"
     }
   },
   "groups": {

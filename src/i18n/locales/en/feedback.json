@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "reviewTitle": "Your review",
+    "unsubscribeTitle": "Unsubscribe"
+  },
+  "followUp": {
+    "subject": "How was {product}?",
+    "greeting": "Hello,",
+    "thanks": "Thank you for discovering Antwerp with us!",
+    "question": "How was your experience? Your review helps other visitors, and helps us make the walks better. It takes a minute.",
+    "reward": "As a thank-you you get {percent} off your next adventure, for any review, positive or critical.",
+    "button": "Leave a review",
+    "signoff": "See you in Antwerp,",
+    "why": "You get this one email because you asked for it when you bought your ticket on {date}. We won't send more follow-up emails for this order.",
+    "unsubscribe": "Don't send me emails like this anymore"
+  },
+  "rewardEmail": {
+    "subject": "Your thank-you code for a next walk",
+    "greeting": "Hello,",
+    "thanks": "Thank you for your review!",
+    "code": "Your personal code: {code}",
+    "terms": "{percent} off one next purchase on hidden-antwerp, valid until {date}. The code works once.",
+    "signoff": "See you soon in Antwerp,"
+  },
+  "review": {
+    "title": "How was your walk?",
+    "intro": "Tell other visitors what you thought. Only people with a ticket can leave a review, one per ticket.",
+    "checking": "Checking your link…",
+    "invalid": "This review link is not valid (anymore). Use the link from your email exactly as it is.",
+    "done": "A review was already left with this ticket. Thank you!",
+    "product": "Your walk: {product}",
+    "rating": "Your rating",
+    "stars": {
+      "one": "{count} star",
+      "other": "{count} stars"
+    },
+    "text": "Your review (optional)",
+    "textHint": "At most {max} characters. Please don't write names of other people or personal details.",
+    "name": "Your name as shown (optional)",
+    "nameHint": "E.g. \"Anna from Ghent\". Leave empty to stay anonymous.",
+    "mayPublish": "Hidden Antwerp may show my review (and the name above) on its website.",
+    "rewardNote": "As a thank-you you get a code for {percent} off your next walk, whatever your rating. Reviews that earned a code are marked as such if they are shown.",
+    "moderation": "We read every review before it appears; we don't change its words.",
+    "submit": "Send my review",
+    "sending": "Sending…",
+    "thanks": "Thank you for your review!",
+    "codeIntro": "Your code for {percent} off your next walk (also sent by email):",
+    "codeValid": "Valid once, until {date}."
+  },
+  "unsubscribe": {
+    "title": "Unsubscribe",
+    "intro": "Don't want follow-up emails from Hidden Antwerp anymore (feedback questions, discount codes)? Press the button. Emails you need for a purchase (ticket, receipt, refund) still arrive.",
+    "button": "Unsubscribe",
+    "busy": "Saving…",
+    "done": "Done: you won't receive follow-up emails anymore.",
+    "invalid": "This unsubscribe link is not valid. Use the link from the email exactly as it is."
+  },
+  "errors": {
+    "invalid-review-link": "This review link is not valid (anymore).",
+    "already-reviewed": "A review was already left with this ticket.",
+    "invalid-rating": "Choose a rating from 1 to 5 stars.",
+    "invalid-review-text": "Your review is too long.",
+    "invalid-name": "The name is too long.",
+    "invalid-unsubscribe-link": "This unsubscribe link is not valid.",
+    "too-many-requests": "Too many attempts. Please try again later.",
+    "offline": "No connection to the server. Check your internet and try again.",
+    "generic": "Something went wrong. Please try again."
+  }
+}
