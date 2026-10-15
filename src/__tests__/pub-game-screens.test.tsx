@@ -227,6 +227,26 @@ describe("the game screen", () => {
     expect(bodyOf(fetchMock, 0)).toMatchObject({ action: { type: "ARRIVE" } });
   });
 
+  test("arriving without network says so, and \"I'm here\" tries again", async () => {
+    const playing = started(lobbyState(true));
+    const arrived = apply(playing, "b", { type: "ARRIVE" });
+    window.localStorage.setItem(`hidden-antwerp:pub-intro:${CODE}`, "seen");
+    const fetchMock = fakeFetch({ body: { version: 3, view: viewOf(arrived, "b"), events: [] } });
+    // The first tap gets no answer at all (sent twice: the retry fails too).
+    fetchMock.mockRejectedValueOnce(new TypeError("Failed to fetch")).mockRejectedValueOnce(new TypeError("Failed to fetch"));
+    render(<PubGame texts={pubGameTexts.en} code={CODE} invite={null} initialView={viewOf(playing, "b")} initialVersion={2} />);
+
+    fireEvent.click(screen.getByRole("button", { name: t("pubgame.beery.letsGo") }));
+    fireEvent.click(await screen.findByRole("button", { name: t("gps.continueWithoutGps") }, { timeout: 5000 }));
+    fireEvent.click(screen.getByRole("button", { name: t("gps.arrived") }));
+    // Twice: the connection banner, and the message right above the map.
+    await waitFor(() => expect(screen.getAllByText(t("pubgame.connection.offline"))).toHaveLength(2));
+
+    fireEvent.click(screen.getByRole("button", { name: t("gps.arrived") }));
+    const firstCafe = cafeName(pubGameDefinition.route[0].cafeIds[0]);
+    expect(await screen.findByRole("heading", { name: t("pubgame.drinks.welcome", { cafe: firstCafe }) })).toBeTruthy();
+  });
+
   test("the rules can be skipped and opened again from the menu", () => {
     render(<PubGame texts={pubGameTexts.en} code={CODE} invite={INVITE} initialView={viewOf(started(lobbyState(true)), "b")} initialVersion={2} />);
     fireEvent.click(screen.getByRole("button", { name: t("pubgame.beery.intro.skip") }));

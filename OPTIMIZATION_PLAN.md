@@ -126,6 +126,14 @@
 | Batch 1 (Next patch) | Framework regressions | The full CI suite + e2e |
 | Batch 2 (timeouts) | A timeout that is too short on slow uploads | Uploads don't use `request()`; 8 s applies only to JSON calls |
 
+## Progress
+
+| Batch | Status | Notes |
+|---|---|---|
+| 0 | ✅ done (`c6ec105`) | `.tts/`/`.cache/` ignored by git, tsc and ESLint (lint now ≈ 27 s); `pub-game-poll-hook.test.tsx` pins down polling, versions and retries; `npm run test:db` on `HiddenAntwerpGeneral_test`: 19 passed (the MongoDB store works against real Atlas; the service round trip create → join → start → answer took 2.0 s from this laptop vs 24 ms in memory). The store test for the poll path moves to batch 3, which needs it. |
+| 1 | ✅ done (`de8e50b`) | next + eslint-config-next 16.3.8, sharp 0.35.5, source-map-js 1.2.2. `npm audit --omit=dev`: 0 vulnerabilities. 5 dev-only highs remain (braces via eslint-config-next; npm's only fix is a downgrade to v14, not taken). All checks + 28 e2e green. |
+| 2 | see commit | C1 request timeout (8 s), B3 same-id retry on 5xx, C2 "No bonus" waits for uploads, C3 reveal retry, C4 failed ARRIVE shown, C5 popup-only queue with stable ids, G1 memoised café destination, C8: polling stops for a gone game, `busy` counter, two live regions always mounted, preview URL created on file choice. Not done from C8: `ClaimPlayerLink` network retry (needs a new text), the FunFact loading status, the settings context memo (no measurable effect). |
+
 ## Baseline: checks on the unchanged code
 
 typecheck ✅ · lint ✅ · i18n:check ✅ · 985 unit tests + coverage thresholds ✅ · build ✅ · 28 browser tests ✅ · `npm audit --omit=dev` ❌ 3 high (S1) · `test:db` not run (needs your OK).

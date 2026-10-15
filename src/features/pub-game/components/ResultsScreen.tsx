@@ -75,11 +75,12 @@ export function ResultsScreen({ view }: { view: PlayerView }) {
         <p>{t("pubgame.results.tradition")}</p>
       </Beery>
 
-      {pending > 0 && (
-        <p role="status" className="rounded-sm border border-gold/50 bg-ink/40 p-3 text-sm">
-          {t.plural("pubgame.results.pending", pending)}
-        </p>
-      )}
+      {/* Always mounted: the message is announced when it appears or changes. */}
+      <div role="status">
+        {pending > 0 && (
+          <p className="rounded-sm border border-gold/50 bg-ink/40 p-3 text-sm">{t.plural("pubgame.results.pending", pending)}</p>
+        )}
+      </div>
 
       <Leaderboard view={view} />
 

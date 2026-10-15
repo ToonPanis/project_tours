@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { cafeDestination, walkBetween } from "@/data/walks/hidden-pubs/game/navigation";
 import { NavigationScreen } from "@/features/navigation/components/NavigationScreen";
 import type { PlayerView } from "../logic/player-view";
@@ -20,11 +21,13 @@ interface CafeNavigationProps {
 export default function CafeNavigation({ view, gpsEnabled, onGpsEnabled, onArrive }: CafeNavigationProps) {
   const { route, cafeIndex } = view.team;
   const cafeId = route[cafeIndex];
+  // The same object on every poll: a new one would re-add the map marker (and reset the camera without GPS).
+  const destination = useMemo(() => cafeDestination(cafeId, cafeIndex + 1), [cafeId, cafeIndex]);
   return (
     <NavigationScreen
       // A new café starts a fresh navigation (clean GPS tracking).
       key={cafeId}
-      destination={cafeDestination(cafeId, cafeIndex + 1)}
+      destination={destination}
       route={walkBetween(route[cafeIndex - 1], cafeId)}
       gpsAlreadyEnabled={gpsEnabled}
       onGpsEnabled={onGpsEnabled}

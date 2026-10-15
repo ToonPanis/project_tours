@@ -10,21 +10,45 @@ import type { ActionResult, CafeReveal, GameUpdate } from "../logic/api-types";
 
 export type ApiResult<T> = { ok: true; data: T } | { ok: false; status: number; error: string };
 
+/**
+ * How long one request may take. On a phone that switches between café wifi
+ * and 4G a request can hang for a minute or more without failing; after this
+ * it counts as "offline", so polling goes on and buttons work again. (Uploads
+ * don't go through here: they may take longer.)
+ */
+export const REQUEST_TIMEOUT_MS = 8_000;
+
 async function request<T>(url: string, init?: RequestInit): Promise<ApiResult<T>> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
     const response = await fetch(url, {
       cache: "no-store",
       ...init,
+      signal: controller.signal,
       headers: init?.body ? { "content-type": "application/json" } : undefined,
     });
-    const body = (await response.json().catch(() => ({}))) as Record<string, unknown>;
+    // Read the whole body before the timer stops: a timeout halfway through is "offline", not an empty answer.
+    const body = parseJson(await response.text());
     if (!response.ok) {
       return { ok: false, status: response.status, error: typeof body.error === "string" ? body.error : "unknown" };
     }
     return { ok: true, data: body as T };
   } catch {
-    // No network (a cellar bar, a tunnel…): status 0.
+    // No network (a cellar bar, a tunnel…) or no answer in time: status 0.
     return { ok: false, status: 0, error: "offline" };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/** The answer as an object; anything that isn't JSON (a proxy's error page) becomes {}. */
+function parseJson(text: string): Record<string, unknown> {
+  try {
+    const value: unknown = JSON.parse(text);
+    return typeof value === "object" && value !== null ? (value as Record<string, unknown>) : {};
+  } catch {
+    return {};
   }
 }
 

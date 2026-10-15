@@ -56,7 +56,8 @@ export function CardStep({ game, onRoundSeen }: CardStepProps) {
       title={t("pubgame.cards.title")}
       screenId={`pub-game-cards-${team.route[team.cafeIndex]}`}
     >
-      {current && <DrawnCard view={view} card={current} />}
+      {/* Always mounted, so the first card is announced too (not only later ones). */}
+      <div aria-live="polite">{current && <DrawnCard view={view} card={current} />}</div>
 
       {pending && canAct && <FollowUp view={view} card={pending} busy={busy} run={run} />}
 
@@ -127,7 +128,7 @@ function DrawnCard({ view, card }: { view: PlayerView; card: CurrentCard }) {
   const t = useT();
   const { rank } = parseCard(card.cardId);
   return (
-    <section className="flex flex-col items-center gap-3 text-center" aria-live="polite">
+    <section className="flex flex-col items-center gap-3 text-center">
       <p className="text-sm uppercase tracking-wider text-gold">{t("pubgame.cards.drew", { name: playerName(view, card.playerId) })}</p>
       {/* Keyed by card: a new card flips in again. */}
       <PlayingCard key={card.cardId} cardId={card.cardId} />

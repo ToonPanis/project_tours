@@ -1,11 +1,13 @@
 import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { pubGameDefinition } from "@/data/walks/hidden-pubs/game/definition";
+import { REQUEST_TIMEOUT_MS } from "@/features/pub-game/client/api";
+import { REVEAL_RETRY_MS, useCafeReveal } from "@/features/pub-game/client/useCafeReveal";
 import { POLL_INTERVAL_MS, usePubGame } from "@/features/pub-game/client/usePubGame";
 import { applyPubGameAction } from "@/features/pub-game/logic/apply-action";
 import { createPubGame } from "@/features/pub-game/logic/create-game";
 import { toPlayerView, type PlayerView } from "@/features/pub-game/logic/player-view";
-import type { PubGameState } from "@/types/pub-game";
+import type { PubGameEvent, PubGameState } from "@/types/pub-game";
 
 /**
  * usePubGame on its own: polling, versions, events and retries. The screen
@@ -30,6 +32,11 @@ function lobby(withBea: boolean): PubGameState {
   return joined.state;
 }
 
+/** Two events that show a popup (see logic/popups.ts), and one that doesn't. */
+const BUDDIES: PubGameEvent = { type: "buddies-linked", playerIds: ["h", "b"], endedPairs: [] };
+const TWO_SIPS: PubGameEvent = { type: "drink", teamId: "t1", sips: [{ playerId: "h", sips: 2, because: "card" }] };
+const JOINED: PubGameEvent = { type: "player-joined", playerId: "b" };
+
 const viewOf = (state: PubGameState): PlayerView => toPlayerView(pubGameDefinition, state, "h");
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status });
 
@@ -40,12 +47,16 @@ interface OpenRequest {
   fail: () => Promise<void>;
 }
 
-/** A fetch whose requests stay open until the test answers (or fails) each one. */
+/**
+ * A fetch whose requests stay open until the test answers (or fails) each one.
+ * Like a browser, it gives up when the request's signal aborts (the timeout).
+ */
 function controlledFetch() {
   const requests: OpenRequest[] = [];
   const mock = vi.fn<(url: string, init?: RequestInit) => Promise<Response>>(
     (url, init) =>
       new Promise<Response>((resolve, reject) => {
+        init?.signal?.addEventListener("abort", () => reject(new DOMException("Aborted", "AbortError")));
         requests.push({
           url,
           init,
@@ -112,6 +123,23 @@ describe("usePubGame polling", () => {
     expect(fetch.mock).toHaveBeenCalledTimes(2);
   });
 
+  test("a poll that hangs gives up after the timeout: offline, and polling goes on", async () => {
+    const fetch = controlledFetch();
+    const { result } = renderHook(() => usePubGame(CODE, viewOf(lobby(false)), 0));
+
+    await tick();
+    expect(fetch.mock).toHaveBeenCalledTimes(1);
+    // No answer at all: until the timeout the phone waits (one request at a time)…
+    await act(async () => vi.advanceTimersByTimeAsync(REQUEST_TIMEOUT_MS - 1));
+    expect(fetch.mock).toHaveBeenCalledTimes(1);
+    expect(result.current.connection).toBe("online");
+    // …then the request is given up, the banner says offline, and the next poll leaves.
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+    expect(result.current.connection).toBe("offline");
+    await tick();
+    expect(fetch.mock).toHaveBeenCalledTimes(2);
+  });
+
   test("a late, older answer never replaces a newer view", async () => {
     const fetch = controlledFetch();
     const { result } = renderHook(() => usePubGame(CODE, viewOf(lobby(false)), 0));
@@ -136,30 +164,65 @@ describe("usePubGame polling", () => {
     expect(result.current.view.players).toHaveLength(2);
   });
 
-  test("each event becomes a popup once, even when a tap and a poll both bring it", async () => {
+  test("each popup shows once, even when a tap and a poll both bring its event", async () => {
     const fetch = controlledFetch();
     const { result } = renderHook(() => usePubGame(CODE, viewOf(lobby(false)), 0));
-    const joined = { version: 1, event: { type: "player-joined" as const, playerId: "b" } };
+    const buddies = { version: 1, event: BUDDIES };
 
     const pending = tap(result);
-    await fetch.requests[0].answer(json({ version: 1, view: viewOf(lobby(true)), events: [joined] }));
+    await fetch.requests[0].answer(json({ version: 1, view: viewOf(lobby(true)), events: [buddies] }));
     await act(async () => {
       await pending;
     });
     await tick();
-    await fetch.requests[1].answer(json({ changed: true, version: 2, view: viewOf(lobby(true)), events: [joined] }));
+    await fetch.requests[1].answer(json({ changed: true, version: 2, view: viewOf(lobby(true)), events: [buddies] }));
 
-    expect(result.current.events).toEqual([joined.event]);
+    expect(result.current.popups.map((popup) => popup.event)).toEqual([BUDDIES]);
   });
 
-  test("a game that no longer exists is reported as gone", async () => {
+  test("only popup events are queued; each popup has its own id, also two from one action", async () => {
+    const fetch = controlledFetch();
+    const { result } = renderHook(() => usePubGame(CODE, viewOf(lobby(false)), 0));
+
+    await tick();
+    await fetch.requests[0].answer(
+      json({
+        changed: true,
+        version: 2,
+        view: viewOf(lobby(true)),
+        // Version 2 created two events (one action can do that).
+        events: [
+          { version: 1, event: JOINED },
+          { version: 2, event: BUDDIES },
+          { version: 2, event: TWO_SIPS },
+        ],
+      }),
+    );
+
+    const { popups } = result.current;
+    expect(popups.map((popup) => popup.event)).toEqual([BUDDIES, TWO_SIPS]);
+    expect(new Set(popups.map((popup) => popup.id)).size).toBe(2);
+
+    // A later poll with only non-popup events leaves the open popup alone (no flicker).
+    await tick();
+    await fetch.requests[1].answer(json({ changed: true, version: 3, view: viewOf(lobby(true)), events: [{ version: 3, event: JOINED }] }));
+    expect(result.current.popups).toBe(popups);
+
+    act(() => result.current.dismissPopup());
+    expect(result.current.popups.map((popup) => popup.event)).toEqual([TWO_SIPS]);
+  });
+
+  test("a game that no longer exists is reported as gone, and the phone stops asking", async () => {
     const fetch = controlledFetch();
     const { result } = renderHook(() => usePubGame(CODE, viewOf(lobby(false)), 0));
 
     await tick();
     await fetch.requests[0].answer(json({ error: "unknown-game" }, 404));
-
     expect(result.current.connection).toBe("gone");
+
+    await tick();
+    await tick();
+    expect(fetch.mock).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -180,6 +243,32 @@ describe("usePubGame actions", () => {
     expect(result.current.busy).toBe(false);
   });
 
+  test("a server error (perhaps after saving) is retried once with the same action id", async () => {
+    const fetch = controlledFetch();
+    const { result } = renderHook(() => usePubGame(CODE, viewOf(lobby(false)), 0));
+
+    const pending = tap(result);
+    await fetch.requests[0].answer(json({ error: "busy" }, 503));
+    expect(fetch.requests).toHaveLength(2);
+    expect(bodyOf(fetch.requests[1]).actionId).toBe(bodyOf(fetch.requests[0]).actionId);
+
+    await fetch.requests[1].answer(json({ version: 1, view: viewOf(lobby(false)), events: [] }));
+    expect(await pending).toBeNull();
+    // A server error is not a lost connection.
+    expect(result.current.connection).toBe("online");
+  });
+
+  test("a refusal (4xx) is not retried", async () => {
+    const fetch = controlledFetch();
+    const { result } = renderHook(() => usePubGame(CODE, viewOf(lobby(false)), 0));
+
+    const pending = tap(result);
+    await fetch.requests[0].answer(json({ error: "not-host" }, 403));
+
+    expect(await pending).toBe("not-host");
+    expect(fetch.requests).toHaveLength(1);
+  });
+
   test("two lost connections: the tap reports offline", async () => {
     const fetch = controlledFetch();
     const { result } = renderHook(() => usePubGame(CODE, viewOf(lobby(false)), 0));
@@ -190,6 +279,25 @@ describe("usePubGame actions", () => {
 
     expect(await pending).toBe("offline");
     expect(result.current.connection).toBe("offline");
+    expect(result.current.busy).toBe(false);
+  });
+
+  test("busy stays on until every overlapping tap has its answer", async () => {
+    const fetch = controlledFetch();
+    const { result } = renderHook(() => usePubGame(CODE, viewOf(lobby(false)), 0));
+
+    const first = tap(result);
+    const second = tap(result);
+    await fetch.requests[0].answer(json({ version: 1, view: viewOf(lobby(false)), events: [] }));
+    await act(async () => {
+      await first;
+    });
+    expect(result.current.busy).toBe(true);
+
+    await fetch.requests[1].answer(json({ version: 2, view: viewOf(lobby(false)), events: [] }));
+    await act(async () => {
+      await second;
+    });
     expect(result.current.busy).toBe(false);
   });
 
@@ -209,5 +317,52 @@ describe("usePubGame actions", () => {
     });
 
     expect(bodyOf(fetch.requests[0]).actionId).not.toBe(bodyOf(fetch.requests[1]).actionId);
+  });
+
+  test("uploading is on while an upload runs, and off again when it fails", async () => {
+    controlledFetch();
+    const { result } = renderHook(() => usePubGame(CODE, viewOf(lobby(false)), 0));
+    let fail: () => void = () => {};
+
+    let upload: Promise<unknown> = Promise.resolve();
+    act(() => {
+      upload = result.current.whileUploading(
+        () => new Promise<void>((_, reject) => (fail = () => reject(new Error("upload lost")))),
+      );
+    });
+    expect(result.current.uploading).toBe(true);
+
+    await act(async () => {
+      fail();
+      await upload.catch(() => {});
+    });
+    expect(result.current.uploading).toBe(false);
+  });
+});
+
+describe("useCafeReveal", () => {
+  test("a failed fetch is tried again a little later", async () => {
+    const fetch = controlledFetch();
+    const { result } = renderHook(() => useCafeReveal(CODE, "cafe-1", "fun-fact"));
+
+    await fetch.requests[0].fail();
+    expect(result.current).toBeNull();
+    await act(async () => vi.advanceTimersByTimeAsync(REVEAL_RETRY_MS - 1));
+    expect(fetch.requests).toHaveLength(1);
+
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+    expect(fetch.requests).toHaveLength(2);
+    const reveal = { explanations: {}, funFact: null };
+    await fetch.requests[1].answer(json(reveal));
+    expect(result.current).toEqual(reveal);
+  });
+
+  test("a refusal is not retried", async () => {
+    const fetch = controlledFetch();
+    renderHook(() => useCafeReveal(CODE, "cafe-1", "fun-fact"));
+
+    await fetch.requests[0].answer(json({ error: "not-joined" }, 401));
+    await act(async () => vi.advanceTimersByTimeAsync(REVEAL_RETRY_MS * 2));
+    expect(fetch.requests).toHaveLength(1);
   });
 });

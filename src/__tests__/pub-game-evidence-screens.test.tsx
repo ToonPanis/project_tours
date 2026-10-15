@@ -132,6 +132,33 @@ describe("sending evidence", () => {
     expect(sent(fetchMock, "/media?")).toEqual([]);
   });
 
+  test("'No bonus' waits while a photo is on its way (moving on would lose it)", async () => {
+    let finishUpload: () => void = () => {};
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) => {
+        if (url.includes("/media?")) {
+          await new Promise<void>((resolve) => (finishUpload = resolve));
+          return new Response(JSON.stringify({ mediaId: MEDIA_ID }), { status: 200 });
+        }
+        // The SUBMIT_EVIDENCE answer doesn't matter here (a refusal keeps the screen as it is).
+        if (url.includes("/actions")) return new Response(JSON.stringify({ error: "task-done" }), { status: 409 });
+        return new Response(JSON.stringify({ changed: false, version: 10 }), { status: 200 });
+      }),
+    );
+    show(atDeKatBonus(), "b");
+    const noBonus = screen.getByRole("button", { name: t("pubgame.bonus.skip") }) as HTMLButtonElement;
+    expect(noBonus.disabled).toBe(false);
+
+    const photo = new File([new Uint8Array([1, 2, 3])], "tap.jpg", { type: "image/jpeg" });
+    fireEvent.change(screen.getByLabelText(t("pubgame.evidence.takePhoto")), { target: { files: [photo] } });
+    fireEvent.click(screen.getByRole("button", { name: t("pubgame.evidence.send") }));
+    await waitFor(() => expect(noBonus.disabled).toBe(true));
+
+    finishUpload();
+    await waitFor(() => expect(noBonus.disabled).toBe(false));
+  });
+
   test("approved shows the points; rejected shows the reason and allows a new photo", () => {
     let state = atDeKatBonus();
     state = apply(state, "b", { type: "SUBMIT_EVIDENCE", submissionId: "s1", taskId: "pubs-de-kat-tap", mediaId: MEDIA_ID, participantIds: ["b"], at: AT });
