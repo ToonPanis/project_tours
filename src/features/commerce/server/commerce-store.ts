@@ -1,4 +1,16 @@
-import type { AuditEntry, CommerceUser, OutboxEmail, Product, ProductPrice } from "@/types/commerce";
+import type {
+  AuditEntry,
+  BillingDocument,
+  CommerceUser,
+  Discount,
+  Order,
+  OrderStatus,
+  OutboxEmail,
+  Product,
+  ProductPrice,
+  TaxSettings,
+  TicketGrant,
+} from "@/types/commerce";
 
 /**
  * Where the commercial data is saved. Two implementations, like Hidden Pubs'
@@ -63,6 +75,66 @@ export interface CommerceStore {
    */
   claimEmail(id: string, attempts: number, now: Date, leaseUntil: Date): Promise<boolean>;
   updateEmail(id: string, changes: Partial<Omit<OutboxEmail, "id">>): Promise<void>;
+
+  // ── Tax settings (P2, versioned) ─────────────────────────────────────
+  /** The newest saved version, or null when nothing was ever saved. */
+  getTaxSettings(): Promise<TaxSettings | null>;
+  /** Saves a new version. False when that version number already exists (someone saved at the same time). */
+  insertTaxSettings(settings: TaxSettings): Promise<boolean>;
+
+  // ── Orders ───────────────────────────────────────────────────────────
+  insertOrder(order: Order): Promise<void>;
+  getOrder(id: string): Promise<Order | null>;
+  findOrderByPaymentIntent(paymentIntentId: string): Promise<Order | null>;
+  /**
+   * Changes an order only while its status is one of `from` (atomic). This is
+   * how an order becomes "paid" exactly once, however many webhooks arrive.
+   */
+  transitionOrder(id: string, from: OrderStatus[], changes: Partial<Omit<Order, "id">>): Promise<boolean>;
+  updateOrder(id: string, changes: Partial<Omit<Order, "id">>): Promise<void>;
+  /** Newest first, optionally only one status. */
+  listOrders(query: { skip: number; limit: number; status?: OrderStatus }): Promise<{ orders: Order[]; total: number }>;
+
+  // ── Stripe events (webhook idempotency) ──────────────────────────────
+  /** "new" the first time an event id is seen, "duplicate" after that. */
+  recordStripeEvent(event: { id: string; type: string; receivedAt: Date; expiresAt: Date }): Promise<"new" | "duplicate">;
+  /** Whether an earlier delivery of this event was processed to the end. */
+  isStripeEventDone(id: string): Promise<boolean>;
+  markStripeEventDone(id: string, at: Date): Promise<void>;
+
+  // ── Tickets ──────────────────────────────────────────────────────────
+  /** One ticket per order: inserted only if the order has none yet. Returns the order's ticket. */
+  insertGrantIfMissing(grant: TicketGrant): Promise<TicketGrant>;
+  getGrant(id: string): Promise<TicketGrant | null>;
+  getGrantByOrder(orderId: string): Promise<TicketGrant | null>;
+  updateGrant(id: string, changes: Partial<Omit<TicketGrant, "id">>): Promise<void>;
+  /** Takes one seat for a new phone (atomic: never more phones than seats). False when the ticket is full or not active. */
+  claimTicketSeat(grantId: string): Promise<boolean>;
+  saveTicketDevice(device: { tokenHash: string; grantId: string; walkSlug: string; createdAt: Date; expiresAt: Date }): Promise<void>;
+  /** The phone's ticket, or null when unknown or expired. */
+  findTicketDevice(tokenHash: string, now: Date): Promise<{ grantId: string; walkSlug: string } | null>;
+  /** Forgets every phone of a ticket (admin "reset phones"). */
+  deleteTicketDevices(grantId: string): Promise<void>;
+
+  // ── Discounts ────────────────────────────────────────────────────────
+  /** False when the code already exists. */
+  insertDiscount(discount: Discount): Promise<boolean>;
+  getDiscount(id: string): Promise<Discount | null>;
+  getDiscountByCode(code: string): Promise<Discount | null>;
+  listDiscounts(): Promise<Discount[]>;
+  updateDiscount(id: string, changes: Partial<Omit<Discount, "id" | "code" | "redemptions">>): Promise<void>;
+  /** Counts one use, only while the code is active and not used up (atomic). */
+  reserveDiscount(id: string): Promise<boolean>;
+  /** Gives a use back (the payment page expired or failed). */
+  releaseDiscount(id: string): Promise<void>;
+
+  // ── Receipts, invoices, credit notes ─────────────────────────────────
+  /** The next number of a series, e.g. "receipt-2026" → 1, 2, 3… (atomic). */
+  nextNumber(series: string): Promise<number>;
+  /** Inserts the document unless one with its id exists. Returns the stored document. */
+  insertDocumentIfMissing(document: BillingDocument): Promise<BillingDocument>;
+  getDocument(id: string): Promise<BillingDocument | null>;
+  listDocumentsForOrder(orderId: string): Promise<BillingDocument[]>;
 }
 
 /**

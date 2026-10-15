@@ -1,0 +1,85 @@
+{
+  "persons": { "one": "{count} persoon", "other": "{count} personen" },
+  "buy": {
+    "title": "Tickets",
+    "perPerson": "per persoon, btw inbegrepen",
+    "persons": "Aantal personen",
+    "decrease": "Eén persoon minder",
+    "increase": "Eén persoon meer",
+    "total": "Totaal",
+    "discountCode": "Kortingscode (optioneel)",
+    "button": "Veilig betalen",
+    "busy": "Betaalpagina wordt geopend…",
+    "note": "Je betaalt op de beveiligde betaalpagina van Stripe. Daarna krijg je een ticketlink per e-mail: iedereen in je groep opent die op zijn eigen telefoon."
+  },
+  "errors": {
+    "sales-closed": "Tickets kunnen nog niet online gekocht worden.",
+    "unknown-product": "Deze wandeling kan op dit moment niet online gekocht worden.",
+    "invalid-quantity": "Kies tussen 1 en 30 personen. Neem voor grotere groepen contact met ons op.",
+    "total-too-low": "Deze bestelling is te klein om online te betalen.",
+    "unknown-discount": "Deze kortingscode bestaat niet.",
+    "discount-not-valid-yet": "Deze kortingscode kan nog niet gebruikt worden.",
+    "discount-expired": "Deze kortingscode is verlopen.",
+    "discount-not-for-product": "Deze kortingscode is niet geldig voor deze wandeling.",
+    "discount-used-up": "Deze kortingscode is opgebruikt.",
+    "payments-unavailable": "Betalen is tijdelijk niet mogelijk. Er werd niets aangerekend. Probeer het over een paar minuten opnieuw.",
+    "invalid-ticket": "Deze ticketlink is niet geldig. Controleer of je de volledige link uit de e-mail hebt gekopieerd.",
+    "ticket-revoked": "Dit ticket is niet meer geldig (het werd terugbetaald of ingetrokken).",
+    "ticket-expired": "Dit ticket is verlopen.",
+    "ticket-full": "Dit ticket is al geopend op evenveel telefoons als het personen telt.",
+    "offline": "Geen verbinding. Controleer je internet en probeer opnieuw.",
+    "generic": "Er ging iets mis. Probeer het opnieuw."
+  },
+  "success": {
+    "title": "Bedankt!",
+    "paid": "Je betaling is ontvangen.",
+    "pending": "We wachten op de bevestiging van de betaling. Deze pagina werkt zichzelf bij.",
+    "failed": "De betaling is niet gelukt. Er werd niets aangerekend.",
+    "canceled": "Deze bestelling werd geannuleerd. Er werd niets aangerekend.",
+    "unknown": "We vinden deze bestelling niet op dit toestel. Je ticketlink staat in de e-mail die we je stuurden.",
+    "openTicket": "Open het ticket op deze telefoon",
+    "emailSent": "We hebben je ticketlink ook gemaild naar {email}.",
+    "share": "Deel de link met je groep: iedereen opent hem op zijn eigen telefoon. Het ticket werkt voor {seats}.",
+    "receipt": "Nummer van het ontvangstbewijs: {number}",
+    "invoiceSoon": "Je factuur voor {business} volgt afzonderlijk.",
+    "backToWalks": "Terug naar de wandelingen"
+  },
+  "canceled": {
+    "title": "Betaling geannuleerd",
+    "body": "Je hebt niets betaald. Je kunt het opnieuw proberen wanneer je wilt.",
+    "back": "Terug naar de wandeling"
+  },
+  "ticket": {
+    "title": "Je ticket",
+    "opening": "Je ticket wordt geopend…",
+    "ready": "Je ticket staat klaar op deze telefoon.",
+    "start": "Start de wandeling",
+    "missing": "De ticketlink is onvolledig. Open de link uit je e-mail opnieuw."
+  },
+  "paywall": {
+    "title": "Voor deze wandeling heb je een ticket nodig",
+    "body": "Koop een ticket op de pagina van de wandeling, of open de ticketlink uit je e-mail op deze telefoon.",
+    "buy": "Koop een ticket"
+  },
+  "email": {
+    "confirmation": {
+      "subject": "Je ticket voor {product}",
+      "greeting": "Hallo,",
+      "thanks": "Bedankt voor je bestelling bij Hidden Antwerp.",
+      "line": "{product}: {persons}",
+      "total": "Totaal betaald: {amount}",
+      "vat": "Waarvan btw ({rate}): {vat}",
+      "receipt": "Nummer van het ontvangstbewijs: {number}",
+      "invoice": "Je factuur volgt afzonderlijk.",
+      "linkIntro": "Je ticketlink. Iedereen in je groep opent hem op zijn eigen telefoon (het ticket werkt voor {seats}):",
+      "validUntil": "Het ticket is geldig tot {date}.",
+      "signoff": "Veel plezier in Antwerpen!"
+    },
+    "refund": {
+      "subject": "Je terugbetaling van Hidden Antwerp",
+      "body": "We hebben {amount} terugbetaald voor je bestelling van {product}.",
+      "ticketRevoked": "Je ticketlink werkt niet meer.",
+      "bankTime": "Afhankelijk van je bank kan het een paar dagen duren voor je de terugbetaling ziet."
+    }
+  }
+}

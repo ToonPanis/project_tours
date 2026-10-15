@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { baseOpenGraph, PROTOTYPE_ROBOTS } from "@/lib/shared-metadata";
+import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
+import { TicketRequired } from "@/features/commerce/components/TicketRequired";
+import { getCommerceContext } from "@/features/commerce/server/context";
+import { playAccess, ticketCookieName } from "@/features/commerce/server/ticket-service";
 import { WalkPlayer } from "@/features/walk-session/components/WalkPlayer";
 import { getTranslator } from "@/i18n/server";
 import { getWalk } from "@/lib/repositories";
@@ -38,6 +42,17 @@ export default async function PlayWalkPage({ params }: PageProps<"/walks/[slug]/
   if (!walk) notFound();
   // A multiplayer pub game isn't played on this page: the organiser creates a game first.
   if (walk.experience === "pub-game") redirect(`/games/new?walk=${walk.slug}`);
+
+  // Tickets (P2): only when sales are open (COMMERCE_SALES_ENABLED) and this walk is on sale.
+  // Otherwise "open" comes back without touching the database, and the walk works as before.
+  const access = await playAccess(getCommerceContext(), walk.slug, (await cookies()).get(ticketCookieName(walk.slug))?.value);
+  if (access === "ticket-required") {
+    return (
+      <div data-walk-theme={walk.theme} className="bg-night-map min-h-full">
+        <TicketRequired walkSlug={walk.slug} t={t} />
+      </div>
+    );
+  }
 
   return (
     <div data-walk-theme={walk.theme} className="bg-night-map min-h-full">

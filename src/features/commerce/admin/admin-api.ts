@@ -31,15 +31,44 @@ const MESSAGES: Record<string, string> = {
   "not-configured": "Sign-in is not configured on this server yet (APP_BASE_URL is missing).",
   "sign-in-required": "Your session has ended. Sign in again.",
   "invalid-name": "The name must be 1 to 80 characters.",
-  "invalid-vat-rate": "Choose one of the Belgian VAT rates.",
-  "invalid-amount": "Type a price in euros, e.g. 14,95 (at most €10,000).",
-  "vat-rate-required": "Set the VAT rate before activating this product.",
+  "invalid-tax-category": "Choose a tax category from the list.",
+  "unknown-tax-category": "That tax category doesn't exist (anymore). Check the tax settings.",
+  "tax-category-required": "Choose the tax category before putting this product on sale.",
+  "invalid-amount": "Type an amount in euros, e.g. 14,95 (at most €10,000; for a refund at most what's left).",
+  // Tax settings
+  "invalid-regime": "Choose a tax regime.",
+  "invalid-country": "The home country must be a two-letter code, e.g. BE.",
+  "invalid-categories": "Each category needs a short id (a–z, 0–9, -), a name and a rate between 0 and 100 %.",
+  "duplicate-category": "Two categories have the same id.",
+  "invalid-oss": "Each OSS rate needs an EU country, an existing category and a rate; no country and category twice.",
+  "invalid-note": "The exemption mention can be at most 300 characters.",
+  "invalid-confirmation": "Tick or untick the accountant's confirmation.",
+  "categories-required": "A VAT-registered business needs at least one tax category.",
+  "note-required": "An exempt business needs the legal mention the accountant gives (it's printed on receipts).",
+  "category-in-use": "A category you removed is still used by a product. Change that product first.",
+  "saved-at-the-same-time": "Someone else saved the tax settings at the same moment. Reload and try again.",
+  // Discounts
+  "invalid-code": "A code is 3 to 30 letters, digits or dashes.",
+  "invalid-kind": "Choose percent or fixed amount.",
+  "invalid-value": "Percent: a whole number from 1 to 100. Fixed: an amount in euros.",
+  "invalid-dates": "Check the dates: 'until' must be after 'from'.",
+  "invalid-max": "The maximum number of uses must be a whole number of at least 1.",
+  "code-exists": "That code already exists.",
+  "unknown-discount": "This discount code doesn't exist (anymore).",
+  "invalid-active": "Something went wrong switching the code on or off.",
+  // Orders
+  "unknown-order": "This order doesn't exist.",
+  "not-refundable": "Only a paid order can be refunded.",
+  "no-ticket": "This order has no ticket.",
+  "nothing-to-resend": "Only a paid order with a ticket can have its confirmation resent.",
   "price-required": "Set a price before activating this product.",
   "unknown-product": "This product doesn't exist (anymore).",
   offline: "No connection to the server. Check your internet and try again.",
 };
 
 export function adminErrorMessage(error: string): string {
+  // "refund-failed:<Stripe code>": the code helps when looking it up in Stripe's dashboard.
+  if (error.startsWith("refund-failed:")) return `Stripe refused or couldn't be reached (${error.slice(14)}). Nothing was refunded.`;
   return MESSAGES[error] ?? `Something went wrong (${error}).`;
 }
 

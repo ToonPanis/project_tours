@@ -6,7 +6,7 @@ import { checkPostRequest, errorResponse, readJson, toResponse } from "@/feature
 
 /**
  * POST /api/admin/products/[id]: changes a product (admins only).
- * Body: any of { name, active, vatRateBasisPoints }. Answer: the product.
+ * Body: any of { name, active, taxCategoryId }. Answer: the product.
  */
 export async function POST(request: NextRequest, ctx: RouteContext<"/api/admin/products/[id]">) {
   const refused = checkPostRequest(request);

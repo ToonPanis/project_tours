@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { getWalks } from "@/data/walks";
-import { ALLOWED_VAT_RATES_BASIS_POINTS, MAX_PRICE_CENTS, MAX_PRODUCT_NAME_LENGTH } from "@/features/commerce/config";
+import { MAX_PRICE_CENTS, MAX_PRODUCT_NAME_LENGTH } from "@/features/commerce/config";
 import { currentPrice, parsePriceInput, parseProductUpdate } from "@/features/commerce/logic/catalog";
 import { normalizeEmail, parseEmailList } from "@/features/commerce/logic/email";
 import { isValidPriceCents, parseEuroAmount, splitGrossAmount } from "@/features/commerce/logic/money";
@@ -35,7 +35,8 @@ describe("money", () => {
   });
 
   test("net + VAT is always exactly the price paid, for every rate and many prices", () => {
-    for (const rate of ALLOWED_VAT_RATES_BASIS_POINTS) {
+    // Example rates only: no rate is built into the app (decision B8).
+    for (const rate of [0, 550, 600, 1200, 2100, 2700, 10_000]) {
       for (let gross = 1; gross <= 20_000; gross += 7) {
         const { netCents, vatCents } = splitGrossAmount(gross, rate);
         expect(netCents + vatCents).toBe(gross);
@@ -109,11 +110,11 @@ describe("catalogue input", () => {
   });
 
   test("a product update keeps only the allowed fields, checked", () => {
-    expect(parseProductUpdate({ name: "  17   Gates ", active: true, vatRateBasisPoints: 600, id: "x", walkSlug: "y" })).toEqual({
+    expect(parseProductUpdate({ name: "  17   Gates ", active: true, taxCategoryId: "experience", id: "x", walkSlug: "y" })).toEqual({
       ok: true,
-      value: { name: "17 Gates", active: true, vatRateBasisPoints: 600 },
+      value: { name: "17 Gates", active: true, taxCategoryId: "experience" },
     });
-    expect(parseProductUpdate({ vatRateBasisPoints: null })).toEqual({ ok: true, value: { vatRateBasisPoints: null } });
+    expect(parseProductUpdate({ taxCategoryId: null })).toEqual({ ok: true, value: { taxCategoryId: null } });
   });
 
   test.each([
@@ -125,8 +126,8 @@ describe("catalogue input", () => {
     [{ name: "x".repeat(MAX_PRODUCT_NAME_LENGTH + 1) }, "invalid-name"],
     [{ name: { $set: "x" } }, "invalid-name"],
     [{ active: "yes" }, "invalid-active"],
-    [{ vatRateBasisPoints: 2000 }, "invalid-vat-rate"],
-    [{ vatRateBasisPoints: "2100" }, "invalid-vat-rate"],
+    [{ taxCategoryId: "Has Spaces" }, "invalid-tax-category"],
+    [{ taxCategoryId: 21 }, "invalid-tax-category"],
   ])("refuses %j (%s)", (body, error) => {
     expect(parseProductUpdate(body)).toEqual({ ok: false, error });
   });

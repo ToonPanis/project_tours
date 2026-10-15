@@ -1,0 +1,85 @@
+{
+  "persons": { "one": "{count} Person", "other": "{count} Personen" },
+  "buy": {
+    "title": "Tickets",
+    "perPerson": "pro Person, inkl. MwSt.",
+    "persons": "Anzahl Personen",
+    "decrease": "Eine Person weniger",
+    "increase": "Eine Person mehr",
+    "total": "Gesamt",
+    "discountCode": "Rabattcode (optional)",
+    "button": "Sicher bezahlen",
+    "busy": "Zahlungsseite wird geöffnet…",
+    "note": "Du bezahlst auf der sicheren Zahlungsseite von Stripe. Danach bekommst du per E-Mail einen Ticket-Link: Alle in deiner Gruppe öffnen ihn auf ihrem eigenen Handy."
+  },
+  "errors": {
+    "sales-closed": "Tickets können noch nicht online gekauft werden.",
+    "unknown-product": "Dieser Rundgang kann im Moment nicht online gekauft werden.",
+    "invalid-quantity": "Wähle zwischen 1 und 30 Personen. Für größere Gruppen kontaktiere uns bitte.",
+    "total-too-low": "Diese Bestellung ist zu klein, um online bezahlt zu werden.",
+    "unknown-discount": "Diesen Rabattcode gibt es nicht.",
+    "discount-not-valid-yet": "Dieser Rabattcode kann noch nicht verwendet werden.",
+    "discount-expired": "Dieser Rabattcode ist abgelaufen.",
+    "discount-not-for-product": "Dieser Rabattcode gilt nicht für diesen Rundgang.",
+    "discount-used-up": "Dieser Rabattcode ist aufgebraucht.",
+    "payments-unavailable": "Zahlungen sind vorübergehend nicht möglich. Es wurde nichts abgebucht. Bitte versuche es in ein paar Minuten noch einmal.",
+    "invalid-ticket": "Dieser Ticket-Link ist ungültig. Prüfe, ob du den vollständigen Link aus der E-Mail kopiert hast.",
+    "ticket-revoked": "Dieses Ticket ist nicht mehr gültig (es wurde erstattet oder zurückgezogen).",
+    "ticket-expired": "Dieses Ticket ist abgelaufen.",
+    "ticket-full": "Dieses Ticket ist bereits auf so vielen Handys geöffnet, wie es Personen umfasst.",
+    "offline": "Keine Verbindung. Prüfe deine Internetverbindung und versuche es erneut.",
+    "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
+  },
+  "success": {
+    "title": "Danke!",
+    "paid": "Deine Zahlung ist eingegangen.",
+    "pending": "Wir warten auf die Zahlungsbestätigung. Diese Seite aktualisiert sich von selbst.",
+    "failed": "Die Zahlung hat nicht geklappt. Es wurde nichts abgebucht.",
+    "canceled": "Diese Bestellung wurde storniert. Es wurde nichts abgebucht.",
+    "unknown": "Wir finden diese Bestellung auf diesem Gerät nicht. Dein Ticket-Link steht in der E-Mail, die wir dir geschickt haben.",
+    "openTicket": "Ticket auf diesem Handy öffnen",
+    "emailSent": "Wir haben deinen Ticket-Link auch an {email} geschickt.",
+    "share": "Teile den Link mit deiner Gruppe: Alle öffnen ihn auf ihrem eigenen Handy. Das Ticket gilt für {seats}.",
+    "receipt": "Belegnummer: {number}",
+    "invoiceSoon": "Deine Rechnung für {business} folgt separat.",
+    "backToWalks": "Zurück zu den Rundgängen"
+  },
+  "canceled": {
+    "title": "Zahlung abgebrochen",
+    "body": "Du hast nichts bezahlt. Du kannst es jederzeit noch einmal versuchen.",
+    "back": "Zurück zum Rundgang"
+  },
+  "ticket": {
+    "title": "Dein Ticket",
+    "opening": "Dein Ticket wird geöffnet…",
+    "ready": "Dein Ticket ist auf diesem Handy bereit.",
+    "start": "Rundgang starten",
+    "missing": "Der Ticket-Link ist unvollständig. Öffne den Link aus deiner E-Mail noch einmal."
+  },
+  "paywall": {
+    "title": "Für diesen Rundgang brauchst du ein Ticket",
+    "body": "Kaufe ein Ticket auf der Seite des Rundgangs oder öffne den Ticket-Link aus deiner E-Mail auf diesem Handy.",
+    "buy": "Ticket kaufen"
+  },
+  "email": {
+    "confirmation": {
+      "subject": "Dein Ticket für {product}",
+      "greeting": "Hallo,",
+      "thanks": "Danke für deine Bestellung bei Hidden Antwerp.",
+      "line": "{product}: {persons}",
+      "total": "Bezahlt insgesamt: {amount}",
+      "vat": "Davon MwSt. ({rate}): {vat}",
+      "receipt": "Belegnummer: {number}",
+      "invoice": "Deine Rechnung folgt separat.",
+      "linkIntro": "Dein Ticket-Link. Alle in deiner Gruppe öffnen ihn auf ihrem eigenen Handy (das Ticket gilt für {seats}):",
+      "validUntil": "Das Ticket ist gültig bis {date}.",
+      "signoff": "Viel Spaß in Antwerpen!"
+    },
+    "refund": {
+      "subject": "Deine Erstattung von Hidden Antwerp",
+      "body": "Wir haben dir {amount} für deine Bestellung von {product} erstattet.",
+      "ticketRevoked": "Dein Ticket-Link funktioniert nicht mehr.",
+      "bankTime": "Je nach Bank kann es ein paar Tage dauern, bis du die Erstattung siehst."
+    }
+  }
+}

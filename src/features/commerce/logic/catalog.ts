@@ -1,5 +1,5 @@
 import type { ProductPrice } from "@/types/commerce";
-import { ALLOWED_VAT_RATES_BASIS_POINTS, MAX_PRODUCT_NAME_LENGTH } from "../config";
+import { MAX_PRODUCT_NAME_LENGTH } from "../config";
 import { parseEuroAmount } from "./money";
 
 /** The price that applies at `now`: the newest one whose `validFrom` has passed. */
@@ -16,7 +16,8 @@ export function currentPrice(prices: ProductPrice[], now: Date): ProductPrice | 
 export interface ProductUpdate {
   name?: string;
   active?: boolean;
-  vatRateBasisPoints?: number | null;
+  /** A category id from the tax settings (the service checks it exists), or null. */
+  taxCategoryId?: string | null;
 }
 
 export type Parsed<T> = { ok: true; value: T } | { ok: false; error: string };
@@ -39,11 +40,12 @@ export function parseProductUpdate(body: unknown): Parsed<ProductUpdate> {
     if (typeof input.active !== "boolean") return { ok: false, error: "invalid-active" };
     update.active = input.active;
   }
-  if ("vatRateBasisPoints" in input) {
-    const rate = input.vatRateBasisPoints;
-    const allowed = ALLOWED_VAT_RATES_BASIS_POINTS as readonly number[];
-    if (rate !== null && !(typeof rate === "number" && allowed.includes(rate))) return { ok: false, error: "invalid-vat-rate" };
-    update.vatRateBasisPoints = rate;
+  if ("taxCategoryId" in input) {
+    const category = input.taxCategoryId;
+    if (category !== null && !(typeof category === "string" && /^[a-z0-9][a-z0-9-]{0,29}$/.test(category))) {
+      return { ok: false, error: "invalid-tax-category" };
+    }
+    update.taxCategoryId = category;
   }
   if (Object.keys(update).length === 0) return { ok: false, error: "nothing-to-update" };
   return { ok: true, value: update };

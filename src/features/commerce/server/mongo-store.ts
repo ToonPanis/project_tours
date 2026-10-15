@@ -1,5 +1,17 @@
 import { MongoServerError, type Db, type Document } from "mongodb";
-import type { AuditEntry, CommerceUser, OutboxEmail, Product, ProductPrice } from "@/types/commerce";
+import type {
+  AuditEntry,
+  BillingDocument,
+  CommerceUser,
+  Discount,
+  Order,
+  OrderStatus,
+  OutboxEmail,
+  Product,
+  ProductPrice,
+  TaxSettings,
+  TicketGrant,
+} from "@/types/commerce";
 import { COLLECTIONS, errorLabel } from "../../../../db/mongo-schema.mjs";
 import { CommerceStoreUnavailableError, type CommerceStore } from "./commerce-store";
 
@@ -53,7 +65,7 @@ function toProduct(doc: Document | null): Product | null {
     name: doc.name,
     unit: "person",
     active: doc.active === true,
-    vatRateBasisPoints: typeof doc.vatRateBasisPoints === "number" ? doc.vatRateBasisPoints : null,
+    taxCategoryId: typeof doc.taxCategoryId === "string" ? doc.taxCategoryId : null,
     sortOrder: typeof doc.sortOrder === "number" ? doc.sortOrder : 0,
     createdAt: iso(doc.createdAt) ?? new Date(0).toISOString(),
     updatedAt: iso(doc.updatedAt) ?? new Date(0).toISOString(),
@@ -98,6 +110,37 @@ function toEmail(doc: Document): OutboxEmail {
     sentAt: iso(doc.sentAt),
   };
 }
+
+/**
+ * P2 records: the date fields at the top level become BSON dates in the
+ * database and ISO strings in the app; nested objects (lines, tax) are stored
+ * as they are. One pair of helpers per record keeps that in one place.
+ */
+function datesToDb<T extends object>(record: Partial<T>, dateFields: readonly string[]): Document {
+  const doc: Document = { ...record };
+  delete doc.id;
+  for (const field of dateFields) {
+    if (field in doc) doc[field] = doc[field] === null ? null : toDate(doc[field] as string);
+  }
+  return doc;
+}
+
+function datesFromDb<T>(doc: Document | null, dateFields: readonly string[]): T | null {
+  if (!doc) return null;
+  const record: Document = { ...doc, id: doc._id };
+  delete record._id;
+  delete record.expiresAt;
+  for (const field of dateFields) {
+    if (field in record) record[field] = record[field] instanceof Date ? (record[field] as Date).toISOString() : null;
+  }
+  return record as T;
+}
+
+const ORDER_DATES = ["createdAt", "updatedAt", "paidAt"] as const;
+const GRANT_DATES = ["createdAt", "validUntil"] as const;
+const DISCOUNT_DATES = ["validFrom", "validUntil", "createdAt"] as const;
+const DOCUMENT_DATES = ["createdAt"] as const;
+const TAX_DATES = ["updatedAt"] as const;
 
 /** The app's ISO strings back to BSON dates, only for the date fields that are present. */
 function emailChangesToDoc(changes: Partial<Omit<OutboxEmail, "id">>): Document {
@@ -248,7 +291,7 @@ export class MongoCommerceStore implements CommerceStore {
       name: product.name,
       unit: product.unit,
       active: product.active,
-      vatRateBasisPoints: product.vatRateBasisPoints,
+      taxCategoryId: product.taxCategoryId,
       sortOrder: product.sortOrder,
       createdAt: toDate(product.createdAt),
       updatedAt: toDate(product.updatedAt),
@@ -330,6 +373,245 @@ export class MongoCommerceStore implements CommerceStore {
   updateEmail(id: string, changes: Partial<Omit<OutboxEmail, "id">>) {
     return this.run(async () => {
       await this.collection(COLLECTIONS.emailOutbox).updateOne({ _id: key(id, 200) }, { $set: emailChangesToDoc(changes) });
+    });
+  }
+
+  // ── P2 ───────────────────────────────────────────────────────────────
+
+  getTaxSettings() {
+    return this.run(async () => {
+      const [doc] = await this.collection(COLLECTIONS.taxSettings).find({}).sort({ version: -1 }).limit(1).toArray();
+      const settings = datesFromDb<TaxSettings & { id?: string }>(doc ?? null, TAX_DATES);
+      if (!settings) return null;
+      delete settings.id;
+      return settings as TaxSettings;
+    });
+  }
+
+  insertTaxSettings(settings: TaxSettings) {
+    return this.run(async () => {
+      try {
+        await this.collection(COLLECTIONS.taxSettings).insertOne({ _id: `v${settings.version}`, ...datesToDb(settings, TAX_DATES) });
+        return true;
+      } catch (error) {
+        if (isDuplicateKey(error)) return false;
+        throw error;
+      }
+    });
+  }
+
+  insertOrder(order: Order) {
+    return this.run(async () => {
+      await this.collection(COLLECTIONS.orders).insertOne({ _id: key(order.id, 100), ...datesToDb(order, ORDER_DATES) });
+    });
+  }
+
+  getOrder(id: string) {
+    return this.run(async () => datesFromDb<Order>(await this.collection(COLLECTIONS.orders).findOne({ _id: key(id, 100) }), ORDER_DATES));
+  }
+
+  findOrderByPaymentIntent(paymentIntentId: string) {
+    return this.run(async () =>
+      datesFromDb<Order>(await this.collection(COLLECTIONS.orders).findOne({ "stripe.paymentIntentId": key(paymentIntentId, 255) }), ORDER_DATES),
+    );
+  }
+
+  transitionOrder(id: string, from: OrderStatus[], changes: Partial<Omit<Order, "id">>) {
+    return this.run(async () => {
+      // "Change it only if its status is still one of these": the filter and the update are one atomic step.
+      const result = await this.collection(COLLECTIONS.orders).updateOne(
+        { _id: key(id, 100), status: { $in: from } },
+        { $set: datesToDb(changes, ORDER_DATES) },
+      );
+      return result.modifiedCount === 1;
+    });
+  }
+
+  updateOrder(id: string, changes: Partial<Omit<Order, "id">>) {
+    return this.run(async () => {
+      await this.collection(COLLECTIONS.orders).updateOne({ _id: key(id, 100) }, { $set: datesToDb(changes, ORDER_DATES) });
+    });
+  }
+
+  listOrders({ skip, limit, status }: { skip: number; limit: number; status?: OrderStatus }) {
+    return this.run(async () => {
+      const filter = status ? { status: key(status, 20) } : {};
+      const collection = this.collection(COLLECTIONS.orders);
+      const [docs, total] = await Promise.all([
+        collection.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).toArray(),
+        collection.countDocuments(filter),
+      ]);
+      return { orders: docs.map((doc) => datesFromDb<Order>(doc, ORDER_DATES) as Order), total };
+    });
+  }
+
+  recordStripeEvent({ id, type, receivedAt, expiresAt }: { id: string; type: string; receivedAt: Date; expiresAt: Date }) {
+    return this.run(async () => {
+      try {
+        await this.collection(COLLECTIONS.stripeEvents).insertOne({ _id: key(id, 255), type, done: false, receivedAt, processedAt: null, expiresAt });
+        return "new" as const;
+      } catch (error) {
+        if (isDuplicateKey(error)) return "duplicate" as const;
+        throw error;
+      }
+    });
+  }
+
+  isStripeEventDone(id: string) {
+    return this.run(async () => (await this.collection(COLLECTIONS.stripeEvents).findOne({ _id: key(id, 255) }))?.done === true);
+  }
+
+  markStripeEventDone(id: string, at: Date) {
+    return this.run(async () => {
+      await this.collection(COLLECTIONS.stripeEvents).updateOne({ _id: key(id, 255) }, { $set: { done: true, processedAt: at } });
+    });
+  }
+
+  insertGrantIfMissing(grant: TicketGrant) {
+    return this.run(async () => {
+      try {
+        await this.collection(COLLECTIONS.ticketGrants).insertOne({ _id: key(grant.id, 100), ...datesToDb(grant, GRANT_DATES) });
+        return grant;
+      } catch (error) {
+        // The unique index on orderId: this order already has its ticket.
+        if (!isDuplicateKey(error)) throw error;
+        const existing = await this.collection(COLLECTIONS.ticketGrants).findOne({ orderId: key(grant.orderId, 100) });
+        return datesFromDb<TicketGrant>(existing, GRANT_DATES) as TicketGrant;
+      }
+    });
+  }
+
+  getGrant(id: string) {
+    return this.run(async () => datesFromDb<TicketGrant>(await this.collection(COLLECTIONS.ticketGrants).findOne({ _id: key(id, 100) }), GRANT_DATES));
+  }
+
+  getGrantByOrder(orderId: string) {
+    return this.run(async () =>
+      datesFromDb<TicketGrant>(await this.collection(COLLECTIONS.ticketGrants).findOne({ orderId: key(orderId, 100) }), GRANT_DATES),
+    );
+  }
+
+  updateGrant(id: string, changes: Partial<Omit<TicketGrant, "id">>) {
+    return this.run(async () => {
+      await this.collection(COLLECTIONS.ticketGrants).updateOne({ _id: key(id, 100) }, { $set: datesToDb(changes, GRANT_DATES) });
+    });
+  }
+
+  claimTicketSeat(grantId: string) {
+    return this.run(async () => {
+      // "One more phone, only while there's a free seat": $expr compares two fields of the same document.
+      const result = await this.collection(COLLECTIONS.ticketGrants).updateOne(
+        { _id: key(grantId, 100), status: "active", $expr: { $lt: ["$devicesUsed", "$seats"] } },
+        { $inc: { devicesUsed: 1 } },
+      );
+      return result.modifiedCount === 1;
+    });
+  }
+
+  saveTicketDevice({ tokenHash, grantId, walkSlug, createdAt, expiresAt }: { tokenHash: string; grantId: string; walkSlug: string; createdAt: Date; expiresAt: Date }) {
+    return this.run(async () => {
+      await this.collection(COLLECTIONS.ticketDevices).insertOne({ _id: key(tokenHash, 100), grantId, walkSlug, createdAt, expiresAt });
+    });
+  }
+
+  findTicketDevice(tokenHash: string, now: Date) {
+    return this.run(async () => {
+      const doc = await this.collection(COLLECTIONS.ticketDevices).findOne({ _id: key(tokenHash, 100), expiresAt: { $gt: now } });
+      return doc && typeof doc.grantId === "string" ? { grantId: doc.grantId, walkSlug: String(doc.walkSlug) } : null;
+    });
+  }
+
+  deleteTicketDevices(grantId: string) {
+    return this.run(async () => {
+      await this.collection(COLLECTIONS.ticketDevices).deleteMany({ grantId: key(grantId, 100) });
+    });
+  }
+
+  insertDiscount(discount: Discount) {
+    return this.run(async () => {
+      try {
+        await this.collection(COLLECTIONS.discounts).insertOne({ _id: key(discount.id, 100), ...datesToDb(discount, DISCOUNT_DATES) });
+        return true;
+      } catch (error) {
+        if (isDuplicateKey(error)) return false;
+        throw error;
+      }
+    });
+  }
+
+  getDiscount(id: string) {
+    return this.run(async () => datesFromDb<Discount>(await this.collection(COLLECTIONS.discounts).findOne({ _id: key(id, 100) }), DISCOUNT_DATES));
+  }
+
+  getDiscountByCode(code: string) {
+    return this.run(async () => datesFromDb<Discount>(await this.collection(COLLECTIONS.discounts).findOne({ code: key(code, 30) }), DISCOUNT_DATES));
+  }
+
+  listDiscounts() {
+    return this.run(async () => {
+      const docs = await this.collection(COLLECTIONS.discounts).find({}).sort({ createdAt: -1 }).limit(500).toArray();
+      return docs.map((doc) => datesFromDb<Discount>(doc, DISCOUNT_DATES) as Discount);
+    });
+  }
+
+  updateDiscount(id: string, changes: Partial<Omit<Discount, "id" | "code" | "redemptions">>) {
+    return this.run(async () => {
+      await this.collection(COLLECTIONS.discounts).updateOne({ _id: key(id, 100) }, { $set: datesToDb(changes, DISCOUNT_DATES) });
+    });
+  }
+
+  reserveDiscount(id: string) {
+    return this.run(async () => {
+      const result = await this.collection(COLLECTIONS.discounts).updateOne(
+        {
+          _id: key(id, 100),
+          active: true,
+          $or: [{ maxRedemptions: null }, { $expr: { $lt: ["$redemptions", "$maxRedemptions"] } }],
+        },
+        { $inc: { redemptions: 1 } },
+      );
+      return result.modifiedCount === 1;
+    });
+  }
+
+  releaseDiscount(id: string) {
+    return this.run(async () => {
+      await this.collection(COLLECTIONS.discounts).updateOne({ _id: key(id, 100), redemptions: { $gt: 0 } }, { $inc: { redemptions: -1 } });
+    });
+  }
+
+  nextNumber(series: string) {
+    return this.run(async () => {
+      const doc = await this.collection(COLLECTIONS.counters).findOneAndUpdate(
+        { _id: key(series, 100) },
+        { $inc: { value: 1 } },
+        { upsert: true, returnDocument: "after" },
+      );
+      return typeof doc?.value === "number" ? doc.value : 1;
+    });
+  }
+
+  insertDocumentIfMissing(document: BillingDocument) {
+    return this.run(async () => {
+      try {
+        await this.collection(COLLECTIONS.documents).insertOne({ _id: key(document.id, 200), ...datesToDb(document, DOCUMENT_DATES) });
+        return document;
+      } catch (error) {
+        if (!isDuplicateKey(error)) throw error;
+        const existing = await this.collection(COLLECTIONS.documents).findOne({ _id: key(document.id, 200) });
+        return datesFromDb<BillingDocument>(existing, DOCUMENT_DATES) as BillingDocument;
+      }
+    });
+  }
+
+  getDocument(id: string) {
+    return this.run(async () => datesFromDb<BillingDocument>(await this.collection(COLLECTIONS.documents).findOne({ _id: key(id, 200) }), DOCUMENT_DATES));
+  }
+
+  listDocumentsForOrder(orderId: string) {
+    return this.run(async () => {
+      const docs = await this.collection(COLLECTIONS.documents).find({ orderId: key(orderId, 100) }).sort({ createdAt: 1 }).toArray();
+      return docs.map((doc) => datesFromDb<BillingDocument>(doc, DOCUMENT_DATES) as BillingDocument);
     });
   }
 }

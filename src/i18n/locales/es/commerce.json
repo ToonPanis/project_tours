@@ -1,0 +1,85 @@
+{
+  "persons": { "one": "{count} persona", "other": "{count} personas" },
+  "buy": {
+    "title": "Entradas",
+    "perPerson": "por persona, IVA incluido",
+    "persons": "Número de personas",
+    "decrease": "Una persona menos",
+    "increase": "Una persona más",
+    "total": "Total",
+    "discountCode": "Código de descuento (opcional)",
+    "button": "Pagar de forma segura",
+    "busy": "Abriendo la página de pago…",
+    "note": "Pagas en la página de pago segura de Stripe. Después recibes por correo electrónico un enlace a la entrada: cada persona de tu grupo lo abre en su propio móvil."
+  },
+  "errors": {
+    "sales-closed": "Todavía no se pueden comprar entradas en línea.",
+    "unknown-product": "Este paseo no se puede comprar en línea en este momento.",
+    "invalid-quantity": "Elige entre 1 y 30 personas. Para grupos más grandes, ponte en contacto con nosotros.",
+    "total-too-low": "Este pedido es demasiado pequeño para pagarlo en línea.",
+    "unknown-discount": "Este código de descuento no existe.",
+    "discount-not-valid-yet": "Este código de descuento todavía no se puede usar.",
+    "discount-expired": "Este código de descuento ha caducado.",
+    "discount-not-for-product": "Este código de descuento no es válido para este paseo.",
+    "discount-used-up": "Este código de descuento ya se ha agotado.",
+    "payments-unavailable": "Los pagos no están disponibles temporalmente. No se ha cobrado nada. Inténtalo de nuevo dentro de unos minutos.",
+    "invalid-ticket": "Este enlace de entrada no es válido. Comprueba que has copiado el enlace completo del correo electrónico.",
+    "ticket-revoked": "Esta entrada ya no es válida (se ha reembolsado o retirado).",
+    "ticket-expired": "Esta entrada ha caducado.",
+    "ticket-full": "Esta entrada ya está abierta en tantos móviles como personas incluye.",
+    "offline": "Sin conexión. Comprueba tu conexión a internet e inténtalo de nuevo.",
+    "generic": "Algo ha salido mal. Inténtalo de nuevo."
+  },
+  "success": {
+    "title": "¡Gracias!",
+    "paid": "Hemos recibido tu pago.",
+    "pending": "Estamos esperando la confirmación del pago. Esta página se actualiza sola.",
+    "failed": "El pago no se ha completado. No se ha cobrado nada.",
+    "canceled": "Este pedido se ha cancelado. No se ha cobrado nada.",
+    "unknown": "No encontramos este pedido en este dispositivo. Tu enlace de entrada está en el correo electrónico que te enviamos.",
+    "openTicket": "Abrir la entrada en este móvil",
+    "emailSent": "También hemos enviado tu enlace de entrada a {email}.",
+    "share": "Comparte el enlace con tu grupo: cada persona lo abre en su propio móvil. La entrada sirve para {seats}.",
+    "receipt": "Número de recibo: {number}",
+    "invoiceSoon": "Tu factura para {business} llegará por separado.",
+    "backToWalks": "Volver a los paseos"
+  },
+  "canceled": {
+    "title": "Pago cancelado",
+    "body": "No has pagado nada. Puedes volver a intentarlo cuando quieras.",
+    "back": "Volver al paseo"
+  },
+  "ticket": {
+    "title": "Tu entrada",
+    "opening": "Abriendo tu entrada…",
+    "ready": "Tu entrada está lista en este móvil.",
+    "start": "Empezar el paseo",
+    "missing": "El enlace de la entrada está incompleto. Vuelve a abrir el enlace de tu correo electrónico."
+  },
+  "paywall": {
+    "title": "Este paseo necesita una entrada",
+    "body": "Compra una entrada en la página del paseo o abre en este móvil el enlace de entrada de tu correo electrónico.",
+    "buy": "Comprar una entrada"
+  },
+  "email": {
+    "confirmation": {
+      "subject": "Tu entrada para {product}",
+      "greeting": "Hola:",
+      "thanks": "Gracias por tu pedido en Hidden Antwerp.",
+      "line": "{product}: {persons}",
+      "total": "Total pagado: {amount}",
+      "vat": "Del cual IVA ({rate}): {vat}",
+      "receipt": "Número de recibo: {number}",
+      "invoice": "Tu factura llegará por separado.",
+      "linkIntro": "Tu enlace de entrada. Cada persona de tu grupo lo abre en su propio móvil (la entrada sirve para {seats}):",
+      "validUntil": "La entrada es válida hasta el {date}.",
+      "signoff": "¡Disfruta de Amberes!"
+    },
+    "refund": {
+      "subject": "Tu reembolso de Hidden Antwerp",
+      "body": "Te hemos reembolsado {amount} por tu pedido de {product}.",
+      "ticketRevoked": "Tu enlace de entrada ya no funciona.",
+      "bankTime": "Según tu banco, pueden pasar unos días antes de que veas el reembolso."
+    }
+  }
+}

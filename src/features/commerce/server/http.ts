@@ -18,6 +18,31 @@ export function adminCookieOptions() {
   };
 }
 
+/** The buyer's cookie between "Pay" and the success page (so only they see their order there). */
+export const BUYER_COOKIE = "ha_order";
+
+export function buyerCookieOptions() {
+  return {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    // Lax, not Strict: the browser must send it when Stripe's page sends the buyer back here.
+    sameSite: "lax" as const,
+    path: "/",
+    maxAge: 24 * 60 * 60,
+  };
+}
+
+/** A phone's ticket cookie: as long as the ticket is valid. */
+export function ticketCookieOptions(validUntil: string) {
+  return {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax" as const,
+    path: "/",
+    expires: new Date(validUntil),
+  };
+}
+
 /**
  * A hash of the visitor's network address, for rate limits only (the address
  * itself is never stored). On Vercel the first entry of x-forwarded-for is the

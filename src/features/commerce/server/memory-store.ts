@@ -1,4 +1,16 @@
-import type { AuditEntry, CommerceUser, OutboxEmail, Product, ProductPrice } from "@/types/commerce";
+import type {
+  AuditEntry,
+  BillingDocument,
+  CommerceUser,
+  Discount,
+  Order,
+  OrderStatus,
+  OutboxEmail,
+  Product,
+  ProductPrice,
+  TaxSettings,
+  TicketGrant,
+} from "@/types/commerce";
 import type { CommerceStore } from "./commerce-store";
 
 /**
@@ -19,6 +31,14 @@ export class MemoryCommerceStore implements CommerceStore {
   private products = new Map<string, Product>();
   private prices: ProductPrice[] = [];
   private outbox = new Map<string, OutboxEmail>();
+  private taxVersions: TaxSettings[] = [];
+  private orders = new Map<string, Order>();
+  private stripeEvents = new Map<string, { done: boolean }>();
+  private grants = new Map<string, TicketGrant>();
+  private devices = new Map<string, { grantId: string; walkSlug: string; expiresAt: Date }>();
+  private discounts = new Map<string, Discount>();
+  private numbers = new Map<string, number>();
+  private documents = new Map<string, BillingDocument>();
 
   async findUserByEmail(email: string) {
     const user = [...this.users.values()].find((candidate) => candidate.email === email);
@@ -130,5 +150,167 @@ export class MemoryCommerceStore implements CommerceStore {
   async updateEmail(id: string, changes: Partial<Omit<OutboxEmail, "id">>) {
     const email = this.outbox.get(id);
     if (email) this.outbox.set(id, { ...email, ...structuredClone(changes) });
+  }
+
+  async getTaxSettings() {
+    const newest = this.taxVersions.at(-1);
+    return newest ? structuredClone(newest) : null;
+  }
+
+  async insertTaxSettings(settings: TaxSettings) {
+    if (this.taxVersions.some((existing) => existing.version === settings.version)) return false;
+    this.taxVersions.push(structuredClone(settings));
+    this.taxVersions.sort((a, b) => a.version - b.version);
+    return true;
+  }
+
+  async insertOrder(order: Order) {
+    this.orders.set(order.id, structuredClone(order));
+  }
+
+  async getOrder(id: string) {
+    const order = this.orders.get(id);
+    return order ? structuredClone(order) : null;
+  }
+
+  async findOrderByPaymentIntent(paymentIntentId: string) {
+    const order = [...this.orders.values()].find((candidate) => candidate.stripe.paymentIntentId === paymentIntentId);
+    return order ? structuredClone(order) : null;
+  }
+
+  async transitionOrder(id: string, from: OrderStatus[], changes: Partial<Omit<Order, "id">>) {
+    const order = this.orders.get(id);
+    if (!order || !from.includes(order.status)) return false;
+    this.orders.set(id, { ...order, ...structuredClone(changes) });
+    return true;
+  }
+
+  async updateOrder(id: string, changes: Partial<Omit<Order, "id">>) {
+    const order = this.orders.get(id);
+    if (order) this.orders.set(id, { ...order, ...structuredClone(changes) });
+  }
+
+  async listOrders({ skip, limit, status }: { skip: number; limit: number; status?: OrderStatus }) {
+    const matching = [...this.orders.values()]
+      .filter((order) => !status || order.status === status)
+      .reverse()
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    return { orders: structuredClone(matching.slice(skip, skip + limit)), total: matching.length };
+  }
+
+  async recordStripeEvent({ id }: { id: string; type: string; receivedAt: Date; expiresAt: Date }) {
+    if (this.stripeEvents.has(id)) return "duplicate" as const;
+    this.stripeEvents.set(id, { done: false });
+    return "new" as const;
+  }
+
+  async isStripeEventDone(id: string) {
+    return this.stripeEvents.get(id)?.done === true;
+  }
+
+  async markStripeEventDone(id: string) {
+    this.stripeEvents.set(id, { done: true });
+  }
+
+  async insertGrantIfMissing(grant: TicketGrant) {
+    const existing = [...this.grants.values()].find((candidate) => candidate.orderId === grant.orderId);
+    if (existing) return structuredClone(existing);
+    this.grants.set(grant.id, structuredClone(grant));
+    return structuredClone(grant);
+  }
+
+  async getGrant(id: string) {
+    const grant = this.grants.get(id);
+    return grant ? structuredClone(grant) : null;
+  }
+
+  async getGrantByOrder(orderId: string) {
+    const grant = [...this.grants.values()].find((candidate) => candidate.orderId === orderId);
+    return grant ? structuredClone(grant) : null;
+  }
+
+  async updateGrant(id: string, changes: Partial<Omit<TicketGrant, "id">>) {
+    const grant = this.grants.get(id);
+    if (grant) this.grants.set(id, { ...grant, ...structuredClone(changes) });
+  }
+
+  async claimTicketSeat(grantId: string) {
+    const grant = this.grants.get(grantId);
+    if (!grant || grant.status !== "active" || grant.devicesUsed >= grant.seats) return false;
+    grant.devicesUsed += 1;
+    return true;
+  }
+
+  async saveTicketDevice({ tokenHash, grantId, walkSlug, expiresAt }: { tokenHash: string; grantId: string; walkSlug: string; createdAt: Date; expiresAt: Date }) {
+    this.devices.set(tokenHash, { grantId, walkSlug, expiresAt });
+  }
+
+  async findTicketDevice(tokenHash: string, now: Date) {
+    const device = this.devices.get(tokenHash);
+    return device && device.expiresAt > now ? { grantId: device.grantId, walkSlug: device.walkSlug } : null;
+  }
+
+  async deleteTicketDevices(grantId: string) {
+    for (const [hash, device] of this.devices) if (device.grantId === grantId) this.devices.delete(hash);
+  }
+
+  async insertDiscount(discount: Discount) {
+    if ([...this.discounts.values()].some((existing) => existing.code === discount.code)) return false;
+    this.discounts.set(discount.id, structuredClone(discount));
+    return true;
+  }
+
+  async getDiscount(id: string) {
+    const discount = this.discounts.get(id);
+    return discount ? structuredClone(discount) : null;
+  }
+
+  async getDiscountByCode(code: string) {
+    const discount = [...this.discounts.values()].find((candidate) => candidate.code === code);
+    return discount ? structuredClone(discount) : null;
+  }
+
+  async listDiscounts() {
+    return structuredClone([...this.discounts.values()].sort((a, b) => b.createdAt.localeCompare(a.createdAt)));
+  }
+
+  async updateDiscount(id: string, changes: Partial<Omit<Discount, "id" | "code" | "redemptions">>) {
+    const discount = this.discounts.get(id);
+    if (discount) this.discounts.set(id, { ...discount, ...structuredClone(changes) });
+  }
+
+  async reserveDiscount(id: string) {
+    const discount = this.discounts.get(id);
+    if (!discount || !discount.active) return false;
+    if (discount.maxRedemptions !== null && discount.redemptions >= discount.maxRedemptions) return false;
+    discount.redemptions += 1;
+    return true;
+  }
+
+  async releaseDiscount(id: string) {
+    const discount = this.discounts.get(id);
+    if (discount && discount.redemptions > 0) discount.redemptions -= 1;
+  }
+
+  async nextNumber(series: string) {
+    const next = (this.numbers.get(series) ?? 0) + 1;
+    this.numbers.set(series, next);
+    return next;
+  }
+
+  async insertDocumentIfMissing(document: BillingDocument) {
+    const existing = this.documents.get(document.id);
+    if (existing) return structuredClone(existing);
+    this.documents.set(document.id, structuredClone(document));
+    return structuredClone(document);
+  }
+
+  async getDocument(id: string) {
+    const document = this.documents.get(id);
+    return document ? structuredClone(document) : null;
+  }
+
+  async listDocumentsForOrder(orderId: string) {
+    return structuredClone([...this.documents.values()].filter((document) => document.orderId === orderId));
   }
 }

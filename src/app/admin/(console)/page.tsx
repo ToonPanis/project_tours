@@ -12,6 +12,14 @@ export default async function AdminHomePage() {
     ["Email", status.email === "brevo" ? "Brevo" : "Memory (development: emails appear in the terminal)", status.email === "brevo"],
     ["Admin addresses (ADMIN_EMAILS)", String(status.adminCount), status.adminCount > 0],
     ["Site address for links (APP_BASE_URL)", status.baseUrlSet ? "Set" : "Not set (required in production)", status.baseUrlSet],
+    [
+      "Stripe",
+      status.stripe === "not-configured" ? "Not configured (STRIPE_SECRET_KEY)" : status.stripe === "live" ? "LIVE keys" : "Test mode",
+      status.stripe !== "not-configured",
+    ],
+    ["Stripe webhook secret", status.stripeWebhookSet ? "Set" : "Not set (STRIPE_WEBHOOK_SECRET)", status.stripeWebhookSet],
+    ["Ticket signing key", status.ticketKeySet ? "Set" : "Not set (TICKET_SIGNING_SECRET, required in production)", status.ticketKeySet],
+    ["Ticket sales (COMMERCE_SALES_ENABLED)", status.salesEnabled ? "OPEN" : "Closed: the site works as before", true],
   ];
 
   return (
@@ -38,7 +46,24 @@ export default async function AdminHomePage() {
           <Link href="/admin/products" className="text-gold underline underline-offset-4">
             Products and prices
           </Link>{" "}
-          : what is for sale, at what price per person, with which VAT rate.
+          : what is for sale, at what price per person, in which tax category.
+        </li>
+        <li>
+          <Link href="/admin/orders" className="text-gold underline underline-offset-4">
+            Orders
+          </Link>{" "}
+          : payments, tickets, refunds, receipts and invoices waiting for Billit.
+        </li>
+        <li>
+          <Link href="/admin/tax" className="text-gold underline underline-offset-4">
+            Tax settings
+          </Link>{" "}
+          : regime, rates, OSS and the accountant&apos;s confirmation.
+        </li>
+        <li>
+          <Link href="/admin/discounts" className="text-gold underline underline-offset-4">
+            Discount codes
+          </Link>
         </li>
         <li>
           <Link href="/admin/audit" className="text-gold underline underline-offset-4">
