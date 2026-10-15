@@ -46,7 +46,18 @@ export default defineConfig({
     // The empty values matter: `next start` also reads .env.local, and without them the
     // tests would play their games in the REAL database from there. (Next.js never
     // overwrites a variable that is already set, even when it's empty.)
-    env: { PUB_GAME_MEMORY_STORES: "true", MONGODB_URI: "", BLOB_READ_WRITE_TOKEN: "" },
+    // The same for the commercial platform (admin sign-in, catalogue): data in memory,
+    // no admin addresses and NO real email (Brevo keys emptied), links to this test server.
+    env: {
+      PUB_GAME_MEMORY_STORES: "true",
+      MONGODB_URI: "",
+      BLOB_READ_WRITE_TOKEN: "",
+      COMMERCE_MEMORY_STORES: "true",
+      ADMIN_EMAILS: "",
+      BREVO_API_KEY: "",
+      EMAIL_FROM: "",
+      APP_BASE_URL: `http://localhost:${PORT}`,
+    },
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,
     // NEXT_PUBLIC_* values are fixed at BUILD time, so they can't be switched off here. A build

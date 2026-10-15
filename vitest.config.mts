@@ -20,6 +20,8 @@ export default defineConfig({
         'src/features/walk-session/storage/**',
         // Hidden Pubs server: the game service, the memory store, identity and HTTP helpers.
         'src/features/pub-game/server/**',
+        // Commercial platform: the services (sign-in, catalogue, email), the memory store and helpers.
+        'src/features/commerce/server/**',
       ],
       exclude: [
         'src/i18n/locales/**',
@@ -29,6 +31,11 @@ export default defineConfig({
         // Wiring per environment, and helpers of the server pages (covered by the browser tests).
         'src/features/pub-game/server/context.ts',
         'src/features/pub-game/server/page-data.ts',
+        // The same for the commercial platform: MongoDB (npm run test:db), wiring, and the
+        // page helper that reads the request's cookies (covered by the API and browser tests).
+        'src/features/commerce/server/mongo-store.ts',
+        'src/features/commerce/server/context.ts',
+        'src/features/commerce/server/admin-access.ts',
       ],
       reporter: ['text-summary', 'html'],
       // A few points under today's values (lines 98.2%, statements 94.4%, branches 88.8%, functions 99.2%):
