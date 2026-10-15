@@ -8,6 +8,7 @@ import type {
   CorporatePricing,
   Partner,
   PartnerClickDay,
+  Review,
   QuoteRequest,
   QuoteStatus,
   Discount,
@@ -111,6 +112,9 @@ function toEmail(doc: Document): OutboxEmail {
     to: String(doc.to),
     subject: String(doc.subject),
     text: typeof doc.text === "string" ? doc.text : null,
+    // P8 fields only when present (older emails keep their shape).
+    ...(typeof doc.html === "string" ? { html: doc.html } : {}),
+    ...(typeof doc.unsubscribeUrl === "string" ? { unsubscribeUrl: doc.unsubscribeUrl } : {}),
     status: doc.status,
     attempts: Number(doc.attempts),
     nextAttemptAt: iso(doc.nextAttemptAt) ?? new Date(0).toISOString(),
@@ -146,7 +150,8 @@ function datesFromDb<T>(doc: Document | null, dateFields: readonly string[]): T 
 }
 
 const ORDER_DATES = ["createdAt", "updatedAt", "paidAt"] as const;
-const GRANT_DATES = ["createdAt", "validUntil"] as const;
+const GRANT_DATES = ["createdAt", "validUntil", "completedAt"] as const;
+const REVIEW_DATES = ["createdAt", "moderatedAt"] as const;
 const DISCOUNT_DATES = ["validFrom", "validUntil", "createdAt"] as const;
 const DOCUMENT_DATES = ["createdAt"] as const;
 const TAX_DATES = ["updatedAt"] as const;
@@ -901,5 +906,81 @@ export class MongoCommerceStore implements CommerceStore {
       );
       return result.modifiedCount === 1;
     });
+  }
+
+  markGrantCompleted(grantId: string, at: string) {
+    return this.run(async () => {
+      // Only the first time: "completedAt is missing or null" and the update are one atomic step.
+      const result = await this.collection(COLLECTIONS.ticketGrants).updateOne(
+        { _id: key(grantId, 100), $or: [{ completedAt: { $exists: false } }, { completedAt: null }] },
+        { $set: { completedAt: toDate(at) } },
+      );
+      return result.modifiedCount === 1;
+    });
+  }
+
+  getGrantByGameCode(gameCode: string) {
+    return this.run(async () =>
+      datesFromDb<TicketGrant>(await this.collection(COLLECTIONS.ticketGrants).findOne({ gameCode: key(gameCode, 100) }), GRANT_DATES),
+    );
+  }
+
+  insertReview(review: Review) {
+    return this.run(async () => {
+      try {
+        await this.collection(COLLECTIONS.reviews).insertOne({ _id: key(review.id, 100), ...datesToDb(review, REVIEW_DATES) });
+        return "inserted" as const;
+      } catch (error) {
+        // The unique index on grantId: this ticket already has its review.
+        if (isDuplicateKey(error)) return "duplicate" as const;
+        throw error;
+      }
+    });
+  }
+
+  getReview(id: string) {
+    return this.run(async () => datesFromDb<Review>(await this.collection(COLLECTIONS.reviews).findOne({ _id: key(id, 100) }), REVIEW_DATES));
+  }
+
+  getReviewByGrant(grantId: string) {
+    return this.run(async () => datesFromDb<Review>(await this.collection(COLLECTIONS.reviews).findOne({ grantId: key(grantId, 100) }), REVIEW_DATES));
+  }
+
+  listReviews({ skip, limit, status }: { skip: number; limit: number; status?: Review["status"] }) {
+    return this.run(async () => {
+      const filter = status ? { status: key(status, 20) } : {};
+      const collection = this.collection(COLLECTIONS.reviews);
+      const [docs, total] = await Promise.all([
+        collection.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).toArray(),
+        collection.countDocuments(filter),
+      ]);
+      return { reviews: docs.map((doc) => datesFromDb<Review>(doc, REVIEW_DATES) as Review), total };
+    });
+  }
+
+  updateReview(id: string, changes: Partial<Omit<Review, "id" | "grantId">>) {
+    return this.run(async () => {
+      await this.collection(COLLECTIONS.reviews).updateOne({ _id: key(id, 100) }, { $set: datesToDb(changes, REVIEW_DATES) });
+    });
+  }
+
+  deleteReview(id: string) {
+    return this.run(async () => {
+      await this.collection(COLLECTIONS.reviews).deleteOne({ _id: key(id, 100) });
+    });
+  }
+
+  addSuppression(emailHash: string, reason: "unsubscribed", at: string) {
+    return this.run(async () => {
+      await this.collection(COLLECTIONS.suppressions).updateOne(
+        { _id: key(emailHash, 100) },
+        { $setOnInsert: { reason, at: toDate(at) } },
+        { upsert: true },
+      );
+    });
+  }
+
+  isSuppressed(emailHash: string) {
+    return this.run(async () => (await this.collection(COLLECTIONS.suppressions).countDocuments({ _id: key(emailHash, 100) }, { limit: 1 })) > 0);
   }
 }

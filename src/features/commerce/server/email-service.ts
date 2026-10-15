@@ -20,6 +20,8 @@ export async function queueEmail(ctx: CommerceContext, id: string, message: Emai
       to: message.to,
       subject: message.subject,
       text: message.text,
+      html: message.html ?? null,
+      unsubscribeUrl: message.unsubscribeUrl ?? null,
       status: "pending",
       attempts: 0,
       nextAttemptAt: now.toISOString(),
@@ -53,13 +55,13 @@ export async function deliverDueEmails(ctx: CommerceContext, limit = 20): Promis
     if (!(await ctx.store.claimEmail(email.id, email.attempts, ctx.now(), leaseUntil))) continue;
     const attempts = email.attempts + 1;
     try {
-      await ctx.mailer.send({ to: email.to, subject: email.subject, text: email.text });
-      await ctx.store.updateEmail(email.id, { status: "sent", attempts, sentAt: ctx.now().toISOString(), text: null, lastError: null });
+      await ctx.mailer.send({ to: email.to, subject: email.subject, text: email.text, html: email.html ?? null, unsubscribeUrl: email.unsubscribeUrl ?? null });
+      await ctx.store.updateEmail(email.id, { status: "sent", attempts, sentAt: ctx.now().toISOString(), text: null, html: null, lastError: null });
       report.sent += 1;
     } catch (error) {
       const code = error instanceof MailerError ? error.code : "unexpected";
       if (attempts >= EMAIL_MAX_ATTEMPTS) {
-        await ctx.store.updateEmail(email.id, { status: "failed", attempts, lastError: code, text: null });
+        await ctx.store.updateEmail(email.id, { status: "failed", attempts, lastError: code, text: null, html: null });
         report.failed += 1;
       } else {
         const delay = EMAIL_RETRY_DELAYS_MS[attempts - 1];

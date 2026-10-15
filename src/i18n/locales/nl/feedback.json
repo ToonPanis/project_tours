@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "reviewTitle": "Je review",
+    "unsubscribeTitle": "Uitschrijven"
+  },
+  "followUp": {
+    "subject": "Hoe was {product}?",
+    "greeting": "Hallo,",
+    "thanks": "Bedankt dat je Antwerpen met ons hebt ontdekt!",
+    "question": "Hoe was je ervaring? Je review helpt andere bezoekers, en helpt ons om de wandelingen beter te maken. Het duurt maar een minuutje.",
+    "reward": "Als bedankje krijg je {percent} korting op je volgende avontuur, voor elke review, positief of kritisch.",
+    "button": "Laat een review achter",
+    "signoff": "Tot in Antwerpen,",
+    "why": "Je krijgt deze ene e-mail omdat je erom hebt gevraagd toen je op {date} je ticket kocht. We sturen geen andere opvolgmails meer voor deze bestelling.",
+    "unsubscribe": "Stuur me geen e-mails zoals deze meer"
+  },
+  "rewardEmail": {
+    "subject": "Je bedankcode voor een volgende wandeling",
+    "greeting": "Hallo,",
+    "thanks": "Bedankt voor je review!",
+    "code": "Je persoonlijke code: {code}",
+    "terms": "{percent} korting op één volgende aankoop op hidden-antwerp, geldig tot {date}. De code werkt één keer.",
+    "signoff": "Tot snel in Antwerpen,"
+  },
+  "review": {
+    "title": "Hoe was je wandeling?",
+    "intro": "Vertel andere bezoekers wat je ervan vond. Alleen wie een ticket heeft, kan een review achterlaten, één per ticket.",
+    "checking": "Je link wordt gecontroleerd…",
+    "invalid": "Deze reviewlink is niet (meer) geldig. Gebruik de link uit je e-mail precies zoals hij is.",
+    "done": "Met dit ticket is al een review achtergelaten. Bedankt!",
+    "product": "Je wandeling: {product}",
+    "rating": "Je beoordeling",
+    "stars": {
+      "one": "{count} ster",
+      "other": "{count} sterren"
+    },
+    "text": "Je review (optioneel)",
+    "textHint": "Maximaal {max} tekens. Schrijf geen namen van andere mensen of persoonlijke gegevens.",
+    "name": "Je naam zoals hij getoond wordt (optioneel)",
+    "nameHint": "Bijv. \"Anna uit Gent\". Laat leeg om anoniem te blijven.",
+    "mayPublish": "Hidden Antwerp mag mijn review (en de naam hierboven) op zijn website tonen.",
+    "rewardNote": "Als bedankje krijg je een code voor {percent} korting op je volgende wandeling, wat je beoordeling ook is. Reviews die een code hebben opgeleverd, worden als zodanig gemarkeerd als ze getoond worden.",
+    "moderation": "We lezen elke review voor hij verschijnt; we veranderen niets aan je woorden.",
+    "submit": "Verstuur mijn review",
+    "sending": "Bezig met versturen…",
+    "thanks": "Bedankt voor je review!",
+    "codeIntro": "Je code voor {percent} korting op je volgende wandeling (ook per e-mail verstuurd):",
+    "codeValid": "Eén keer geldig, tot {date}."
+  },
+  "unsubscribe": {
+    "title": "Uitschrijven",
+    "intro": "Wil je geen opvolgmails van Hidden Antwerp meer (feedbackvragen, kortingscodes)? Druk op de knop. E-mails die je nodig hebt voor een aankoop (ticket, ontvangstbewijs, terugbetaling) komen nog steeds aan.",
+    "button": "Uitschrijven",
+    "busy": "Bezig met opslaan…",
+    "done": "Klaar: je krijgt geen opvolgmails meer.",
+    "invalid": "Deze uitschrijflink is niet geldig. Gebruik de link uit de e-mail precies zoals hij is."
+  },
+  "errors": {
+    "invalid-review-link": "Deze reviewlink is niet (meer) geldig.",
+    "already-reviewed": "Met dit ticket is al een review achtergelaten.",
+    "invalid-rating": "Kies een beoordeling van 1 tot 5 sterren.",
+    "invalid-review-text": "Je review is te lang.",
+    "invalid-name": "De naam is te lang.",
+    "invalid-unsubscribe-link": "Deze uitschrijflink is niet geldig.",
+    "too-many-requests": "Te veel pogingen. Probeer het later opnieuw.",
+    "offline": "Geen verbinding met de server. Controleer je internet en probeer het opnieuw.",
+    "generic": "Er ging iets mis. Probeer het opnieuw."
+  }
+}

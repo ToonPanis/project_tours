@@ -13,7 +13,8 @@
     "discountCode": "Discount code (optional)",
     "button": "Pay securely",
     "busy": "Opening the payment page…",
-    "note": "You pay on Stripe's secure payment page. Afterwards you get a ticket link by email: everyone in your group opens it on their own phone."
+    "note": "You pay on Stripe's secure payment page. Afterwards you get a ticket link by email: everyone in your group opens it on their own phone.",
+    "followUpConsent": "Send me one email after the walk: a short feedback question and a discount code for a next walk (optional, you can unsubscribe anytime)."
   },
   "errors": {
     "sales-closed": "Tickets can't be bought online yet.",
@@ -77,13 +78,20 @@
       "invoice": "Your invoice will follow separately.",
       "linkIntro": "Your ticket link. Everyone in your group opens it on their own phone (the ticket works on {seats}):",
       "validUntil": "The ticket is valid until {date}.",
-      "signoff": "Enjoy Antwerp!"
+      "signoff": "Enjoy Antwerp!",
+      "group": "Playing with more people? Everyone opens this same link on their own phone. For Hidden Pubs, the organiser opens it, creates the game and invites the others from the game's lobby (link, QR code or WhatsApp).",
+      "button": "Open your ticket"
     },
     "refund": {
       "subject": "Your refund from Hidden Antwerp",
       "body": "We have refunded {amount} for your order of {product}.",
       "ticketRevoked": "Your ticket link no longer works.",
       "bankTime": "Depending on your bank, it can take a few days before you see the refund."
+    },
+    "invoice": {
+      "subject": "Your invoice from Hidden Antwerp",
+      "body": "Your invoice {number} for your order of {product} is ready.",
+      "button": "View your invoice"
     }
   },
   "groups": {

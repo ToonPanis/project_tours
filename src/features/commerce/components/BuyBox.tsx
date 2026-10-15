@@ -22,6 +22,8 @@ export function BuyBox({ walkSlug, unitPriceCents }: BuyBoxProps) {
   const locale = useLocale();
   const [quantity, setQuantity] = useState(2);
   const [code, setCode] = useState("");
+  // P8: unticked by default (consent must be an active choice).
+  const [followUp, setFollowUp] = useState(false);
   const [isBusy, setIsBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const euros = (cents: number) => new Intl.NumberFormat(`${locale}-BE`, { style: "currency", currency: "EUR" }).format(cents / 100);
@@ -30,7 +32,7 @@ export function BuyBox({ walkSlug, unitPriceCents }: BuyBoxProps) {
     event.preventDefault();
     setIsBusy(true);
     setError(null);
-    const result = await postCommerce<{ url: string }>("/api/checkout", { walkSlug, quantity, discountCode: code.trim(), locale });
+    const result = await postCommerce<{ url: string }>("/api/checkout", { walkSlug, quantity, discountCode: code.trim(), locale, followUpConsent: followUp });
     if (result.ok) {
       // Stripe's own page: the card details never touch this site.
       window.location.assign(result.data.url);
@@ -86,6 +88,11 @@ export function BuyBox({ walkSlug, unitPriceCents }: BuyBoxProps) {
           autoCapitalize="characters"
           className="min-h-12 rounded-sm border border-parchment/30 bg-ink/40 px-4 text-lg uppercase text-parchment focus:border-gold focus:outline-none"
         />
+      </label>
+
+      <label className="flex min-h-11 items-start gap-3 text-sm text-parchment/85">
+        <input type="checkbox" checked={followUp} onChange={(event) => setFollowUp(event.target.checked)} className="mt-1 size-5 shrink-0" />
+        <span>{t("commerce.buy.followUpConsent")}</span>
       </label>
 
       <p className="flex items-baseline justify-between text-lg">

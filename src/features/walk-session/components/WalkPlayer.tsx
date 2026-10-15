@@ -6,6 +6,8 @@ import type { Walk } from "@/types/walk";
 
 interface WalkPlayerProps {
   walk: Walk;
+  /** P8: the walk is played with a ticket; its completion is reported (for the follow-up email). */
+  reportCompletion?: boolean;
 }
 
 /**
@@ -13,11 +15,11 @@ interface WalkPlayerProps {
  * Every walk played here is a guide walk; the multiplayer pub game has its
  * own pages at /games/… (the play page redirects there).
  */
-export function WalkPlayer({ walk }: WalkPlayerProps) {
+export function WalkPlayer({ walk, reportCompletion = false }: WalkPlayerProps) {
   return (
     // Lets the playtest tools feed simulated GPS positions to navigation.
     <PositionSimulationProvider>
-      <GuideWalkPlayer walk={walk} />
+      <GuideWalkPlayer walk={walk} reportCompletion={reportCompletion} />
     </PositionSimulationProvider>
   );
 }

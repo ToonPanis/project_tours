@@ -2,6 +2,7 @@ import type { Order, OrderCustomer } from "@/types/commerce";
 import { applyTax } from "../logic/tax";
 import { ensureCommission, syncCommissionAfterRefund } from "./commission-service";
 import type { CommerceContext } from "./context";
+import { applyRefundToDiscounts } from "./discount-service";
 import { ensureCreditNote, ensureOrderDocument } from "./document-service";
 import { queueOrderConfirmation, queueRefundEmail } from "./order-emails";
 import type { CheckoutPaidEvent, PaymentEvent } from "./payment-gateway";
@@ -125,11 +126,15 @@ async function recordRefund(ctx: CommerceContext, paymentIntentId: string | null
 
   const newlyRefunded = refundedTotalCents - order.refundedCents;
   const fully = refundedTotalCents >= order.totalCents;
+  // "paid" → "refunded" happens once (atomic), so the code's use goes back once.
+  const becameRefunded = fully && (await ctx.store.transitionOrder(order.id, ["paid"], { status: "refunded", updatedAt: ctx.now().toISOString() }));
   await ctx.store.updateOrder(order.id, {
     refundedCents: refundedTotalCents,
     status: fully ? "refunded" : order.status,
     updatedAt: ctx.now().toISOString(),
   });
+  // P8: give the discount code's use back and switch off unused review rewards of this order.
+  if (becameRefunded) await applyRefundToDiscounts(ctx, order.id, order.discount?.discountId ?? null);
 
   let ticketRevoked = false;
   const grant = await ctx.store.getGrantByOrder(order.id);

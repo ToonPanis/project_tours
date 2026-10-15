@@ -87,6 +87,11 @@
     "body": "Merci pour votre demande de devis pour {company}.",
     "next": "Nous reviendrons vers vous avec une proposition dans les meilleurs délais.",
     "summary": "Votre demande :",
-    "signoff": "Cordialement,"
+    "signoff": "Cordialement,",
+    "accepted": {
+      "subject": "Votre réservation chez Hidden Antwerp est confirmée",
+      "body": "Bonne nouvelle : nous avons confirmé la réservation pour {company}.",
+      "next": "Nous vous enverrons les informations pratiques (point de rendez-vous, horaires, billets) avant le jour J. Des questions ? Répondez simplement à cet e-mail."
+    }
   }
 }

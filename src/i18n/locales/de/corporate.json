@@ -87,6 +87,11 @@
     "body": "Vielen Dank für Ihre Angebotsanfrage für {company}.",
     "next": "Wir melden uns so bald wie möglich mit einem Angebot bei Ihnen.",
     "summary": "Ihre Anfrage:",
-    "signoff": "Mit freundlichen Grüßen"
+    "signoff": "Mit freundlichen Grüßen",
+    "accepted": {
+      "subject": "Ihre Buchung bei Hidden Antwerp ist bestätigt",
+      "body": "Gute Nachrichten: Wir haben die Buchung für {company} bestätigt.",
+      "next": "Vor dem Termin senden wir Ihnen die praktischen Details (Treffpunkt, Zeiten, Tickets). Fragen? Antworten Sie einfach auf diese E-Mail."
+    }
   }
 }

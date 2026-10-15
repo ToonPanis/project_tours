@@ -108,3 +108,25 @@ export const PARTNERS_PAGE_SIZE = 50;
 export const COMMISSIONS_PAGE_SIZE = 50;
 /** Rows in the partner's own sales list (the totals always cover the whole period). */
 export const PARTNER_SALES_ROWS = 200;
+
+// ─── P8: follow-up email, reviews, unique codes ─────────────────────────────
+
+/**
+ * The sentence the buyer ticks on the buy box (its text is in commerce.json,
+ * key commerce.buy.followUpConsent). Change the version whenever that sentence
+ * changes: every order records the version it was given for.
+ */
+export const FOLLOW_UP_CONSENT_VERSION = "follow-up-2026-10-v1";
+
+/**
+ * The reward for a review (decision B11, proposed): a personal code, one use,
+ * for any review whatever its rating. `enabled: false` = only the question.
+ */
+export const REVIEW_REWARD = { enabled: true, percent: 10, validDays: 183 } as const;
+export const MAX_REVIEW_TEXT_LENGTH = 1000;
+export const MAX_REVIEW_NAME_LENGTH = 40;
+export const REVIEWS_PAGE_SIZE = 25;
+/** Reviews sent per network address (no flooding with fake tokens). */
+export const REVIEW_RATE_LIMIT = { limit: 10, windowMs: 60 * MINUTE } as const;
+/** A batch of unique codes: at most this many at once. */
+export const MAX_BATCH_CODES = 500;

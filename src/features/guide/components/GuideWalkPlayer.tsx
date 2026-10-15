@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { ReportWalkCompleted } from "@/features/commerce/components/ReportWalkCompleted";
 import { getDetourCost } from "@/features/navigation/logic/route-legs";
 import { usePreloadMap } from "@/features/navigation/preload-map";
 import { PlayHeader } from "@/features/walk-session/components/PlayHeader";
@@ -31,7 +32,7 @@ import { GuideStopPage, type DetourOption } from "./GuideStopPage";
  * Optional (bonus) stops are offered as a choice on the stop page before
  * them; skipping one navigates straight to the stop after it.
  */
-export function GuideWalkPlayer({ walk }: { walk: Walk }) {
+export function GuideWalkPlayer({ walk, reportCompletion = false }: { walk: Walk; reportCompletion?: boolean }) {
   // Saved session, route panel, GPS flag, navigation reset.
   const shell = usePlayerShell(walk);
   const { isLoaded, session, dispatch, startNewSession } = shell;
@@ -127,6 +128,8 @@ export function GuideWalkPlayer({ walk }: { walk: Walk }) {
     return (
       <>
         <GuideCompletionScreen walk={walk} session={session} copy={copy} t={t} onShowRoute={shell.openRoute} />
+        {/* P8: played with a ticket → tell the server once that the walk is finished (no location). */}
+        {reportCompletion && <ReportWalkCompleted walkSlug={walk.slug} />}
         {routePanel}
         {playtestControls}
       </>

@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "reviewTitle": "Votre avis",
+    "unsubscribeTitle": "Se désabonner"
+  },
+  "followUp": {
+    "subject": "Comment était {product} ?",
+    "greeting": "Bonjour,",
+    "thanks": "Merci d'avoir découvert Anvers avec nous !",
+    "question": "Comment s'est passée votre expérience ? Votre avis aide d'autres visiteurs, et nous aide à améliorer nos balades. Cela ne prend qu'une minute.",
+    "reward": "Pour vous remercier, vous recevez {percent} de réduction sur votre prochaine aventure, pour tout avis, positif ou critique.",
+    "button": "Laisser un avis",
+    "signoff": "À bientôt à Anvers,",
+    "why": "Vous recevez cet unique e-mail parce que vous l'avez demandé lors de l'achat de votre billet le {date}. Nous n'enverrons pas d'autre e-mail de suivi pour cette commande.",
+    "unsubscribe": "Ne plus m'envoyer ce type d'e-mails"
+  },
+  "rewardEmail": {
+    "subject": "Votre code de remerciement pour une prochaine balade",
+    "greeting": "Bonjour,",
+    "thanks": "Merci pour votre avis !",
+    "code": "Votre code personnel : {code}",
+    "terms": "{percent} de réduction sur un prochain achat sur hidden-antwerp, valable jusqu'au {date}. Le code ne fonctionne qu'une fois.",
+    "signoff": "À bientôt à Anvers,"
+  },
+  "review": {
+    "title": "Comment était votre balade ?",
+    "intro": "Dites aux autres visiteurs ce que vous en avez pensé. Seules les personnes qui ont un billet peuvent laisser un avis, un par billet.",
+    "checking": "Vérification de votre lien…",
+    "invalid": "Ce lien d'avis n'est pas (ou plus) valable. Utilisez le lien de votre e-mail exactement tel quel.",
+    "done": "Un avis a déjà été laissé avec ce billet. Merci !",
+    "product": "Votre balade : {product}",
+    "rating": "Votre note",
+    "stars": {
+      "one": "{count} étoile",
+      "other": "{count} étoiles"
+    },
+    "text": "Votre avis (facultatif)",
+    "textHint": "{max} caractères au maximum. Merci de ne pas écrire de noms d'autres personnes ni de données personnelles.",
+    "name": "Votre nom tel qu'il sera affiché (facultatif)",
+    "nameHint": "Par ex. « Anna de Gand ». Laissez vide pour rester anonyme.",
+    "mayPublish": "Hidden Antwerp peut afficher mon avis (et le nom ci-dessus) sur son site web.",
+    "rewardNote": "Pour vous remercier, vous recevez un code de {percent} de réduction sur votre prochaine balade, quelle que soit votre note. Les avis qui ont donné droit à un code sont signalés comme tels s'ils sont affichés.",
+    "moderation": "Nous lisons chaque avis avant sa publication ; nous n'en modifions pas les mots.",
+    "submit": "Envoyer mon avis",
+    "sending": "Envoi…",
+    "thanks": "Merci pour votre avis !",
+    "codeIntro": "Votre code de {percent} de réduction sur votre prochaine balade (également envoyé par e-mail) :",
+    "codeValid": "Valable une fois, jusqu'au {date}."
+  },
+  "unsubscribe": {
+    "title": "Se désabonner",
+    "intro": "Vous ne voulez plus recevoir d'e-mails de suivi de Hidden Antwerp (demandes d'avis, codes de réduction) ? Appuyez sur le bouton. Les e-mails nécessaires à un achat (billet, reçu, remboursement) continueront d'arriver.",
+    "button": "Se désabonner",
+    "busy": "Enregistrement…",
+    "done": "C'est fait : vous ne recevrez plus d'e-mails de suivi.",
+    "invalid": "Ce lien de désabonnement n'est pas valable. Utilisez le lien de l'e-mail exactement tel quel."
+  },
+  "errors": {
+    "invalid-review-link": "Ce lien d'avis n'est pas (ou plus) valable.",
+    "already-reviewed": "Un avis a déjà été laissé avec ce billet.",
+    "invalid-rating": "Choisissez une note de 1 à 5 étoiles.",
+    "invalid-review-text": "Votre avis est trop long.",
+    "invalid-name": "Le nom est trop long.",
+    "invalid-unsubscribe-link": "Ce lien de désabonnement n'est pas valable.",
+    "too-many-requests": "Trop de tentatives. Veuillez réessayer plus tard.",
+    "offline": "Pas de connexion au serveur. Vérifiez votre connexion internet et réessayez.",
+    "generic": "Une erreur s'est produite. Veuillez réessayer."
+  }
+}

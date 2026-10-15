@@ -10,7 +10,8 @@
     "discountCode": "Código de descuento (opcional)",
     "button": "Pagar de forma segura",
     "busy": "Abriendo la página de pago…",
-    "note": "Pagas en la página de pago segura de Stripe. Después recibes por correo electrónico un enlace a la entrada: cada persona de tu grupo lo abre en su propio móvil."
+    "note": "Pagas en la página de pago segura de Stripe. Después recibes por correo electrónico un enlace a la entrada: cada persona de tu grupo lo abre en su propio móvil.",
+    "followUpConsent": "Quiero recibir un único correo después del paseo: una breve pregunta de opinión y un código de descuento para un próximo paseo (opcional, puedes darte de baja en cualquier momento)."
   },
   "errors": {
     "sales-closed": "Todavía no se pueden comprar entradas en línea.",
@@ -74,13 +75,20 @@
       "invoice": "Tu factura llegará por separado.",
       "linkIntro": "Tu enlace de entrada. Cada persona de tu grupo lo abre en su propio móvil (la entrada sirve para {seats}):",
       "validUntil": "La entrada es válida hasta el {date}.",
-      "signoff": "¡Disfruta de Amberes!"
+      "signoff": "¡Disfruta de Amberes!",
+      "group": "¿Vais varias personas? Cada una abre este mismo enlace en su propio móvil. En Hidden Pubs, el organizador lo abre, crea la partida e invita a los demás desde la sala de espera de la partida (enlace, código QR o WhatsApp).",
+      "button": "Abrir tu entrada"
     },
     "refund": {
       "subject": "Tu reembolso de Hidden Antwerp",
       "body": "Te hemos reembolsado {amount} por tu pedido de {product}.",
       "ticketRevoked": "Tu enlace de entrada ya no funciona.",
       "bankTime": "Según tu banco, pueden pasar unos días antes de que veas el reembolso."
+    },
+    "invoice": {
+      "subject": "Tu factura de Hidden Antwerp",
+      "body": "Tu factura {number} de tu pedido de {product} está lista.",
+      "button": "Ver tu factura"
     }
   },
   "groups": {

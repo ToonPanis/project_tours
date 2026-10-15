@@ -29,3 +29,22 @@ export function verifyTicketToken(token: unknown, key: string): string | null {
   // Constant time: how long the comparison takes says nothing about how close a guess was.
   return given.length === expected.length && timingSafeEqual(given, expected) ? grantId : null;
 }
+
+/**
+ * P8: the same signing for other links that must not be guessable or stored:
+ * "review" (the review page for one ticket) and "unsubscribe" (one email
+ * address, by its hash). `purpose` is part of what is signed, so a ticket
+ * link can never be used as a review or unsubscribe link, or the other way round.
+ */
+export function signValue(purpose: "review" | "unsubscribe", value: string, key: string): string {
+  return `${value}.${createHmac("sha256", key).update(`${purpose}:${value}`).digest("base64url")}`;
+}
+
+export function verifySignedValue(purpose: "review" | "unsubscribe", token: unknown, key: string, shape: RegExp): string | null {
+  if (typeof token !== "string" || token.length > 300) return null;
+  const [value, signature, ...rest] = token.split(".");
+  if (rest.length > 0 || !value || !signature || !shape.test(value)) return null;
+  const expected = Buffer.from(signValue(purpose, value, key).split(".")[1]);
+  const given = Buffer.from(signature);
+  return given.length === expected.length && timingSafeEqual(given, expected) ? value : null;
+}

@@ -89,7 +89,10 @@ export type AuditAction =
   | "partner-updated"
   | "partner-user-invited"
   | "partner-user-deactivated"
-  | "commission-status-changed";
+  | "commission-status-changed"
+  | "review-moderated"
+  | "review-deleted"
+  | "discount-batch-created";
 
 // ─── Tax (decision B8) ──────────────────────────────────────────────────────
 
@@ -222,6 +225,12 @@ export interface Order {
    * rule of that moment. Missing on orders from before P7.
    */
   partner?: OrderPartner | null;
+  /**
+   * P8: the buyer's choice on the buy box: may we send ONE email after the walk
+   * (a feedback question and a discount code)? Recorded with the time and the
+   * version of the sentence they agreed to. Missing on orders from before P8.
+   */
+  followUp?: { consent: boolean; at: string; textVersion: string } | null;
 }
 
 /** The referral of one order (see Order.partner). */
@@ -255,6 +264,12 @@ export interface TicketGrant {
    * game is being created. Null for walks and unused tickets.
    */
   gameCode: string | null;
+  /**
+   * P8: when the walk was finished with this ticket (the completion screen of a
+   * guide walk, or the host ending the Hidden Pubs game). Only the first time;
+   * no location, no progress. Missing/null until then.
+   */
+  completedAt?: string | null;
 }
 
 export interface Discount {
@@ -275,6 +290,15 @@ export interface Discount {
   active: boolean;
   createdAt: string;
   createdBy: string;
+  /**
+   * P8: where the code comes from: typed by an admin, one of a batch of unique
+   * codes, or a personal reward for a review. Missing = "admin" (older codes).
+   */
+  source?: "admin" | "batch" | "review";
+  /** The batch it belongs to ("batch" codes). */
+  batchId?: string | null;
+  /** A review reward: the order whose ticket earned it (the code is switched off if that order is refunded in full). */
+  forOrderId?: string | null;
 }
 
 /**
@@ -319,6 +343,10 @@ export interface OutboxEmail {
   subject: string;
   /** Null once sent or given up. */
   text: string | null;
+  /** P8: the HTML version (null once sent or given up, like the text; missing on older emails). */
+  html?: string | null;
+  /** P8: the List-Unsubscribe link of a non-transactional email. */
+  unsubscribeUrl?: string | null;
   status: "pending" | "sent" | "failed";
   attempts: number;
   nextAttemptAt: string;
@@ -463,4 +491,35 @@ export interface CommissionEntry {
   /** The admin's reference of the bank transfer, once paid. */
   payoutReference: string | null;
   history: { status: CommissionStatus; at: string; by: string | null }[];
+}
+
+// ─── Reviews (P8) ───────────────────────────────────────────────────────────
+
+/**
+ * A verified review: only possible with a real ticket (the link in the
+ * follow-up email is signed for that ticket), one per ticket. Shown nowhere
+ * until an admin approves it; "incentivised" says it earned a discount code
+ * (EU rules: rewarded reviews must be disclosed, the reward may not depend on
+ * the rating).
+ */
+export interface Review {
+  id: string;
+  grantId: string;
+  orderId: string;
+  walkSlug: string;
+  productId: string;
+  /** 1–5. */
+  rating: number;
+  text: string | null;
+  /** How the customer wants to be named if it is published ("Anna, Ghent"); null = anonymous. */
+  displayName: string | null;
+  /** The customer agreed that the review (and the name above) may be shown on the website. */
+  mayPublish: boolean;
+  locale: string;
+  status: "pending" | "approved" | "rejected";
+  incentivised: boolean;
+  rewardDiscountId: string | null;
+  createdAt: string;
+  moderatedAt: string | null;
+  moderatedBy: string | null;
 }

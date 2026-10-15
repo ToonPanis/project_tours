@@ -6,6 +6,7 @@ import type {
   CommissionStatus,
   Partner,
   PartnerClickDay,
+  Review,
   CorporatePricing,
   QuoteRequest,
   QuoteStatus,
@@ -205,6 +206,23 @@ export interface CommerceStore {
    * the history line; `payoutReference` is saved with "paid".
    */
   transitionCommission(id: string, from: CommissionStatus[], change: CommissionChange): Promise<boolean>;
+
+  // ── P8: completion, reviews, unsubscribes ────────────────────────────
+  /** Sets the ticket's completedAt only if it has none yet (atomic). True the first time. */
+  markGrantCompleted(grantId: string, at: string): Promise<boolean>;
+  /** The ticket a Hidden Pubs game was created with, or null. */
+  getGrantByGameCode(gameCode: string): Promise<TicketGrant | null>;
+  /** "duplicate" when this ticket already has a review (one per ticket, also at the same moment). */
+  insertReview(review: Review): Promise<"inserted" | "duplicate">;
+  getReview(id: string): Promise<Review | null>;
+  getReviewByGrant(grantId: string): Promise<Review | null>;
+  /** Newest first, optionally one status. */
+  listReviews(query: { skip: number; limit: number; status?: Review["status"] }): Promise<{ reviews: Review[]; total: number }>;
+  updateReview(id: string, changes: Partial<Omit<Review, "id" | "grantId">>): Promise<void>;
+  deleteReview(id: string): Promise<void>;
+  /** Remembers that an address (by its SHA-256 hash only) wants no more non-transactional mail. */
+  addSuppression(emailHash: string, reason: "unsubscribed", at: string): Promise<void>;
+  isSuppressed(emailHash: string): Promise<boolean>;
 
   // ── Settings ─────────────────────────────────────────────────────────
   /** The corporate price table, or null when an admin never saved one (the defaults are used). */

@@ -10,7 +10,8 @@
     "discountCode": "Code de réduction (facultatif)",
     "button": "Payer en toute sécurité",
     "busy": "Ouverture de la page de paiement…",
-    "note": "Vous payez sur la page de paiement sécurisée de Stripe. Ensuite, vous recevez par e-mail un lien vers votre billet : chaque membre de votre groupe l'ouvre sur son propre téléphone."
+    "note": "Vous payez sur la page de paiement sécurisée de Stripe. Ensuite, vous recevez par e-mail un lien vers votre billet : chaque membre de votre groupe l'ouvre sur son propre téléphone.",
+    "followUpConsent": "M'envoyer un seul e-mail après la balade : une courte demande d'avis et un code de réduction pour une prochaine balade (facultatif, vous pouvez vous désabonner à tout moment)."
   },
   "errors": {
     "sales-closed": "Les billets ne peuvent pas encore être achetés en ligne.",
@@ -74,13 +75,20 @@
       "invoice": "Votre facture suivra séparément.",
       "linkIntro": "Votre lien de billet. Chaque membre de votre groupe l'ouvre sur son propre téléphone (le billet est valable pour {seats}) :",
       "validUntil": "Le billet est valable jusqu'au {date}.",
-      "signoff": "Profitez bien d'Anvers !"
+      "signoff": "Profitez bien d'Anvers !",
+      "group": "Vous êtes plusieurs ? Chacun ouvre ce même lien sur son propre téléphone. Pour Hidden Pubs, l'organisateur l'ouvre, crée la partie et invite les autres depuis l'écran d'attente de la partie (lien, code QR ou WhatsApp).",
+      "button": "Ouvrir votre billet"
     },
     "refund": {
       "subject": "Votre remboursement de Hidden Antwerp",
       "body": "Nous avons remboursé {amount} pour votre commande de {product}.",
       "ticketRevoked": "Votre lien de billet ne fonctionne plus.",
       "bankTime": "Selon votre banque, il peut falloir quelques jours avant que le remboursement apparaisse."
+    },
+    "invoice": {
+      "subject": "Votre facture de Hidden Antwerp",
+      "body": "Votre facture {number} pour votre commande de {product} est prête.",
+      "button": "Voir votre facture"
     }
   },
   "groups": {

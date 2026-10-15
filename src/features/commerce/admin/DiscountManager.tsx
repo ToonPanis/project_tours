@@ -20,6 +20,10 @@ export function DiscountManager({ discounts, products }: { discounts: Discount[]
   const [validFrom, setValidFrom] = useState("");
   const [validUntil, setValidUntil] = useState("");
   const [maxRedemptions, setMaxRedemptions] = useState("");
+  // P8: one shared code, or a batch of unique single-use codes.
+  const [mode, setMode] = useState<"shared" | "unique">("shared");
+  const [count, setCount] = useState("50");
+  const [createdCodes, setCreatedCodes] = useState<string[] | null>(null);
   const [isBusy, setIsBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -29,6 +33,20 @@ export function DiscountManager({ discounts, products }: { discounts: Discount[]
     setIsBusy(true);
     setError(null);
     setSuccess(null);
+    setCreatedCodes(null);
+    if (mode === "unique") {
+      const batch = await postJson<{ batchId: string; codes: string[] }>("/api/admin/discounts/batch", { code, kind, value, productIds, validFrom, validUntil, count });
+      setIsBusy(false);
+      if (!batch.ok) {
+        setError(adminErrorMessage(batch.error));
+        return;
+      }
+      setSuccess(`${batch.data.codes.length} unique codes created. Copy them now: they're listed below once.`);
+      setCreatedCodes(batch.data.codes);
+      setCode("");
+      router.refresh();
+      return;
+    }
     const result = await postJson<Discount>("/api/admin/discounts", { code, kind, value, productIds, validFrom, validUntil, maxRedemptions });
     setIsBusy(false);
     if (!result.ok) {
@@ -48,13 +66,36 @@ export function DiscountManager({ discounts, products }: { discounts: Discount[]
   }
 
   const productName = (id: string) => products.find((product) => product.id === id)?.name ?? id;
+  // Batch and review codes are many: shown as one summary line each, not one line per code.
+  const shared = discounts.filter((discount) => !discount.source || discount.source === "admin");
+  const batches = new Map<string, Discount[]>();
+  for (const discount of discounts.filter((candidate) => candidate.source === "batch")) {
+    const key = discount.batchId ?? "?";
+    batches.set(key, [...(batches.get(key) ?? []), discount]);
+  }
+  const rewards = discounts.filter((discount) => discount.source === "review");
 
   return (
     <div className="flex flex-col gap-8 text-parchment">
       <form onSubmit={create} className="flex flex-col gap-4 rounded-sm border border-parchment/20 p-4">
         <h2 className="font-display text-2xl font-semibold">New code</h2>
+        <fieldset className="flex flex-wrap gap-4">
+          <legend className={labelText}>What to make</legend>
+          <label className="flex min-h-11 items-center gap-2">
+            <input type="radio" name="mode" checked={mode === "shared"} onChange={() => setMode("shared")} /> One code (shared)
+          </label>
+          <label className="flex min-h-11 items-center gap-2">
+            <input type="radio" name="mode" checked={mode === "unique"} onChange={() => setMode("unique")} /> Unique codes, one use each
+          </label>
+        </fieldset>
+        {mode === "unique" && (
+          <label className="flex max-w-48 flex-col gap-1">
+            <span className={labelText}>How many (1–500)</span>
+            <input value={count} onChange={(event) => setCount(event.target.value)} inputMode="numeric" required className={field} />
+          </label>
+        )}
         <label className="flex flex-col gap-1">
-          <span className={labelText}>Code</span>
+          <span className={labelText}>{mode === "unique" ? "Prefix (each code gets its own random part)" : "Code"}</span>
           <input value={code} onChange={(event) => setCode(event.target.value)} maxLength={30} required className={`${field} uppercase`} />
         </label>
         <fieldset className="flex flex-wrap gap-4">
@@ -94,22 +135,30 @@ export function DiscountManager({ discounts, products }: { discounts: Discount[]
             <span className={labelText}>Valid until</span>
             <input type="date" value={validUntil} onChange={(event) => setValidUntil(event.target.value)} className={field} />
           </label>
-          <label className="flex flex-col gap-1">
-            <span className={labelText}>Max. uses</span>
-            <input value={maxRedemptions} onChange={(event) => setMaxRedemptions(event.target.value)} inputMode="numeric" className={field} />
-          </label>
+          {mode === "shared" && (
+            <label className="flex flex-col gap-1">
+              <span className={labelText}>Max. uses</span>
+              <input value={maxRedemptions} onChange={(event) => setMaxRedemptions(event.target.value)} inputMode="numeric" className={field} />
+            </label>
+          )}
         </div>
         <Button type="submit" disabled={isBusy}>
-          Create code
+          {mode === "unique" ? "Create unique codes" : "Create code"}
         </Button>
         <AdminStatus tone="error" message={error} />
         <AdminStatus tone="success" message={success} />
+        {createdCodes && (
+          <label className="flex flex-col gap-1">
+            <span className={labelText}>The new codes (one per line)</span>
+            <textarea readOnly value={createdCodes.join("\n")} rows={Math.min(12, createdCodes.length)} className={`${field} py-2 font-mono`} />
+          </label>
+        )}
       </form>
 
       <div className="flex flex-col gap-2">
         <h2 className="font-display text-2xl font-semibold">Codes</h2>
-        {discounts.length === 0 && <p className="text-parchment/70">No codes yet.</p>}
-        {discounts.map((discount) => (
+        {shared.length === 0 && <p className="text-parchment/70">No codes yet.</p>}
+        {shared.map((discount) => (
           <article key={discount.id} className="flex flex-wrap items-center justify-between gap-3 rounded-sm border border-parchment/15 p-3">
             <div>
               <p className="font-semibold">
@@ -128,6 +177,22 @@ export function DiscountManager({ discounts, products }: { discounts: Discount[]
             </Button>
           </article>
         ))}
+        {[...batches.values()].map((batch) => {
+          const first = batch[0];
+          const used = batch.filter((discount) => discount.redemptions > 0).length;
+          return (
+            <article key={first.batchId ?? first.id} className="rounded-sm border border-parchment/15 p-3">
+              <p className="font-semibold">{`Batch ${first.code.replace(/-[^-]+$/, "")}-… · ${batch.length} unique codes · ${first.kind === "percent" ? `${first.value} %` : formatEuros(first.value)} off`}</p>
+              <p className="text-sm text-parchment/70">{`${used} used · ${first.validUntil ? `until ${first.validUntil.slice(0, 10)}` : "no end date"}`}</p>
+            </article>
+          );
+        })}
+        {rewards.length > 0 && (
+          <article className="rounded-sm border border-parchment/15 p-3">
+            <p className="font-semibold">{`Review rewards · ${rewards.length} personal codes`}</p>
+            <p className="text-sm text-parchment/70">{`${rewards.filter((discount) => discount.redemptions > 0).length} used · ${rewards.filter((discount) => !discount.active).length} switched off (order refunded)`}</p>
+          </article>
+        )}
       </div>
     </div>
   );

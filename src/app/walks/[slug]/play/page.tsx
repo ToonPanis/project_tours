@@ -57,7 +57,8 @@ export default async function PlayWalkPage({ params }: PageProps<"/walks/[slug]/
   return (
     <div data-walk-theme={walk.theme} className="bg-night-map min-h-full">
       <div className="mx-auto max-w-lg">
-        <WalkPlayer walk={walk} />
+        {/* Only with a ticket ("granted") is there anyone to send a follow-up email to. */}
+        <WalkPlayer walk={walk} reportCompletion={access === "granted"} />
       </div>
     </div>
   );
