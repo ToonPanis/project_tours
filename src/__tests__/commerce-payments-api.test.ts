@@ -260,6 +260,12 @@ describe("admin and cron routes", () => {
     vi.stubEnv("CRON_SECRET", "cron-secret");
     expect((await outboxCron(new NextRequest(`${ORIGIN}/api/cron/email-outbox`, { headers: { authorization: "Bearer wrong" } }))).status).toBe(401);
     const ok = await outboxCron(new NextRequest(`${ORIGIN}/api/cron/email-outbox`, { headers: { authorization: "Bearer cron-secret" } }));
-    expect(await ok.json()).toEqual({ sent: 0, retrying: 0, failed: 0 });
+    // P9: the daily maintenance also applies the retention periods (nothing old here).
+    expect(await ok.json()).toEqual({
+      sent: 0,
+      retrying: 0,
+      failed: 0,
+      retention: { auditEntriesDeleted: 0, rejectedReviewsDeleted: 0, unpaidOrdersDeleted: 0, ordersPseudonymised: 0 },
+    });
   });
 });

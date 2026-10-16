@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "title": "Privacy and cookies",
+    "description": "What Hidden Antwerp stores, why, and for how long."
+  },
+  "title": "Privacy and cookies",
+  "intro": "This page lists, factually, what Hidden Antwerp stores on your phone and on our servers, why, and for how long. We use no advertising, no analytics and no tracking across websites.",
+  "draftNotice": "Prototype: this overview describes how the app works today. The full privacy notice is still being written and will be checked by a lawyer before the launch.",
+  "cookies": {
+    "title": "Cookies",
+    "intro": "Only cookies the site needs to work. They are first-party (only our site can read them) and contain no advertising or tracking IDs.",
+    "name": "Cookie",
+    "purpose": "What for",
+    "duration": "How long",
+    "rows": {
+      "locale": "Your language choice.",
+      "player": "Recognises your phone as the same player in a Hidden Pubs game.",
+      "order": "Shows your order on the payment confirmation page.",
+      "ticket": "Remembers that this phone opened your ticket.",
+      "referral": "Remembers which partner (for example your hotel) sent you, so they can be credited if you buy a ticket. Only the partner code and the time, nothing about you.",
+      "staff": "Keeps Hidden Antwerp staff or partners signed in (only if you sign in to those areas)."
+    },
+    "durations": {
+      "year": "1 year",
+      "days": "{count} days",
+      "hours": "{count} hours",
+      "ticketValidity": "as long as the ticket is valid",
+      "session": "12 hours or 7 days"
+    },
+    "referralNote": "Whether this partner cookie may be set without asking first is still being checked legally."
+  },
+  "storage": {
+    "title": "Stored on your phone (local storage)",
+    "language": "Your language choice (a copy, in case the cookie is gone).",
+    "progress": "Your progress in a walk (which stops you finished), so you can continue later. No location.",
+    "intro": "That you have seen the introduction of a Hidden Pubs game."
+  },
+  "location": {
+    "title": "Your location",
+    "body": "During navigation your phone's GPS position is used on your phone only, to show the map and detect arrival. It is never stored and never sent to our servers or anyone else."
+  },
+  "server": {
+    "title": "Stored on our servers",
+    "orders": "Purchases: email address, name and country from the payment page, business details for an invoice, what you bought and paid. Kept for the accounting period; afterwards your email and name are removed.",
+    "games": "Hidden Pubs games: team names, answers, scores and evidence photos or videos. Deleted automatically after 7 days.",
+    "quotes": "Company quote requests: contact details and the request. Deleted after 2 years.",
+    "reviews": "Reviews you write after a walk: rating, text and an optional name. Kept until deleted.",
+    "followUp": "Whether you asked for an email after the walk, and if you unsubscribed (only a scrambled fingerprint of your address).",
+    "partners": "Visits through a partner link are only counted per day; nothing about you."
+  },
+  "providers": {
+    "title": "Services we use",
+    "hosting": "Vercel (hosting of the website and storage of Hidden Pubs photos).",
+    "database": "MongoDB Atlas (database).",
+    "payments": "Stripe (payment page; your card details go to Stripe only, never to us).",
+    "email": "Brevo (sending emails).",
+    "maps": "OpenFreeMap (map tiles; their server sees which part of the map your phone loads, not your GPS position)."
+  },
+  "rights": {
+    "title": "Your rights",
+    "body": "You can ask which data we have about you, get a copy, have it corrected or erased, and unsubscribe from emails after a walk with the link in every such email. Purchases stay in the accounts as long as the law requires, without your email and name after that period.",
+    "contact": "Contact for privacy questions: [CONTACT ADDRESS TO BE ADDED BEFORE LAUNCH]"
+  }
+}

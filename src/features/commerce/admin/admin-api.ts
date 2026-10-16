@@ -84,6 +84,8 @@ const MESSAGES: Record<string, string> = {
   // Reviews and unique codes (P8)
   "unknown-review": "This review doesn't exist (anymore).",
   "invalid-count": "Choose how many codes: a whole number from 1 to 500.",
+  // Personal data requests (P9)
+  "confirmation-mismatch": "Type exactly the same address in the confirmation field.",
   offline: "No connection to the server. Check your internet and try again.",
 };
 

@@ -34,6 +34,8 @@ const globalForGames = globalThis as typeof globalThis & {
 function memoryStoresAllowed(): boolean {
   if (process.env.NODE_ENV !== "production") return true;
   if (process.env.PUB_GAME_MEMORY_STORES !== "true") return false;
+  // P9: never on Vercel, even if the test flag was set there by mistake.
+  if (process.env.VERCEL === "1") return false;
   if (!globalForGames.pubGameMemoryWarned) {
     globalForGames.pubGameMemoryWarned = true;
     console.warn("⚠ PUB_GAME_MEMORY_STORES=true: Hidden Pubs keeps games and photos in memory. For tests only.");

@@ -18,6 +18,7 @@
     "test:e2e": "playwright test",
     "db:setup": "node --env-file=.env.local scripts/db-setup.mjs",
     "db:check": "node --env-file=.env.local scripts/db-check.mjs",
+    "db:export": "node --env-file=.env.local scripts/db-export.mjs",
     "media:download": "node --env-file=.env.local scripts/media-download.mjs",
     "test:db": "node --env-file=.env.local node_modules/vitest/vitest.mjs run src/__tests__/pub-game-store.test.ts src/__tests__/commerce-store.test.ts"
   },

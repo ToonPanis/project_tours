@@ -130,3 +130,22 @@ export const REVIEWS_PAGE_SIZE = 25;
 export const REVIEW_RATE_LIMIT = { limit: 10, windowMs: 60 * MINUTE } as const;
 /** A batch of unique codes: at most this many at once. */
 export const MAX_BATCH_CODES = 500;
+
+// ─── P9: retention periods ──────────────────────────────────────────────────
+
+/**
+ * How long records are kept before the daily maintenance deletes or
+ * pseudonymises them (docs/commercial/SECURITY_AUDIT.md). ⚖️ The accounting
+ * period (10 years in Belgium) and the audit-log period are to be confirmed
+ * with the accountant / lawyer; change them here.
+ */
+export const RETENTION = {
+  /** Who changed what: security evidence for 2 years. */
+  auditLogDays: 2 * 365,
+  /** Rejected reviews: kept a year (in case of questions), then deleted. */
+  rejectedReviewDays: 365,
+  /** Orders that were never paid hold no email; deleted after a year. */
+  unpaidOrderDays: 365,
+  /** Paid orders: the email and name are removed after the accounting period; the amounts stay. */
+  orderPersonalDataDays: 10 * 365 + 3,
+} as const;

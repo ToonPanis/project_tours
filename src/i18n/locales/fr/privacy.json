@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "title": "Confidentialité et cookies",
+    "description": "Ce que Hidden Antwerp conserve, pourquoi et pendant combien de temps."
+  },
+  "title": "Confidentialité et cookies",
+  "intro": "Cette page indique, de manière factuelle, ce que Hidden Antwerp conserve sur votre téléphone et sur nos serveurs, pourquoi et pendant combien de temps. Nous n'utilisons aucune publicité, aucun outil d'analyse et aucun suivi entre sites web.",
+  "draftNotice": "Prototype : cet aperçu décrit le fonctionnement actuel de l'application. La politique de confidentialité complète est encore en cours de rédaction et sera vérifiée par un avocat avant le lancement.",
+  "cookies": {
+    "title": "Cookies",
+    "intro": "Uniquement les cookies dont le site a besoin pour fonctionner. Ce sont des cookies internes (seul notre site peut les lire) et ils ne contiennent aucun identifiant publicitaire ou de suivi.",
+    "name": "Cookie",
+    "purpose": "À quoi il sert",
+    "duration": "Durée",
+    "rows": {
+      "locale": "Votre choix de langue.",
+      "player": "Reconnaît votre téléphone comme le même joueur dans une partie de Hidden Pubs.",
+      "order": "Affiche votre commande sur la page de confirmation du paiement.",
+      "ticket": "Mémorise que ce téléphone a ouvert votre billet.",
+      "referral": "Mémorise quel partenaire (par exemple votre hôtel) vous a envoyé, afin qu'il puisse en être crédité si vous achetez un billet. Uniquement le code du partenaire et l'heure, rien sur vous.",
+      "staff": "Maintient connectés les membres du personnel ou les partenaires de Hidden Antwerp (uniquement si vous vous connectez à ces espaces)."
+    },
+    "durations": {
+      "year": "1 an",
+      "days": "{count} jours",
+      "hours": "{count} heures",
+      "ticketValidity": "tant que le billet est valable",
+      "session": "12 heures ou 7 jours"
+    },
+    "referralNote": "La question de savoir si ce cookie partenaire peut être déposé sans demander d'abord est encore en cours de vérification juridique."
+  },
+  "storage": {
+    "title": "Conservé sur votre téléphone (stockage local)",
+    "language": "Votre choix de langue (une copie, au cas où le cookie aurait disparu).",
+    "progress": "Votre progression dans une promenade (les étapes que vous avez terminées), pour que vous puissiez continuer plus tard. Aucune position.",
+    "intro": "Le fait que vous avez vu l'introduction d'une partie de Hidden Pubs."
+  },
+  "location": {
+    "title": "Votre position",
+    "body": "Pendant la navigation, la position GPS de votre téléphone est utilisée uniquement sur votre téléphone, pour afficher la carte et détecter votre arrivée. Elle n'est jamais conservée et jamais envoyée à nos serveurs ni à qui que ce soit."
+  },
+  "server": {
+    "title": "Conservé sur nos serveurs",
+    "orders": "Achats : adresse e-mail, nom et pays indiqués sur la page de paiement, coordonnées de l'entreprise pour une facture, ce que vous avez acheté et payé. Conservés pendant la période comptable ; ensuite, votre adresse e-mail et votre nom sont supprimés.",
+    "games": "Parties de Hidden Pubs : noms des équipes, réponses, scores et photos ou vidéos de preuve. Supprimés automatiquement après 7 jours.",
+    "quotes": "Demandes de devis d'entreprises : coordonnées et la demande. Supprimées après 2 ans.",
+    "reviews": "Avis que vous rédigez après une promenade : note, texte et un nom facultatif. Conservés jusqu'à leur suppression.",
+    "followUp": "Si vous avez demandé un e-mail après la promenade, et si vous vous êtes désinscrit (uniquement une empreinte brouillée de votre adresse).",
+    "partners": "Les visites via un lien partenaire sont uniquement comptées par jour ; rien sur vous."
+  },
+  "providers": {
+    "title": "Services que nous utilisons",
+    "hosting": "Vercel (hébergement du site web et stockage des photos de Hidden Pubs).",
+    "database": "MongoDB Atlas (base de données).",
+    "payments": "Stripe (page de paiement ; les données de votre carte vont uniquement à Stripe, jamais à nous).",
+    "email": "Brevo (envoi des e-mails).",
+    "maps": "OpenFreeMap (tuiles de carte ; leur serveur voit quelle partie de la carte votre téléphone charge, pas votre position GPS)."
+  },
+  "rights": {
+    "title": "Vos droits",
+    "body": "Vous pouvez demander quelles données nous détenons sur vous, en obtenir une copie, les faire corriger ou effacer, et vous désinscrire des e-mails envoyés après une promenade grâce au lien présent dans chacun de ces e-mails. Les achats restent dans la comptabilité aussi longtemps que la loi l'exige, sans votre adresse e-mail ni votre nom après cette période.",
+    "contact": "Contact pour les questions de confidentialité : [ADRESSE DE CONTACT À AJOUTER AVANT LE LANCEMENT]"
+  }
+}

@@ -67,7 +67,7 @@ test("the corporate page: loads without errors, fits a phone, and a quote reques
 });
 
 test("the new admin pages need a session", async ({ page }) => {
-  for (const path of ["/admin/orders", "/admin/tax", "/admin/discounts", "/admin/quotes", "/admin/groups", "/admin/documents", "/admin/partners", "/admin/reviews"]) {
+  for (const path of ["/admin/orders", "/admin/tax", "/admin/discounts", "/admin/quotes", "/admin/groups", "/admin/documents", "/admin/partners", "/admin/reviews", "/admin/privacy"]) {
     await page.goto(path);
     await expect(page).toHaveURL(/\/admin\/login$/);
   }
@@ -105,4 +105,16 @@ test("the unsubscribe page only acts on a button press, and refuses a broken lin
   await expect(page.getByRole("heading", { level: 1, name: en("feedback.unsubscribe.title") })).toBeVisible();
   await page.getByRole("button", { name: en("feedback.unsubscribe.button") }).click();
   await expect(page.getByText(en("feedback.unsubscribe.invalid"))).toBeVisible();
+});
+
+test("the privacy page: reachable from the footer, lists the real cookies, fits a phone", async ({ page }) => {
+  const problems = watchForProblems(page);
+  await page.goto("/walks");
+  await page.getByRole("link", { name: en("navigation.privacy") }).click();
+  await expect(page).toHaveURL(/\/privacy$/);
+  await expect(page.getByRole("heading", { level: 1, name: en("privacy.title") })).toBeVisible();
+  for (const name of ["ha-locale", "ha_ticket_<walk>", "ha_ref"]) await expect(page.getByText(name, { exact: true })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.waitForLoadState("networkidle");
+  expect(problems).toEqual([]);
 });

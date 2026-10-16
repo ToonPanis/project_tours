@@ -52,6 +52,8 @@ next-env.d.ts
 
 # Hidden Pubs evidence downloaded by npm run media:download (players' photos: never commit)
 /media-downloads/
+# P9: database exports (contain personal data)
+/backups/
 
 # Local text-to-speech tools (Python venv, voice models): not part of the app
 /.tts/

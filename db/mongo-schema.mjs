@@ -256,6 +256,8 @@ const VALIDATORS = {
       partner: { bsonType: ["object", "null"] },
       // P8: consent for the one email after the walk (time + sentence version).
       followUp: { bsonType: ["object", "null"] },
+      // P9: when the buyer's email and name were removed (erasure or retention).
+      erasedAt: optionalDate,
     },
   },
   [COLLECTIONS.stripeEvents]: {
@@ -453,6 +455,8 @@ export const INDEXES = {
   [COLLECTIONS.orders]: [
     { key: { createdAt: -1 }, name: "createdAt_desc" },
     { key: { status: 1, createdAt: -1 }, name: "status_createdAt" },
+    // P9: a person's orders, for access and erasure requests.
+    { key: { email: 1 }, name: "email", partialFilterExpression: { email: { $type: "string" } } },
     // P5: the dashboard reads paid orders by payment date.
     { key: { status: 1, paidAt: 1 }, name: "status_paidAt" },
     // P7: one partner's orders by payment date.
@@ -483,6 +487,8 @@ export const INDEXES = {
     { key: { status: 1, createdAt: -1 }, name: "status_createdAt" },
     { key: { createdAt: -1 }, name: "createdAt_desc" },
     { key: { dedupeKey: 1, createdAt: -1 }, name: "dedupeKey_createdAt" },
+    // P9: a person's requests (access and erasure).
+    { key: { email: 1 }, name: "email" },
     expiry,
   ],
   [COLLECTIONS.settings]: [],

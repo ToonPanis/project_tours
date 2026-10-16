@@ -10,9 +10,10 @@ import home from "./home.json";
 import meta from "./meta.json";
 import navigation from "./navigation.json";
 import partner from "./partner.json";
+import privacy from "./privacy.json";
 import pubgame from "./pubgame.json";
 import walks from "./walks.json";
 
-const nl = { common, navigation, meta, home, errors, walks, game, guide, gps, pubgame, commerce, corporate, partner, feedback };
+const nl = { common, navigation, meta, home, errors, walks, game, guide, gps, pubgame, commerce, corporate, partner, feedback, privacy };
 
 export default nl;

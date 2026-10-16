@@ -224,6 +224,27 @@ export interface CommerceStore {
   addSuppression(emailHash: string, reason: "unsubscribed", at: string): Promise<void>;
   isSuppressed(emailHash: string): Promise<boolean>;
 
+  // ── P9: personal data requests and retention ─────────────────────────
+  /** Orders whose buyer email is this address (case-insensitive). */
+  findOrdersByEmail(email: string): Promise<Order[]>;
+  /** Quote requests sent from this address (case-insensitive). */
+  findQuotesByEmail(email: string): Promise<QuoteRequest[]>;
+  deleteQuote(id: string): Promise<void>;
+  /** Outbox records to this address (case-insensitive); texts of sent emails are already gone. */
+  listEmailsTo(email: string): Promise<OutboxEmail[]>;
+  /** Deletes the outbox records to this address; returns how many. */
+  deleteEmailsTo(email: string): Promise<number>;
+  /** Removes a user's email address from the audit log (the actions and their user id stay). */
+  anonymiseAuditActor(actorId: string): Promise<number>;
+  /** Retention: audit entries older than `before`. Returns how many were deleted. */
+  deleteAuditBefore(before: Date): Promise<number>;
+  /** Retention: reviews with this status created before `before`. */
+  deleteReviewsBefore(status: Review["status"], before: Date): Promise<number>;
+  /** Retention: orders that were never paid (pending, failed, canceled), created before `before`. */
+  deleteUnpaidOrdersBefore(before: Date): Promise<number>;
+  /** Retention: paid/refunded orders created before `before` that still hold an email or a name. */
+  listOrdersWithPersonalDataBefore(before: Date, limit: number): Promise<Order[]>;
+
   // ── Settings ─────────────────────────────────────────────────────────
   /** The corporate price table, or null when an admin never saved one (the defaults are used). */
   getCorporatePricing(): Promise<CorporatePricing | null>;

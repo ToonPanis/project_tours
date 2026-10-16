@@ -92,7 +92,11 @@ export type AuditAction =
   | "commission-status-changed"
   | "review-moderated"
   | "review-deleted"
-  | "discount-batch-created";
+  | "discount-batch-created"
+  | "personal-data-exported"
+  | "personal-data-erased"
+  | "retention-applied"
+  | "admin-sign-in-alert";
 
 // ─── Tax (decision B8) ──────────────────────────────────────────────────────
 
@@ -231,6 +235,12 @@ export interface Order {
    * version of the sentence they agreed to. Missing on orders from before P8.
    */
   followUp?: { consent: boolean; at: string; textVersion: string } | null;
+  /**
+   * P9: when the buyer's personal data was removed (an erasure request, or the
+   * end of the retention period). The amounts, VAT, country and business
+   * details the accounts need stay; the email and name are gone.
+   */
+  erasedAt?: string | null;
 }
 
 /** The referral of one order (see Order.partner). */

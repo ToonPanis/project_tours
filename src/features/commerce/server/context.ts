@@ -89,6 +89,8 @@ function getTicketSigningKey(): string {
  * every server instance would have its own memory.
  */
 function memoryAllowed(): boolean {
+  // P9: never on Vercel, even if the test flag was set there by mistake (data would vanish).
+  if (process.env.VERCEL === "1") return false;
   return process.env.NODE_ENV !== "production" || process.env.COMMERCE_MEMORY_STORES === "true";
 }
 

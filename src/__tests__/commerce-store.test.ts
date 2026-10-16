@@ -556,6 +556,48 @@ describe.each(factories)("$name commerce store", ({ create, cleanup }) => {
     expect(await store.isSuppressed(hash)).toBe(true);
   });
 
+  test("P9: a person's records by email (any case), deleted or anonymised; retention deletes only what is old", async () => {
+    const address = `${unique("person").toLowerCase()}@example.com`;
+    const orderId = unique("order");
+    await store.insertOrder(order(orderId, { status: "paid", paidAt: NOW.toISOString(), email: address }));
+    expect((await store.findOrdersByEmail(address.toUpperCase())).map((found) => found.id)).toEqual([orderId]);
+    expect(await store.findOrdersByEmail(`x${address}`)).toEqual([]);
+    // An address with regex characters is matched literally.
+    expect(await store.findOrdersByEmail(".*@example.com")).toEqual([]);
+
+    const quoteId = unique("quote");
+    await store.insertQuote(
+      { id: quoteId, status: "NEW", company: "Acme", contactName: "Jan", email: address, phone: null, preferredDate: null, participants: 10, activity: "team-building", language: "nl", formula: "unsure", wishes: null, history: [], createdAt: NOW.toISOString(), updatedAt: NOW.toISOString() },
+      unique("dedupe"),
+      LATER,
+    );
+    expect((await store.findQuotesByEmail(address)).map((found) => found.id)).toEqual([quoteId]);
+    await store.deleteQuote(quoteId);
+    expect(await store.findQuotesByEmail(address)).toEqual([]);
+
+    await store.enqueueEmail(email(unique("mail"), { to: address }), LATER);
+    expect(await store.listEmailsTo(address.toUpperCase())).toHaveLength(1);
+    expect(await store.deleteEmailsTo(address)).toBe(1);
+
+    const actorId = unique("actor");
+    await store.appendAudit({ id: unique("audit"), actorId, actorEmail: address, action: "login", target: "x", details: {}, at: "1990-01-01T00:00:00.000Z" });
+    expect(await store.anonymiseAuditActor(actorId)).toBe(1);
+    expect(await store.deleteAuditBefore(new Date("1990-06-01T00:00:00.000Z"))).toBeGreaterThanOrEqual(1);
+
+    const oldUnpaid = unique("order");
+    await store.insertOrder(order(oldUnpaid, { status: "canceled", createdAt: "1990-01-01T00:00:00.000Z" }));
+    const oldPaid = unique("order");
+    await store.insertOrder(order(oldPaid, { status: "paid", paidAt: "1990-01-01T00:00:00.000Z", createdAt: "1990-01-01T00:00:00.000Z", email: address }));
+    expect(await store.deleteUnpaidOrdersBefore(new Date("1990-06-01T00:00:00.000Z"))).toBeGreaterThanOrEqual(1);
+    expect(await store.getOrder(oldUnpaid)).toBeNull();
+    const stale = await store.listOrdersWithPersonalDataBefore(new Date("1990-06-01T00:00:00.000Z"), 100);
+    expect(stale.map((found) => found.id)).toContain(oldPaid);
+    expect(stale.map((found) => found.id)).not.toContain(orderId);
+    await store.updateOrder(oldPaid, { email: null, erasedAt: NOW.toISOString() });
+    expect((await store.listOrdersWithPersonalDataBefore(new Date("1990-06-01T00:00:00.000Z"), 100)).map((found) => found.id)).not.toContain(oldPaid);
+    expect((await store.getOrder(oldPaid))?.erasedAt).toBe(NOW.toISOString());
+  });
+
   test("settings: the corporate price table is saved and read back", async () => {
     const pricing = {
       tiers: [{ persons: 12, selfGuidedCents: 18_000, guidedCents: null, guidedFrom: false }],
