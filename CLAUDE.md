@@ -57,6 +57,9 @@ src/app/checkout/, tickets/   buyers: /checkout/success, /checkout/canceled, /ti
 src/app/playtest/checkout/    P10, BROWSER TESTS ONLY: the test payment page (404 unless COMMERCE_FAKE_PAYMENTS + memory stores, never on Vercel); API /api/playtest/(seed|pay)
 src/app/privacy/              P9: factual "privacy & cookies" page (8 languages, footer link; cookie names/durations from the code)
 src/app/review/, unsubscribe/ P8: /review#<token> (verified review), /unsubscribe#<token>; API /api/reviews(/check), /api/unsubscribe
+src/app/about|contact|reviews/  public pages (frontend redesign, docs/frontend/FRONTEND_REDESIGN.md): /about, /contact (mailto to
+                              CONTACT_EMAIL, switched off without it), /reviews (approved reviews from listReviews; the 4 marked
+                              example reviews in features/reviews/demo-reviews.ts show only outside production unless SHOW_DEMO_REVIEWS)
 src/app/corporate/            /corporate: team building page, price guide, quote form (API: /api/quotes); footer link
 src/app/partner/              PARTNER PORTAL (8 languages, noindex): /partner/login (+ /verify), /partner (own figures only);
                               API /api/partner/auth/*, /api/partner/qr. Partner links: src/proxy.ts → /api/r (click + cookie)
@@ -140,6 +143,7 @@ Pattern: **technical data exists once** (ids, coordinates, addresses, images, an
 - **Audit log** (`com_audit_log`): sign-ins, sign-outs and every catalogue change with old → new; never secrets or customer data.
 - **Email (B6):** `Mailer` = Brevo (HTTPS API with `fetch`, no SDK) or memory (dev prints emails in the terminal; tests read `sent`). Outbox `com_email_outbox`: idempotent id (same id = one email), atomic claim before sending, retries with growing pauses, the text is removed once sent or given up.
 - Stores like Hidden Pubs: `CommerceStore` = memory (dev/tests, `COMMERCE_MEMORY_STORES=true` for the Playwright build only) | MongoDB (`com_*` collections in `db/mongo-schema.mjs`, string `_id`s, keys checked against NoSQL injection, fixed error message). `context.ts` picks them; contract tests in `commerce-store.test.ts` run against both (`npm run test:db`).
+- Admin shell: sidebar groups in `admin/admin-navigation.ts` (a test fails if a console page has no entry), `AdminShell` + `PageHeader` on every page.
 - The admin area is **English only** (owner tool, like the playtest tools): folders named `admin/` are skipped by `no-hardcoded-text.test.ts`; the admin layout sets `lang="en"` and `noindex`. Buyer screens and emails are in all 8 languages (`commerce.json`).
 
 ## Hidden Pubs (`src/features/pub-game/`, `src/app/games/`, `src/app/api/games/`)
