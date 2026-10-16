@@ -205,6 +205,8 @@ const VALIDATORS = {
       // P8: the HTML version and the unsubscribe link (follow-up mails).
       html: optionalText(100000),
       unsubscribeUrl: optionalText(500),
+      // P10: not sent after this (sign-in links).
+      sendBefore: optionalDate,
       status: { enum: ["pending", "sent", "failed"] },
       attempts: whole,
       nextAttemptAt: date,

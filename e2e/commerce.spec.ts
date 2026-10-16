@@ -118,3 +118,10 @@ test("the privacy page: reachable from the footer, lists the real cookies, fits 
   await page.waitForLoadState("networkidle");
   expect(problems).toEqual([]);
 });
+
+test("the browser tests' payment page and routes don't exist on a normal server (404)", async ({ page, request }) => {
+  const pageResponse = await page.goto("/playtest/checkout?order=x");
+  expect(pageResponse?.status()).toBe(404);
+  expect((await request.post("/api/playtest/pay", { data: { order: "x" } })).status()).toBe(404);
+  expect((await request.post("/api/playtest/seed", { data: {} })).status()).toBe(404);
+});
