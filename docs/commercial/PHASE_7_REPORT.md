@@ -3,7 +3,9 @@
 Date: 2026-10-17. Branch: `commercial/p7-partners` (from `main` = `28db53b`, after P5). Not merged, not deployed.
 Brief: phase 3 "Partnercodes en commissies" (my step P7). P6 (invoicing via Billit) waits for the Billit account and business details (B7).
 
-## 0. Decisions used (please confirm)
+## 0. Decisions used — confirmed 2026-10-17
+
+The owner confirmed manual approval of commissions and changed the attribution window to **one year** (`PARTNER_ATTRIBUTION_DAYS = 365`, last click still wins). The table below is the original proposal.
 
 The two questions at the start of P7 were not answered; I built the recommended options, both easy to change:
 

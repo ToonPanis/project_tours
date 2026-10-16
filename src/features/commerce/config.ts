@@ -92,8 +92,9 @@ export const EU_COUNTRIES = [
  * Attribution (docs/commercial/PHASE_7_REPORT.md, "Attribution rules"): a partner
  * link is remembered this long in a first-party cookie; a newer partner link
  * replaces it (last click wins). Only orders started within the window count.
+ * One year: the owner's decision of 2026-10-17 (was 30 days).
  */
-export const PARTNER_ATTRIBUTION_DAYS = 30;
+export const PARTNER_ATTRIBUTION_DAYS = 365;
 export const PARTNER_ATTRIBUTION_MS = PARTNER_ATTRIBUTION_DAYS * DAY;
 /** The same visitor opening the same partner link again within this time is one click. */
 export const PARTNER_CLICK_REPEAT_MS = 30 * MINUTE;

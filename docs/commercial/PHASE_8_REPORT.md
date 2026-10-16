@@ -3,7 +3,7 @@
 Date: 2026-10-17. Branch: `commercial/p8-emails-reviews` (from `main` = `e326d8a`, after P7). Not merged, not deployed.
 Brief: phase 7 "Automatische e-mails, reviews en kortingscodes" (my step P8).
 
-## 0. Decisions used (please confirm)
+## 0. Decisions used — all four confirmed by the owner on 2026-10-17
 
 The four questions at the start were not answered. I built the safest recommended option each time, each easy to change:
 

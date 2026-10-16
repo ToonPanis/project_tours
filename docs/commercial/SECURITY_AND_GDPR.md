@@ -51,7 +51,7 @@ Date: 2026-10-15. Status: **proposal**. Items marked ⚖️ **need human legal o
 | Reviews | Text, rating, optional display name, ticket link | Consent (publication) | Until withdrawn |
 | Review/follow-up email after the walk | Email | ⚖️ Existing-customer exception (soft opt-in) for similar products **with** an unsubscribe in every mail, or explicit consent | Until unsubscribe |
 | Marketing | Email | Consent (checkbox, not pre-ticked), logged in `com_consents` | Until withdrawn |
-| Partner attribution | First-party cookie with the partner code, click counters without IP | ⚖️ Probably strictly-necessary-for-commission or consent: to confirm (Belgian cookie rules are strict) | Cookie = attribution window (e.g. 30 days) |
+| Partner attribution | First-party cookie with the partner code, click counters without IP | ⚖️ Probably strictly-necessary-for-commission or consent: to confirm (Belgian cookie rules are strict) | Cookie = attribution window (one year, owner's decision 2026-10-17) |
 | Admin audit log | Admin id, actions | Legitimate interest (security) | 2 years |
 
 Also needed: a processor list (Stripe, Vercel, MongoDB, email provider, invoicing tool) with DPAs; data export and deletion procedures (admin tool: find by email → export JSON / pseudonymise, keeping what accounting requires); a record of processing activities; an updated privacy notice in 8 languages; terms of sale.
