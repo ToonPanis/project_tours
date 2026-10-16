@@ -1,0 +1,155 @@
+{
+  "about": {
+    "meta": {
+      "title": "Over ons",
+      "description": "Hidden Antwerp neemt je mee voorbij de bekende bezienswaardigheden: interactieve stadswandelingen en caféspellen op eigen tempo, langs de verhalen van Antwerpen, in 8 talen."
+    },
+    "eyebrow": "Over Hidden Antwerp",
+    "title": "Ontdek de stad achter de bekende plekken.",
+    "intro": "Hidden Antwerp neemt je mee voorbij de bekende bezienswaardigheden. Verken eeuwenoude straten, ontdek vergeten verhalen, vind authentieke Antwerpse cafés en beleef de stad via interactieve avonturen, gemaakt voor nieuwsgierige ontdekkers.",
+    "cta": "Ontdek onze belevingen",
+    "story": {
+      "title": "Ons verhaal",
+      "p1": "Hidden Antwerp is ontstaan uit liefde voor deze stad: haar geschiedenis, haar verborgen hoekjes en haar echte cafés.",
+      "p2": "Wij geloven dat de boeiendste verhalen van een stad niet altijd bij de bekendste monumenten te vinden zijn. Vaker liggen ze te wachten in smalle zijstraatjes, achter oude poorten, in eeuwenoude cafés en in gebouwen waar de meeste bezoekers gewoon voorbijlopen.",
+      "p3": "Hidden Antwerp brengt die verhalen weer tot leven. We combineren lokale geschiedenis met waar je telefoon goed in is: interactieve kaarten, gps-navigatie die je van halte naar halte leidt en speelse opdrachten waardoor je twee keer kijkt.",
+      "p4": "Ons doel is eenvoudig: dat je Antwerpen zelf kunt ontdekken, op je eigen tempo, en thuiskomt met verhalen die je in geen enkele reisgids had gevonden."
+    },
+    "experiences": {
+      "title": "Onze belevingen",
+      "intro": "Elke wandeling heeft haar eigen karakter. Kies de wandeling die past bij je gezelschap en je stemming.",
+      "upcoming": "Binnenkort"
+    },
+    "why": {
+      "title": "Waarom Hidden Antwerp?",
+      "pace": {
+        "title": "Op je eigen tempo",
+        "text": "Begin wanneer je wilt, pauzeer voor een koffie, ga morgen verder: je voortgang wacht op je."
+      },
+      "stories": {
+        "title": "Echte Antwerpse verhalen",
+        "text": "Geschiedenis, legendes en het dagelijkse leven, waarbij geschiedenis en legende altijd duidelijk van elkaar gescheiden zijn."
+      },
+      "gps": {
+        "title": "Interactief, met gps",
+        "text": "Een kaart wijst je de weg naar elke halte, en bij aankomst opent de wandeling het volgende hoofdstuk."
+      },
+      "groups": {
+        "title": "Voor vrienden, koppels en groepen",
+        "text": "Wandel samen op één telefoon, of speel Hidden Pubs in teams, met elke speler op zijn eigen telefoon."
+      },
+      "noGuide": {
+        "title": "Geen gids nodig",
+        "text": "Geen verzamelpunt, geen vaste uren: je telefoon is je gids, in de browser, zonder app."
+      },
+      "languages": {
+        "title": "Beschikbaar in 8 talen",
+        "text": "Engels, Nederlands, Frans, Spaans, Italiaans, Duits, Russisch en Oekraïens."
+      }
+    },
+    "partners": {
+      "title": "Voor hotels, cafés en bedrijven",
+      "text": "Hotels en toeristische partners kunnen onze wandelingen aan hun gasten aanraden met hun eigen partnerlink. Bedrijven en groepen kunnen een teamuitstap of een privébeleving boeken.",
+      "corporate": "Teambuilding en groepsaanvragen",
+      "contact": "Word partner"
+    },
+    "vision": {
+      "title": "Waar we naartoe willen",
+      "text": "Antwerpen is onze eerste stad. Onze ambitie is om dezelfde manier van ontdekken naar andere Belgische steden te brengen, zoals Gent, Brugge en Brussel, en later naar bestemmingen in het buitenland.",
+      "note": "Dit is ons plan voor de toekomst: vandaag zijn onze wandelingen alleen in Antwerpen beschikbaar."
+    },
+    "closing": {
+      "title": "Je volgende avontuur begint hier.",
+      "walks": "Ontdek onze wandelingen",
+      "contact": "Neem contact op"
+    }
+  },
+  "contact": {
+    "meta": {
+      "title": "Contact",
+      "description": "Vragen over onze wandelingen, groepsboekingen, bedrijfsevenementen of partnerschappen? Neem contact op met Hidden Antwerp."
+    },
+    "title": "Laten we kennismaken.",
+    "intro": "Een vraag over een wandeling, een groepsboeking, een bedrijfsevenement of een partnerschap? Stuur ons een bericht en we komen bij je terug.",
+    "form": {
+      "title": "Stuur ons een bericht",
+      "name": "Je naam",
+      "email": "Je e-mailadres",
+      "subject": "Onderwerp",
+      "type": "Waarover gaat het?",
+      "message": "Je bericht",
+      "privacy": "Ik ga ermee akkoord dat Hidden Antwerp mijn naam en e-mailadres gebruikt om mijn bericht te beantwoorden.",
+      "privacyLink": "Hoe we met je gegevens omgaan",
+      "submit": "Openen in mijn e-mailapp",
+      "mailtoNote": "De knop opent je eigen e-mailapp met je bericht al ingevuld; je verstuurt het van daaruit. Er wordt niets op onze website opgeslagen.",
+      "opened": "Je e-mailapp zou nu moeten openen met het bericht klaar. Ging hij niet open? Schrijf naar {email}.",
+      "notConfigured": "Ons e-mailadres voor dit formulier wordt nog ingesteld. Gebruik tot dan de andere mogelijkheden op deze pagina of schrijf ons per post.",
+      "types": {
+        "general": "Algemene vraag",
+        "booking": "Hulp bij een boeking",
+        "group": "Groepsboeking",
+        "corporate": "Bedrijfsevenement",
+        "partnership": "Partnerschap",
+        "technical": "Technische hulp",
+        "something": "Iets anders"
+      },
+      "errors": {
+        "name": "Vul je naam in.",
+        "email": "Vul een geldig e-mailadres in.",
+        "subject": "Vul een onderwerp in.",
+        "message": "Schrijf je bericht (minstens 10 tekens).",
+        "privacy": "Ga akkoord, zodat we je kunnen antwoorden."
+      }
+    },
+    "more": {
+      "title": "Andere manieren om ons te bereiken",
+      "groupsTitle": "Groepen en bedrijven",
+      "groupsText": "Teambuilding, een bedrijfsuitstap of een grote groep? Gebruik ons offerteformulier: je krijgt een bevestiging en een voorstel.",
+      "groupsLink": "Vraag een offerte aan",
+      "partnersTitle": "Hotels, cafés en toeristische partners",
+      "partnersText": "Wil je onze wandelingen aan je gasten aanraden? Vertel ons over je zaak via het formulier op deze pagina.",
+      "supportTitle": "Hulp bij een ticket",
+      "supportText": "Je ticketlink staat in de bevestigingsmail. Kwijt? Vermeld de datum van je bestelling en je e-mailadres in je bericht.",
+      "postTitle": "Per post",
+      "postAddress": "Hidden Antwerp, Melkmarkt 35, 2000 Antwerpen, België"
+    }
+  },
+  "reviews": {
+    "meta": {
+      "title": "Reviews",
+      "description": "Wat wandelaars over Hidden Antwerp zeggen: geverifieerde reviews van mensen die een van onze wandelingen deden."
+    },
+    "title": "Wat onze ontdekkers zeggen",
+    "intro": "Alleen wie een van onze wandelingen met een ticket deed, kan een review schrijven, één per ticket. We lezen elke review voordat hij verschijnt en veranderen nooit iets aan de woorden.",
+    "average": "{rating} op 5",
+    "count": {
+      "one": "op basis van {count} review",
+      "other": "op basis van {count} reviews"
+    },
+    "sort": {
+      "label": "Sorteren",
+      "newest": "Nieuwste eerst",
+      "highest": "Hoogste score",
+      "lowest": "Laagste score",
+      "apply": "Sorteren"
+    },
+    "stars": {
+      "one": "{count} ster op 5",
+      "other": "{count} sterren op 5"
+    },
+    "anonymous": "Een Hidden Antwerp-wandelaar",
+    "rewarded": "Beloond met een kortingscode (voor elke review, ongeacht de score)",
+    "empty": "Er zijn nog geen reviews gepubliceerd. Een wandeling met ons gedaan? Je vindt de reviewlink in de e-mail na je wandeling.",
+    "unavailable": "De reviews kunnen nu niet geladen worden. Probeer het later opnieuw.",
+    "leave": {
+      "title": "Schrijf een review",
+      "text": "Een wandeling met een ticket gedaan? Wanneer je ze afrondt, krijg je een e-mail met je persoonlijke reviewlink (als je daarom vroeg bij de aankoop). Eén review per ticket, zodat elke review van een echte wandeling komt.",
+      "walks": "Bekijk onze wandelingen"
+    },
+    "demo": {
+      "title": "Voorbeeldreviews",
+      "note": "Dit zijn voorbeeldreviews om de opmaak te tonen. Ze komen niet van echte klanten en tellen niet mee in een score.",
+      "badge": "Voorbeeldreview"
+    }
+  }
+}

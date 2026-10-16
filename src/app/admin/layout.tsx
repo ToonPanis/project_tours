@@ -12,8 +12,9 @@ export const metadata: Metadata = {
 };
 
 export default function AdminLayout({ children }: LayoutProps<"/admin">) {
+  // The width comes from the parts: the console's sidebar layout, or the narrow sign-in pages.
   return (
-    <div lang="en" className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8">
+    <div lang="en" className="w-full bg-ink">
       {children}
     </div>
   );

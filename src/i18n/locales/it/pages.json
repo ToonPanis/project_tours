@@ -1,0 +1,155 @@
+{
+  "about": {
+    "meta": {
+      "title": "Chi siamo",
+      "description": "Hidden Antwerp ti porta oltre i luoghi più famosi: passeggiate urbane interattive e giochi nei locali, in autonomia, tra le storie di Anversa, in 8 lingue."
+    },
+    "eyebrow": "Chi è Hidden Antwerp",
+    "title": "Scopri la città oltre l'ovvio.",
+    "intro": "Hidden Antwerp ti porta oltre i monumenti più famosi. Esplora strade secolari, riscopri storie dimenticate, trova autentici locali del posto e vivi Anversa attraverso avventure interattive pensate per esploratori curiosi.",
+    "cta": "Scopri le nostre esperienze",
+    "story": {
+      "title": "La nostra storia",
+      "p1": "Hidden Antwerp nasce dall'amore per questa città: la sua storia, i suoi angoli nascosti e i suoi caffè autentici.",
+      "p2": "Crediamo che le storie più interessanti di una città non si trovino sempre ai piedi dei suoi monumenti più noti. Più spesso aspettano in strette viuzze, dietro vecchi portoni, in caffè secolari e in edifici davanti ai quali la maggior parte dei visitatori passa senza fermarsi.",
+      "p3": "Hidden Antwerp riporta in vita quelle storie. Uniamo la storia locale a ciò che il tuo telefono sa fare meglio: mappe interattive, navigazione GPS che ti guida di tappa in tappa e sfide giocose che ti fanno guardare due volte.",
+      "p4": "Il nostro obiettivo è semplice: che tu possa scoprire Anversa da solo, con i tuoi tempi, e tornare a casa con storie che non avresti mai trovato in una guida turistica."
+    },
+    "experiences": {
+      "title": "Le nostre esperienze",
+      "intro": "Ogni passeggiata ha il suo carattere. Scegli quella più adatta alla tua compagnia e al tuo umore.",
+      "upcoming": "Prossimamente"
+    },
+    "why": {
+      "title": "Perché Hidden Antwerp?",
+      "pace": {
+        "title": "Esplora con i tuoi tempi",
+        "text": "Inizia quando vuoi, fermati per un caffè, continua domani: i tuoi progressi ti aspettano."
+      },
+      "stories": {
+        "title": "Autentiche storie locali",
+        "text": "Storia, leggende e vita quotidiana, tenendo sempre ben distinte la storia e la leggenda."
+      },
+      "gps": {
+        "title": "Interattivo, con guida GPS",
+        "text": "Una mappa ti mostra la strada verso ogni tappa e, al tuo arrivo, la passeggiata apre il capitolo successivo."
+      },
+      "groups": {
+        "title": "Per amici, coppie e gruppi",
+        "text": "Camminate insieme con un solo telefono, oppure giocate a Hidden Pubs a squadre, ogni giocatore con il proprio telefono."
+      },
+      "noGuide": {
+        "title": "Nessuna guida necessaria",
+        "text": "Nessun punto d'incontro, nessun orario fisso: il tuo telefono è la tua guida, nel browser, senza app."
+      },
+      "languages": {
+        "title": "Disponibile in 8 lingue",
+        "text": "Inglese, olandese, francese, spagnolo, italiano, tedesco, russo e ucraino."
+      }
+    },
+    "partners": {
+      "title": "Per hotel, locali e aziende",
+      "text": "Hotel e partner turistici possono consigliare le nostre passeggiate ai loro ospiti con il proprio link partner. Aziende e gruppi possono prenotare un'uscita di team o un'esperienza privata.",
+      "corporate": "Team building e richieste per gruppi",
+      "contact": "Diventa partner"
+    },
+    "vision": {
+      "title": "Dove stiamo andando",
+      "text": "Anversa è la nostra prima città. La nostra ambizione è portare lo stesso modo di scoprire in altre città belghe come Gand, Bruges e Bruxelles, e più avanti in destinazioni all'estero.",
+      "note": "Questo è il nostro progetto per il futuro: oggi le nostre passeggiate sono disponibili solo ad Anversa."
+    },
+    "closing": {
+      "title": "La tua prossima avventura inizia qui.",
+      "walks": "Scopri le nostre passeggiate",
+      "contact": "Contattaci"
+    }
+  },
+  "contact": {
+    "meta": {
+      "title": "Contatti",
+      "description": "Domande sulle nostre passeggiate, prenotazioni di gruppo, eventi aziendali o collaborazioni? Contatta Hidden Antwerp."
+    },
+    "title": "Mettiamoci in contatto.",
+    "intro": "Una domanda su una passeggiata, una prenotazione di gruppo, un evento aziendale o una collaborazione? Scrivici un messaggio e ti risponderemo.",
+    "form": {
+      "title": "Scrivici un messaggio",
+      "name": "Il tuo nome",
+      "email": "Il tuo indirizzo e-mail",
+      "subject": "Oggetto",
+      "type": "Di cosa si tratta?",
+      "message": "Il tuo messaggio",
+      "privacy": "Accetto che Hidden Antwerp utilizzi il mio nome e il mio indirizzo e-mail per rispondere al mio messaggio.",
+      "privacyLink": "Come trattiamo i tuoi dati",
+      "submit": "Apri nella mia app e-mail",
+      "mailtoNote": "Il pulsante apre la tua app e-mail con il messaggio già compilato; lo invii da lì. Sul nostro sito non viene salvato nulla.",
+      "opened": "La tua app e-mail dovrebbe aprirsi ora con il messaggio pronto. Non si è aperta? Scrivi a {email}.",
+      "notConfigured": "Stiamo configurando il nostro indirizzo e-mail per questo modulo. Nel frattempo usa le altre opzioni di questa pagina o scrivici per posta.",
+      "types": {
+        "general": "Domanda generale",
+        "booking": "Assistenza prenotazioni",
+        "group": "Prenotazione di gruppo",
+        "corporate": "Evento aziendale",
+        "partnership": "Collaborazione",
+        "technical": "Assistenza tecnica",
+        "something": "Altro"
+      },
+      "errors": {
+        "name": "Inserisci il tuo nome.",
+        "email": "Inserisci un indirizzo e-mail valido.",
+        "subject": "Inserisci un oggetto.",
+        "message": "Scrivi il tuo messaggio (almeno 10 caratteri).",
+        "privacy": "Dai il tuo consenso, così potremo risponderti."
+      }
+    },
+    "more": {
+      "title": "Altri modi per contattarci",
+      "groupsTitle": "Gruppi e aziende",
+      "groupsText": "Team building, un'uscita aziendale o un gruppo numeroso? Usa il nostro modulo di preventivo: riceverai una conferma e una proposta.",
+      "groupsLink": "Richiedi un preventivo",
+      "partnersTitle": "Hotel, locali e partner turistici",
+      "partnersText": "Vuoi consigliare le nostre passeggiate ai tuoi ospiti? Parlaci della tua attività con il modulo in questa pagina.",
+      "supportTitle": "Aiuto con un biglietto",
+      "supportText": "Il link del tuo biglietto è nell'e-mail di conferma. L'hai perso? Indica la data dell'ordine e il tuo indirizzo e-mail nel messaggio.",
+      "postTitle": "Per posta",
+      "postAddress": "Hidden Antwerp, Melkmarkt 35, 2000 Antwerpen, Belgio"
+    }
+  },
+  "reviews": {
+    "meta": {
+      "title": "Recensioni",
+      "description": "Cosa dicono di Hidden Antwerp: recensioni verificate di persone che hanno fatto una delle nostre passeggiate."
+    },
+    "title": "Cosa dicono i nostri esploratori",
+    "intro": "Solo chi ha fatto una delle nostre passeggiate con un biglietto può scrivere una recensione, una per biglietto. Leggiamo ogni recensione prima che venga pubblicata e non ne cambiamo mai le parole.",
+    "average": "{rating} su 5",
+    "count": {
+      "one": "su {count} recensione",
+      "other": "su {count} recensioni"
+    },
+    "sort": {
+      "label": "Ordina",
+      "newest": "Più recenti",
+      "highest": "Valutazione più alta",
+      "lowest": "Valutazione più bassa",
+      "apply": "Ordina"
+    },
+    "stars": {
+      "one": "{count} stella su 5",
+      "other": "{count} stelle su 5"
+    },
+    "anonymous": "Un esploratore di Hidden Antwerp",
+    "rewarded": "Premiato con un codice sconto (per qualsiasi recensione, qualunque sia la valutazione)",
+    "empty": "Non è stata ancora pubblicata nessuna recensione. Hai fatto una passeggiata con noi? Trovi il link per la recensione nell'e-mail che ricevi dopo la passeggiata.",
+    "unavailable": "Al momento non è possibile caricare le recensioni. Riprova più tardi.",
+    "leave": {
+      "title": "Lascia una recensione",
+      "text": "Hai fatto una passeggiata con un biglietto? Quando la finisci, ricevi un'e-mail con il tuo link personale per la recensione (se l'hai chiesto al momento dell'acquisto). Una recensione per biglietto, così ogni recensione viene da una passeggiata vera.",
+      "walks": "Vedi le nostre passeggiate"
+    },
+    "demo": {
+      "title": "Recensioni di esempio",
+      "note": "Queste sono recensioni di esempio per mostrare l'impaginazione. Non provengono da clienti reali e non contano in nessuna valutazione.",
+      "badge": "Recensione di esempio"
+    }
+  }
+}

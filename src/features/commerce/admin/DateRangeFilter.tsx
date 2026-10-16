@@ -1,6 +1,6 @@
 import type { ReportRange } from "../logic/report-dates";
 
-const field = "min-h-11 rounded-sm border border-parchment/30 bg-ink/40 px-3 text-parchment focus:border-gold focus:outline-none";
+const field = "min-h-11 rounded-sm border border-parchment/30 bg-ink/40 px-3 text-parchment focus:border-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-gold";
 
 /**
  * The dashboard's date filter: a plain GET form (works without JavaScript; the

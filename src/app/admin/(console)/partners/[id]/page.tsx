@@ -10,7 +10,8 @@ import { requireAdmin } from "@/features/commerce/server/admin-access";
 import { listLedgerPage } from "@/features/commerce/server/commission-service";
 import { getCommerceContext } from "@/features/commerce/server/context";
 import { pageBaseUrl } from "@/features/commerce/server/page-base-url";
-import { getPartnerAdminDetail } from "@/features/commerce/server/partner-service";
+import { getPartnerAdminDetail } from "@/features/commerce/server/partner-service";
+import { PageHeader } from "@/features/commerce/admin/PageHeader";
 
 /** /admin/partners/[id]: a partner's details, link and QR code, portal users and commission ledger. */
 export default async function AdminPartnerPage({ params, searchParams }: PageProps<"/admin/partners/[id]">) {
@@ -30,7 +31,7 @@ export default async function AdminPartnerPage({ params, searchParams }: PagePro
           ← All partners
         </Link>
       </p>
-      <h1 className="font-display text-4xl font-semibold">{partner.name}</h1>
+      <PageHeader title={partner.name} description="Link and QR code, portal access and the commission ledger of this partner." />
       <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
         <dt className="text-parchment/70">Code</dt>
         <dd>
