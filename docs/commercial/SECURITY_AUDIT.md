@@ -76,7 +76,7 @@ Date: 2026-10-17, on `main` after P8 (`c506abb`) plus the P9 changes. Scope: eve
 
 ## 4. For a human (⚖️) before launch
 
-1. Privacy notice (the `/privacy` page is a factual overview, marked as such; it has a visible placeholder for the contact address), terms of sale, processor agreements (Stripe, Vercel, MongoDB, Brevo, later Billit), record of processing activities.
+1. Privacy notice (the `/privacy` page is a factual overview, marked as such; its privacy contact is Hidden Antwerp, Melkmarkt 35, 2000 Antwerpen; an email address for requests is still recommended), terms of sale, processor agreements (Stripe, Vercel, MongoDB, Brevo, later Billit), record of processing activities.
 2. Retention periods above (accountant: 10 years? audit log 2 years?).
 3. `ha_ref` partner cookie: consent needed or not.
 4. Consent sentence for the follow-up email; rewarded reviews wording.
