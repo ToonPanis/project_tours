@@ -1,0 +1,155 @@
+{
+  "about": {
+    "meta": {
+      "title": "Über uns",
+      "description": "Hidden Antwerp führt dich über die bekannten Sehenswürdigkeiten hinaus: interaktive Stadtrundgänge und Kneipenspiele auf eigene Faust, entlang der Geschichten Antwerpens, in 8 Sprachen."
+    },
+    "eyebrow": "Über Hidden Antwerp",
+    "title": "Entdecke die Stadt jenseits des Offensichtlichen.",
+    "intro": "Hidden Antwerp führt dich über die berühmten Sehenswürdigkeiten hinaus. Erkunde jahrhundertealte Straßen, entdecke vergessene Geschichten, finde echte Antwerpener Kneipen und erlebe die Stadt in interaktiven Abenteuern für neugierige Entdecker.",
+    "cta": "Unsere Erlebnisse entdecken",
+    "story": {
+      "title": "Unsere Geschichte",
+      "p1": "Hidden Antwerp ist aus der Liebe zu dieser Stadt entstanden: zu ihrer Geschichte, ihren versteckten Ecken und ihren urigen Cafés.",
+      "p2": "Wir glauben, dass die spannendsten Geschichten einer Stadt nicht immer bei ihren bekanntesten Denkmälern zu finden sind. Viel öfter warten sie in schmalen Seitengassen, hinter alten Toren, in jahrhundertealten Cafés und in Gebäuden, an denen die meisten Besucher einfach vorbeigehen.",
+      "p3": "Hidden Antwerp erweckt diese Geschichten wieder zum Leben. Wir verbinden lokale Geschichte mit dem, was dein Smartphone gut kann: interaktive Karten, GPS-Navigation, die dich von Station zu Station führt, und spielerische Aufgaben, bei denen du zweimal hinschaust.",
+      "p4": "Unser Ziel ist einfach: dass du Antwerpen auf eigene Faust entdecken kannst, in deinem eigenen Tempo, und mit Geschichten nach Hause kommst, die du in keinem Reiseführer gefunden hättest."
+    },
+    "experiences": {
+      "title": "Unsere Erlebnisse",
+      "intro": "Jeder Rundgang hat seinen eigenen Charakter. Wähle den, der zu deiner Begleitung und deiner Stimmung passt.",
+      "upcoming": "Demnächst"
+    },
+    "why": {
+      "title": "Warum Hidden Antwerp?",
+      "pace": {
+        "title": "In deinem eigenen Tempo",
+        "text": "Starte, wann du willst, mach eine Kaffeepause, geh morgen weiter: Dein Fortschritt wartet auf dich."
+      },
+      "stories": {
+        "title": "Echte Geschichten aus der Stadt",
+        "text": "Geschichte, Legenden und Alltagsleben, wobei Geschichte und Legende immer klar voneinander getrennt sind."
+      },
+      "gps": {
+        "title": "Interaktiv und GPS-geführt",
+        "text": "Eine Karte zeigt dir den Weg zu jeder Station, und bei deiner Ankunft öffnet der Rundgang das nächste Kapitel."
+      },
+      "groups": {
+        "title": "Für Freunde, Paare und Gruppen",
+        "text": "Geht gemeinsam mit einem Smartphone, oder spielt Hidden Pubs in Teams, jeder Spieler auf seinem eigenen Smartphone."
+      },
+      "noGuide": {
+        "title": "Kein Stadtführer nötig",
+        "text": "Kein Treffpunkt, keine festen Zeiten: Dein Smartphone ist dein Guide, im Browser, ohne App."
+      },
+      "languages": {
+        "title": "In 8 Sprachen verfügbar",
+        "text": "Englisch, Niederländisch, Französisch, Spanisch, Italienisch, Deutsch, Russisch und Ukrainisch."
+      }
+    },
+    "partners": {
+      "title": "Für Hotels, Cafés und Unternehmen",
+      "text": "Hotels und Tourismuspartner können ihren Gästen unsere Rundgänge mit ihrem eigenen Partnerlink empfehlen. Unternehmen und Gruppen können einen Teamausflug oder ein privates Erlebnis buchen.",
+      "corporate": "Teambuilding und Gruppenanfragen",
+      "contact": "Partner werden"
+    },
+    "vision": {
+      "title": "Wohin wir wollen",
+      "text": "Antwerpen ist unsere erste Stadt. Unser Ziel ist es, dieselbe Art des Entdeckens in andere belgische Städte wie Gent, Brügge und Brüssel zu bringen und später auch zu Reisezielen im Ausland.",
+      "note": "Das ist unser Plan für die Zukunft: Heute gibt es unsere Rundgänge nur in Antwerpen."
+    },
+    "closing": {
+      "title": "Dein nächstes Abenteuer beginnt hier.",
+      "walks": "Unsere Rundgänge entdecken",
+      "contact": "Kontakt aufnehmen"
+    }
+  },
+  "contact": {
+    "meta": {
+      "title": "Kontakt",
+      "description": "Fragen zu unseren Rundgängen, Gruppenbuchungen, Firmenevents oder Partnerschaften? Nimm Kontakt mit Hidden Antwerp auf."
+    },
+    "title": "Lass uns in Kontakt kommen.",
+    "intro": "Eine Frage zu einem Rundgang, einer Gruppenbuchung, einem Firmenevent oder einer Partnerschaft? Schick uns eine Nachricht, und wir melden uns bei dir.",
+    "form": {
+      "title": "Schick uns eine Nachricht",
+      "name": "Dein Name",
+      "email": "Deine E-Mail-Adresse",
+      "subject": "Betreff",
+      "type": "Worum geht es?",
+      "message": "Deine Nachricht",
+      "privacy": "Ich bin damit einverstanden, dass Hidden Antwerp meinen Namen und meine E-Mail-Adresse verwendet, um meine Nachricht zu beantworten.",
+      "privacyLink": "Wie wir mit deinen Daten umgehen",
+      "submit": "In meiner E-Mail-App öffnen",
+      "mailtoNote": "Der Button öffnet deine eigene E-Mail-App mit deiner fertig ausgefüllten Nachricht; du verschickst sie von dort. Auf unserer Website wird nichts gespeichert.",
+      "opened": "Deine E-Mail-App sollte sich jetzt mit der fertigen Nachricht öffnen. Hat sie sich nicht geöffnet? Schreib an {email}.",
+      "notConfigured": "Unsere E-Mail-Adresse für dieses Formular wird gerade eingerichtet. Nutze bis dahin die anderen Möglichkeiten auf dieser Seite oder schreib uns per Post.",
+      "types": {
+        "general": "Allgemeine Frage",
+        "booking": "Hilfe bei einer Buchung",
+        "group": "Gruppenbuchung",
+        "corporate": "Firmenevent",
+        "partnership": "Partnerschaft",
+        "technical": "Technischer Support",
+        "something": "Etwas anderes"
+      },
+      "errors": {
+        "name": "Bitte gib deinen Namen ein.",
+        "email": "Bitte gib eine gültige E-Mail-Adresse ein.",
+        "subject": "Bitte gib einen Betreff ein.",
+        "message": "Bitte schreib deine Nachricht (mindestens 10 Zeichen).",
+        "privacy": "Bitte stimme zu, damit wir dir antworten können."
+      }
+    },
+    "more": {
+      "title": "Weitere Kontaktmöglichkeiten",
+      "groupsTitle": "Gruppen und Unternehmen",
+      "groupsText": "Teambuilding, ein Firmenausflug oder eine große Gruppe? Nutze unser Angebotsformular: Du bekommst eine Bestätigung und einen Vorschlag.",
+      "groupsLink": "Angebot anfragen",
+      "partnersTitle": "Hotels, Cafés und Tourismuspartner",
+      "partnersText": "Möchtest du deinen Gästen unsere Rundgänge empfehlen? Erzähl uns über das Formular auf dieser Seite von deinem Betrieb.",
+      "supportTitle": "Hilfe zu einem Ticket",
+      "supportText": "Dein Ticketlink steht in der Bestätigungs-E-Mail. Verloren? Gib in deiner Nachricht dein Bestelldatum und deine E-Mail-Adresse an.",
+      "postTitle": "Per Post",
+      "postAddress": "Hidden Antwerp, Melkmarkt 35, 2000 Antwerpen, Belgien"
+    }
+  },
+  "reviews": {
+    "meta": {
+      "title": "Bewertungen",
+      "description": "Was Teilnehmer über Hidden Antwerp sagen: verifizierte Bewertungen von Menschen, die einen unserer Rundgänge gemacht haben."
+    },
+    "title": "Was unsere Entdecker sagen",
+    "intro": "Nur wer einen unserer Rundgänge mit einem Ticket gemacht hat, kann eine Bewertung schreiben, eine pro Ticket. Wir lesen jede Bewertung, bevor sie erscheint, und ändern niemals ihren Wortlaut.",
+    "average": "{rating} von 5",
+    "count": {
+      "one": "basierend auf {count} Bewertung",
+      "other": "basierend auf {count} Bewertungen"
+    },
+    "sort": {
+      "label": "Sortieren",
+      "newest": "Neueste zuerst",
+      "highest": "Beste Bewertung",
+      "lowest": "Schlechteste Bewertung",
+      "apply": "Sortieren"
+    },
+    "stars": {
+      "one": "{count} von 5 Sternen",
+      "other": "{count} von 5 Sternen"
+    },
+    "anonymous": "Ein Hidden-Antwerp-Entdecker",
+    "rewarded": "Mit einem Rabattcode belohnt (für jede Bewertung, unabhängig von der Punktzahl)",
+    "empty": "Es wurden noch keine Bewertungen veröffentlicht. Du hast einen Rundgang mit uns gemacht? Den Bewertungslink findest du in der E-Mail nach deinem Rundgang.",
+    "unavailable": "Die Bewertungen können gerade nicht geladen werden. Bitte versuch es später noch einmal.",
+    "leave": {
+      "title": "Bewertung schreiben",
+      "text": "Du hast einen Rundgang mit einem Ticket gemacht? Wenn du ihn beendest, bekommst du eine E-Mail mit deinem persönlichen Bewertungslink (wenn du das beim Kauf gewünscht hast). Eine Bewertung pro Ticket, damit jede Bewertung von einem echten Rundgang stammt.",
+      "walks": "Unsere Rundgänge ansehen"
+    },
+    "demo": {
+      "title": "Beispielbewertungen",
+      "note": "Dies sind Beispielbewertungen, die das Layout zeigen. Sie stammen nicht von echten Kunden und zählen in keiner Bewertung mit.",
+      "badge": "Beispielbewertung"
+    }
+  }
+}

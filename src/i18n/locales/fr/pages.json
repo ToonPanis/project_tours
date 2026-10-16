@@ -1,0 +1,155 @@
+{
+  "about": {
+    "meta": {
+      "title": "Qui sommes-nous",
+      "description": "Hidden Antwerp vous emmène au-delà des sites célèbres : des balades urbaines interactives et des jeux de bars, en autonomie, à travers les histoires d'Anvers, en 8 langues."
+    },
+    "eyebrow": "À propos de Hidden Antwerp",
+    "title": "Découvrez la ville au-delà des évidences.",
+    "intro": "Hidden Antwerp vous emmène au-delà des monuments célèbres. Parcourez des rues chargées de siècles d'histoire, dénichez des récits oubliés, poussez la porte de vrais cafés anversois et vivez Anvers à travers des aventures interactives pensées pour les explorateurs curieux.",
+    "cta": "Découvrir nos expériences",
+    "story": {
+      "title": "Notre histoire",
+      "p1": "Hidden Antwerp est né d'un amour pour cette ville : son histoire, ses recoins cachés et ses cafés authentiques.",
+      "p2": "Nous sommes convaincus que les histoires les plus passionnantes d'une ville ne se trouvent pas toujours au pied de ses monuments les plus connus. Bien souvent, elles attendent dans d'étroites ruelles, derrière de vieux porches, dans des cafés centenaires et dans des bâtiments devant lesquels la plupart des visiteurs passent sans s'arrêter.",
+      "p3": "Hidden Antwerp redonne vie à ces histoires. Nous associons l'histoire locale à ce que votre téléphone fait de mieux : des cartes interactives, une navigation GPS qui vous guide d'étape en étape et des défis ludiques qui vous font regarder à deux fois.",
+      "p4": "Notre objectif est simple : que vous puissiez découvrir Anvers par vous-même, à votre rythme, et rentrer avec des histoires que vous n'auriez jamais trouvées dans un guide de voyage."
+    },
+    "experiences": {
+      "title": "Nos expériences",
+      "intro": "Chaque balade a son propre caractère. Choisissez celle qui convient à vos compagnons et à votre humeur.",
+      "upcoming": "Bientôt disponible"
+    },
+    "why": {
+      "title": "Pourquoi Hidden Antwerp ?",
+      "pace": {
+        "title": "À votre rythme",
+        "text": "Commencez quand vous voulez, faites une pause café, reprenez demain : votre progression vous attend."
+      },
+      "stories": {
+        "title": "D'authentiques histoires locales",
+        "text": "L'histoire, les légendes et la vie quotidienne, en distinguant toujours clairement l'histoire de la légende."
+      },
+      "gps": {
+        "title": "Interactif et guidé par GPS",
+        "text": "Une carte vous montre le chemin jusqu'à chaque étape, et la balade ouvre le chapitre suivant à votre arrivée."
+      },
+      "groups": {
+        "title": "Entre amis, en couple ou en groupe",
+        "text": "Marchez ensemble avec un seul téléphone, ou jouez à Hidden Pubs en équipes, chaque joueur sur son propre téléphone."
+      },
+      "noGuide": {
+        "title": "Pas besoin de guide",
+        "text": "Pas de point de rendez-vous, pas d'horaires imposés : votre téléphone est votre guide, dans le navigateur, sans application."
+      },
+      "languages": {
+        "title": "Disponible en 8 langues",
+        "text": "Anglais, néerlandais, français, espagnol, italien, allemand, russe et ukrainien."
+      }
+    },
+    "partners": {
+      "title": "Pour les hôtels, cafés et entreprises",
+      "text": "Les hôtels et partenaires touristiques peuvent recommander nos balades à leurs clients grâce à leur propre lien partenaire. Les entreprises et les groupes peuvent réserver une sortie d'équipe ou une expérience privée.",
+      "corporate": "Team building et demandes de groupe",
+      "contact": "Devenir partenaire"
+    },
+    "vision": {
+      "title": "Notre cap",
+      "text": "Anvers est notre première ville. Notre ambition est d'apporter cette même façon de découvrir à d'autres villes belges comme Gand, Bruges et Bruxelles, puis plus tard à des destinations à l'étranger.",
+      "note": "Il s'agit de notre projet pour l'avenir : aujourd'hui, nos balades sont disponibles uniquement à Anvers."
+    },
+    "closing": {
+      "title": "Votre prochaine aventure commence ici.",
+      "walks": "Découvrir nos balades",
+      "contact": "Nous contacter"
+    }
+  },
+  "contact": {
+    "meta": {
+      "title": "Contact",
+      "description": "Des questions sur nos balades, les réservations de groupe, les événements d'entreprise ou les partenariats ? Contactez Hidden Antwerp."
+    },
+    "title": "Restons en contact.",
+    "intro": "Une question sur une balade, une réservation de groupe, un événement d'entreprise ou un partenariat ? Envoyez-nous un message et nous vous répondrons.",
+    "form": {
+      "title": "Envoyez-nous un message",
+      "name": "Votre nom",
+      "email": "Votre adresse e-mail",
+      "subject": "Objet",
+      "type": "De quoi s'agit-il ?",
+      "message": "Votre message",
+      "privacy": "J'accepte que Hidden Antwerp utilise mon nom et mon adresse e-mail pour répondre à mon message.",
+      "privacyLink": "Comment nous traitons vos données",
+      "submit": "Ouvrir dans mon application e-mail",
+      "mailtoNote": "Le bouton ouvre votre propre application e-mail avec votre message déjà rempli ; vous l'envoyez depuis celle-ci. Rien n'est enregistré sur notre site.",
+      "opened": "Votre application e-mail devrait s'ouvrir maintenant avec le message prêt. Elle ne s'est pas ouverte ? Écrivez à {email}.",
+      "notConfigured": "Notre adresse e-mail pour ce formulaire est en cours de configuration. En attendant, utilisez les autres options de cette page ou écrivez-nous par courrier.",
+      "types": {
+        "general": "Question générale",
+        "booking": "Aide à la réservation",
+        "group": "Réservation de groupe",
+        "corporate": "Événement d'entreprise",
+        "partnership": "Partenariat",
+        "technical": "Assistance technique",
+        "something": "Autre chose"
+      },
+      "errors": {
+        "name": "Veuillez indiquer votre nom.",
+        "email": "Veuillez indiquer une adresse e-mail valide.",
+        "subject": "Veuillez indiquer un objet.",
+        "message": "Veuillez écrire votre message (au moins 10 caractères).",
+        "privacy": "Veuillez donner votre accord pour que nous puissions vous répondre."
+      }
+    },
+    "more": {
+      "title": "Autres moyens de nous joindre",
+      "groupsTitle": "Groupes et entreprises",
+      "groupsText": "Team building, sortie d'entreprise ou grand groupe ? Utilisez notre formulaire de devis : vous recevrez une confirmation et une proposition.",
+      "groupsLink": "Demander un devis",
+      "partnersTitle": "Hôtels, cafés et partenaires touristiques",
+      "partnersText": "Vous souhaitez recommander nos balades à vos clients ? Présentez-nous votre établissement grâce au formulaire de cette page.",
+      "supportTitle": "Aide pour un billet",
+      "supportText": "Le lien de votre billet se trouve dans l'e-mail de confirmation. Vous l'avez perdu ? Indiquez la date de votre commande et votre adresse e-mail dans votre message.",
+      "postTitle": "Par courrier",
+      "postAddress": "Hidden Antwerp, Melkmarkt 35, 2000 Antwerpen, Belgique"
+    }
+  },
+  "reviews": {
+    "meta": {
+      "title": "Avis",
+      "description": "Ce que les promeneurs disent de Hidden Antwerp : des avis vérifiés de personnes ayant fait l'une de nos balades."
+    },
+    "title": "Ce que disent nos explorateurs",
+    "intro": "Seules les personnes ayant fait l'une de nos balades avec un billet peuvent laisser un avis, un par billet. Nous lisons chaque avis avant sa publication et n'en modifions jamais les mots.",
+    "average": "{rating} sur 5",
+    "count": {
+      "one": "sur la base de {count} avis",
+      "other": "sur la base de {count} avis"
+    },
+    "sort": {
+      "label": "Trier",
+      "newest": "Les plus récents",
+      "highest": "Meilleure note",
+      "lowest": "Note la plus basse",
+      "apply": "Trier"
+    },
+    "stars": {
+      "one": "{count} étoile sur 5",
+      "other": "{count} étoiles sur 5"
+    },
+    "anonymous": "Un promeneur Hidden Antwerp",
+    "rewarded": "Récompensé par un code de réduction (pour tout avis, quelle que soit la note)",
+    "empty": "Aucun avis n'a encore été publié. Vous avez fait une balade avec nous ? Vous trouverez le lien pour laisser un avis dans l'e-mail reçu après votre balade.",
+    "unavailable": "Les avis ne peuvent pas être chargés pour le moment. Veuillez réessayer plus tard.",
+    "leave": {
+      "title": "Laisser un avis",
+      "text": "Vous avez fait une balade avec un billet ? À la fin, vous recevez un e-mail avec votre lien personnel pour laisser un avis (si vous l'avez demandé lors de l'achat). Un avis par billet, pour que chaque avis vienne d'une vraie balade.",
+      "walks": "Voir nos balades"
+    },
+    "demo": {
+      "title": "Exemples d'avis",
+      "note": "Ce sont des exemples d'avis pour montrer la mise en page. Ils ne proviennent pas de vrais clients et ne comptent dans aucune note.",
+      "badge": "Exemple d'avis"
+    }
+  }
+}

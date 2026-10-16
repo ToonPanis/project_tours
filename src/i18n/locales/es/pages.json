@@ -1,0 +1,155 @@
+{
+  "about": {
+    "meta": {
+      "title": "Sobre nosotros",
+      "description": "Hidden Antwerp te lleva más allá de los lugares famosos: paseos urbanos interactivos y juegos de bares a tu aire, a través de las historias de Amberes, en 8 idiomas."
+    },
+    "eyebrow": "Sobre Hidden Antwerp",
+    "title": "Descubre la ciudad más allá de lo evidente.",
+    "intro": "Hidden Antwerp te lleva más allá de los monumentos famosos. Recorre calles centenarias, desvela historias olvidadas, descubre auténticos bares locales y vive Amberes a través de aventuras interactivas creadas para exploradores curiosos.",
+    "cta": "Descubre nuestras experiencias",
+    "story": {
+      "title": "Nuestra historia",
+      "p1": "Hidden Antwerp nació del amor por esta ciudad: su historia, sus rincones escondidos y sus bares auténticos.",
+      "p2": "Creemos que las historias más interesantes de una ciudad no siempre están en sus monumentos más conocidos. Muchas veces esperan en estrechas callejuelas, tras viejos portales, en bares centenarios y en edificios ante los que la mayoría de los visitantes pasa de largo.",
+      "p3": "Hidden Antwerp devuelve la vida a esas historias. Combinamos la historia local con lo que mejor hace tu móvil: mapas interactivos, navegación GPS que te guía de parada en parada y retos divertidos que te hacen mirar dos veces.",
+      "p4": "Nuestro objetivo es sencillo: que puedas descubrir Amberes por tu cuenta, a tu ritmo, y volver a casa con historias que nunca habrías encontrado en una guía de viaje."
+    },
+    "experiences": {
+      "title": "Nuestras experiencias",
+      "intro": "Cada paseo tiene su propio carácter. Elige el que mejor encaje con tu compañía y tu estado de ánimo.",
+      "upcoming": "Próximamente"
+    },
+    "why": {
+      "title": "¿Por qué Hidden Antwerp?",
+      "pace": {
+        "title": "Explora a tu ritmo",
+        "text": "Empieza cuando quieras, haz una pausa para un café, sigue mañana: tu progreso te espera."
+      },
+      "stories": {
+        "title": "Auténticas historias locales",
+        "text": "Historia, leyendas y vida cotidiana, distinguiendo siempre con claridad la historia de la leyenda."
+      },
+      "gps": {
+        "title": "Interactivo y guiado por GPS",
+        "text": "Un mapa te muestra el camino a cada parada, y el paseo abre el siguiente capítulo cuando llegas."
+      },
+      "groups": {
+        "title": "Para amigos, parejas y grupos",
+        "text": "Caminad juntos con un solo móvil o jugad a Hidden Pubs por equipos, cada jugador con su propio móvil."
+      },
+      "noGuide": {
+        "title": "Sin necesidad de guía",
+        "text": "Sin punto de encuentro ni horarios fijos: tu móvil es tu guía, en el navegador, sin app."
+      },
+      "languages": {
+        "title": "Disponible en 8 idiomas",
+        "text": "Inglés, neerlandés, francés, español, italiano, alemán, ruso y ucraniano."
+      }
+    },
+    "partners": {
+      "title": "Para hoteles, bares y empresas",
+      "text": "Los hoteles y socios turísticos pueden recomendar nuestros paseos a sus huéspedes con su propio enlace de socio. Las empresas y los grupos pueden reservar una salida de equipo o una experiencia privada.",
+      "corporate": "Team building y solicitudes de grupo",
+      "contact": "Hazte socio"
+    },
+    "vision": {
+      "title": "Hacia dónde vamos",
+      "text": "Amberes es nuestra primera ciudad. Nuestra ambición es llevar esta misma forma de descubrir a otras ciudades belgas como Gante, Brujas y Bruselas, y más adelante a destinos en el extranjero.",
+      "note": "Es nuestro plan de futuro: hoy nuestros paseos solo están disponibles en Amberes."
+    },
+    "closing": {
+      "title": "Tu próxima aventura empieza aquí.",
+      "walks": "Descubre nuestros paseos",
+      "contact": "Contáctanos"
+    }
+  },
+  "contact": {
+    "meta": {
+      "title": "Contacto",
+      "description": "¿Preguntas sobre nuestros paseos, reservas de grupo, eventos de empresa o colaboraciones? Ponte en contacto con Hidden Antwerp."
+    },
+    "title": "Hablemos.",
+    "intro": "¿Una pregunta sobre un paseo, una reserva de grupo, un evento de empresa o una colaboración? Envíanos un mensaje y te responderemos.",
+    "form": {
+      "title": "Envíanos un mensaje",
+      "name": "Tu nombre",
+      "email": "Tu correo electrónico",
+      "subject": "Asunto",
+      "type": "¿De qué se trata?",
+      "message": "Tu mensaje",
+      "privacy": "Acepto que Hidden Antwerp utilice mi nombre y mi correo electrónico para responder a mi mensaje.",
+      "privacyLink": "Cómo tratamos tus datos",
+      "submit": "Abrir en mi app de correo",
+      "mailtoNote": "El botón abre tu propia app de correo con tu mensaje ya escrito; lo envías desde allí. No se guarda nada en nuestra web.",
+      "opened": "Tu app de correo debería abrirse ahora con el mensaje listo. ¿No se ha abierto? Escribe a {email}.",
+      "notConfigured": "Estamos configurando nuestra dirección de correo para este formulario. Mientras tanto, usa las otras opciones de esta página o escríbenos por correo postal.",
+      "types": {
+        "general": "Pregunta general",
+        "booking": "Ayuda con una reserva",
+        "group": "Reserva de grupo",
+        "corporate": "Evento de empresa",
+        "partnership": "Colaboración",
+        "technical": "Asistencia técnica",
+        "something": "Otra cosa"
+      },
+      "errors": {
+        "name": "Escribe tu nombre.",
+        "email": "Escribe un correo electrónico válido.",
+        "subject": "Escribe un asunto.",
+        "message": "Escribe tu mensaje (al menos 10 caracteres).",
+        "privacy": "Acepta para que podamos responderte."
+      }
+    },
+    "more": {
+      "title": "Otras formas de contactarnos",
+      "groupsTitle": "Grupos y empresas",
+      "groupsText": "¿Team building, una salida de empresa o un grupo grande? Usa nuestro formulario de presupuesto: recibirás una confirmación y una propuesta.",
+      "groupsLink": "Solicitar presupuesto",
+      "partnersTitle": "Hoteles, bares y socios turísticos",
+      "partnersText": "¿Quieres recomendar nuestros paseos a tus huéspedes? Háblanos de tu negocio con el formulario de esta página.",
+      "supportTitle": "Ayuda con una entrada",
+      "supportText": "El enlace de tu entrada está en el correo de confirmación. ¿Lo has perdido? Indica la fecha de tu pedido y tu correo electrónico en tu mensaje.",
+      "postTitle": "Por correo postal",
+      "postAddress": "Hidden Antwerp, Melkmarkt 35, 2000 Antwerpen, Bélgica"
+    }
+  },
+  "reviews": {
+    "meta": {
+      "title": "Opiniones",
+      "description": "Lo que dicen los paseantes de Hidden Antwerp: opiniones verificadas de personas que hicieron uno de nuestros paseos."
+    },
+    "title": "Lo que dicen nuestros exploradores",
+    "intro": "Solo quienes hicieron uno de nuestros paseos con una entrada pueden escribir una opinión, una por entrada. Leemos cada opinión antes de publicarla y nunca cambiamos sus palabras.",
+    "average": "{rating} de 5",
+    "count": {
+      "one": "basado en {count} opinión",
+      "other": "basado en {count} opiniones"
+    },
+    "sort": {
+      "label": "Ordenar",
+      "newest": "Más recientes primero",
+      "highest": "Mejor valoración",
+      "lowest": "Peor valoración",
+      "apply": "Ordenar"
+    },
+    "stars": {
+      "one": "{count} estrella de 5",
+      "other": "{count} estrellas de 5"
+    },
+    "anonymous": "Un paseante de Hidden Antwerp",
+    "rewarded": "Recompensado con un código de descuento (por cualquier opinión, sea cual sea la valoración)",
+    "empty": "Todavía no se ha publicado ninguna opinión. ¿Has hecho un paseo con nosotros? Encontrarás el enlace para opinar en el correo que recibes después del paseo.",
+    "unavailable": "Ahora mismo no se pueden cargar las opiniones. Vuelve a intentarlo más tarde.",
+    "leave": {
+      "title": "Deja tu opinión",
+      "text": "¿Has hecho un paseo con una entrada? Al terminarlo, recibes un correo con tu enlace personal para opinar (si lo pediste al comprar). Una opinión por entrada, para que cada opinión venga de un paseo real.",
+      "walks": "Ver nuestros paseos"
+    },
+    "demo": {
+      "title": "Opiniones de ejemplo",
+      "note": "Son opiniones de ejemplo para mostrar el diseño. No son de clientes reales y no cuentan en ninguna valoración.",
+      "badge": "Opinión de ejemplo"
+    }
+  }
+}
