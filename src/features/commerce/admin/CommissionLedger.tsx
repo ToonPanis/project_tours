@@ -125,7 +125,7 @@ export function CommissionLedger({
                   <td className="py-1 pr-3 text-right tabular-nums">{formatEuros(entry.amountCents)}</td>
                   <td className="py-1">
                     {STATUS_LABEL[entry.status]}
-                    {entry.payoutReference ? <span className="block text-xs text-parchment/60">{entry.payoutReference}</span> : null}
+                    {entry.payoutReference ? <span className="block text-sm text-parchment/60">{entry.payoutReference}</span> : null}
                   </td>
                 </tr>
               ))}

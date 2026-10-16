@@ -81,7 +81,7 @@ export default async function AdminHomePage({ searchParams }: PageProps<"/admin"
             </div>
           ))}
         </dl>
-        <p className="text-xs text-parchment/60">
+        <p className="text-sm text-parchment/60">
           Orders count on the day they were paid; refunds count with their order. The VAT of a refunded part goes back in proportion. Commissions are those of the period&apos;s orders, whatever their payout status (see Partners).
         </p>
       </div>

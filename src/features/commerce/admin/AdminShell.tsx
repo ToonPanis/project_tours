@@ -73,7 +73,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
   }, [menuOpen]);
 
   return (
-    <div className="flex min-h-[calc(100vh-3.5rem)] w-full text-parchment">
+    <div className="flex min-h-[calc(100vh-3.5rem)] w-full text-parchment accent-gold">
       {/* Large screens: the sidebar. */}
       {!collapsed && (
         <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-64 shrink-0 overflow-y-auto border-r border-parchment/15 bg-umber/40 px-3 py-6 lg:block">

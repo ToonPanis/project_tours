@@ -119,15 +119,15 @@ export function TaxSettingsForm({ settings }: { settings: TaxSettings }) {
         {categories.map((row, index) => (
           <div key={index} className="grid grid-cols-1 gap-2 rounded-sm border border-parchment/15 p-3 sm:grid-cols-[8rem_1fr_6rem_auto]">
             <label className="flex flex-col gap-1">
-              <span className="text-xs text-parchment/70">Id</span>
+              <span className="text-sm text-parchment/70">Id</span>
               <input value={row.id} onChange={(event) => updateCategory(index, { id: event.target.value })} placeholder="experience" className={field} />
             </label>
             <label className="flex flex-col gap-1">
-              <span className="text-xs text-parchment/70">Name</span>
+              <span className="text-sm text-parchment/70">Name</span>
               <input value={row.label} onChange={(event) => updateCategory(index, { label: event.target.value })} className={field} />
             </label>
             <label className="flex flex-col gap-1">
-              <span className="text-xs text-parchment/70">Rate %</span>
+              <span className="text-sm text-parchment/70">Rate %</span>
               <input value={row.rate} onChange={(event) => updateCategory(index, { rate: event.target.value })} inputMode="decimal" className={field} />
             </label>
             <button
@@ -155,7 +155,7 @@ export function TaxSettingsForm({ settings }: { settings: TaxSettings }) {
             {ossRates.map((row, index) => (
               <div key={index} className="grid grid-cols-1 gap-2 rounded-sm border border-parchment/15 p-3 sm:grid-cols-[7rem_1fr_6rem_auto]">
                 <label className="flex flex-col gap-1">
-                  <span className="text-xs text-parchment/70">Country</span>
+                  <span className="text-sm text-parchment/70">Country</span>
                   <select value={row.country} onChange={(event) => updateOss(index, { country: event.target.value })} className={field}>
                     <option value="">–</option>
                     {EU_COUNTRIES.map((country) => (
@@ -166,7 +166,7 @@ export function TaxSettingsForm({ settings }: { settings: TaxSettings }) {
                   </select>
                 </label>
                 <label className="flex flex-col gap-1">
-                  <span className="text-xs text-parchment/70">Category</span>
+                  <span className="text-sm text-parchment/70">Category</span>
                   <select value={row.categoryId} onChange={(event) => updateOss(index, { categoryId: event.target.value })} className={field}>
                     <option value="">–</option>
                     {categories.map((category) => (
@@ -177,7 +177,7 @@ export function TaxSettingsForm({ settings }: { settings: TaxSettings }) {
                   </select>
                 </label>
                 <label className="flex flex-col gap-1">
-                  <span className="text-xs text-parchment/70">Rate %</span>
+                  <span className="text-sm text-parchment/70">Rate %</span>
                   <input value={row.rate} onChange={(event) => updateOss(index, { rate: event.target.value })} inputMode="decimal" className={field} />
                 </label>
                 <button

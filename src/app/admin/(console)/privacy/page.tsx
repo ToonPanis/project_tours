@@ -23,7 +23,7 @@ export default async function AdminPrivacyPage() {
           <li>By MongoDB itself (TTL): sign-in links 15 minutes, sessions 12 hours / 7 days, sent emails 90 days, quote requests 2 years, partner click counters 3 years, Hidden Pubs games and photos 7 days.</li>
           <li>Kept: unsubscribed addresses (hash only, to respect the opt-out), the commission ledger (no personal data).</li>
         </ul>
-        <p className="text-xs text-parchment/60">⚖️ The periods are proposals: confirm them with your accountant and lawyer (config.ts, RETENTION).</p>
+        <p className="text-sm text-parchment/60">⚖️ The periods are proposals: confirm them with your accountant and lawyer (config.ts, RETENTION).</p>
       </div>
     </section>
   );
