@@ -1,0 +1,155 @@
+{
+  "about": {
+    "meta": {
+      "title": "About us",
+      "description": "Hidden Antwerp takes you beyond the famous landmarks: self-guided, interactive city walks and pub games through Antwerp's stories, in 8 languages."
+    },
+    "eyebrow": "About Hidden Antwerp",
+    "title": "Discover the city beyond the obvious.",
+    "intro": "Hidden Antwerp takes you beyond the famous landmarks. Explore centuries-old streets, uncover forgotten stories, discover authentic local pubs and experience Antwerp through interactive adventures created for curious explorers.",
+    "cta": "Explore our experiences",
+    "story": {
+      "title": "Our story",
+      "p1": "Hidden Antwerp grew out of a love for this city: its history, its hidden corners and its authentic cafés.",
+      "p2": "We believe the most interesting stories of a city are not always found at its best-known monuments. More often they wait in narrow side streets, behind old gateways, in centuries-old cafés and in buildings that most visitors walk straight past.",
+      "p3": "Hidden Antwerp brings those stories back to life. We combine local history with what your phone does well: interactive maps, GPS navigation that guides you from stop to stop, and playful tasks that make you look twice.",
+      "p4": "Our aim is simple: that you can discover Antwerp on your own, at your own pace, and come home with stories you would never have found in a guidebook."
+    },
+    "experiences": {
+      "title": "Our experiences",
+      "intro": "Each walk has its own character. Choose the one that suits your company and your mood.",
+      "upcoming": "Coming soon"
+    },
+    "why": {
+      "title": "Why Hidden Antwerp?",
+      "pace": {
+        "title": "Explore at your own pace",
+        "text": "Start when you like, pause for a coffee, continue tomorrow: your progress waits for you."
+      },
+      "stories": {
+        "title": "Authentic local stories",
+        "text": "History, legends and everyday life, with history and legend always clearly told apart."
+      },
+      "gps": {
+        "title": "Interactive, GPS-guided",
+        "text": "A map shows the way to every stop, and the walk opens the next chapter when you arrive."
+      },
+      "groups": {
+        "title": "For friends, couples and groups",
+        "text": "Walk together on one phone, or play Hidden Pubs as teams, each player on their own phone."
+      },
+      "noGuide": {
+        "title": "No tour guide needed",
+        "text": "No meeting point, no fixed times: your phone is your guide, in the browser, without an app."
+      },
+      "languages": {
+        "title": "Available in 8 languages",
+        "text": "English, Dutch, French, Spanish, Italian, German, Russian and Ukrainian."
+      }
+    },
+    "partners": {
+      "title": "For hotels, cafés and companies",
+      "text": "Hotels and tourism partners can recommend our walks to their guests with their own partner link. Companies and groups can book a team outing or a private experience.",
+      "corporate": "Team building and group requests",
+      "contact": "Become a partner"
+    },
+    "vision": {
+      "title": "Where we're heading",
+      "text": "Hidden Antwerp is our first city. Our ambition is to bring the same way of discovering to other Belgian cities such as Ghent, Bruges and Brussels, and later to destinations abroad.",
+      "note": "This is our plan for the future: today our walks are available in Antwerp only."
+    },
+    "closing": {
+      "title": "Your next adventure starts here.",
+      "walks": "Explore our walks",
+      "contact": "Contact us"
+    }
+  },
+  "contact": {
+    "meta": {
+      "title": "Contact",
+      "description": "Questions about our walks, group bookings, company events or partnerships? Get in touch with Hidden Antwerp."
+    },
+    "title": "Let's get in touch.",
+    "intro": "Questions about a walk, a group booking, a company event or a partnership? Send us a message and we'll get back to you.",
+    "form": {
+      "title": "Send us a message",
+      "name": "Your name",
+      "email": "Your email address",
+      "subject": "Subject",
+      "type": "What is it about?",
+      "message": "Your message",
+      "privacy": "I agree that Hidden Antwerp uses my name and email address to answer my message.",
+      "privacyLink": "How we handle your data",
+      "submit": "Open in my email app",
+      "mailtoNote": "The button opens your own email app with your message filled in; you send it from there. Nothing is stored on our website.",
+      "opened": "Your email app should open now with the message ready. Didn't it open? Write to {email}.",
+      "notConfigured": "Our email address for this form is being set up. Until then, use the options on this page or write to us by post.",
+      "types": {
+        "general": "General question",
+        "booking": "Booking support",
+        "group": "Group booking",
+        "corporate": "Corporate event",
+        "partnership": "Partnership",
+        "technical": "Technical support",
+        "something": "Something else"
+      },
+      "errors": {
+        "name": "Please fill in your name.",
+        "email": "Please fill in a valid email address.",
+        "subject": "Please fill in a subject.",
+        "message": "Please write your message (at least 10 characters).",
+        "privacy": "Please agree so that we can answer you."
+      }
+    },
+    "more": {
+      "title": "Other ways to reach us",
+      "groupsTitle": "Groups and companies",
+      "groupsText": "Team building, company outings or a large group? Use our quote form: you'll get a confirmation and a proposal.",
+      "groupsLink": "Request a quote",
+      "partnersTitle": "Hotels, cafés and tourism partners",
+      "partnersText": "Would you like to recommend our walks to your guests? Tell us about your business with the form on this page.",
+      "supportTitle": "Help with a ticket",
+      "supportText": "Your ticket link is in the confirmation email. Lost it? Mention your order date and email address in your message.",
+      "postTitle": "By post",
+      "postAddress": "Hidden Antwerp, Melkmarkt 35, 2000 Antwerpen, Belgium"
+    }
+  },
+  "reviews": {
+    "meta": {
+      "title": "Reviews",
+      "description": "What walkers say about Hidden Antwerp: verified reviews from people who did one of our walks."
+    },
+    "title": "What our explorers say",
+    "intro": "Only people who did one of our walks with a ticket can write a review, one per ticket. We read every review before it appears and never change its words.",
+    "average": "{rating} out of 5",
+    "count": {
+      "one": "based on {count} review",
+      "other": "based on {count} reviews"
+    },
+    "sort": {
+      "label": "Sort",
+      "newest": "Newest first",
+      "highest": "Highest rating",
+      "lowest": "Lowest rating",
+      "apply": "Sort"
+    },
+    "stars": {
+      "one": "{count} star out of 5",
+      "other": "{count} stars out of 5"
+    },
+    "anonymous": "A Hidden Antwerp walker",
+    "rewarded": "Rewarded with a discount code (for any review, whatever the rating)",
+    "empty": "No reviews have been published yet. Did a walk with us? You'll find the review link in the email after your walk.",
+    "unavailable": "Reviews can't be loaded right now. Please try again later.",
+    "leave": {
+      "title": "Leave a review",
+      "text": "Did a walk with a ticket? When you finish it, you get an email with your personal review link (if you asked for it when buying). One review per ticket, so every review comes from a real walk.",
+      "walks": "See our walks"
+    },
+    "demo": {
+      "title": "Example reviews",
+      "note": "These are example reviews to show the layout. They are not from real customers and don't count in any rating.",
+      "badge": "Example review"
+    }
+  }
+}

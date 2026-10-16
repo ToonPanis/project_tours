@@ -3,6 +3,7 @@ import { ORDERS_PAGE_SIZE } from "@/features/commerce/config";
 import { requireAdmin } from "@/features/commerce/server/admin-access";
 import { getCommerceContext } from "@/features/commerce/server/context";
 import { listGroupsPage } from "@/features/commerce/server/report-service";
+import { PageHeader } from "@/features/commerce/admin/PageHeader";
 
 const formatTime = (iso: string) =>
   new Intl.DateTimeFormat("nl-BE", { dateStyle: "short", timeStyle: "short", timeZone: "Europe/Brussels" }).format(new Date(iso));
@@ -19,7 +20,7 @@ export default async function AdminGroupsPage({ searchParams }: PageProps<"/admi
 
   return (
     <section className="flex flex-col gap-4 text-parchment">
-      <h1 className="font-display text-4xl font-semibold">Hidden Pubs groups</h1>
+      <PageHeader title="Hidden Pubs groups" description="Hidden Pubs games created with a ticket, and their places." />
       <p className="text-sm text-parchment/70">Games created with a ticket. Places = persons on the ticket, the organiser included.</p>
       <p className="text-parchment/70">{`${total} groups · page ${page} of ${pageCount}`}</p>
       <ul className="flex flex-col gap-2">

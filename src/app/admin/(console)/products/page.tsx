@@ -4,6 +4,7 @@ import { requireAdmin } from "@/features/commerce/server/admin-access";
 import { listCatalog } from "@/features/commerce/server/catalog-service";
 import { getCommerceContext } from "@/features/commerce/server/context";
 import { getTaxSettings } from "@/features/commerce/server/tax-service";
+import { PageHeader } from "@/features/commerce/admin/PageHeader";
 
 /** /admin/products: the catalogue. Prices and tax categories change here, without a code change. */
 export default async function AdminProductsPage() {
@@ -14,7 +15,7 @@ export default async function AdminProductsPage() {
   return (
     <section className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <h1 className="font-display text-4xl font-semibold text-parchment">Products</h1>
+        <PageHeader title="Products" description="What can be sold, at what price per person and in which tax category." />
         <p className="text-parchment/80">
           Every product is sold per person; prices include VAT. A new price applies from the moment you save it, and the old one
           stays in the history. A product can only go on sale with a tax category and a price.

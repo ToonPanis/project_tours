@@ -7,7 +7,7 @@ import type { CorporatePricing } from "@/types/commerce";
 import { adminErrorMessage, postJson } from "./admin-api";
 import { AdminStatus } from "./AdminStatus";
 
-const field = "min-h-11 w-full rounded-sm border border-parchment/30 bg-ink/40 px-3 text-parchment focus:border-gold focus:outline-none";
+const field = "min-h-11 w-full rounded-sm border border-parchment/30 bg-ink/40 px-3 text-parchment focus:border-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-gold";
 const euros = (cents: number | null) => (cents === null ? "" : String(cents / 100).replace(".", ","));
 
 interface Row {
@@ -55,15 +55,15 @@ export function CorporatePricingEditor({ pricing }: { pricing: CorporatePricing 
       {rows.map((row, index) => (
         <div key={index} className="grid grid-cols-2 gap-2 rounded-sm border border-parchment/15 p-3 sm:grid-cols-[6rem_1fr_1fr_auto_auto] sm:items-end">
           <label className="flex flex-col gap-1">
-            <span className="text-xs text-parchment/70">Persons</span>
+            <span className="text-sm text-parchment/70">Persons</span>
             <input value={row.persons} onChange={(event) => update(index, { persons: event.target.value })} inputMode="numeric" className={field} />
           </label>
           <label className="flex flex-col gap-1">
-            <span className="text-xs text-parchment/70">Self-guided €</span>
+            <span className="text-sm text-parchment/70">Self-guided €</span>
             <input value={row.selfGuided} onChange={(event) => update(index, { selfGuided: event.target.value })} inputMode="decimal" className={field} />
           </label>
           <label className="flex flex-col gap-1">
-            <span className="text-xs text-parchment/70">With a guide €</span>
+            <span className="text-sm text-parchment/70">With a guide €</span>
             <input value={row.guided} onChange={(event) => update(index, { guided: event.target.value })} inputMode="decimal" className={field} />
           </label>
           <label className="flex min-h-11 items-center gap-2 text-sm">

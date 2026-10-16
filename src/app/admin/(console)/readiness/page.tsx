@@ -2,6 +2,7 @@ import { readinessSummary, type CheckStatus, type ReadinessCheck } from "@/featu
 import { requireAdmin } from "@/features/commerce/server/admin-access";
 import { getCommerceContext } from "@/features/commerce/server/context";
 import { launchReadiness } from "@/features/commerce/server/readiness-service";
+import { PageHeader } from "@/features/commerce/admin/PageHeader";
 
 const BADGE: Record<CheckStatus, { text: string; look: string }> = {
   ok: { text: "OK", look: "border-emerald-400/60 text-emerald-300" },
@@ -37,7 +38,7 @@ export default async function AdminReadinessPage() {
   const summary = readinessSummary(checks);
   return (
     <section className="flex flex-col gap-6 text-parchment">
-      <h1 className="font-display text-4xl font-semibold">Launch readiness</h1>
+      <PageHeader title="Launch readiness" description="Which settings are in place, and what's left before real sales." />
       <p className="text-parchment/80">
         {summary.live
           ? "Everything is in place for real sales."
