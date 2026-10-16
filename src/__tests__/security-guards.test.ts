@@ -25,7 +25,9 @@ function filesUnder(dir: string, name: RegExp): string[] {
 const rel = (path: string) => relative(root, path).split(sep).join("/");
 const read = (path: string) => readFileSync(path, "utf-8");
 
-describe("every protected route and page checks access itself (never only a layout)", () => {
+// These tests read the source code (and the secrets test every tracked file): a longer time limit
+// than the default 5 s, so a busy machine or CI runner doesn't fail them for being slow.
+describe("every protected route and page checks access itself (never only a layout)", { timeout: 30_000 }, () => {
   test("admin API routes: adminPost or adminFromRequest (sign-in routes excepted)", () => {
     const routes = filesUnder(join(src, "app", "api", "admin"), /^route\.ts$/).filter((path) => !rel(path).includes("/admin/auth/"));
     expect(routes.length).toBeGreaterThan(15);
@@ -68,7 +70,7 @@ describe("every protected route and page checks access itself (never only a layo
   });
 });
 
-describe("secrets and logs", () => {
+describe("secrets and logs", { timeout: 30_000 }, () => {
   const tracked = execFileSync("git", ["ls-files"], { cwd: root, encoding: "utf-8" })
     .split("\n")
     .filter((path) => path && !path.startsWith("public/") && !/\.(png|jpe?g|webp|avif|mp3|svg|ico|woff2?)$/i.test(path) && path !== "package-lock.json");

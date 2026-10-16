@@ -12,7 +12,13 @@ import { MailerError, type EmailMessage } from "./mailer";
  * - privacy: once sent (or given up) the text is removed from the database.
  */
 
-export async function queueEmail(ctx: CommerceContext, id: string, message: EmailMessage): Promise<"queued" | "duplicate"> {
+export async function queueEmail(
+  ctx: CommerceContext,
+  id: string,
+  message: EmailMessage,
+  /** P10: `sendBefore`: after this moment the email is no longer sent (e.g. a sign-in link's expiry). */
+  options: { sendBefore?: Date } = {},
+): Promise<"queued" | "duplicate"> {
   const now = ctx.now();
   return ctx.store.enqueueEmail(
     {
@@ -22,6 +28,7 @@ export async function queueEmail(ctx: CommerceContext, id: string, message: Emai
       text: message.text,
       html: message.html ?? null,
       unsubscribeUrl: message.unsubscribeUrl ?? null,
+      sendBefore: options.sendBefore ? options.sendBefore.toISOString() : null,
       status: "pending",
       attempts: 0,
       nextAttemptAt: now.toISOString(),
@@ -50,6 +57,12 @@ export async function deliverDueEmails(ctx: CommerceContext, limit = 20): Promis
   const report: DeliveryReport = { sent: 0, retrying: 0, failed: 0 };
   for (const email of await ctx.store.listDueEmails(ctx.now(), limit)) {
     if (email.text === null) continue;
+    // P10: too late to be useful (e.g. a sign-in link that has expired): given up, never sent.
+    if (email.sendBefore && Date.parse(email.sendBefore) <= ctx.now().getTime()) {
+      await ctx.store.updateEmail(email.id, { status: "failed", lastError: "expired", text: null, html: null });
+      report.failed += 1;
+      continue;
+    }
     // Another sender got it first: skip it.
     const leaseUntil = new Date(ctx.now().getTime() + SEND_LEASE_MS);
     if (!(await ctx.store.claimEmail(email.id, email.attempts, ctx.now(), leaseUntil))) continue;

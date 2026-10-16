@@ -120,6 +120,7 @@ function toEmail(doc: Document): OutboxEmail {
     // P8 fields only when present (older emails keep their shape).
     ...(typeof doc.html === "string" ? { html: doc.html } : {}),
     ...(typeof doc.unsubscribeUrl === "string" ? { unsubscribeUrl: doc.unsubscribeUrl } : {}),
+    ...(doc.sendBefore instanceof Date ? { sendBefore: doc.sendBefore.toISOString() } : {}),
     status: doc.status,
     attempts: Number(doc.attempts),
     nextAttemptAt: iso(doc.nextAttemptAt) ?? new Date(0).toISOString(),
@@ -200,6 +201,7 @@ function emailChangesToDoc(changes: Partial<Omit<OutboxEmail, "id">>): Document 
   if (changes.nextAttemptAt !== undefined) doc.nextAttemptAt = toDate(changes.nextAttemptAt);
   if (changes.createdAt !== undefined) doc.createdAt = toDate(changes.createdAt);
   if (changes.sentAt !== undefined) doc.sentAt = changes.sentAt === null ? null : toDate(changes.sentAt);
+  if (changes.sendBefore !== undefined) doc.sendBefore = changes.sendBefore === null ? null : toDate(changes.sendBefore);
   return doc;
 }
 

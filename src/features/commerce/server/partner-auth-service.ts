@@ -68,7 +68,7 @@ export async function requestPartnerLoginLink(
       t("partner.email.loginValid", { minutes: LOGIN_LINK_LIFETIME_MS / 60_000 }),
       t("partner.email.loginIgnore"),
     ].join("\n"),
-  });
+  }, { sendBefore: new Date(ctx.now().getTime() + LOGIN_LINK_LIFETIME_MS) });
   return ok({ sent: true });
 }
 

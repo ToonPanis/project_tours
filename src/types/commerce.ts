@@ -357,6 +357,8 @@ export interface OutboxEmail {
   html?: string | null;
   /** P8: the List-Unsubscribe link of a non-transactional email. */
   unsubscribeUrl?: string | null;
+  /** P10: don't send after this (a sign-in link that has expired is useless); then it's marked failed ("expired"). */
+  sendBefore?: string | null;
   status: "pending" | "sent" | "failed";
   attempts: number;
   nextAttemptAt: string;

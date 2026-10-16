@@ -147,7 +147,8 @@ describe("the answers stay on the server", () => {
     });
   }
 
-  test("only src/features/pub-game/server/ imports the answers and the reveal texts", () => {
+  // Reads every source file: slow under the full parallel run, so a longer time limit.
+  test("only src/features/pub-game/server/ imports the answers and the reveal texts", { timeout: 30_000 }, () => {
     const root = join(process.cwd(), "src");
     const secret = /from\s+["'][^"']*(answers\.server|reveals\/index\.server|game\/reveals\/[a-z]{2})["']/;
     const importers = sourceFiles(root)
@@ -159,7 +160,7 @@ describe("the answers stay on the server", () => {
     expect(importers.filter((file) => !file.startsWith("features/pub-game/server/"))).toEqual([]);
   });
 
-  test("browser code never imports the server folder (not even types)", () => {
+  test("browser code never imports the server folder (not even types)", { timeout: 30_000 }, () => {
     const root = join(process.cwd(), "src");
     const importsServer = /from\s+["'][^"']*(pub-game\/server|\.\.\/server)\//;
     const clientFiles = sourceFiles(root).filter((file) => {

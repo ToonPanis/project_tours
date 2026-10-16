@@ -80,6 +80,7 @@ export async function requestLoginLink(
   await ctx.store.saveLoginToken({ tokenHash, userId: user.id, expiresAt: new Date(ctx.now().getTime() + LOGIN_LINK_LIFETIME_MS) });
 
   const minutes = LOGIN_LINK_LIFETIME_MS / 60_000;
+  const linkExpiresAt = new Date(ctx.now().getTime() + LOGIN_LINK_LIFETIME_MS);
   await queueEmail(ctx, `login:${tokenHash}`, {
     to: user.email,
     subject: "Your Hidden Antwerp sign-in link",
@@ -92,7 +93,7 @@ export async function requestLoginLink(
       `The link works once, for ${minutes} minutes.`,
       "Didn't ask for it? Then you can ignore this email: nobody can sign in without the link.",
     ].join("\n"),
-  });
+  }, { sendBefore: linkExpiresAt });
   return ok({ sent: true });
 }
 

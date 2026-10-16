@@ -2,6 +2,7 @@ import { createMongoClient, databaseOf } from "@/features/pub-game/server/mongo"
 import { hashToken, newId, newPlayerToken } from "@/features/pub-game/server/identity";
 import { parseEmailList } from "../logic/email";
 import type { CommerceStore } from "./commerce-store";
+import { FakeCheckoutGateway, fakePaymentsAllowed } from "./fake-payment-gateway";
 import { PendingBillitProvider, type InvoiceProvider } from "./invoicing";
 import { BrevoMailer, MemoryMailer, type Mailer } from "./mailer";
 import { MemoryCommerceStore } from "./memory-store";
@@ -62,6 +63,11 @@ export function salesEnabled(): boolean {
  */
 function getPayments(): PaymentGateway {
   if (globalForCommerce.commercePayments) return globalForCommerce.commercePayments;
+  // P10: the browser tests' own payment page (fake-payments.ts); refused outside that test build.
+  if (fakePaymentsAllowed()) {
+    globalForCommerce.commercePayments = new FakeCheckoutGateway();
+    return globalForCommerce.commercePayments;
+  }
   const secretKey = process.env.STRIPE_SECRET_KEY;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   if (!secretKey || !webhookSecret) throw new PaymentProviderError("not-configured");
