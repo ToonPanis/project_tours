@@ -35,7 +35,12 @@ export async function POST(request: NextRequest) {
   try {
     event = ctx.payments.parseWebhook(rawBody, request.headers.get("stripe-signature"));
   } catch (error) {
-    if (error instanceof WebhookSignatureError) return NextResponse.json({ error: "invalid-signature" }, { status: 400 });
+    if (error instanceof WebhookSignatureError) {
+      // Visible in the Vercel logs: the usual cause is a STRIPE_WEBHOOK_SECRET from another endpoint
+      // (each Stripe endpoint has its own secret). Nothing of the request is logged.
+      console.warn("[Hidden Antwerp] Stripe webhook refused: invalid signature (does STRIPE_WEBHOOK_SECRET belong to this endpoint?)");
+      return NextResponse.json({ error: "invalid-signature" }, { status: 400 });
+    }
     if (error instanceof PaymentProviderError) return NextResponse.json({ error: "not-configured" }, { status: 503 });
     throw error;
   }
