@@ -552,4 +552,87 @@ export class MemoryCommerceStore implements CommerceStore {
   async isSuppressed(emailHash: string) {
     return this.suppressions.has(emailHash);
   }
+
+  async findOrdersByEmail(email: string) {
+    const wanted = email.toLowerCase();
+    return structuredClone([...this.orders.values()].filter((order) => order.email?.toLowerCase() === wanted));
+  }
+
+  async findQuotesByEmail(email: string) {
+    const wanted = email.toLowerCase();
+    return structuredClone([...this.quotes.values()].map((entry) => entry.quote).filter((quote) => quote.email.toLowerCase() === wanted));
+  }
+
+  async deleteQuote(id: string) {
+    this.quotes.delete(id);
+  }
+
+  async listEmailsTo(email: string) {
+    const wanted = email.toLowerCase();
+    return structuredClone([...this.outbox.values()].filter((entry) => entry.to.toLowerCase() === wanted));
+  }
+
+  async deleteEmailsTo(email: string) {
+    const wanted = email.toLowerCase();
+    let deleted = 0;
+    for (const [id, entry] of this.outbox) {
+      if (entry.to.toLowerCase() === wanted) {
+        this.outbox.delete(id);
+        deleted += 1;
+      }
+    }
+    return deleted;
+  }
+
+  async anonymiseAuditActor(actorId: string) {
+    let changed = 0;
+    this.audit = this.audit.map((entry) => {
+      if (entry.actorId !== actorId || entry.actorEmail === null) return entry;
+      changed += 1;
+      return { ...entry, actorEmail: null };
+    });
+    return changed;
+  }
+
+  async deleteAuditBefore(before: Date) {
+    const kept = this.audit.filter((entry) => Date.parse(entry.at) >= before.getTime());
+    const deleted = this.audit.length - kept.length;
+    this.audit = kept;
+    return deleted;
+  }
+
+  async deleteReviewsBefore(status: Review["status"], before: Date) {
+    let deleted = 0;
+    for (const [id, review] of this.reviews) {
+      if (review.status === status && Date.parse(review.createdAt) < before.getTime()) {
+        this.reviews.delete(id);
+        deleted += 1;
+      }
+    }
+    return deleted;
+  }
+
+  async deleteUnpaidOrdersBefore(before: Date) {
+    let deleted = 0;
+    for (const [id, order] of this.orders) {
+      if (["pending", "failed", "canceled"].includes(order.status) && Date.parse(order.createdAt) < before.getTime()) {
+        this.orders.delete(id);
+        deleted += 1;
+      }
+    }
+    return deleted;
+  }
+
+  async listOrdersWithPersonalDataBefore(before: Date, limit: number) {
+    return structuredClone(
+      [...this.orders.values()]
+        .filter(
+          (order) =>
+            (order.status === "paid" || order.status === "refunded") &&
+            Date.parse(order.createdAt) < before.getTime() &&
+            (order.email !== null || (order.customer?.name ?? null) !== null),
+        )
+        .slice(0, limit),
+    );
+  }
 }

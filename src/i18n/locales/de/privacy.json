@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "title": "Datenschutz und Cookies",
+    "description": "Was Hidden Antwerp speichert, warum und wie lange."
+  },
+  "title": "Datenschutz und Cookies",
+  "intro": "Diese Seite listet sachlich auf, was Hidden Antwerp auf deinem Handy und auf unseren Servern speichert, warum und wie lange. Wir verwenden keine Werbung, keine Analyse und kein websiteübergreifendes Tracking.",
+  "draftNotice": "Prototyp: Diese Übersicht beschreibt, wie die App heute funktioniert. Die vollständige Datenschutzerklärung wird noch geschrieben und vor dem Start von einem Anwalt geprüft.",
+  "cookies": {
+    "title": "Cookies",
+    "intro": "Nur Cookies, die die Website zum Funktionieren braucht. Es sind First-Party-Cookies (nur unsere Website kann sie lesen), und sie enthalten keine Werbe- oder Tracking-IDs.",
+    "name": "Cookie",
+    "purpose": "Wofür",
+    "duration": "Wie lange",
+    "rows": {
+      "locale": "Deine Sprachwahl.",
+      "player": "Erkennt dein Handy als denselben Spieler in einem Hidden-Pubs-Spiel wieder.",
+      "order": "Zeigt deine Bestellung auf der Bestätigungsseite der Zahlung.",
+      "ticket": "Merkt sich, dass dieses Handy dein Ticket geöffnet hat.",
+      "referral": "Merkt sich, welcher Partner (zum Beispiel dein Hotel) dich geschickt hat, damit er angerechnet werden kann, wenn du ein Ticket kaufst. Nur der Partnercode und die Uhrzeit, nichts über dich.",
+      "staff": "Hält Mitarbeitende oder Partner von Hidden Antwerp angemeldet (nur wenn du dich in diesen Bereichen anmeldest)."
+    },
+    "durations": {
+      "year": "1 Jahr",
+      "days": "{count} Tage",
+      "hours": "{count} Stunden",
+      "ticketValidity": "solange das Ticket gültig ist",
+      "session": "12 Stunden oder 7 Tage"
+    },
+    "referralNote": "Ob dieses Partner-Cookie ohne vorherige Nachfrage gesetzt werden darf, wird noch rechtlich geprüft."
+  },
+  "storage": {
+    "title": "Auf deinem Handy gespeichert (lokaler Speicher)",
+    "language": "Deine Sprachwahl (eine Kopie, falls das Cookie weg ist).",
+    "progress": "Dein Fortschritt in einem Rundgang (welche Stationen du abgeschlossen hast), damit du später weitermachen kannst. Kein Standort.",
+    "intro": "Dass du die Einführung eines Hidden-Pubs-Spiels gesehen hast."
+  },
+  "location": {
+    "title": "Dein Standort",
+    "body": "Während der Navigation wird die GPS-Position deines Handys nur auf deinem Handy verwendet, um die Karte anzuzeigen und die Ankunft zu erkennen. Sie wird nie gespeichert und nie an unsere Server oder an andere gesendet."
+  },
+  "server": {
+    "title": "Auf unseren Servern gespeichert",
+    "orders": "Käufe: E-Mail-Adresse, Name und Land von der Zahlungsseite, Firmendaten für eine Rechnung, was du gekauft und bezahlt hast. Aufbewahrt für den Buchhaltungszeitraum; danach werden deine E-Mail-Adresse und dein Name entfernt.",
+    "games": "Hidden-Pubs-Spiele: Teamnamen, Antworten, Punktestände und Beweisfotos oder -videos. Nach 7 Tagen automatisch gelöscht.",
+    "quotes": "Angebotsanfragen von Unternehmen: Kontaktdaten und die Anfrage. Nach 2 Jahren gelöscht.",
+    "reviews": "Bewertungen, die du nach einem Rundgang schreibst: Wertung, Text und ein optionaler Name. Aufbewahrt, bis sie gelöscht werden.",
+    "followUp": "Ob du nach dem Rundgang um eine E-Mail gebeten hast und ob du dich abgemeldet hast (nur ein unkenntlich gemachter Fingerabdruck deiner Adresse).",
+    "partners": "Besuche über einen Partnerlink werden nur pro Tag gezählt; nichts über dich."
+  },
+  "providers": {
+    "title": "Dienste, die wir nutzen",
+    "hosting": "Vercel (Hosting der Website und Speicherung der Hidden-Pubs-Fotos).",
+    "database": "MongoDB Atlas (Datenbank).",
+    "payments": "Stripe (Zahlungsseite; deine Kartendaten gehen nur an Stripe, nie an uns).",
+    "email": "Brevo (Versand von E-Mails).",
+    "maps": "OpenFreeMap (Kartenkacheln; ihr Server sieht, welchen Teil der Karte dein Handy lädt, nicht deine GPS-Position)."
+  },
+  "rights": {
+    "title": "Deine Rechte",
+    "body": "Du kannst fragen, welche Daten wir über dich haben, eine Kopie erhalten, sie berichtigen oder löschen lassen und dich mit dem Link in jeder solchen E-Mail von E-Mails nach einem Rundgang abmelden. Käufe bleiben so lange in der Buchhaltung, wie das Gesetz es verlangt, nach diesem Zeitraum ohne deine E-Mail-Adresse und deinen Namen.",
+    "contact": "Kontakt für Datenschutzfragen: [KONTAKTADRESSE WIRD VOR DEM START ERGÄNZT]"
+  }
+}

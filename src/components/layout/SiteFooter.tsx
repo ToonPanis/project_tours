@@ -20,6 +20,9 @@ export async function SiteFooter() {
           <Link href="/corporate" className="min-h-11 content-center underline-offset-4 hover:text-gold hover:underline">
             {t("navigation.forCompanies")}
           </Link>
+          <Link href="/privacy" className="min-h-11 content-center underline-offset-4 hover:text-gold hover:underline">
+            {t("navigation.privacy")}
+          </Link>
         </div>
       </div>
     </footer>

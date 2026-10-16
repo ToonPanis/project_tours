@@ -20,6 +20,7 @@ export default function AdminConsoleLayout({ children }: LayoutProps<"/admin">) 
             ["/admin/quotes", "Quotes"],
             ["/admin/partners", "Partners"],
             ["/admin/reviews", "Reviews"],
+            ["/admin/privacy", "Privacy"],
             ["/admin/groups", "Groups"],
             ["/admin/documents", "Invoices"],
             ["/admin/products", "Products"],

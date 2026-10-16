@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "title": "Privacy e cookie",
+    "description": "Cosa conserva Hidden Antwerp, perché e per quanto tempo."
+  },
+  "title": "Privacy e cookie",
+  "intro": "Questa pagina elenca, in modo oggettivo, cosa conserva Hidden Antwerp sul tuo telefono e sui nostri server, perché e per quanto tempo. Non usiamo pubblicità, né strumenti di analisi, né tracciamento tra siti web.",
+  "draftNotice": "Prototipo: questa panoramica descrive come funziona l'app oggi. L'informativa sulla privacy completa è ancora in fase di stesura e sarà verificata da un avvocato prima del lancio.",
+  "cookies": {
+    "title": "Cookie",
+    "intro": "Solo i cookie di cui il sito ha bisogno per funzionare. Sono cookie di prima parte (solo il nostro sito può leggerli) e non contengono identificativi pubblicitari o di tracciamento.",
+    "name": "Cookie",
+    "purpose": "A cosa serve",
+    "duration": "Per quanto tempo",
+    "rows": {
+      "locale": "La tua scelta della lingua.",
+      "player": "Riconosce il tuo telefono come lo stesso giocatore in una partita di Hidden Pubs.",
+      "order": "Mostra il tuo ordine nella pagina di conferma del pagamento.",
+      "ticket": "Ricorda che questo telefono ha aperto il tuo biglietto.",
+      "referral": "Ricorda quale partner (per esempio il tuo hotel) ti ha indirizzato, così che gli possa essere riconosciuto se acquisti un biglietto. Solo il codice del partner e l'ora, niente su di te.",
+      "staff": "Mantiene connessi il personale o i partner di Hidden Antwerp (solo se accedi a quelle aree)."
+    },
+    "durations": {
+      "year": "1 anno",
+      "days": "{count} giorni",
+      "hours": "{count} ore",
+      "ticketValidity": "finché il biglietto è valido",
+      "session": "12 ore o 7 giorni"
+    },
+    "referralNote": "È ancora in corso una verifica legale per stabilire se questo cookie del partner possa essere impostato senza chiedere prima."
+  },
+  "storage": {
+    "title": "Conservato sul tuo telefono (archiviazione locale)",
+    "language": "La tua scelta della lingua (una copia, nel caso il cookie non ci sia più).",
+    "progress": "I tuoi progressi in una passeggiata (quali tappe hai completato), così puoi continuare più tardi. Nessuna posizione.",
+    "intro": "Il fatto che hai visto l'introduzione di una partita di Hidden Pubs."
+  },
+  "location": {
+    "title": "La tua posizione",
+    "body": "Durante la navigazione la posizione GPS del tuo telefono viene usata solo sul tuo telefono, per mostrare la mappa e rilevare l'arrivo. Non viene mai conservata e mai inviata ai nostri server o a chiunque altro."
+  },
+  "server": {
+    "title": "Conservato sui nostri server",
+    "orders": "Acquisti: indirizzo e-mail, nome e paese dalla pagina di pagamento, dati aziendali per una fattura, cosa hai acquistato e pagato. Conservati per il periodo contabile; dopo, la tua e-mail e il tuo nome vengono rimossi.",
+    "games": "Partite di Hidden Pubs: nomi delle squadre, risposte, punteggi e foto o video di prova. Eliminati automaticamente dopo 7 giorni.",
+    "quotes": "Richieste di preventivo delle aziende: dati di contatto e la richiesta. Eliminate dopo 2 anni.",
+    "reviews": "Recensioni che scrivi dopo una passeggiata: valutazione, testo e un nome facoltativo. Conservate finché non vengono eliminate.",
+    "followUp": "Se hai chiesto un'e-mail dopo la passeggiata, e se hai annullato l'iscrizione (solo un'impronta offuscata del tuo indirizzo).",
+    "partners": "Le visite tramite un link partner vengono solo contate per giorno; niente su di te."
+  },
+  "providers": {
+    "title": "Servizi che usiamo",
+    "hosting": "Vercel (hosting del sito web e archiviazione delle foto di Hidden Pubs).",
+    "database": "MongoDB Atlas (database).",
+    "payments": "Stripe (pagina di pagamento; i dati della tua carta vanno solo a Stripe, mai a noi).",
+    "email": "Brevo (invio delle e-mail).",
+    "maps": "OpenFreeMap (tessere della mappa; il loro server vede quale parte della mappa carica il tuo telefono, non la tua posizione GPS)."
+  },
+  "rights": {
+    "title": "I tuoi diritti",
+    "body": "Puoi chiedere quali dati abbiamo su di te, ottenerne una copia, farli correggere o cancellare, e annullare l'iscrizione alle e-mail dopo una passeggiata con il link presente in ciascuna di queste e-mail. Gli acquisti restano nella contabilità per tutto il tempo richiesto dalla legge, senza la tua e-mail e il tuo nome dopo tale periodo.",
+    "contact": "Contatto per domande sulla privacy: [INDIRIZZO DI CONTATTO DA AGGIUNGERE PRIMA DEL LANCIO]"
+  }
+}

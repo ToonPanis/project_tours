@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "title": "Privacidad y cookies",
+    "description": "Qué guarda Hidden Antwerp, por qué y durante cuánto tiempo."
+  },
+  "title": "Privacidad y cookies",
+  "intro": "Esta página enumera, de forma objetiva, qué guarda Hidden Antwerp en tu móvil y en nuestros servidores, por qué y durante cuánto tiempo. No usamos publicidad, ni analítica, ni seguimiento entre sitios web.",
+  "draftNotice": "Prototipo: este resumen describe cómo funciona la aplicación hoy. El aviso de privacidad completo todavía se está redactando y lo revisará un abogado antes del lanzamiento.",
+  "cookies": {
+    "title": "Cookies",
+    "intro": "Solo las cookies que el sitio necesita para funcionar. Son propias (solo nuestro sitio puede leerlas) y no contienen identificadores publicitarios ni de seguimiento.",
+    "name": "Cookie",
+    "purpose": "Para qué",
+    "duration": "Cuánto tiempo",
+    "rows": {
+      "locale": "Tu elección de idioma.",
+      "player": "Reconoce tu móvil como el mismo jugador en una partida de Hidden Pubs.",
+      "order": "Muestra tu pedido en la página de confirmación del pago.",
+      "ticket": "Recuerda que este móvil abrió tu entrada.",
+      "referral": "Recuerda qué socio (por ejemplo, tu hotel) te envió, para que se le pueda atribuir si compras una entrada. Solo el código del socio y la hora, nada sobre ti.",
+      "staff": "Mantiene la sesión iniciada del personal o los socios de Hidden Antwerp (solo si inicias sesión en esas áreas)."
+    },
+    "durations": {
+      "year": "1 año",
+      "days": "{count} días",
+      "hours": "{count} horas",
+      "ticketValidity": "mientras la entrada sea válida",
+      "session": "12 horas o 7 días"
+    },
+    "referralNote": "Todavía se está comprobando jurídicamente si esta cookie de socio puede instalarse sin preguntar antes."
+  },
+  "storage": {
+    "title": "Guardado en tu móvil (almacenamiento local)",
+    "language": "Tu elección de idioma (una copia, por si la cookie ha desaparecido).",
+    "progress": "Tu progreso en un paseo (qué paradas has terminado), para que puedas continuar más tarde. Sin ubicación.",
+    "intro": "Que has visto la introducción de una partida de Hidden Pubs."
+  },
+  "location": {
+    "title": "Tu ubicación",
+    "body": "Durante la navegación, la posición GPS de tu móvil se usa solo en tu móvil, para mostrar el mapa y detectar tu llegada. Nunca se guarda y nunca se envía a nuestros servidores ni a nadie más."
+  },
+  "server": {
+    "title": "Guardado en nuestros servidores",
+    "orders": "Compras: dirección de correo electrónico, nombre y país de la página de pago, datos de la empresa para una factura, lo que compraste y pagaste. Se conservan durante el periodo contable; después se eliminan tu correo electrónico y tu nombre.",
+    "games": "Partidas de Hidden Pubs: nombres de los equipos, respuestas, puntuaciones y fotos o vídeos de prueba. Se eliminan automáticamente después de 7 días.",
+    "quotes": "Solicitudes de presupuesto de empresas: datos de contacto y la solicitud. Se eliminan después de 2 años.",
+    "reviews": "Reseñas que escribes después de un paseo: valoración, texto y un nombre opcional. Se conservan hasta que se eliminan.",
+    "followUp": "Si pediste un correo después del paseo, y si te diste de baja (solo una huella codificada de tu dirección).",
+    "partners": "Las visitas a través de un enlace de socio solo se cuentan por día; nada sobre ti."
+  },
+  "providers": {
+    "title": "Servicios que usamos",
+    "hosting": "Vercel (alojamiento del sitio web y almacenamiento de las fotos de Hidden Pubs).",
+    "database": "MongoDB Atlas (base de datos).",
+    "payments": "Stripe (página de pago; los datos de tu tarjeta van solo a Stripe, nunca a nosotros).",
+    "email": "Brevo (envío de correos electrónicos).",
+    "maps": "OpenFreeMap (teselas del mapa; su servidor ve qué parte del mapa carga tu móvil, no tu posición GPS)."
+  },
+  "rights": {
+    "title": "Tus derechos",
+    "body": "Puedes preguntar qué datos tenemos sobre ti, obtener una copia, pedir que se corrijan o se borren, y darte de baja de los correos después de un paseo con el enlace que aparece en cada uno de esos correos. Las compras permanecen en la contabilidad durante el tiempo que exige la ley, sin tu correo electrónico ni tu nombre después de ese periodo.",
+    "contact": "Contacto para preguntas sobre privacidad: [DIRECCIÓN DE CONTACTO PENDIENTE DE AÑADIR ANTES DEL LANZAMIENTO]"
+  }
+}

@@ -118,6 +118,19 @@ export async function verifyLoginLink(ctx: CommerceContext, body: unknown, clien
 
   const admin = { id: user.id, email: user.email };
   await recordAudit(ctx, admin, "login", `user:${user.id}`);
+  // P9 (security risk R4): every admin sign-in is announced to that admin, so a
+  // stolen mailbox or link can't be used unnoticed.
+  await queueEmail(ctx, `admin-signin:${hashSecret(sessionSecret)}`, {
+    to: user.email,
+    subject: "New sign-in to the Hidden Antwerp admin area",
+    text: [
+      "Hello,",
+      "",
+      `Someone signed in to the Hidden Antwerp admin area with your address on ${now.toISOString().replace("T", " ").slice(0, 16)} UTC.`,
+      "Was this you? Then there is nothing to do.",
+      "Wasn't it you? Remove your address from ADMIN_EMAILS on Vercel (this ends every session at once), change your email password, then add it back.",
+    ].join("\n"),
+  });
   return ok({ admin, sessionSecret, expiresAt });
 }
 

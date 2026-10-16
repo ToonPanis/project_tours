@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "title": "Privacy en cookies",
+    "description": "Wat Hidden Antwerp bewaart, waarom en hoe lang."
+  },
+  "title": "Privacy en cookies",
+  "intro": "Deze pagina zet feitelijk op een rij wat Hidden Antwerp op je telefoon en op onze servers bewaart, waarom en hoe lang. We gebruiken geen advertenties, geen analytics en geen tracking over websites heen.",
+  "draftNotice": "Prototype: dit overzicht beschrijft hoe de app vandaag werkt. De volledige privacyverklaring wordt nog geschreven en wordt vóór de lancering door een advocaat nagekeken.",
+  "cookies": {
+    "title": "Cookies",
+    "intro": "Alleen cookies die de site nodig heeft om te werken. Het zijn first-party cookies (alleen onze site kan ze lezen) en ze bevatten geen advertentie- of tracking-ID's.",
+    "name": "Cookie",
+    "purpose": "Waarvoor",
+    "duration": "Hoe lang",
+    "rows": {
+      "locale": "Je taalkeuze.",
+      "player": "Herkent je telefoon als dezelfde speler in een Hidden Pubs-spel.",
+      "order": "Toont je bestelling op de bevestigingspagina van de betaling.",
+      "ticket": "Onthoudt dat deze telefoon je ticket heeft geopend.",
+      "referral": "Onthoudt welke partner (bijvoorbeeld je hotel) je heeft doorgestuurd, zodat die erkenning kan krijgen als je een ticket koopt. Alleen de partnercode en het tijdstip, niets over jou.",
+      "staff": "Houdt medewerkers of partners van Hidden Antwerp aangemeld (alleen als je je aanmeldt in die delen)."
+    },
+    "durations": {
+      "year": "1 jaar",
+      "days": "{count} dagen",
+      "hours": "{count} uur",
+      "ticketValidity": "zolang het ticket geldig is",
+      "session": "12 uur of 7 dagen"
+    },
+    "referralNote": "Of deze partnercookie mag worden geplaatst zonder eerst te vragen, wordt nog juridisch nagekeken."
+  },
+  "storage": {
+    "title": "Bewaard op je telefoon (local storage)",
+    "language": "Je taalkeuze (een kopie, voor het geval de cookie weg is).",
+    "progress": "Je voortgang in een wandeling (welke stops je hebt afgerond), zodat je later kunt verdergaan. Geen locatie.",
+    "intro": "Dat je de introductie van een Hidden Pubs-spel hebt gezien."
+  },
+  "location": {
+    "title": "Je locatie",
+    "body": "Tijdens de navigatie wordt de GPS-positie van je telefoon alleen op je telefoon gebruikt, om de kaart te tonen en je aankomst te herkennen. Ze wordt nooit bewaard en nooit naar onze servers of naar iemand anders gestuurd."
+  },
+  "server": {
+    "title": "Bewaard op onze servers",
+    "orders": "Aankopen: e-mailadres, naam en land van de betaalpagina, bedrijfsgegevens voor een factuur, wat je kocht en betaalde. Bewaard gedurende de boekhoudperiode; daarna worden je e-mailadres en naam verwijderd.",
+    "games": "Hidden Pubs-spellen: teamnamen, antwoorden, scores en bewijsfoto's of -video's. Automatisch verwijderd na 7 dagen.",
+    "quotes": "Offerteaanvragen van bedrijven: contactgegevens en de aanvraag. Verwijderd na 2 jaar.",
+    "reviews": "Reviews die je na een wandeling schrijft: score, tekst en een optionele naam. Bewaard tot ze worden verwijderd.",
+    "followUp": "Of je na de wandeling een e-mail hebt gevraagd, en of je je hebt uitgeschreven (alleen een gecodeerde vingerafdruk van je adres).",
+    "partners": "Bezoeken via een partnerlink worden alleen per dag geteld; niets over jou."
+  },
+  "providers": {
+    "title": "Diensten die we gebruiken",
+    "hosting": "Vercel (hosting van de website en opslag van Hidden Pubs-foto's).",
+    "database": "MongoDB Atlas (database).",
+    "payments": "Stripe (betaalpagina; je kaartgegevens gaan alleen naar Stripe, nooit naar ons).",
+    "email": "Brevo (versturen van e-mails).",
+    "maps": "OpenFreeMap (kaarttegels; hun server ziet welk deel van de kaart je telefoon laadt, niet je GPS-positie)."
+  },
+  "rights": {
+    "title": "Je rechten",
+    "body": "Je kunt vragen welke gegevens we over je hebben, er een kopie van krijgen, ze laten verbeteren of wissen, en je uitschrijven voor e-mails na een wandeling met de link in elke zo'n e-mail. Aankopen blijven in de boekhouding zolang de wet dat vereist, na die periode zonder je e-mailadres en naam.",
+    "contact": "Contact voor privacyvragen: [CONTACTADRES WORDT VÓÓR DE LANCERING TOEGEVOEGD]"
+  }
+}

@@ -34,6 +34,11 @@ interface StringIdDocument extends Document {
   _id: string;
 }
 
+/** An exact, case-insensitive match for an email address (the address is escaped: no regex tricks). */
+function emailMatch(email: string): RegExp {
+  return new RegExp(`^${key(email).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i");
+}
+
 /** MongoDB's "this unique key already exists". */
 const isDuplicateKey = (error: unknown) => error instanceof MongoServerError && error.code === 11000;
 
@@ -149,7 +154,7 @@ function datesFromDb<T>(doc: Document | null, dateFields: readonly string[]): T 
   return record as T;
 }
 
-const ORDER_DATES = ["createdAt", "updatedAt", "paidAt"] as const;
+const ORDER_DATES = ["createdAt", "updatedAt", "paidAt", "erasedAt"] as const;
 const GRANT_DATES = ["createdAt", "validUntil", "completedAt"] as const;
 const REVIEW_DATES = ["createdAt", "moderatedAt"] as const;
 const DISCOUNT_DATES = ["validFrom", "validUntil", "createdAt"] as const;
@@ -982,5 +987,68 @@ export class MongoCommerceStore implements CommerceStore {
 
   isSuppressed(emailHash: string) {
     return this.run(async () => (await this.collection(COLLECTIONS.suppressions).countDocuments({ _id: key(emailHash, 100) }, { limit: 1 })) > 0);
+  }
+
+  findOrdersByEmail(email: string) {
+    return this.run(async () => {
+      const docs = await this.collection(COLLECTIONS.orders).find({ email: emailMatch(email) }).sort({ createdAt: -1 }).toArray();
+      return docs.map((doc) => datesFromDb<Order>(doc, ORDER_DATES) as Order);
+    });
+  }
+
+  findQuotesByEmail(email: string) {
+    return this.run(async () => {
+      const docs = await this.collection(COLLECTIONS.quotes).find({ email: emailMatch(email) }).sort({ createdAt: -1 }).toArray();
+      return docs.map((doc) => toQuote(doc) as QuoteRequest);
+    });
+  }
+
+  deleteQuote(id: string) {
+    return this.run(async () => {
+      await this.collection(COLLECTIONS.quotes).deleteOne({ _id: key(id, 100) });
+    });
+  }
+
+  listEmailsTo(email: string) {
+    return this.run(async () => (await this.collection(COLLECTIONS.emailOutbox).find({ to: emailMatch(email) }).toArray()).map(toEmail));
+  }
+
+  deleteEmailsTo(email: string) {
+    return this.run(async () => (await this.collection(COLLECTIONS.emailOutbox).deleteMany({ to: emailMatch(email) })).deletedCount);
+  }
+
+  anonymiseAuditActor(actorId: string) {
+    return this.run(
+      async () =>
+        (await this.collection(COLLECTIONS.auditLog).updateMany({ actorId: key(actorId, 100), actorEmail: { $ne: null } }, { $set: { actorEmail: null } })).modifiedCount,
+    );
+  }
+
+  deleteAuditBefore(before: Date) {
+    return this.run(async () => (await this.collection(COLLECTIONS.auditLog).deleteMany({ at: { $lt: before } })).deletedCount);
+  }
+
+  deleteReviewsBefore(status: Review["status"], before: Date) {
+    return this.run(async () => (await this.collection(COLLECTIONS.reviews).deleteMany({ status: key(status, 20), createdAt: { $lt: before } })).deletedCount);
+  }
+
+  deleteUnpaidOrdersBefore(before: Date) {
+    return this.run(
+      async () => (await this.collection(COLLECTIONS.orders).deleteMany({ status: { $in: ["pending", "failed", "canceled"] }, createdAt: { $lt: before } })).deletedCount,
+    );
+  }
+
+  listOrdersWithPersonalDataBefore(before: Date, limit: number) {
+    return this.run(async () => {
+      const docs = await this.collection(COLLECTIONS.orders)
+        .find({
+          status: { $in: ["paid", "refunded"] },
+          createdAt: { $lt: before },
+          $or: [{ email: { $type: "string" } }, { "customer.name": { $type: "string" } }],
+        })
+        .limit(limit)
+        .toArray();
+      return docs.map((doc) => datesFromDb<Order>(doc, ORDER_DATES) as Order);
+    });
   }
 }
