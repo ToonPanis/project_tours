@@ -29,3 +29,53 @@ Date: 2026-10-17. Request: "Frontend redesign, About Us, Contact & Reviews" (own
 1. **Admin redesign** (this branch): a sidebar layout (collapsible on desktop, drawer on phones) with grouped sections of the pages that really exist; a shared page header with title and description; readable tables (horizontal scroll), consistent buttons/cards/badges, visible keyboard focus, contrast checked; no change to any admin action or API.
 2. **Public pages** `/about`, `/contact`, `/reviews` in 8 languages, linked in header and footer; metadata and Organization structured data; tests.
 3. Report with what was done, tested, and what needs backend work later.
+
+## 4. Delivery report (phase 10)
+
+Branch `frontend/public-pages` (contains `frontend/admin-redesign`). Not pushed, not deployed.
+
+### 4.1 Changed and new frontend files
+- **Admin:** new `src/features/commerce/admin/{AdminShell,PageHeader}.tsx`, `admin-navigation.ts`; `src/app/admin/layout.tsx`, `src/app/admin/login/layout.tsx` (new), `src/app/admin/(console)/layout.tsx`; every console page (`page.tsx` of dashboard, orders(+detail), groups, documents, discounts, partners(+detail), quotes(+detail), reviews, privacy, products, tax, audit, readiness) now uses `PageHeader`; focus/contrast classes in the admin client components (`CommissionLedger`, `CorporatePricingEditor`, `DateRangeFilter`, `DiscountManager`, `LoginForm`, `OrderActions`, `PartnerForm`, `PartnerUsers`, `PrivacyRequests`, `ProductEditor`, `QuoteStatusForm`, `ReviewModeration`, `TaxSettingsForm`, `charts`).
+- **Public:** `src/app/{about,contact,reviews}/page.tsx`, `src/features/contact/ContactForm.tsx`, `src/features/reviews/{demo-reviews,public-reviews}.ts`, `src/lib/canonical.ts`, `src/components/layout/{SiteHeader,SiteFooter}.tsx`.
+- **Translations:** `src/i18n/locales/<8>/pages.json` (new), `<8>/navigation.json` (+ about, reviews, contact, menu), `<8>/index.ts`.
+- **Tests:** `src/__tests__/{admin-shell,public-pages}.test.tsx`, `e2e/public-pages.spec.ts`.
+
+### 4.2 Admin improvements
+- Sidebar with five sections (Overview, Sales, Business, Customers, Settings) listing **only existing pages**; a test fails if a page is added without a sidebar entry or a link points to nothing. "Walks & games" and "Users" are not shown: they don't exist as admin features (walk content lives in the code; there are no customer accounts).
+- Collapsible sidebar on desktop ("Hide menu" for wide tables), a menu panel on phones/tablets (Escape closes it and returns focus), a top bar with the current section, "View site" and sign-out.
+- Every page: a clear title + one-line description; wider content column (`max-w-6xl` instead of `max-w-3xl`).
+- Readability: no text below ~4.5:1 on the dark background (all `/40`–`/50` text raised), notes 14 px instead of 12 px, visible gold focus ring on every field and link, gold radio/checkbox accents, `aria-current` on the active section.
+- Unchanged: every admin action, route, access check (still per page/route) and API.
+- Checked visually (screenshots at 1366 px, 820 px tablet and 390 px phone) on a production build against the **test** database with a temporary admin session (removed afterwards).
+
+### 4.3 New pages
+- **/about:** hero ("Discover the city beyond the obvious.") + CTA to `/walks`; brand story (no claims about founders); the real walks via the existing `WalkCard` (own images, prices, links) + the "coming soon" walks; six "why" points (all supported by the app); a partner block (→ `/corporate`, `/contact`); the future vision, labelled as a plan; closing CTAs. Organization structured data (name, URL, postal address).
+- **/contact:** form with name, email, request type (7 types), subject, message, privacy consent; validation with messages per field, focus to the first error, status message always mounted. It opens the visitor's own email app (mailto) to `CONTACT_EMAIL`; without it the form is switched off and says so. Side cards: groups/companies → existing quote form (`/corporate#quote`), partners, ticket help, postal address.
+- **/reviews:** real reviews only (approved + `mayPublish`), with stars, name (or "a Hidden Antwerp walker"), walk, date, text, the "rewarded" disclosure; average and count of real reviews only; sorting (newest/highest/lowest, GET form); empty and "can't load" states; how to leave a verified review.
+
+### 4.4 The four demo reviews
+In `src/features/reviews/demo-reviews.ts` (a frontend fixture, no database): labelled "Example review" in every language, in a separate "Example reviews" section with a note, never counted in the average or the number, no structured data, shown **only outside production** (development and Vercel previews) unless `SHOW_DEMO_REVIEWS=true`. Delete the file (and its import on the page) to remove them. Demo review 4 mentions "Hidden Streets", which is not a walk in the project: shown as a label only.
+
+### 4.5 Existing backend reused (nothing changed)
+Walk repository (`getAllWalks`, `getUpcomingWalks`), the review store method `listReviews` (read only, from the server page), the corporate quote form/endpoint (`/corporate`, `/api/quotes`), the privacy page.
+
+### 4.6 Still needs backend work (documented, not built)
+1. A public review form without a ticket (brief 5.2) — needs a new endpoint and is a fake-review risk; verified reviews already work via the follow-up email.
+2. Storing contact messages on the server (brief 4.3) — needs an endpoint and a mailbox; today mailto.
+3. Real hreflang/canonical per language — needs locale URLs (decision B4).
+
+### 4.7 Translations
+`pages.json` in all 8 languages (marketing copy adapted per language, not word for word; register as in each language's existing texts; ru/uk plural forms), 4 navigation keys × 8. `npm run i18n:check`: complete.
+
+### 4.8 Performance
+- The new pages are Server Components (only the contact form and the admin shell send JavaScript); walk images reuse `next/image` via `WalkCard`.
+- The phone menu in the header is a `<details>` element: no JavaScript.
+- Admin: the shell is the only client part of the frame; pages stay server-rendered; no new dependencies.
+
+### 4.9 Tests actually run
+On the merged branch (2026-10-16): `npm run typecheck` ✓, `npm run lint` ✓, `npm run i18n:check` ✓ (8 languages complete), `npx vitest run` 82 files / **1,482 tests passed**. Browser tests (production build, 390 px): the public pages, pages, languages and layout specs (24) passed, an earlier full run 38 + 1 fixed (phone-menu selector). Screenshots checked: admin at 1366 / 820 / 390 px, /about desktop, /contact, /reviews and the menu in German on a phone.
+
+### 4.10 Known limitations
+- `noindex` stays on the whole site (content and image rights not cleared): the SEO metadata is ready but search engines won't index yet.
+- The admin is dark only (there was no light mode).
+- `CONTACT_EMAIL` must be set (and that mailbox must exist) before the contact form works; the domain has no MX record yet.
