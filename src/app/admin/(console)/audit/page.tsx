@@ -3,6 +3,7 @@ import { AUDIT_PAGE_SIZE } from "@/features/commerce/config";
 import { requireAdmin } from "@/features/commerce/server/admin-access";
 import { listAuditPage } from "@/features/commerce/server/catalog-service";
 import { getCommerceContext } from "@/features/commerce/server/context";
+import { PageHeader } from "@/features/commerce/admin/PageHeader";
 
 const formatTime = (iso: string) =>
   new Intl.DateTimeFormat("nl-BE", { dateStyle: "short", timeStyle: "medium", timeZone: "Europe/Brussels" }).format(new Date(iso));
@@ -15,7 +16,7 @@ export default async function AdminAuditPage({ searchParams }: PageProps<"/admin
 
   return (
     <section className="flex flex-col gap-4">
-      <h1 className="font-display text-4xl font-semibold text-parchment">Audit log</h1>
+      <PageHeader title="Audit log" description="Who changed what, and when. Never secrets or customers' data." />
       <p className="text-parchment/80">{`${total} entries · page ${page} of ${pageCount}`}</p>
 
       <ol className="flex flex-col gap-2">

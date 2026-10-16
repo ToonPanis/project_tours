@@ -8,7 +8,7 @@ import type { CommissionEntry, CommissionStatus } from "@/types/commerce";
 import { adminErrorMessage, formatEuros, postJson } from "./admin-api";
 import { AdminStatus } from "./AdminStatus";
 
-const field = "min-h-11 rounded-sm border border-parchment/30 bg-ink/40 px-3 text-parchment focus:border-gold focus:outline-none";
+const field = "min-h-11 rounded-sm border border-parchment/30 bg-ink/40 px-3 text-parchment focus:border-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-gold";
 
 const STATUS_LABEL: Record<CommissionStatus, string> = {
   pending: "Pending (being checked)",
@@ -125,7 +125,7 @@ export function CommissionLedger({
                   <td className="py-1 pr-3 text-right tabular-nums">{formatEuros(entry.amountCents)}</td>
                   <td className="py-1">
                     {STATUS_LABEL[entry.status]}
-                    {entry.payoutReference ? <span className="block text-xs text-parchment/60">{entry.payoutReference}</span> : null}
+                    {entry.payoutReference ? <span className="block text-sm text-parchment/60">{entry.payoutReference}</span> : null}
                   </td>
                 </tr>
               ))}

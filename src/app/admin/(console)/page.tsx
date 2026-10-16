@@ -6,6 +6,7 @@ import { requireAdmin } from "@/features/commerce/server/admin-access";
 import { configurationStatus, getCommerceContext } from "@/features/commerce/server/context";
 import { buildDashboard } from "@/features/commerce/server/report-service";
 import { reviewSummary } from "@/features/commerce/server/review-service";
+import { PageHeader } from "@/features/commerce/admin/PageHeader";
 
 const euros = (cents: number) => new Intl.NumberFormat("nl-BE", { style: "currency", currency: "EUR" }).format(cents / 100);
 const compactEuros = (cents: number) =>
@@ -42,7 +43,7 @@ export default async function AdminHomePage({ searchParams }: PageProps<"/admin"
   return (
     <section className="flex flex-col gap-8 text-parchment">
       <div>
-        <h1 className="font-display text-4xl font-semibold">Dashboard</h1>
+        <PageHeader title="Dashboard" description="Revenue, tickets, customers and reviews for the period you choose (Brussels time)." />
         <p className="text-parchment/80">{`Signed in as ${admin.email} · ${range.firstDay} to ${range.lastDay} (Brussels time)`}</p>
       </div>
 
@@ -80,7 +81,7 @@ export default async function AdminHomePage({ searchParams }: PageProps<"/admin"
             </div>
           ))}
         </dl>
-        <p className="text-xs text-parchment/60">
+        <p className="text-sm text-parchment/60">
           Orders count on the day they were paid; refunds count with their order. The VAT of a refunded part goes back in proportion. Commissions are those of the period&apos;s orders, whatever their payout status (see Partners).
         </p>
       </div>

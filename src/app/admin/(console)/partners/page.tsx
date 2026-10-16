@@ -8,6 +8,7 @@ import { requireAdmin } from "@/features/commerce/server/admin-access";
 import { listLedgerPage } from "@/features/commerce/server/commission-service";
 import { getCommerceContext } from "@/features/commerce/server/context";
 import { listPartnersWithTotals } from "@/features/commerce/server/partner-service";
+import { PageHeader } from "@/features/commerce/admin/PageHeader";
 
 const TYPE_LABEL = { HOTEL_PARTNER: "Hotel", HORECA_PARTNER: "Café / restaurant", TOURISM_PARTNER: "Tourism", CORPORATE_PARTNER: "Company" } as const;
 const STATUS_FILTERS = [null, "pending", "approved", "payable", "paid", "reversed"] as const;
@@ -32,7 +33,7 @@ export default async function AdminPartnersPage({ searchParams }: PageProps<"/ad
 
   return (
     <section className="flex flex-col gap-6 text-parchment">
-      <h1 className="font-display text-4xl font-semibold">Partners</h1>
+      <PageHeader title="Partners" description="Partner links, portal access and the commission ledger." />
       <p className="text-parchment/80">
         {`A partner link is the site's address with ?ref=CODE. It is remembered ${PARTNER_ATTRIBUTION_DAYS} days on the visitor's device; a later partner link replaces it (last click wins). Commission is only booked for paid orders and goes down with refunds. No money is sent automatically: you pay partners yourself and record the transfer here.`}
       </p>

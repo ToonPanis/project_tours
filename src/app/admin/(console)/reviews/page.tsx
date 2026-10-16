@@ -4,6 +4,7 @@ import { ReviewModeration } from "@/features/commerce/admin/ReviewModeration";
 import { requireAdmin } from "@/features/commerce/server/admin-access";
 import { getCommerceContext } from "@/features/commerce/server/context";
 import { listReviewsPage, reviewSummary } from "@/features/commerce/server/review-service";
+import { PageHeader } from "@/features/commerce/admin/PageHeader";
 
 const STATUSES = [null, "pending", "approved", "rejected"] as const;
 
@@ -28,7 +29,7 @@ export default async function AdminReviewsPage({ searchParams }: PageProps<"/adm
 
   return (
     <section className="flex flex-col gap-4 text-parchment">
-      <h1 className="font-display text-4xl font-semibold">Reviews</h1>
+      <PageHeader title="Reviews" description="Verified reviews (one per ticket): moderate before anything is shown." />
       <p className="text-parchment/80">
         {`${summary.approved} approved${summary.average === null ? "" : `, average ${summary.average.toFixed(1)} / 5`} · ${summary.pending} waiting. Only customers with a ticket can write one (link in the follow-up email), one per ticket. ${REVIEW_REWARD.enabled ? `Every review earns a ${REVIEW_REWARD.percent} % code, whatever the rating; if reviews are shown later, rewarded ones must be marked as such.` : "No reward is given."} Nothing is shown on the site yet.`}
       </p>

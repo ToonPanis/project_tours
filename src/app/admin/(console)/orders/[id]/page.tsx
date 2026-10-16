@@ -4,7 +4,8 @@ import { formatEuros } from "@/features/commerce/admin/admin-api";
 import { OrderActions } from "@/features/commerce/admin/OrderActions";
 import { requireAdmin } from "@/features/commerce/server/admin-access";
 import { getCommerceContext } from "@/features/commerce/server/context";
-import { getOrderDetail } from "@/features/commerce/server/order-admin-service";
+import { getOrderDetail } from "@/features/commerce/server/order-admin-service";
+import { PageHeader } from "@/features/commerce/admin/PageHeader";
 
 const formatTime = (iso: string | null) =>
   iso ? new Intl.DateTimeFormat("nl-BE", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Brussels" }).format(new Date(iso)) : "–";
@@ -48,7 +49,7 @@ export default async function AdminOrderPage({ params }: PageProps<"/admin/order
       <Link href="/admin/orders" className="min-h-11 content-center text-sm text-gold underline underline-offset-4">
         All orders
       </Link>
-      <h1 className="font-display text-3xl font-semibold">{`Order ${order.id.slice(0, 8)}`}</h1>
+      <PageHeader title={`Order ${order.id.slice(0, 8)}`} description="Payment, ticket and documents of this order." />
 
       <dl className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-[12rem_1fr]">
         {rows.map(([label, value]) => (

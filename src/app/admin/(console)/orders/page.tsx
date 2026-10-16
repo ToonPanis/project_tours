@@ -4,6 +4,7 @@ import { formatEuros } from "@/features/commerce/admin/admin-api";
 import { requireAdmin } from "@/features/commerce/server/admin-access";
 import { getCommerceContext } from "@/features/commerce/server/context";
 import { listOrdersPage } from "@/features/commerce/server/order-admin-service";
+import { PageHeader } from "@/features/commerce/admin/PageHeader";
 
 const STATUSES = ["pending", "paid", "failed", "canceled", "refunded"] as const;
 const formatTime = (iso: string) =>
@@ -25,7 +26,7 @@ export default async function AdminOrdersPage({ searchParams }: PageProps<"/admi
 
   return (
     <section className="flex flex-col gap-4 text-parchment">
-      <h1 className="font-display text-4xl font-semibold">Orders</h1>
+      <PageHeader title="Orders" description="Every order, its payment, ticket and documents. Open one to refund or resend." />
       <nav aria-label="Filter by status" className="flex flex-wrap gap-3 text-sm">
         <Link href={link({ status: null })} className={!status ? "font-semibold text-gold" : "underline underline-offset-4"}>
           All

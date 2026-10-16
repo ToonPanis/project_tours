@@ -73,7 +73,7 @@ export function OrderActions({ orderId, canRefund, remainingCents, hasActiveTick
               value={amount}
               onChange={(event) => setAmount(event.target.value)}
               inputMode="decimal"
-              className="min-h-11 rounded-sm border border-parchment/30 bg-ink/40 px-3 focus:border-gold focus:outline-none"
+              className="min-h-11 rounded-sm border border-parchment/30 bg-ink/40 px-3 focus:border-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-gold"
             />
           </label>
           <label className="flex min-h-11 items-center gap-2">

@@ -171,7 +171,7 @@ export function StatTile({ label, value, note }: { label: string; value: string;
     <div className="flex flex-col gap-1 rounded-sm border border-parchment/15 bg-ink/30 p-4">
       <span className="text-sm text-parchment/70">{label}</span>
       <span className="text-2xl font-semibold tabular-nums text-parchment">{value}</span>
-      {note && <span className="text-xs text-parchment/60">{note}</span>}
+      {note && <span className="text-sm text-parchment/60">{note}</span>}
     </div>
   );
 }
