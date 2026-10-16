@@ -23,7 +23,8 @@ afterEach(() => {
 
 const READY_ENV: Record<string, string> = {
   APP_BASE_URL: "https://www.hiddenantwerp.com",
-  MONGODB_URI: "mongodb+srv://SECRETUSER:SECRETPASS@cluster/db",
+  // Fake values that don't look like real keys (security-guards.test.ts scans every tracked file for those).
+  MONGODB_URI: "mongodb+srv://cluster.example.invalid/FAKEDATABASEVALUE",
   ADMIN_EMAILS: "owner@example.com",
   BREVO_API_KEY: "xkeysib-FAKEBREVOVALUE",
   EMAIL_FROM: "no-reply@hiddenantwerp.com",
@@ -31,7 +32,7 @@ const READY_ENV: Record<string, string> = {
   CRON_SECRET: "FAKECRONSECRETVALUE",
   BLOB_READ_WRITE_TOKEN: "FAKEBLOBTOKENVALUE",
   STRIPE_SECRET_KEY: "sk_test_FAKESTRIPEVALUE",
-  STRIPE_WEBHOOK_SECRET: "whsec_FAKEWEBHOOKVALUE",
+  STRIPE_WEBHOOK_SECRET: "whsec_FAKE",
 };
 const input = (changes: Partial<ReadinessInput> = {}, env: Record<string, string | undefined> = {}): ReadinessInput => ({
   env: { ...READY_ENV, ...env },
