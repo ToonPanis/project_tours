@@ -71,6 +71,14 @@ async function signIn(): Promise<string> {
 }
 
 describe("sign-in routes", () => {
+  test("after signing in, the sign-in alert email goes out right away (not only at night)", async () => {
+    await signIn();
+    const mailer = getCommerceContext().mailer as MemoryMailer;
+    expect(mailer.sent.some((email) => email.subject === "New sign-in to the Hidden Antwerp admin area")).toBe(false);
+    await runAfterResponse();
+    expect(mailer.sent.at(-1)?.subject).toBe("New sign-in to the Hidden Antwerp admin area");
+  });
+
   test("the link email goes out after the answer, with a link to this site (development: the request's origin)", async () => {
     const mailer = getCommerceContext().mailer as MemoryMailer;
     const before = mailer.sent.length;

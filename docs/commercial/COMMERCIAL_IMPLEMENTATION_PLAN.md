@@ -60,7 +60,11 @@ Email provider (transactional)                                           Invoici
 - **Reviews:** our own verified review page (one per ticket), moderated in `/admin/reviews`; shown on the site only later (SEO phase).
 - **B11:** a 10 % personal single-use code for every review, whatever the rating; rewarded reviews are marked.
 
-Still open: B4, B7 (Billit account), B8 (VAT confirmation), B10, B12; a second factor for admins; ⚖️ consent for the `ha_ref` cookie (now one year).
+**Taken (2026-10-17), later that day:**
+- **B8:** the owner chose **6 % VAT** and confirmed the tax settings in person ("Confirmed by the accountant" ticked in `/admin/tax`). ⚖️ Whether a self-guided city-walk app and a café game qualify for the reduced Belgian rate is not obvious (often 21 %): to be checked with the accountant; a wrong rate means paying the difference later. Note: the saved regime was "exempt" at first (no VAT charged); for 6 % it must be "vat-registered".
+- **Ticket sales opened on production** (`COMMERCE_SALES_ENABLED=true`) with Stripe **test** keys: the buy boxes are public, play pages ask for a ticket, real cards are refused by Stripe and test cards give free tickets. Live keys only with the owner's explicit OK after the Stripe activation. First end-to-end test purchase on production succeeded (order paid by webhook, ticket, receipt R2026-000001, confirmation email).
+
+Still open: B4, B7 (Billit account), B10, B12; a second factor for admins; ⚖️ consent for the `ha_ref` cookie (now one year).
 
 | # | Decision | My recommendation |
 |---|---|---|

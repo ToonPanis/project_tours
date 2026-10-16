@@ -1,6 +1,7 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { after, NextResponse, type NextRequest } from "next/server";
 import { verifyLoginLink } from "@/features/commerce/server/auth-service";
 import { getCommerceContext } from "@/features/commerce/server/context";
+import { deliverDueEmails } from "@/features/commerce/server/email-service";
 import { ADMIN_COOKIE, adminCookieOptions, clientKey } from "@/features/commerce/server/http";
 import { checkPostRequest, readJson, toResponse } from "@/features/pub-game/server/http";
 
@@ -13,8 +14,11 @@ export async function POST(request: NextRequest) {
   const refused = checkPostRequest(request);
   if (refused) return refused;
 
-  const result = await verifyLoginLink(getCommerceContext(), await readJson(request), clientKey(request));
+  const ctx = getCommerceContext();
+  const result = await verifyLoginLink(ctx, await readJson(request), clientKey(request));
   if (!result.ok) return toResponse(result);
+  // The sign-in alert (P9) goes out right after the answer, not only with the nightly round.
+  after(() => deliverDueEmails(ctx));
 
   const response = NextResponse.json({ email: result.data.admin.email }, { headers: { "Cache-Control": "no-store" } });
   response.cookies.set(ADMIN_COOKIE, result.data.sessionSecret, adminCookieOptions());
