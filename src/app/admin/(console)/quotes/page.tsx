@@ -5,6 +5,7 @@ import { QUOTE_STATUSES } from "@/features/commerce/logic/quotes";
 import { requireAdmin } from "@/features/commerce/server/admin-access";
 import { getCommerceContext } from "@/features/commerce/server/context";
 import { getCorporatePricing, listQuotesPage } from "@/features/commerce/server/quote-service";
+import { PageHeader } from "@/features/commerce/admin/PageHeader";
 
 const formatTime = (iso: string) =>
   new Intl.DateTimeFormat("nl-BE", { dateStyle: "short", timeStyle: "short", timeZone: "Europe/Brussels" }).format(new Date(iso));
@@ -29,7 +30,7 @@ export default async function AdminQuotesPage({ searchParams }: PageProps<"/admi
 
   return (
     <section className="flex flex-col gap-6 text-parchment">
-      <h1 className="font-display text-4xl font-semibold">Quote requests</h1>
+      <PageHeader title="Quote requests" description="Company and group requests from the corporate page, with the indicative price table." />
       <nav aria-label="Filter by status" className="flex flex-wrap gap-3 text-sm">
         <Link href={link({ status: null })} className={!status ? "font-semibold text-gold" : "underline underline-offset-4"}>
           All

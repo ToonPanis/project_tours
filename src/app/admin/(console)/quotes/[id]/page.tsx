@@ -4,7 +4,8 @@ import { QuoteStatusForm } from "@/features/commerce/admin/QuoteStatusForm";
 import { nextStatuses } from "@/features/commerce/logic/quotes";
 import { requireAdmin } from "@/features/commerce/server/admin-access";
 import { getCommerceContext } from "@/features/commerce/server/context";
-import { getQuote } from "@/features/commerce/server/quote-service";
+import { getQuote } from "@/features/commerce/server/quote-service";
+import { PageHeader } from "@/features/commerce/admin/PageHeader";
 
 const formatTime = (iso: string) =>
   new Intl.DateTimeFormat("nl-BE", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Brussels" }).format(new Date(iso));
@@ -35,7 +36,7 @@ export default async function AdminQuotePage({ params }: PageProps<"/admin/quote
       <Link href="/admin/quotes" className="min-h-11 content-center text-sm text-gold underline underline-offset-4">
         All quote requests
       </Link>
-      <h1 className="font-display text-3xl font-semibold">{quote.company}</h1>
+      <PageHeader title={quote.company} description="The request, its status history and internal notes." />
       <dl className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-[10rem_1fr]">
         {rows.map(([label, value]) => (
           <div key={label} className="contents">

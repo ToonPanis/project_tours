@@ -39,7 +39,7 @@ export function QuoteStatusForm({ quoteId, next }: { quoteId: string; next: Quot
         <select
           value={status}
           onChange={(event) => setStatus(event.target.value as QuoteStatus)}
-          className="min-h-11 rounded-sm border border-parchment/30 bg-ink/40 px-3 focus:border-gold focus:outline-none"
+          className="min-h-11 rounded-sm border border-parchment/30 bg-ink/40 px-3 focus:border-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-gold"
         >
           {next.map((option) => (
             <option key={option} value={option}>
@@ -55,7 +55,7 @@ export function QuoteStatusForm({ quoteId, next }: { quoteId: string; next: Quot
           onChange={(event) => setNote(event.target.value)}
           maxLength={1000}
           rows={3}
-          className="rounded-sm border border-parchment/30 bg-ink/40 px-3 py-2 focus:border-gold focus:outline-none"
+          className="rounded-sm border border-parchment/30 bg-ink/40 px-3 py-2 focus:border-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-gold"
         />
       </label>
       <Button type="submit" disabled={isBusy || status === ""}>

@@ -4,6 +4,7 @@ import { ORDERS_PAGE_SIZE } from "@/features/commerce/config";
 import { requireAdmin } from "@/features/commerce/server/admin-access";
 import { getCommerceContext } from "@/features/commerce/server/context";
 import { listDocumentsPage } from "@/features/commerce/server/report-service";
+import { PageHeader } from "@/features/commerce/admin/PageHeader";
 
 const formatTime = (iso: string) =>
   new Intl.DateTimeFormat("nl-BE", { dateStyle: "short", timeStyle: "short", timeZone: "Europe/Brussels" }).format(new Date(iso));
@@ -24,7 +25,7 @@ export default async function AdminDocumentsPage({ searchParams }: PageProps<"/a
 
   return (
     <section className="flex flex-col gap-4 text-parchment">
-      <h1 className="font-display text-4xl font-semibold">Receipts and invoices</h1>
+      <PageHeader title="Receipts and invoices" description="Receipts, credit notes and business invoices (business invoices wait for Billit)." />
       <p className="text-sm text-parchment/70">
         Receipts and credit notes for consumers are made here. Business invoices are made by the invoicing provider (Billit, not
         connected yet): those waiting are marked and must be made by hand for now.

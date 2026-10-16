@@ -7,7 +7,7 @@ import type { CorporatePricing } from "@/types/commerce";
 import { adminErrorMessage, postJson } from "./admin-api";
 import { AdminStatus } from "./AdminStatus";
 
-const field = "min-h-11 w-full rounded-sm border border-parchment/30 bg-ink/40 px-3 text-parchment focus:border-gold focus:outline-none";
+const field = "min-h-11 w-full rounded-sm border border-parchment/30 bg-ink/40 px-3 text-parchment focus:border-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-gold";
 const euros = (cents: number | null) => (cents === null ? "" : String(cents / 100).replace(".", ","));
 
 interface Row {

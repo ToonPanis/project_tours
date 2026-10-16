@@ -3,6 +3,7 @@ import { requireAdmin } from "@/features/commerce/server/admin-access";
 import { getCommerceContext } from "@/features/commerce/server/context";
 import { getTaxSettings } from "@/features/commerce/server/tax-service";
 import { taxAllowsSales } from "@/features/commerce/logic/tax";
+import { PageHeader } from "@/features/commerce/admin/PageHeader";
 
 /** /admin/tax: the configurable VAT (decision B8). Every save is a new version; orders keep a copy of what applied. */
 export default async function AdminTaxPage() {
@@ -13,7 +14,7 @@ export default async function AdminTaxPage() {
   return (
     <section className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <h1 className="font-display text-4xl font-semibold text-parchment">Tax settings</h1>
+        <PageHeader title="Tax settings" description="VAT regime, rates and the accountant's confirmation. Sales stay closed until confirmed." />
         <p className="text-parchment/80">
           {settings.version === 0
             ? "Nothing saved yet."

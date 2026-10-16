@@ -31,7 +31,7 @@ export function ReviewModeration({ review, productName }: { review: Review; prod
       <p className="font-semibold">
         <span aria-label={`${review.rating} of 5 stars`} className="text-gold">
           {"★".repeat(review.rating)}
-          <span className="text-parchment/30">{"★".repeat(5 - review.rating)}</span>
+          <span className="text-parchment/70">{"★".repeat(5 - review.rating)}</span>
         </span>
         {` · ${productName} · ${review.createdAt.slice(0, 10)} · ${review.status}`}
       </p>

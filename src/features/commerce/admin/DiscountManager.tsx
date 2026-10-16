@@ -7,7 +7,7 @@ import type { Discount, Product } from "@/types/commerce";
 import { adminErrorMessage, formatEuros, postJson } from "./admin-api";
 import { AdminStatus } from "./AdminStatus";
 
-const field = "min-h-11 rounded-sm border border-parchment/30 bg-ink/40 px-3 text-parchment focus:border-gold focus:outline-none";
+const field = "min-h-11 rounded-sm border border-parchment/30 bg-ink/40 px-3 text-parchment focus:border-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-gold";
 const labelText = "text-xs font-semibold uppercase tracking-wider text-gold";
 
 /** /admin/discounts: create codes, see how often they were used, switch them off. */

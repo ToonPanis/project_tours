@@ -1,13 +1,14 @@
 import { PrivacyRequests } from "@/features/commerce/admin/PrivacyRequests";
 import { RETENTION } from "@/features/commerce/config";
 import { requireAdmin } from "@/features/commerce/server/admin-access";
+import { PageHeader } from "@/features/commerce/admin/PageHeader";
 
 /** /admin/privacy: GDPR access, portability and erasure requests (P9), and the retention periods. */
 export default async function AdminPrivacyPage() {
   await requireAdmin();
   return (
     <section className="flex flex-col gap-6 text-parchment">
-      <h1 className="font-display text-4xl font-semibold">Personal data requests</h1>
+      <PageHeader title="Personal data requests" description="Find, export or erase a person's data (GDPR), and the retention periods." />
       <p className="text-parchment/80">
         Customers have no accounts: find their data by email address. Answer a request within a month. Every export and erasure is in the audit log (by the address&apos;s hash, not the address).
       </p>
