@@ -52,7 +52,15 @@ Email provider (transactional)                                           Invoici
 - **B5:** admins (later partners) sign in with a **one-time email link**, built in-house (no new dependency).
 - **B6:** **Brevo** for transactional email (HTTPS API with `fetch`, no SDK).
 
-Still open: B4, B7–B12.
+**Taken (2026-10-17), confirmed by the owner after P7–P8:**
+- **Partner attribution:** a partner link counts for **one year** (`PARTNER_ATTRIBUTION_DAYS = 365`), the last click wins.
+- **Commissions** are approved by an admin by hand (no automatic approval cron).
+- **B9:** a walk counts as finished on the completion screen of a ticketed guide walk (one call, no location) or when the host ends a Hidden Pubs game made with a ticket.
+- **Follow-up email:** only with the unticked consent box on the buy box (recorded with time + text version), unsubscribe in every mail.
+- **Reviews:** our own verified review page (one per ticket), moderated in `/admin/reviews`; shown on the site only later (SEO phase).
+- **B11:** a 10 % personal single-use code for every review, whatever the rating; rewarded reviews are marked.
+
+Still open: B4, B7 (Billit account), B8 (VAT confirmation), B10, B12; a second factor for admins; ⚖️ consent for the `ha_ref` cookie (now one year).
 
 | # | Decision | My recommendation |
 |---|---|---|

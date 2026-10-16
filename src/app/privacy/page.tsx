@@ -27,7 +27,7 @@ export default async function PrivacyPage() {
     ["hp_<CODE>", t("privacy.cookies.rows.player"), days(GAME_LIFETIME_DAYS)],
     ["ha_order", t("privacy.cookies.rows.order"), t("privacy.cookies.durations.hours", { count: 24 })],
     ["ha_ticket_<walk>", t("privacy.cookies.rows.ticket"), t("privacy.cookies.durations.ticketValidity")],
-    ["ha_ref", t("privacy.cookies.rows.referral"), days(PARTNER_ATTRIBUTION_DAYS)],
+    ["ha_ref", t("privacy.cookies.rows.referral"), PARTNER_ATTRIBUTION_DAYS === 365 ? t("privacy.cookies.durations.year") : days(PARTNER_ATTRIBUTION_DAYS)],
     ["ha_admin, ha_partner", t("privacy.cookies.rows.staff"), t("privacy.cookies.durations.session")],
   ];
   const storage: [string, string][] = [
