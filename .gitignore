@@ -55,6 +55,7 @@ next-env.d.ts
 # P9: database exports (contain personal data)
 /backups/
 
-# Local text-to-speech tools (Python venv, voice models): not part of the app
-/.tts/
+# Generated speech (Voice Studio / audio guide), content-addressed cache
 /.cache/
+# Free local voices: Python environment + voice models (scripts/setup-local-tts.ps1)
+/.tts/

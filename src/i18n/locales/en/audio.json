@@ -1,0 +1,16 @@
+{
+  "eyebrow": "Audio guide",
+  "listen": "Listen to the story",
+  "play": "Play",
+  "pause": "Pause",
+  "restart": "Start again",
+  "back": "Back {seconds} seconds",
+  "forward": "Forward {seconds} seconds",
+  "progress": "Position in the story",
+  "positionText": "{current} of {total}",
+  "speed": "Speed",
+  "volume": "Volume",
+  "aiVoice": "Read by an AI voice",
+  "loadError": "The audio could not be loaded. Check your connection and try again.",
+  "playerLabel": "Audio player: {title}"
+}

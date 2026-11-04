@@ -45,6 +45,24 @@ describe("WalkingMap with the real component", () => {
     fakeMap.workerUrl = "";
   });
 
+  test("a quest shows its search zone, without a destination pin or the map's own place names", () => {
+    const zone = { center: grooteMarkt, radiusMeters: 100 };
+    fakeMap.markerCount = 0;
+    renderMap({ searchZone: zone });
+    act(() => fakeMap.fire("load"));
+    expect(fakeMap.markerCount).toBe(0);
+    expect(fakeMap.sourceIds).toContain("zone");
+    expect(fakeMap.hiddenLayerIds).toEqual(["poi_r1"]); // points of interest off, street names stay
+  });
+
+  test("a normal stop has its destination pin and keeps the map's place names", () => {
+    fakeMap.markerCount = 0;
+    renderMap();
+    act(() => fakeMap.fire("load"));
+    expect(fakeMap.markerCount).toBe(1);
+    expect(fakeMap.hiddenLayerIds).toEqual([]);
+  });
+
   test("points MapLibre at the versioned worker before creating the map", () => {
     renderMap();
     expect(fakeMap.workerUrl).toBe(new URL(mapWorkerUrl("6.11.1"), window.location.origin).href);

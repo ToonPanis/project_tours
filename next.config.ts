@@ -65,6 +65,13 @@ const nextConfig: NextConfig = {
               source: `${MAP_WORKER_FOLDER}/:version/:file*`,
               headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
             },
+            // The audio guide's recordings: a changed text gets a new file name (its fingerprint,
+            // see scripts/generate-audio-guide.mjs), so a file never changes. A phone that played
+            // a stop once can play it again without downloading it.
+            {
+              source: "/audio/:walk/:locale/:file*",
+              headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+            },
           ]),
     ];
   },

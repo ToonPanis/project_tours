@@ -4,7 +4,7 @@ import { getRouteLegTo } from "../src/features/navigation/logic/route-legs";
 import { pointAlongRoute } from "../src/features/navigation/logic/route-progress";
 import { getOrderedLocations } from "../src/lib/walk-locations";
 import type { GeoCoordinates } from "../src/types/common";
-import { coordinateTexts, en, everythingStored, recordRequests, watchForProblems } from "./helpers";
+import { completeSpookyTask, coordinateTexts, en, everythingStored, recordRequests, watchForProblems } from "./helpers";
 
 /**
  * A walk with (emulated) GPS in a real browser: Classics of Antwerp from the
@@ -39,7 +39,10 @@ test.describe("walking with GPS", () => {
     // Standing at the station: two readings with a new timestamp → arrived.
     await walkTo(page, { latitude: first.coordinates!.latitude + 0.00002, longitude: first.coordinates!.longitude });
     await walkTo(page, first.coordinates!);
-    await expect(page.getByRole("heading", { level: 1, name: first.name })).toBeVisible({ timeout: 15_000 });
+    // Arrived: Spooky's first task (find a detail), then the stop's story.
+    await expect(page.getByRole("dialog", { name: en("quest.taskForYou") })).toBeVisible({ timeout: 15_000 });
+    await completeSpookyTask(page);
+    await expect(page.getByRole("heading", { level: 1, name: first.name })).toBeVisible();
 
     // On to the second stop, walking along the route line.
     await page.getByRole("button", { name: en("guide.startWalking") }).click();
@@ -72,8 +75,11 @@ test.describe("walking with GPS", () => {
     await page.getByRole("button", { name: en("guide.startWalk") }).click();
     await walkTo(page, { latitude: first.coordinates!.latitude + 0.00002, longitude: first.coordinates!.longitude });
     await walkTo(page, first.coordinates!);
-    await expect(page.getByRole("heading", { level: 1, name: first.name })).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByRole("dialog", { name: en("quest.taskForYou") })).toBeVisible({ timeout: 15_000 });
+    await completeSpookyTask(page);
+    await expect(page.getByRole("heading", { level: 1, name: first.name })).toBeVisible();
 
+    // After the reload the task stays done: straight back to the story.
     await page.reload();
     await page.getByRole("button", { name: new RegExp(en("guide.continueAt", { stop: 1, total: getOrderedLocations(walk).length }).replace(/[()]/g, "\\$&")) }).click();
     await expect(page.getByRole("heading", { level: 1, name: first.name })).toBeVisible();
@@ -90,6 +96,7 @@ test.describe("location refused", () => {
     await expect(page.getByText(en("gps.permissionTitle"))).toBeVisible();
     await expect(page.locator(".maplibregl-canvas")).toBeVisible();
     await page.getByRole("button", { name: en("gps.imHere") }).click();
+    await completeSpookyTask(page);
     await expect(page.getByRole("heading", { level: 1, name: first.name })).toBeVisible();
   });
 });

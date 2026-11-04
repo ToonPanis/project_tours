@@ -13,9 +13,10 @@ import pages from "./pages.json";
 import partner from "./partner.json";
 import privacy from "./privacy.json";
 import pubgame from "./pubgame.json";
+import quest from "./quest.json";
 import walks from "./walks.json";
 
 /** English: the master language. Every other language is checked against these keys. */
-const en = { common, navigation, meta, home, errors, walks, game, guide, gps, pubgame, commerce, corporate, partner, feedback, privacy, pages };
+const en = { common, navigation, meta, home, errors, walks, game, guide, gps, pubgame, quest, commerce, corporate, partner, feedback, privacy, pages };
 
 export default en;

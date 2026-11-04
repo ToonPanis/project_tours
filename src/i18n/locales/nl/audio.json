@@ -1,0 +1,16 @@
+{
+  "eyebrow": "Audiogids",
+  "listen": "Beluister het verhaal",
+  "play": "Afspelen",
+  "pause": "Pauzeren",
+  "restart": "Opnieuw beginnen",
+  "back": "{seconds} seconden terug",
+  "forward": "{seconds} seconden vooruit",
+  "progress": "Positie in het verhaal",
+  "positionText": "{current} van {total}",
+  "speed": "Snelheid",
+  "volume": "Volume",
+  "aiVoice": "Voorgelezen door een AI-stem",
+  "loadError": "De audio kon niet worden geladen. Controleer je verbinding en probeer opnieuw.",
+  "playerLabel": "Audiospeler: {title}"
+}

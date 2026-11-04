@@ -18,9 +18,14 @@ export function ImageCredit({ image }: { image: GuideImage }) {
   return (
     <>
       {image.approximateYear} · {image.photographerOrArtist} ·{" "}
-      <a href={image.sourceUrl} target="_blank" rel="noopener noreferrer" className={creditLinkClasses}>
-        {image.source}
-      </a>{" "}
+      {/* No link when the source isn't known yet (e.g. an archive document still to be traced). */}
+      {image.sourceUrl ? (
+        <a href={image.sourceUrl} target="_blank" rel="noopener noreferrer" className={creditLinkClasses}>
+          {image.source}
+        </a>
+      ) : (
+        image.source
+      )}{" "}
       ·{" "}
       {image.licenseUrl ? (
         <a href={image.licenseUrl} target="_blank" rel="noopener noreferrer" className={creditLinkClasses}>

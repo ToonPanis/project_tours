@@ -1,0 +1,177 @@
+{
+  "locales": {
+    "en": {
+      "tracks": {
+        "classics-central-station": {
+          "file": "/audio/classics-of-antwerp/en/classics-central-station-096c4ff72678f1.mp3",
+          "hash": "096c4ff72678f1",
+          "durationSeconds": 176
+        },
+        "classics-diamond-district": {
+          "file": "/audio/classics-of-antwerp/en/classics-diamond-district-0ec4f6bda2a91b.mp3",
+          "hash": "0ec4f6bda2a91b",
+          "durationSeconds": 150.6
+        },
+        "classics-diamond-district.more.jewish-community": {
+          "file": "/audio/classics-of-antwerp/en/classics-diamond-district.more.jewish-community-077e0a11c6ed36.mp3",
+          "hash": "077e0a11c6ed36",
+          "durationSeconds": 87.5
+        },
+        "classics-keyserlei-meir": {
+          "file": "/audio/classics-of-antwerp/en/classics-keyserlei-meir-1bf83fd865cecf.mp3",
+          "hash": "1bf83fd865cecf",
+          "durationSeconds": 107.8
+        },
+        "classics-stadsfeestzaal": {
+          "file": "/audio/classics-of-antwerp/en/classics-stadsfeestzaal-165bb6f4e8b9b9.mp3",
+          "hash": "165bb6f4e8b9b9",
+          "durationSeconds": 108.6
+        },
+        "classics-paleis-op-de-meir": {
+          "file": "/audio/classics-of-antwerp/en/classics-paleis-op-de-meir-1b011236413294.mp3",
+          "hash": "1b011236413294",
+          "durationSeconds": 57.8
+        }
+      }
+    },
+    "nl": {
+      "tracks": {
+        "classics-central-station": {
+          "file": "/audio/classics-of-antwerp/nl/classics-central-station-17e512dbf23f69.mp3",
+          "hash": "17e512dbf23f69",
+          "durationSeconds": 147
+        },
+        "classics-diamond-district": {
+          "file": "/audio/classics-of-antwerp/nl/classics-diamond-district-127282bd0cd725.mp3",
+          "hash": "127282bd0cd725",
+          "durationSeconds": 125.7
+        },
+        "classics-diamond-district.more.jewish-community": {
+          "file": "/audio/classics-of-antwerp/nl/classics-diamond-district.more.jewish-community-0ecd4b871891c4.mp3",
+          "hash": "0ecd4b871891c4",
+          "durationSeconds": 72.3
+        },
+        "classics-keyserlei-meir": {
+          "file": "/audio/classics-of-antwerp/nl/classics-keyserlei-meir-189b6b4b197176.mp3",
+          "hash": "189b6b4b197176",
+          "durationSeconds": 92.8
+        },
+        "classics-stadsfeestzaal": {
+          "file": "/audio/classics-of-antwerp/nl/classics-stadsfeestzaal-0c0c0de1155698.mp3",
+          "hash": "0c0c0de1155698",
+          "durationSeconds": 91.7
+        },
+        "classics-paleis-op-de-meir": {
+          "file": "/audio/classics-of-antwerp/nl/classics-paleis-op-de-meir-08c4a029cd6441.mp3",
+          "hash": "08c4a029cd6441",
+          "durationSeconds": 46
+        },
+        "classics-rubenshuis": {
+          "file": "/audio/classics-of-antwerp/nl/classics-rubenshuis-1aab6822b28957.mp3",
+          "hash": "1aab6822b28957",
+          "durationSeconds": 187.9
+        },
+        "classics-handelsbeurs": {
+          "file": "/audio/classics-of-antwerp/nl/classics-handelsbeurs-1043384375c9b8.mp3",
+          "hash": "1043384375c9b8",
+          "durationSeconds": 140.5
+        },
+        "classics-boerentoren": {
+          "file": "/audio/classics-of-antwerp/nl/classics-boerentoren-1e270a4eb5baed.mp3",
+          "hash": "1e270a4eb5baed",
+          "durationSeconds": 82.8
+        },
+        "classics-groenplaats": {
+          "file": "/audio/classics-of-antwerp/nl/classics-groenplaats-06bf9c74aead40.mp3",
+          "hash": "06bf9c74aead40",
+          "durationSeconds": 113.8
+        },
+        "classics-cathedral": {
+          "file": "/audio/classics-of-antwerp/nl/classics-cathedral-0e8cdb96f05237.mp3",
+          "hash": "0e8cdb96f05237",
+          "durationSeconds": 59.9
+        },
+        "classics-cathedral.card.cathedral": {
+          "file": "/audio/classics-of-antwerp/nl/classics-cathedral.card.cathedral-1313f6c3462ae7.mp3",
+          "hash": "1313f6c3462ae7",
+          "durationSeconds": 135.7
+        },
+        "classics-cathedral.card.quinten-matsijs": {
+          "file": "/audio/classics-of-antwerp/nl/classics-cathedral.card.quinten-matsijs-1073d0dee64d92.mp3",
+          "hash": "1073d0dee64d92",
+          "durationSeconds": 117.5
+        },
+        "classics-cathedral.card.nello-patrasche": {
+          "file": "/audio/classics-of-antwerp/nl/classics-cathedral.card.nello-patrasche-05fe91ba501877.mp3",
+          "hash": "05fe91ba501877",
+          "durationSeconds": 107.9
+        },
+        "classics-vlaeykensgang": {
+          "file": "/audio/classics-of-antwerp/nl/classics-vlaeykensgang-13a23ddc633502.mp3",
+          "hash": "13a23ddc633502",
+          "durationSeconds": 91.1
+        },
+        "classics-grote-markt": {
+          "file": "/audio/classics-of-antwerp/nl/classics-grote-markt-1e7db37b1a62bf.mp3",
+          "hash": "1e7db37b1a62bf",
+          "durationSeconds": 125.5
+        },
+        "classics-brabo": {
+          "file": "/audio/classics-of-antwerp/nl/classics-brabo-1141a4e69cd866.mp3",
+          "hash": "1141a4e69cd866",
+          "durationSeconds": 104.4
+        },
+        "classics-stadhuis": {
+          "file": "/audio/classics-of-antwerp/nl/classics-stadhuis-014152759e6a3c.mp3",
+          "hash": "014152759e6a3c",
+          "durationSeconds": 72.8
+        },
+        "classics-stadhuis.card.fury-attack": {
+          "file": "/audio/classics-of-antwerp/nl/classics-stadhuis.card.fury-attack-0c381cd78d00c7.mp3",
+          "hash": "0c381cd78d00c7",
+          "durationSeconds": 23.5
+        },
+        "classics-stadhuis.card.fury-city-hall": {
+          "file": "/audio/classics-of-antwerp/nl/classics-stadhuis.card.fury-city-hall-0e4208827c014e.mp3",
+          "hash": "0e4208827c014e",
+          "durationSeconds": 20.9
+        },
+        "classics-stadhuis.card.fury-city": {
+          "file": "/audio/classics-of-antwerp/nl/classics-stadhuis.card.fury-city-1dafeb8888aadf.mp3",
+          "hash": "1dafeb8888aadf",
+          "durationSeconds": 27.7
+        },
+        "classics-conscienceplein": {
+          "file": "/audio/classics-of-antwerp/nl/classics-conscienceplein-161f3f67432afc.mp3",
+          "hash": "161f3f67432afc",
+          "durationSeconds": 70.9
+        },
+        "classics-carolus-borromeus": {
+          "file": "/audio/classics-of-antwerp/nl/classics-carolus-borromeus-02ae5e506de8f1.mp3",
+          "hash": "02ae5e506de8f1",
+          "durationSeconds": 100.3
+        },
+        "classics-vleeshuis": {
+          "file": "/audio/classics-of-antwerp/nl/classics-vleeshuis-008c40c62ed5db.mp3",
+          "hash": "008c40c62ed5db",
+          "durationSeconds": 97.8
+        },
+        "classics-sint-paulus": {
+          "file": "/audio/classics-of-antwerp/nl/classics-sint-paulus-1bd811868b4b53.mp3",
+          "hash": "1bd811868b4b53",
+          "durationSeconds": 100.8
+        },
+        "classics-het-steen": {
+          "file": "/audio/classics-of-antwerp/nl/classics-het-steen-19e149e142d6b2.mp3",
+          "hash": "19e149e142d6b2",
+          "durationSeconds": 226.6
+        },
+        "classics-scheldt": {
+          "file": "/audio/classics-of-antwerp/nl/classics-scheldt-1bc3aeb00f3a0a.mp3",
+          "hash": "1bc3aeb00f3a0a",
+          "durationSeconds": 132.6
+        }
+      }
+    }
+  }
+}

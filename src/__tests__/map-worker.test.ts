@@ -40,12 +40,15 @@ describe("MapLibre worker", () => {
     expect(workerUrl).toBe(`/maplibre/${installedVersion}/maplibre-gl-worker.mjs`);
   });
 
-  test("the versioned worker is cached for a year; nothing else gets a cache header", async () => {
+  test("the versioned worker and the audio guide's recordings are cached for a year; nothing else gets a cache header", async () => {
     const rules = (await nextConfig.headers?.()) ?? [];
     const workerRule = rules.find((rule) => rule.source.startsWith(`${MAP_WORKER_FOLDER}/:version/`));
     expect(workerRule?.headers).toContainEqual({ key: "Cache-Control", value: "public, max-age=31536000, immutable" });
+    // Recordings have their text's fingerprint in the file name, so a file never changes.
+    const audioRule = rules.find((rule) => rule.source === "/audio/:walk/:locale/:file*");
+    expect(audioRule?.headers).toContainEqual({ key: "Cache-Control", value: "public, max-age=31536000, immutable" });
     // Pages and images must never get an immutable cache.
-    for (const rule of rules.filter((rule) => rule !== workerRule)) {
+    for (const rule of rules.filter((rule) => rule !== workerRule && rule !== audioRule)) {
       expect(rule.headers.map((header) => header.key)).not.toContain("Cache-Control");
     }
   });
