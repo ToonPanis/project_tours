@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { NextRequest } from "next/server";
 import { GET as clickRoute } from "@/app/api/r/route";
 import { POST as commissionsRoute } from "@/app/api/admin/commissions/route";
@@ -564,6 +564,10 @@ describe("partner portal: sign-in and isolation", () => {
     const { secret } = await signedInPartner(setup, "HOTELJULIEN", "frontdesk@hotel.example");
     await addPartner(setup, "CAFEDEKAT");
     globalThis.commerceStore = setup.store;
+    // The route uses the real clock, the session was made at the test context's fixed date:
+    // pin the clock to that date, or the 7-day session has "expired" a week after it.
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(setup.ctx.now());
     try {
       expect((await partnerQrRoute(new NextRequest("https://site.example/api/partner/qr"))).status).toBe(401);
       const response = await partnerQrRoute(
@@ -574,6 +578,7 @@ describe("partner portal: sign-in and isolation", () => {
       expect(response.headers.get("content-disposition")).toContain("hoteljulien");
       expect(await response.text()).toContain("<svg");
     } finally {
+      vi.useRealTimers();
       delete globalThis.commerceStore;
     }
   });
