@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import Image from "next/image";
 import type { GuideImage } from "@/types/guide";
 
@@ -15,25 +16,31 @@ interface GuideImageFigureProps {
 const creditLinkClasses = "py-2 underline underline-offset-2";
 
 export function ImageCredit({ image }: { image: GuideImage }) {
+  // Each part of the credit, in order. A part that is unknown (empty) is left out, so the
+  // line never shows an empty piece between two "·".
+  const parts: { key: string; text: string; href?: string | null }[] = [
+    { key: "year", text: image.approximateYear },
+    { key: "maker", text: image.photographerOrArtist },
+    // No link when the source isn't known (e.g. an archive document still to be traced).
+    { key: "source", text: image.source, href: image.sourceUrl },
+    { key: "license", text: image.license, href: image.licenseUrl },
+  ];
+  const known = parts.filter((part) => part.text.trim() !== "");
+
   return (
     <>
-      {image.approximateYear} · {image.photographerOrArtist} ·{" "}
-      {/* No link when the source isn't known yet (e.g. an archive document still to be traced). */}
-      {image.sourceUrl ? (
-        <a href={image.sourceUrl} target="_blank" rel="noopener noreferrer" className={creditLinkClasses}>
-          {image.source}
-        </a>
-      ) : (
-        image.source
-      )}{" "}
-      ·{" "}
-      {image.licenseUrl ? (
-        <a href={image.licenseUrl} target="_blank" rel="noopener noreferrer" className={creditLinkClasses}>
-          {image.license}
-        </a>
-      ) : (
-        image.license
-      )}
+      {known.map((part, index) => (
+        <Fragment key={part.key}>
+          {index > 0 && " · "}
+          {part.href ? (
+            <a href={part.href} target="_blank" rel="noopener noreferrer" className={creditLinkClasses}>
+              {part.text}
+            </a>
+          ) : (
+            part.text
+          )}
+        </Fragment>
+      ))}
     </>
   );
 }

@@ -43,29 +43,29 @@ function cleanArtist(artist: string, unknownLabel: string): string {
   return /^(unknown|anonymous)/i.test(artist.trim()) ? unknownLabel : artist.trim();
 }
 
-/** Credit texts in the visitor's language, for images whose maker, source or rights are not known. */
+/** Credit texts in the visitor's language, for images whose maker is not known. */
 interface ImageLabels {
   unknownArtist: string;
-  sourceToVerify: string;
-  rightsToVerify: string;
 }
 
 /** Image metadata from images.json (Commons) or, for the few images that don't come from Commons, local-images.json. */
-function findImageMetadata(id: string, labels: ImageLabels): ImageMetadata | undefined {
+function findImageMetadata(id: string): ImageMetadata | undefined {
   const commons = imagesFile.images.find((image) => image.id === id);
   if (commons) return commons;
   const local = localImagesFile.images.find((image) => image.id === id);
   if (!local) return undefined;
   return {
     ...local,
-    // Unknown source or rights are shown as such, never left blank.
-    source: local.source ?? labels.sourceToVerify,
-    license: local.rightsCleared && local.license ? local.license : labels.rightsToVerify,
+    // Owner's decision (2026-11-04): an unknown source or license is simply left out of the
+    // credit, without a "still to be verified" label. `rightsCleared: false` in
+    // local-images.json keeps track of which images still need their rights cleared.
+    source: local.source ?? "",
+    license: local.rightsCleared && local.license ? local.license : "",
   };
 }
 
 function buildImage(id: string, content: ClassicsContent, labels: ImageLabels): GuideImage {
-  const metadata = findImageMetadata(id, labels);
+  const metadata = findImageMetadata(id);
   const text = content.images[id];
   if (!metadata || !text) throw new Error(`Classics of Antwerp: missing image data for "${id}"`);
 
@@ -189,8 +189,6 @@ function buildWalk(content: ClassicsContent, locale: Locale): Walk {
   const routeLegs = loadRouteLegs(routesFile);
   const locations = buildLocations(content, {
     unknownArtist: t("guide.unknownArtist"),
-    sourceToVerify: t("guide.sourceToVerify"),
-    rightsToVerify: t("guide.rightsToVerify"),
   });
 
   return {

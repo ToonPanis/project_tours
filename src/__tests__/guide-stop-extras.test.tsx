@@ -31,11 +31,13 @@ describe("More stories (optional deeper content)", () => {
     // The images of the story come with their captions.
     expect(screen.getByText(stories[0].image!.caption)).toBeDefined();
     for (const image of stories[0].images ?? []) expect(screen.getByText(image.caption)).toBeDefined();
-    // An image without a known source says so in its credit, instead of linking nowhere.
+    // An image without a known source never links nowhere, and its credit leaves the unknown
+    // parts out instead of showing an empty piece between two "·".
     const unsourced = [stories[0].image!, ...(stories[0].images ?? [])].find((image) => !image.sourceUrl);
-    if (unsourced) {
-      expect(screen.getAllByText(new RegExp(t("guide.rightsToVerify"))).length).toBeGreaterThan(0);
-      expect(screen.queryByRole("link", { name: unsourced.source })).toBeNull();
+    expect(unsourced).toBeDefined();
+    for (const link of screen.queryAllByRole("link")) expect(link.textContent?.trim()).not.toBe("");
+    for (const credit of document.querySelectorAll("figcaption p:last-child")) {
+      expect(credit.textContent).not.toMatch(/·\s*·|·\s*$|^\s*·/);
     }
 
     fireEvent.click(screen.getByRole("button", { name: new RegExp(t("guide.moreStoriesHide")) }));

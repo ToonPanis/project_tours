@@ -4,12 +4,10 @@ import { describe, expect, test } from "vitest";
 import { classicsOfAntwerpWalk, getClassicsWalk } from "@/data/walks/classics-of-antwerp";
 import localImagesFile from "@/data/walks/classics-of-antwerp/local-images.json";
 import { locales } from "@/i18n/config";
-import { createTranslator } from "@/i18n/translate";
 import { getReadingMinutes } from "@/features/guide/logic/reading-time";
 import { getOrderedLocations } from "@/lib/walk-locations";
 
 const locations = getOrderedLocations(classicsOfAntwerpWalk);
-const t = createTranslator("en");
 /** The few images that don't come from the Commons script (see local-images.json). */
 const localImages = new Map(localImagesFile.images.map((image) => [image.id, image]));
 
@@ -101,8 +99,9 @@ describe.each(locations.map((location) => [location.name, location] as const))(
         expect(image.alt.length).toBeGreaterThan(10);
         const local = localImages.get(image.id);
         if (local && !local.rightsCleared) {
-          // Rights unknown: the credit must say so (and the image be cleared before a public launch).
-          expect(image.license).toBe(t("guide.rightsToVerify"));
+          // Rights not cleared yet (to do before a public launch). By the owner's choice the credit
+          // shows no license and no "to be verified" label, and never a made-up license.
+          expect(image.license).toBe("");
           continue;
         }
         expect(image.license).toMatch(/^(public domain|cc0|cc by(-sa)? \d)/i);
