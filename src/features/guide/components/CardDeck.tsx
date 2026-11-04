@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { AudioGuidePlayer } from "@/features/audio/components/AudioGuidePlayer";
 import type { Translator } from "@/i18n/translate";
 import type { GuideCard } from "@/types/guide";
 import { GuideImageFigure } from "./GuideImageFigure";
@@ -76,7 +75,7 @@ interface GuideCardArticleProps {
   label?: string;
 }
 
-/** One card: title, its own audio, image, story sections with more images woven in, "Did you know?". */
+/** One card: title, image, story sections with more images woven in, "Did you know?". */
 export function GuideCardArticle({ card, t, label }: GuideCardArticleProps) {
   const images = card.images ?? [];
 
@@ -87,8 +86,6 @@ export function GuideCardArticle({ card, t, label }: GuideCardArticleProps) {
         <h2 className="font-display text-3xl font-semibold leading-tight">{card.title}</h2>
         {card.subtitle && <p className="font-display text-lg italic text-sepia">{card.subtitle}</p>}
       </div>
-      {/* Only this slide's story: another slide has its own recording. */}
-      {card.audio && <AudioGuidePlayer key={card.audio.src} track={card.audio} title={card.title} t={t} />}
       {card.image && <GuideImageFigure image={card.image} />}
       {card.sections.map((section, sectionIndex) => (
         <div key={section.heading ?? sectionIndex} className="flex flex-col gap-5">

@@ -1,4 +1,3 @@
-import type { AudioTrack } from "./audio";
 import type { Source } from "./content";
 import type { VerificationStatus } from "./reveal";
 
@@ -119,8 +118,6 @@ export interface GuideCard {
   /** More images, woven in after the sections (the first after the first section, …). */
   images?: GuideImage[];
   didYouKnow?: string[];
-  /** This slide read aloud (only when its recording matches today's text). */
-  audio?: AudioTrack;
 }
 
 /** One drawing to find or identify on site. */
@@ -219,8 +216,6 @@ export interface GuideStopContent {
   galleries?: GuideGallery[];
   searchTask?: SearchTask;
   infoBoxes?: InfoBox[];
-  /** The stop's story read aloud (only when its recording matches today's text). */
-  audio?: AudioTrack;
 }
 
 /** Texts for a guide walk's start screen. */

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { AudioGuidePlayer } from "@/features/audio/components/AudioGuidePlayer";
 import { useScreenFocus } from "@/hooks/useScreenFocus";
 import { formatWalkingDistance, formatWalkingTime } from "@/features/navigation/logic/maneuver-display";
 import type { DetourCost } from "@/features/navigation/logic/route-legs";
@@ -50,7 +49,7 @@ interface GuideStopPageProps {
  * One stop of a guide walk, as a long, calm reading page on "paper". Every
  * block below is optional and only shown when the stop has data for it:
  *
- *   header (drawing or photo, status) → audio guide → what you see → pause → search task →
+ *   header (drawing or photo, status) → what you see → pause → search task →
  *   story → image galleries → slides → terms → then & now → look at this → did you know? →
  *   more stories (optional, closed) → vanished gates nearby → practical info →
  *   sources → the way on.
@@ -119,11 +118,6 @@ export function GuideStopPage({
       </header>
 
       <div className="flex flex-col gap-8 px-4 pb-10">
-        {/* The audio guide reads this page (once its story may be shown: never a search task's answer). */}
-        {guide.audio && isStoryVisible && (
-          <AudioGuidePlayer key={guide.audio.src} track={guide.audio} title={location.name} t={t} />
-        )}
-
         {/* What you see */}
         <div className="space-y-4 text-lg leading-relaxed">
           {featuredItems.length > 0 && (
