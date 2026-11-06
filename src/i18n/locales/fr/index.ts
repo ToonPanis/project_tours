@@ -13,8 +13,9 @@ import pages from "./pages.json";
 import partner from "./partner.json";
 import privacy from "./privacy.json";
 import pubgame from "./pubgame.json";
+import quest from "./quest.json";
 import walks from "./walks.json";
 
-const fr = { common, navigation, meta, home, errors, walks, game, guide, gps, pubgame, commerce, corporate, partner, feedback, privacy, pages };
+const fr = { common, navigation, meta, home, errors, walks, game, guide, gps, pubgame, quest, commerce, corporate, partner, feedback, privacy, pages };
 
 export default fr;

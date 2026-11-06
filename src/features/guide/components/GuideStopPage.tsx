@@ -14,7 +14,9 @@ import { CardDeck } from "./CardDeck";
 import { CollectionItemCard } from "./CollectionItemCard";
 import { GlossaryList } from "./GlossaryList";
 import { GuideImageFigure } from "./GuideImageFigure";
+import { ImageGallery } from "./ImageGallery";
 import { InfoBoxView } from "./InfoBoxView";
+import { MoreStories } from "./MoreStories";
 import { SearchTaskView } from "./SearchTaskView";
 import { StatusBadge } from "./StatusBadge";
 import { StorySection } from "./StorySection";
@@ -48,8 +50,9 @@ interface GuideStopPageProps {
  * block below is optional and only shown when the stop has data for it:
  *
  *   header (drawing or photo, status) → what you see → pause → search task →
- *   story → slides → terms → then & now → look at this → did you know? →
- *   vanished gates nearby → practical info → sources → the way on.
+ *   story → image galleries → slides → terms → then & now → look at this → did you know? →
+ *   more stories (optional, closed) → vanished gates nearby → practical info →
+ *   sources → the way on.
  */
 export function GuideStopPage({
   location,
@@ -161,6 +164,8 @@ export function GuideStopPage({
               <GuideImageFigure key={image.id} image={image} />
             ))}
 
+            {guide.galleries?.map((gallery) => <ImageGallery key={gallery.id} gallery={gallery} t={t} />)}
+
             {guide.cards && guide.cards.length > 0 && <CardDeck cards={guide.cards} t={t} />}
 
             {guide.glossary && guide.glossary.length > 0 && <GlossaryList terms={guide.glossary} t={t} />}
@@ -212,6 +217,8 @@ export function GuideStopPage({
                 </ul>
               </aside>
             )}
+
+            {guide.moreStories && guide.moreStories.length > 0 && <MoreStories stories={guide.moreStories} t={t} />}
 
             {guide.vanishedNearby && guide.vanishedNearby.length > 0 && (
               <section aria-labelledby={`${location.id}-vanished`} className="flex flex-col gap-4">

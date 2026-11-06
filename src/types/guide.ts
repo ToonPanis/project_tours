@@ -30,15 +30,29 @@ export interface GuideImage {
 }
 
 /**
+ * A few historical images of one subject, shown large and one at a time with a
+ * caption under each (e.g. old prints of a building). Swipe, buttons or arrow
+ * keys go to the next one; each image can be enlarged.
+ */
+export interface GuideGallery {
+  id: string;
+  title: string;
+  /** One or two sentences on what the images show together. */
+  intro?: string;
+  images: GuideImage[];
+}
+
+/**
  * One part of a stop's story. The kind keeps apart:
  * - "history": documented facts (with sources)
  * - "interpretation": a likely (architectural) reading, not proven
  * - "context": general background of the period or neighbourhood
  * - "legend": a story that is not history
+ * - "fiction": a known invented story, e.g. a novel set at this place
  */
 export interface GuideSection {
   heading?: string;
-  kind: "history" | "legend" | "interpretation" | "context";
+  kind: "history" | "legend" | "interpretation" | "context" | "fiction";
   paragraphs: string[];
 }
 
@@ -98,8 +112,11 @@ export interface GuideCard {
   id: string;
   title: string;
   subtitle?: string;
+  /** Shown at the top of the card. */
   image?: GuideImage;
   sections: GuideSection[];
+  /** More images, woven in after the sections (the first after the first section, …). */
+  images?: GuideImage[];
   didYouKnow?: string[];
 }
 
@@ -190,6 +207,13 @@ export interface GuideStopContent {
   thenAndNow?: string[];
   glossary?: GlossaryTerm[];
   cards?: GuideCard[];
+  /**
+   * Optional deeper stories, hidden behind a "Discover more stories" button.
+   * Secondary content: the walk works the same without opening them.
+   */
+  moreStories?: GuideCard[];
+  /** Historical images shown large, one at a time, after the story (see GuideGallery). */
+  galleries?: GuideGallery[];
   searchTask?: SearchTask;
   infoBoxes?: InfoBox[];
 }

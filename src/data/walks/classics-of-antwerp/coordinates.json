@@ -5,6 +5,8 @@
     { "id": "classics-diamond-district", "name": "Diamond District", "latitude": 51.215207, "longitude": 4.418734, "status": "to-verify" },
     { "id": "classics-keyserlei-meir", "name": "De Keyserlei & Meir", "latitude": 51.217502, "longitude": 4.418381, "status": "to-verify" },
     { "id": "classics-stadsfeestzaal", "name": "Stadsfeestzaal", "latitude": 51.217637, "longitude": 4.411308, "status": "to-verify" },
+    { "id": "classics-paleis-op-de-meir", "name": "Paleis op de Meir (Meir 50; geocoded 2026-10-10, quest stop)", "latitude": 51.217849, "longitude": 4.408675, "status": "to-verify" },
+    { "id": "classics-rubenshuis", "name": "Rubenshuis (Wapper)", "latitude": 51.21715, "longitude": 4.40895, "status": "to-verify" },
     { "id": "classics-handelsbeurs", "name": "Handelsbeurs", "latitude": 51.21846, "longitude": 4.405785, "status": "to-verify" },
     { "id": "classics-boerentoren", "name": "Boerentoren", "latitude": 51.21883, "longitude": 4.403938, "status": "to-verify" },
     { "id": "classics-groenplaats", "name": "Groenplaats", "latitude": 51.218614, "longitude": 4.401639, "status": "to-verify" },

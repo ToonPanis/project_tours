@@ -1,0 +1,17 @@
+{
+  "eyebrow": "Una missione di Spooky",
+  "taskForYou": "Spooky ha una missione per te!",
+  "viewTask": "Vedi la missione",
+  "startSearching": "Inizia a cercare",
+  "showClue": "Mostra l’indizio",
+  "spookyAlt": "Spooky, un simpatico fantasmino con una lanterna",
+  "inZoneTitle": "Sei nella zona di ricerca!",
+  "inZoneBody": "Guardati bene intorno e confronta ciò che vedi con l’indizio. Hidden Antwerp se ne accorge da solo quando l’hai trovato.",
+  "distanceToZone": "Distanza dalla zona di ricerca",
+  "foundIt": "L’ho trovato",
+  "withoutGpsHint": "Niente GPS? Usa l’indizio e la mappa e tocca il pulsante qui sotto appena l’hai trovato.",
+  "foundTitle": "Hai trovato il luogo!",
+  "foundBody": "Scopri cosa abbiamo trovato per te!",
+  "discoveryFoundTitle": "Ottimo, l’hai trovato!",
+  "discoverStory": "Scopri la storia"
+}
